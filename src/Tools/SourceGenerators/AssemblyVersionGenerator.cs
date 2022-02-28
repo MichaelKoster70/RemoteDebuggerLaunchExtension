@@ -1,4 +1,10 @@
-﻿
+﻿// ----------------------------------------------------------------------------
+// <copyright company="Michael Koster">
+//   Copyright (c) Michael Koster. All rights reserved.
+//   Licensed under the MIT License.
+// </copyright>
+// ----------------------------------------------------------------------------
+
 using Microsoft.CodeAnalysis;
 
 namespace Tools.SourceGenerators
@@ -35,7 +41,7 @@ namespace {rootNamespace}.Generated
       /// <param name="context">The <see cref="GeneratorInitializationContext"/> to register callbacks on.</param>
       public void Initialize(GeneratorInitializationContext context)
       {
-         //EMPTY_BODY - no initialization needed
+         //no initialization needed
       }
    }
 }
