@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5A452CB0-92FC-4F9D-8EAB-16FC3D579F8B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SourceGenerators", "src\Tools\SourceGenerators\SourceGenerators.csproj", "{6AA140D9-4DB5-4A8A-8C82-F1A3DE1AA359}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6AA140D9-4DB5-4A8A-8C82-F1A3DE1AA359}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AA140D9-4DB5-4A8A-8C82-F1A3DE1AA359}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AA140D9-4DB5-4A8A-8C82-F1A3DE1AA359}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AA140D9-4DB5-4A8A-8C82-F1A3DE1AA359}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6AA140D9-4DB5-4A8A-8C82-F1A3DE1AA359} = {5A452CB0-92FC-4F9D-8EAB-16FC3D579F8B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {28E2E12F-EC94-41FB-BF65-3D5B09E077DE}
+	EndGlobalSection
+EndGlobal
