@@ -1,2 +1,2 @@
-# RemoteDebuggerVsPlugin
-Visual Studio Plugin providing a full F5 experience for debugging .NET code on Linux based targets
+# RemoteDebuggerLaunchExtension
+Visual Studio Extension providing a full F5 experience for debugging .NET code on Linux based targets
