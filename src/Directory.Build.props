@@ -3,7 +3,7 @@
     <Authors>Michael Koster</Authors>
     <Copyright>Michael Koster</Copyright>
     <Company>Michael Koster</Company>
-    <Product>Remote Debugger Launcher VS Extension for .NET Projects</Product>
+    <Product>Remote Debugger Launcher VS Extension</Product>
     <SourceRevisionId Condition="'$(SourceRevisionId)' == ''">$(BUILD_SOURCEVERSIONSHORT)</SourceRevisionId>
   </PropertyGroup>
 
