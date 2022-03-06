@@ -41,7 +41,25 @@ namespace RemoteDebuggerLauncher
          return GetEnumOption<AdapterProviderKind>(PackageConstants.OptionsCategory, PackageConstants.OptionsPageDevice, PackageConstants.OptionsNamePrivateKey);
       }
 
-      public string QueryPuttyInstallationPath()
+      public string QueryDotNetInstallPath()
+      {
+         ThreadHelper.ThrowIfNotOnUIThread();
+         return GetOption<string>(PackageConstants.OptionsCategory, PackageConstants.OptionsPageLocal, PackageConstants.OptionsNameDotNetInstallPath);
+      }
+
+      public string QueryDebuggerInstallPath()
+      {
+         ThreadHelper.ThrowIfNotOnUIThread();
+         return GetOption<string>(PackageConstants.OptionsCategory, PackageConstants.OptionsPageLocal, PackageConstants.OptionsNameDebuggerInstallPath);
+      }
+
+      public string QueryAppFolderPath()
+      {
+         ThreadHelper.ThrowIfNotOnUIThread();
+         return GetOption<string>(PackageConstants.OptionsCategory, PackageConstants.OptionsPageLocal, PackageConstants.OptionsNameAppFolderPath);
+      }
+
+      public string QueryPuttyInstallPath()
       {
          ThreadHelper.ThrowIfNotOnUIThread();
          return GetOption<string>(PackageConstants.OptionsCategory, PackageConstants.OptionsPageLocal, PackageConstants.OptionsPuttyInstallPath);

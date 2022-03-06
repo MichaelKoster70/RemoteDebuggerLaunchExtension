@@ -14,10 +14,17 @@ namespace RemoteDebuggerLauncher
    {
       internal class LaunchConfiguration
       {
-         public string version => "0.2.0";
-         public string name => ".NET Core Launch";
-         public string request => "launch";
-         public string type => "coreclr";
+         [JsonProperty("version")]
+         public string Version => "0.2.0";
+
+         [JsonProperty("name")]
+         public string Name => ".NET Core Launch";
+
+         [JsonProperty("request")]
+         public string Request => "launch";
+
+         [JsonProperty("type")]
+         public string Type => "coreclr";
 
          [JsonProperty("$adapter")]
          public string Adapter { get; set; }

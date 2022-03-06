@@ -99,7 +99,7 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// Queries the private key to be used to establish a connection to the remote device.
       /// </summary>
-      /// <returns>A <see langword="string"/> holding the private ke; an empty string if no key is configured.</returns>
+      /// <returns>A <see langword="string"/> holding the private key file path; an empty string if no key is configured.</returns>
       /// <remarks>
       /// The following configuration provides are queried for a private key, first match wins
       /// - selected launch profile
@@ -130,9 +130,9 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// Queries the adapter provider to be used to establish a connection to the remote device.
       /// </summary>
-      /// <returns>A <see cref="AdapterProviderKind"/> holding the private key; an empty string if no key is configured.</returns>
+      /// <returns>A <see cref="AdapterProviderKind"/> instance.</returns>
       /// <remarks>
-      /// The following configuration provides are queried for a private key, first match wins
+      /// The following configuration provides are queried for a provider, first match wins
       /// - selected launch profile
       /// - Tools/Options settings
       /// </remarks>
@@ -165,6 +165,99 @@ namespace RemoteDebuggerLauncher
             default:
                return AdapterProviderKind.WindowsSSH;
          }
+      }
+
+      /// <summary>
+      /// Queries the path where .NET 'dotnet' is installed on the remote device.
+      /// </summary>
+      /// <returns>A <see langword="string"/> holding the path; an empty string not configured.</returns>
+      /// <remarks>
+      /// The following configuration provides are queried for a path, first match wins
+      /// - selected launch profile
+      /// - Tools/Options settings
+      /// </remarks>
+      public string QueryDotNetInstallPath()
+      {
+         if (launchProfile.OtherSettings.TryGetValue(SecureShellRemoteLaunchProfile.dotNetInstallPathProperty, out var settingsValue))
+         {
+            if (settingsValue is string profileDotNetInstallPath && !string.IsNullOrEmpty(profileDotNetInstallPath))
+            {
+               // Launch profile has path specified => use it
+               return profileDotNetInstallPath;
+            }
+         }
+
+         var optionsDotNetInstallPath = optionsPageAccessor.QueryDotNetInstallPath();
+         if (!string.IsNullOrEmpty(optionsDotNetInstallPath))
+         {
+            // Options has path specified => use it
+            return optionsDotNetInstallPath;
+         }
+
+         // No path key available
+         return string.Empty;
+      }
+
+      /// <summary>
+      /// Queries the path where the VS Code Debugger is installed on the remote device.
+      /// </summary>
+      /// <returns>A <see langword="string"/> holding the path; an empty string not configured.</returns>
+      /// <remarks>
+      /// The following configuration provides are queried for a path, first match wins
+      /// - selected launch profile
+      /// - Tools/Options settings
+      /// </remarks>
+      public string QueryDebuggerInstallPath()
+      {
+         if (launchProfile.OtherSettings.TryGetValue(SecureShellRemoteLaunchProfile.debuggerInstallPathProperty, out var settingsValue))
+         {
+            if (settingsValue is string profileDebuggerInstallPath && !string.IsNullOrEmpty(profileDebuggerInstallPath))
+            {
+               // Launch profile has path specified => use it
+               return profileDebuggerInstallPath;
+            }
+         }
+
+         var optionsDebuggerInstallPath = optionsPageAccessor.QueryDebuggerInstallPath();
+         if (!string.IsNullOrEmpty(optionsDebuggerInstallPath))
+         {
+            // Options has path specified => use it
+            return optionsDebuggerInstallPath;
+         }
+
+         // No path key available
+         return string.Empty;
+      }
+
+      /// <summary>
+      /// Queries the path where the VS Code Debugger is installed on the remote device.
+      /// </summary>
+      /// <returns>A <see langword="string"/> holding the path; an empty string not configured.</returns>
+      /// <remarks>
+      /// The following configuration provides are queried for a private key, first match wins
+      /// - selected launch profile
+      /// - Tools/Options settings
+      /// </remarks>
+      public string QueryAppFolderPath()
+      {
+         if (launchProfile.OtherSettings.TryGetValue(SecureShellRemoteLaunchProfile.appFolderPathProperty, out var settingsValue))
+         {
+            if (settingsValue is string profileAppFolderPath && !string.IsNullOrEmpty(profileAppFolderPath))
+            {
+               // Launch profile has path specified => use it
+               return profileAppFolderPath;
+            }
+         }
+
+         var optionsAppFolderPath = optionsPageAccessor.QueryAppFolderPath();
+         if (!string.IsNullOrEmpty(optionsAppFolderPath))
+         {
+            // Options has path specified => use it
+            return optionsAppFolderPath;
+         }
+
+         // No path key available
+         return string.Empty;
       }
    }
 }

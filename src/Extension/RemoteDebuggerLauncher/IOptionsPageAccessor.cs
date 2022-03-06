@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// ----------------------------------------------------------------------------
+// <copyright company="Michael Koster">
+//   Copyright (c) Michael Koster. All rights reserved.
+//   Licensed under the MIT License.
+// </copyright>
+// ----------------------------------------------------------------------------
 
 namespace RemoteDebuggerLauncher
 {
@@ -14,9 +15,12 @@ namespace RemoteDebuggerLauncher
 
       AdapterProviderKind QueryAdapterProvider();
 
-      string QueryPuttyInstallationPath();
+      string QueryDotNetInstallPath();
+
+      string QueryDebuggerInstallPath();
+
+      string QueryPuttyInstallPath();
+
+      string QueryAppFolderPath();
    }
 }
-//DTE dte = (DTE)GetService(typeof(DTE));
-//EnvDTE.Properties props = dte.get_Properties("My Category", "My Grid Page");
-//int n = (int)props.Item("OptionInteger").Value;

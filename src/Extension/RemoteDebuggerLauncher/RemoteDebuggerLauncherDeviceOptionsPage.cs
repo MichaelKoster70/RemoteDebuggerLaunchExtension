@@ -18,13 +18,31 @@ namespace RemoteDebuggerLauncher
    internal class RemoteDebuggerLauncherDeviceOptionsPage : DialogPage
    {
       [Category("Remote Device")]
-      [DisplayName("User Name")]
+      [DisplayName("User name")]
       [Description("The default user name to be used for connecting to a target device.")]
       public string UserName { get; set; } = "user";
 
       [Category("Remote Device")]
-      [DisplayName("Private Key")]
+      [DisplayName("Private key")]
       [Description("The default private key to be used for connecting to the target device.")]
       public string PrivateKey { get; set; } = String.Empty;
+
+      [Category("Remote Device")]
+      [DisplayName(".NET install path")]
+      [Description("The path where .NET binary 'dotnet' is installed on the target device.")]
+      [DefaultValue(PackageConstants.OptionsDefaultValueDotNetInstallPath)]
+      public string DotNetInstallPath { get; set; } = PackageConstants.OptionsDefaultValueDotNetInstallPath;
+
+      [Category("Remote Device")]
+      [DisplayName("VS Code debugger install path")]
+      [Description("The path where the VS code debugger binary is installed on the target device.")]
+      [DefaultValue(PackageConstants.OptionsDefaultValueDebuggerInstallPath)]
+      public string DebuggerInstallPath { get; set; } = PackageConstants.OptionsDefaultValueDebuggerInstallPath;
+
+      [Category("Remote Device")]
+      [DisplayName("App folder path")]
+      [Description("The path on the target device where the application binaries will get deployed to.")]
+      [DefaultValue(PackageConstants.OptionsDefaultValueAppFolderPath)]
+      public string AppFolderlPath { get; set; } = PackageConstants.OptionsDefaultValueAppFolderPath;
    }
 }

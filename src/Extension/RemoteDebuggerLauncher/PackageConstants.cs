@@ -29,6 +29,24 @@ namespace RemoteDebuggerLauncher
       /// <summary>The option name on the device page for the private key.</summary>
       public const string OptionsNamePrivateKey = "PrivateKey";
 
+      /// <summary>The option name on the device page for the .NET installation path.</summary>
+      public const string OptionsNameDotNetInstallPath = "DotNetInstallPath";
+
+      /// <summary>The default value for the .NET installation path on the device page.</summary>
+      public const string OptionsDefaultValueDotNetInstallPath = "~/.dotnet/dotnet";
+
+      /// <summary>The default value for the VS Code Debugger installation path on the device page.</summary>
+      public const string OptionsDefaultValueDebuggerInstallPath = "~/.vsdbg/vsdbg";
+
+      /// <summary>The default value for the App folder path on the device page.</summary>
+      public const string OptionsDefaultValueAppFolderPath = "/var/project";
+
+      /// <summary>The option name on the device page for the debugger installation path.</summary>
+      public const string OptionsNameDebuggerInstallPath = "DebuggerInstallPath";
+
+      /// <summary>The option name on the device page for the app folder path.</summary>
+      public const string OptionsNameAppFolderPath = "AppFolderPath";
+
       /// <summary>The option name on the local page for the PuTTY installation Path.</summary>
       public const string OptionsPuttyInstallPath = "PuttyInstallPath";
 
