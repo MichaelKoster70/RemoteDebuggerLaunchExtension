@@ -30,22 +30,28 @@ namespace RemoteDebuggerLauncher
       public const string OptionsNamePrivateKey = "PrivateKey";
 
       /// <summary>The option name on the device page for the .NET installation path.</summary>
-      public const string OptionsNameDotNetInstallPath = "DotNetInstallPath";
+      public const string OptionsNameDotNetInstallFolderPath = "DotNetInstallFolderPath";
 
       /// <summary>The default value for the .NET installation path on the device page.</summary>
-      public const string OptionsDefaultValueDotNetInstallPath = "~/.dotnet/dotnet";
+      public const string OptionsDefaultValueDotNetInstallFolderPath = "~/.dotnet";
 
-      /// <summary>The default value for the VS Code Debugger installation path on the device page.</summary>
-      public const string OptionsDefaultValueDebuggerInstallPath = "~/.vsdbg/vsdbg";
-
-      /// <summary>The default value for the App folder path on the device page.</summary>
-      public const string OptionsDefaultValueAppFolderPath = "/var/project";
+      /// <summary>The name of the 'dotnet' binary.</summary>
+      public const string BinaryNameDotnet = "dotent";
 
       /// <summary>The option name on the device page for the debugger installation path.</summary>
-      public const string OptionsNameDebuggerInstallPath = "DebuggerInstallPath";
+      public const string OptionsNameDebuggerInstallFolderPath = "DebuggerInstallFolderPath";
+
+      /// <summary>The default value for the VS Code Debugger installation path on the device page.</summary>
+      public const string OptionsDefaultValueDebuggerInstallFolderPath = "~/.vsdbg";
+
+      /// <summary>The name of the VS debugger binary.</summary>
+      public const string BinaryNameDebugger = "vsdbg";
 
       /// <summary>The option name on the device page for the app folder path.</summary>
       public const string OptionsNameAppFolderPath = "AppFolderPath";
+
+      /// <summary>The default value for the App folder path on the device page.</summary>
+      public const string OptionsDefaultValueAppFolderPath = "~/project";
 
       /// <summary>The option name on the local page for the PuTTY installation Path.</summary>
       public const string OptionsPuttyInstallPath = "PuttyInstallPath";

@@ -61,9 +61,18 @@
   <ItemGroup>
     <Compile Include="AdapterLaunchConfiguration.cs" />
     <Compile Include="AdapterProviderKind.cs" />
-    <Compile Include="ConfigurationAggregator.cs" />
+    <Compile Include="AuthenticationKind.cs" />
+    <Compile Include="SecureShellSessionCommanding.cs" />
+    <Compile Include="ILoggerService.cs" />
     <Compile Include="IOptionsPageAccessor.cs" />
-    <Compile Include="OptionsPageAccessor.cs" />
+    <Compile Include="ISecureShellSessionCommanding.cs" />
+    <Compile Include="LoggerService.cs" />
+    <Compile Include="OptionsPageAccessorService.cs" />
+    <Compile Include="RemoteDebuggerLauncherException.cs" />
+    <Compile Include="SecureShellRemoteOperations.cs" />
+    <Compile Include="UnixPath.cs" />
+    <Compile Include="ConfigurationAggregator.cs" />
+    <Compile Include="ProjectSystemConfiguredProjectExtensions.cs" />
     <Compile Include="RemoteDebuggerLauncherLocalOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -32,54 +32,65 @@ namespace RemoteDebuggerLauncher
    internal class SecureShellRemoteLaunchTargetsProvider : IDebugProfileLaunchTargetsProvider
    {
       private readonly ConfiguredProject configuredProject;
-      private readonly IOptionsPageAccessor optionsPageAccessor;
 
       [ImportingConstructor]
-      public SecureShellRemoteLaunchTargetsProvider(ConfiguredProject configuredProject, IOptionsPageAccessor optionsPageAccessor)
+      public SecureShellRemoteLaunchTargetsProvider(ConfiguredProject configuredProject)
       {
          this.configuredProject = configuredProject;
-         this.optionsPageAccessor = optionsPageAccessor;
       }
 
       public Task OnAfterLaunchAsync(DebugLaunchOptions launchOptions, ILaunchProfile profile)
       {
-         //DTE2 dte = (DTE2)RemoteDebuggerLauncherPackage.GetGlobalService(typeof(SDTE));
-         //dte.ExecuteCommand("DebugAdapterHost.Launch", $"/LaunchJson:\"{profile.ExecutablePath}\"");
          return Task.CompletedTask;
       }
 
       public async Task OnBeforeLaunchAsync(DebugLaunchOptions launchOptions, ILaunchProfile profile)
       {
-         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+         var optionsPageAccessor = await ServiceProvider.GetGlobalServiceAsync<SOptionsPageAccessor, IOptionsPageAccessor>();
+         var loggerService = await ServiceProvider.GetGlobalServiceAsync<SLoggerService, ILoggerService>();
          var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
-         var outputPane = PackageHelper.GetGlobalService<IVsOutputWindowPane, SVsGeneralOutputWindowPane>();
 
-         outputPane.OutputStringThreadSafe("Hello World");
+         using (var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService))
+         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            // try to connect to the device
+            await remoteOperations.CheckConnectionThrowAsync().ConfigureAwait(true);
+
+         }
+
+
+         var projectPropertiesProvider = configuredProject.Services.ProjectPropertiesProvider;
+         var properties = await projectPropertiesProvider.GetCommonProperties().GetPropertyNamesAsync();
+
+         var projectFolder = Path.GetDirectoryName(configuredProject.UnconfiguredProject.FullPath);
+         var outputDir = await configuredProject.GetOutputDirectoryAsync();
+         var assemblyName = await configuredProject.GetAssemblyNameAsync();
+
          //return Task.CompletedTask;
       }
 
       public async Task<IReadOnlyList<IDebugLaunchSettings>> QueryDebugTargetsAsync(DebugLaunchOptions launchOptions, ILaunchProfile profile)
       {
-         var projectFolder = Path.GetDirectoryName(configuredProject.UnconfiguredProject.FullPath);
-         var outputDir = await GetOutputDirectoryAsync(configuredProject);
+         //await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-
-         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+         var optionsPageAccessor = await AsyncServiceProvider.GlobalProvider.GetServiceAsync<SOptionsPageAccessor, IOptionsPageAccessor>();
          var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
-         var launchSettings = CreateLaunchSettings(launchOptions, configurationAggregator);
+         var launchSettings = await CreateLaunchSettingsAsync(launchOptions, configurationAggregator);
 
          return new List<IDebugLaunchSettings>() { launchSettings};
       }
 
-      private DebugLaunchSettings CreateLaunchSettings(DebugLaunchOptions launchOptions, ConfigurationAggregator configurationAggregator)
+      private async Task<DebugLaunchSettings> CreateLaunchSettingsAsync(DebugLaunchOptions launchOptions, ConfigurationAggregator configurationAggregator)
       {
-         ThreadHelper.ThrowIfNotOnUIThread();
+         // must be executed on the UI thread
+         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
          var launchSettings = new DebugLaunchSettings(launchOptions)
          {
             LaunchOperation = DebugLaunchOperation.CreateProcess,
             Executable = "dotnet",
-            Options = AdapterLaunchConfiguration.Create(configurationAggregator),
+            Options = await AdapterLaunchConfiguration.CreateAsync(configurationAggregator, configuredProject),
             LaunchDebugEngineGuid = PackageConstants.EngineGuid,
             Project = configuredProject.UnconfiguredProject.Services.HostObject as IVsHierarchy
          };
@@ -90,14 +101,6 @@ namespace RemoteDebuggerLauncher
       public bool SupportsProfile(ILaunchProfile profile)
       {
          return profile.CommandName.Equals(PackageConstants.SecureShellRemoteLaunchCommandName);
-      }
-
-      private static Task<string> GetOutputDirectoryAsync(ConfiguredProject configuredProject)
-      {
-         var projectPropertiesProvider = configuredProject.Services.ProjectPropertiesProvider;
-
-         ThrowIf.NotPresent(projectPropertiesProvider);
-         return projectPropertiesProvider.GetCommonProperties().GetEvaluatedPropertyValueAsync("OutDir");
       }
    }
 }

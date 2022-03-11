@@ -47,7 +47,7 @@ namespace RemoteDebuggerLauncher
       /// </summary>
       /// <returns>A <see langword="string"/> holding the user name; an empty string if no name is configured.</returns>
       /// <remarks>
-      /// The following configuration provides are queried for a user name, first match wins
+      /// The following configuration provides are queried, first match wins
       /// - selected launch profile
       /// - Tools/Options settings
       /// </remarks>
@@ -78,7 +78,7 @@ namespace RemoteDebuggerLauncher
       /// </summary>
       /// <returns>A <see langword="string"/> holding the host name; an empty string if no name is configured.</returns>
       /// <remarks>
-      /// The following configuration provides are queried for a host name, first match wins
+      /// The following configuration provides are queried, first match wins
       /// - selected launch profile
       /// </remarks>
       public string QueryHostName()
@@ -101,7 +101,7 @@ namespace RemoteDebuggerLauncher
       /// </summary>
       /// <returns>A <see langword="string"/> holding the private key file path; an empty string if no key is configured.</returns>
       /// <remarks>
-      /// The following configuration provides are queried for a private key, first match wins
+      /// The following configuration provides are queried, first match wins
       /// - selected launch profile
       /// - Tools/Options settings
       /// </remarks>
@@ -123,7 +123,7 @@ namespace RemoteDebuggerLauncher
             return optionsPrivateKey;
          }
 
-         // No private key available
+         // No private key available, rely on defaults
          return string.Empty;
       }
 
@@ -132,7 +132,7 @@ namespace RemoteDebuggerLauncher
       /// </summary>
       /// <returns>A <see cref="AdapterProviderKind"/> instance.</returns>
       /// <remarks>
-      /// The following configuration provides are queried for a provider, first match wins
+      /// The following configuration provides are queried, first match wins
       /// - selected launch profile
       /// - Tools/Options settings
       /// </remarks>
@@ -168,75 +168,78 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <summary>
-      /// Queries the path where .NET 'dotnet' is installed on the remote device.
+      /// Queries the folder path where the .NET framework is installed on the remote device.
       /// </summary>
-      /// <returns>A <see langword="string"/> holding the path; an empty string not configured.</returns>
+      /// <returns>A <see langword="string"/> holding the path.</returns>
       /// <remarks>
-      /// The following configuration provides are queried for a path, first match wins
+      /// The following configuration provides are queried, first match wins
       /// - selected launch profile
       /// - Tools/Options settings
+      /// - Built-in defaults
       /// </remarks>
-      public string QueryDotNetInstallPath()
+      public string QueryDotNetInstallFolderPath()
       {
-         if (launchProfile.OtherSettings.TryGetValue(SecureShellRemoteLaunchProfile.dotNetInstallPathProperty, out var settingsValue))
+         if (launchProfile.OtherSettings.TryGetValue(SecureShellRemoteLaunchProfile.dotNetInstallFolderPathProperty, out var settingsValue))
          {
-            if (settingsValue is string profileDotNetInstallPath && !string.IsNullOrEmpty(profileDotNetInstallPath))
+            if (settingsValue is string profileDotNetInstallFolerPath && !string.IsNullOrEmpty(profileDotNetInstallFolerPath))
             {
                // Launch profile has path specified => use it
-               return profileDotNetInstallPath;
+               return profileDotNetInstallFolerPath;
             }
          }
 
-         var optionsDotNetInstallPath = optionsPageAccessor.QueryDotNetInstallPath();
-         if (!string.IsNullOrEmpty(optionsDotNetInstallPath))
+         var optionsDotNetInstallFolderPath = optionsPageAccessor.QueryDotNetInstallFolderPath();
+         if (!string.IsNullOrEmpty(optionsDotNetInstallFolderPath))
          {
             // Options has path specified => use it
-            return optionsDotNetInstallPath;
+            return optionsDotNetInstallFolderPath;
          }
 
-         // No path key available
-         return string.Empty;
+         // No path configured, relay on built-in defaults
+         return PackageConstants.OptionsDefaultValueDotNetInstallFolderPath;
       }
 
       /// <summary>
       /// Queries the path where the VS Code Debugger is installed on the remote device.
       /// </summary>
-      /// <returns>A <see langword="string"/> holding the path; an empty string not configured.</returns>
+      /// <returns>A <see langword="string"/> holding the path.</returns>
       /// <remarks>
-      /// The following configuration provides are queried for a path, first match wins
+      /// The following configuration provides are queried, first match wins
       /// - selected launch profile
       /// - Tools/Options settings
+      /// - Built-in defaults
       /// </remarks>
-      public string QueryDebuggerInstallPath()
+      public string QueryDebuggerInstallFolderPath()
       {
-         if (launchProfile.OtherSettings.TryGetValue(SecureShellRemoteLaunchProfile.debuggerInstallPathProperty, out var settingsValue))
+         if (launchProfile.OtherSettings.TryGetValue(SecureShellRemoteLaunchProfile.debuggerInstallFolderPathProperty, out var settingsValue))
          {
-            if (settingsValue is string profileDebuggerInstallPath && !string.IsNullOrEmpty(profileDebuggerInstallPath))
+            if (settingsValue is string profileDebuggerInstallFolderPath && !string.IsNullOrEmpty(profileDebuggerInstallFolderPath))
             {
                // Launch profile has path specified => use it
-               return profileDebuggerInstallPath;
+               return profileDebuggerInstallFolderPath;
             }
          }
 
-         var optionsDebuggerInstallPath = optionsPageAccessor.QueryDebuggerInstallPath();
-         if (!string.IsNullOrEmpty(optionsDebuggerInstallPath))
+         var optionsDebuggerInstallFolderPath = optionsPageAccessor.QueryDebuggerInstallFolderPath();
+         if (!string.IsNullOrEmpty(optionsDebuggerInstallFolderPath))
          {
             // Options has path specified => use it
-            return optionsDebuggerInstallPath;
+            return optionsDebuggerInstallFolderPath;
          }
 
-         // No path key available
-         return string.Empty;
+         // No path configured, relay on built-in defaults
+         return PackageConstants.OptionsDefaultValueDotNetInstallFolderPath;
       }
 
       /// <summary>
-      /// Queries the path where the VS Code Debugger is installed on the remote device.
+      /// Queries the path where the application gets deployed on the remote device.
       /// </summary>
-      /// <returns>A <see langword="string"/> holding the path; an empty string not configured.</returns>
+      /// <returns>A <see langword="string"/> holding the path.</returns>
       /// <remarks>
-      /// The following configuration provides are queried for a private key, first match wins
+      /// The following configuration provides are queried, first match wins
       /// - selected launch profile
       /// - Tools/Options settings
+      /// - Built-in defaults
       /// </remarks>
       public string QueryAppFolderPath()
       {
@@ -256,8 +259,8 @@ namespace RemoteDebuggerLauncher
             return optionsAppFolderPath;
          }
 
-         // No path key available
-         return string.Empty;
+         // No path configured, relay on built-in defaults
+         return PackageConstants.OptionsDefaultValueAppFolderPath;
       }
    }
 }

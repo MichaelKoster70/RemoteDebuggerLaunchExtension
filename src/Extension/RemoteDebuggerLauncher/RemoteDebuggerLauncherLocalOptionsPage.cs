@@ -20,6 +20,11 @@ namespace RemoteDebuggerLauncher
       [Category("Local Settings")]
       [DisplayName("PuTTY Installation Path")]
       [Description("The path where PuTTY is installed.")]
+      public AdapterProviderKind AdapterProvider { get; set; } = AdapterProviderKind.WindowsSSH;
+
+      [Category("Local Settings")]
+      [DisplayName("PuTTY Installation Path")]
+      [Description("The path where PuTTY is installed.")]
       [DefaultValue("")]
       public string PuttyInstallPath { get; set; } = String.Empty;
    }

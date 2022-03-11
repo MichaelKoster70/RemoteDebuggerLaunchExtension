@@ -7,6 +7,9 @@
 
 namespace RemoteDebuggerLauncher
 {
+   /// <summary>
+   /// Interface defining the VS options page accessor service.
+   /// </summary>
    internal interface IOptionsPageAccessor
    {
       string QueryUserName();
@@ -15,12 +18,19 @@ namespace RemoteDebuggerLauncher
 
       AdapterProviderKind QueryAdapterProvider();
 
-      string QueryDotNetInstallPath();
+      string QueryDotNetInstallFolderPath();
 
-      string QueryDebuggerInstallPath();
+      string QueryDebuggerInstallFolderPath();
 
       string QueryPuttyInstallPath();
 
       string QueryAppFolderPath();
+   }
+
+   /// <summary>
+   /// Defines the service type for the options page accessor service.
+   /// </summary>
+   internal interface SOptionsPageAccessor
+   {
    }
 }

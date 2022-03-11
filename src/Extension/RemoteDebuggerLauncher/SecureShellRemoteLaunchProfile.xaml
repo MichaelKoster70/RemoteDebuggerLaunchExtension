@@ -78,14 +78,14 @@
       </StringProperty.Metadata>
    </StringProperty>
 
-   <StringProperty Name="dotNetInstallPath"
-                   DisplayName=".NET install path"
-                   Description="The path where .NET binary 'dotnet' is installed on the target device."
+   <StringProperty Name="dotNetInstallFolderPath"
+                   DisplayName=".NET install folder path"
+                   Description="The folder path where the .NET framework is installed on the target device."
                    Subcategory="Remote Devices"/>
 
-   <StringProperty Name="debuggerInstallPath"
-                   DisplayName="Debugger install path"
-                   Description="The path where the VS code debugger binary is installed on the target device."
+   <StringProperty Name="debuggerInstallFolderPath"
+                   DisplayName="Debugger install folder path"
+                   Description="The folder path where the VS code debugger is installed on the target device."
                    Subcategory="Remote Devices"/>
 
    <StringProperty Name="appFolderPath"

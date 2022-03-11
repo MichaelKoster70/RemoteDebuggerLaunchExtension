@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
 using Microsoft.VisualStudio.Shell;
 using Newtonsoft.Json;
@@ -47,15 +48,22 @@ namespace RemoteDebuggerLauncher
          public Dictionary<string, JToken> ConfigurationProperties { get; } = new Dictionary<string, JToken>();
       }
 
-      public static string Create(ConfigurationAggregator configurationAggregator)
+      public static async Task<string> CreateAsync(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject)
       {
          ThrowIf.ArgumentNull(configurationAggregator, nameof(configurationAggregator));
+         ThrowIf.ArgumentNull(configuredProject, nameof(configuredProject));
 
          var provider = configurationAggregator.QueryAdapterProvider();
          var hostName = configurationAggregator.QueryHostName();
          var userName = configurationAggregator.QueryUserName();
          var privateKey = configurationAggregator.QueryPrivateKeyFilePath();
-         var vsdbgPath = "~/vsdbg/vsdbg";
+         var program = UnixPath.Combine(configurationAggregator.QueryDotNetInstallFolderPath(), PackageConstants.BinaryNameDotnet);
+         var vsdbgPath = UnixPath.Combine(configurationAggregator.QueryDebuggerInstallFolderPath(), PackageConstants.BinaryNameDebugger);
+
+         var appFolderPath = configurationAggregator.QueryAppFolderPath();
+         var assemblyFileName = await configuredProject.GetAssemblyFileNameAsync();
+
+         var assemblyPath = UnixPath.Combine(appFolderPath, assemblyFileName);
 
          string adapter = string.Empty;
          string adapterArgs = string.Empty;
@@ -76,10 +84,10 @@ namespace RemoteDebuggerLauncher
          {
             Adapter = adapter,
             AdapterArgs = adapterArgs,
-            Program = "/home/pi/.dotnet/dotnet",
+            Program = program,
             Args =
             {
-               "/home/pi/appManaged/HelloWorld.dll"
+               assemblyPath
             }
          };
 
