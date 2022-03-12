@@ -30,19 +30,19 @@ namespace RemoteDebuggerLauncher
       [Category("Remote Device")]
       [DisplayName(".NET install folder path")]
       [Description("The folder path where .NET framework is installed on the target device.")]
-      [DefaultValue(PackageConstants.OptionsNameDotNetInstallFolderPath)]
-      public string DotNetInstallFolderPath { get; set; } = PackageConstants.OptionsNameDotNetInstallFolderPath;
+      [DefaultValue(PackageConstants.Options.DefaultValueDotNetInstallFolderPath)]
+      public string DotNetInstallFolderPath { get; set; } = PackageConstants.Options.DefaultValueDotNetInstallFolderPath;
 
       [Category("Remote Device")]
-      [DisplayName("VS Code debugger install folderpath")]
+      [DisplayName("VS Code debugger install folder path")]
       [Description("The folder path where the VS code debugger is installed on the target device.")]
-      [DefaultValue(PackageConstants.OptionsDefaultValueDebuggerInstallFolderPath)]
-      public string DebuggerInstallFolderPath { get; set; } = PackageConstants.OptionsDefaultValueDebuggerInstallFolderPath;
+      [DefaultValue(PackageConstants.Options.DefaultValueDebuggerInstallFolderPath)]
+      public string DebuggerInstallFolderPath { get; set; } = PackageConstants.Options.DefaultValueDebuggerInstallFolderPath;
 
       [Category("Remote Device")]
       [DisplayName("App folder path")]
       [Description("The path on the target device where the application binaries will get deployed to.")]
-      [DefaultValue(PackageConstants.OptionsDefaultValueAppFolderPath)]
-      public string AppFolderPath { get; set; } = PackageConstants.OptionsDefaultValueAppFolderPath;
+      [DefaultValue(PackageConstants.Options.DefaultValueAppFolderPath)]
+      public string AppFolderPath { get; set; } = PackageConstants.Options.DefaultValueAppFolderPath;
    }
 }

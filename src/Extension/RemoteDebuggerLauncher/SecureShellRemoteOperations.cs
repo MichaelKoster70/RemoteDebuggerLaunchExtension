@@ -7,7 +7,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Management.Automation;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,12 +19,11 @@ namespace RemoteDebuggerLauncher
    /// <summary>
    /// Holds the high level operations performed on the remote device
    /// </summary>
-   internal class SecureShellRemoteOperations : IDisposable
+   internal class SecureShellRemoteOperations
    {
       private readonly ConfigurationAggregator configurationAggregator;
       private readonly SecureShellSession session;
       private readonly ILoggerService logger;
-      private bool disposedValue;
 
       /// <summary>
       /// Initializes a new instance of the <see cref="SecureShellRemoteOperations" /> class.
@@ -59,48 +61,149 @@ namespace RemoteDebuggerLauncher
       {
          try
          {
-            logger.WriteOutputDebugPane($"connecting to {session.Settings.UserName}@{ session.Settings.HostName}...");
+            logger.WriteLineOutputExtensionPane("--------------------------------------------------");
+            logger.WriteOutputExtensionPane($"Connecting to {session.Settings.UserName}@{ session.Settings.HostName}... ");
             await session.ExecuteSingleCommandAsync("hello echo").ConfigureAwait(true);
-            logger.WriteOutputDebugPane("OK\r\n");
+            logger.WriteLineOutputExtensionPane("OK");
          }
          catch (Exception ex)
          {
             // whatever exception is thrown indicates a problem
-            var message = $"Cannot connect to {session.Settings.UserName}@{ session.Settings.HostName} : {ex.Message}";
-            logger.WriteOutputDebugPane("FAILED\r\n");
-            throw new RemoteDebuggerLauncherException(message);
+            logger.WriteLineOutputExtensionPane($"FAILED: {ex.Message}");
+            throw new RemoteDebuggerLauncherException($"Cannot connect to {session.Settings.UserName}@{ session.Settings.HostName} : {ex.Message}");
          }
       }
 
-      public async Task<bool> TryInstallVsDbgAsync()
+      /// <summary>
+      /// Tries to install the VS Code assuming the target device has a direct internet connection.
+      /// </summary>
+      /// <returns>A <see cref="Tasl{Boolean}"/>representing the asynchronous operation: <c>true</c> if successful; else <c>false</c>.</returns>
+      public async Task<bool> TryInstallVsDbgOnlineAsync()
       {
-         logger.WriteOutputDebugPane($"connecting to {session.Settings.UserName}@{ session.Settings.HostName}...");
+         try
+         {
+            using (var commands = session.CreateCommandSession())
+            {
+               logger.WriteLineOutputExtensionPane("--------------------------------------------------");
+               logger.WriteLineOutputExtensionPane("Installing VS Code Debugger Online\r\n");
+
+               var debuggerInstallPath = configurationAggregator.QueryDebuggerInstallFolderPath();
+               var result = await commands.ExecuteCommandAsync($"curl -sSL {PackageConstants.Debugger.GetVsDbgShUrl} | sh /dev/stdin -v {PackageConstants.Debugger.Version} -l {debuggerInstallPath}");
+               logger.WriteOutputExtensionPane(result);
+            }
+         }
+         catch (SecureShellSessionException ex)
+         {
+            logger.WriteOutputExtensionPane($"FAILED to install debugger: {ex.Message})\r\n");
+            return false;
+         }
+
          return true;
       }
 
       /// <summary>
-      /// Releases unmanaged and - optionally - managed resources.
+      /// Tries to install the VS Code assuming the target device has no internet connection.
       /// </summary>
-      /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-      protected virtual void Dispose(bool disposing)
+      /// <returns>A <see cref="Task"/>representing the asynchronous operation.</returns>
+      /// <remarks>
+      /// The downloaded vsdbg version gets cached under %localappdata%\RemoteDebuggerLauncher\vsdbg\vs2022
+      /// </remarks>
+      public async Task TryInstallVsDbgOfflineAsync()
       {
-         if (!disposedValue)
+         try
          {
-            if (disposing)
+            logger.WriteLineOutputExtensionPane("--------------------------------------------------");
+            logger.WriteLineOutputExtensionPane("Installing VS Code Debugger Offline");
+
+            // Get the CPU architecture to determine which runtime ID to use, ignoring MacOS and Alpine based Linux when determining the needed runtime ID.
+            string runtimeId;
+            var cpuArchitecture = (await session.ExecuteSingleCommandAsync("uname -m").ConfigureAwait(true)).Trim('\n');
+            switch(cpuArchitecture)
             {
-               // dispose managed state (managed objects)
-               session?.Dispose();
+               case "armv7l":
+                  runtimeId = "linux-arm";
+                  break;
+               case "aarch64":
+                  runtimeId = "linux-arm64";
+                  break;
+               case "x86_64":
+                  runtimeId = "linux-x64";
+                  break;
+               default:
+                  throw new RemoteDebuggerLauncherException("Cannot install VS Code Debugger: unknown CPU architecture");
             }
 
-            // free unmanaged resources (unmanaged objects) and override finalizer
-            disposedValue = true;
+            // get the download cache folder
+            var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var downloadCachePath = Path.Combine(localAppData, PackageConstants.Debugger.DownloadCacheFolder, runtimeId);
+
+            logger.WriteOutputExtensionPane($"Downloading URL:{PackageConstants.Debugger.GetVsDbgPs1Url}, Version: {PackageConstants.Debugger.Version}, RuntimeID:{runtimeId}\r\n");
+
+            // Download the PS1 script to install the debugger
+            using (var httpClient = new HttpClient())
+            {
+               var response = await httpClient.GetAsync(PackageConstants.Debugger.GetVsDbgPs1Url);
+               response.EnsureSuccessStatusCode();
+               var installScript = await response.Content.ReadAsStringAsync();
+
+               using (var psHost = PowerShell.Create())
+               {
+                  psHost.AddScript(installScript)
+                     .AddParameter("Version", PackageConstants.Debugger.Version)
+                     .AddParameter("RuntimeID", runtimeId)
+                     .AddParameter("InstallPath", downloadCachePath);
+                  var result = psHost.Invoke();
+               }
+            }
+
+            var debuggerInstallPath = configurationAggregator.QueryDebuggerInstallFolderPath();
+
+            logger.WriteOutputExtensionPane("$Installing ");
+
+            using (var commandSession = session.CreateCommandSession())
+            {
+               // remove all files in the target folder, in case the
+               await commandSession.ExecuteCommandAsync($"[ -d {debuggerInstallPath} ] | rm -rf {debuggerInstallPath}/*");
+
+               // create the directory if it does not jet exist
+               await commandSession.ExecuteCommandAsync($"mkdir -p {debuggerInstallPath}");
+
+               // upload the files
+               await session.UploadFolderRecursiveAsync(downloadCachePath, debuggerInstallPath);
+
+               // adjust permissions
+               await commandSession.ExecuteCommandAsync($"chmod +x {debuggerInstallPath}/{PackageConstants.Debugger.BinaryName}");
+            }
+
+            logger.WriteLineOutputExtensionPane("DONE");
+
+         }
+         catch (SecureShellSessionException ex)
+         {
+            logger.WriteLineOutputExtensionPane($"FAILED to install debugger: {ex.Message}");
+            throw;
          }
       }
 
-      public void Dispose()
+      public async Task DeployAsync(string sourcePath, bool clean)
       {
-         Dispose(disposing: true);
-         GC.SuppressFinalize(this);
+         var targetPath = configurationAggregator.QueryAppFolderPath();
+
+         logger.WriteLineOutputExtensionPane("--------------------------------------------------");
+         logger.WriteLineOutputExtensionPane($"Deploying Source: {sourcePath}, Target: {targetPath}");
+
+         // Clean the remote target if requested
+         if (clean)
+         {
+            using (var commandSession = session.CreateCommandSession())
+            {
+               await commandSession.ExecuteCommandAsync($"[ -d {targetPath} ] | rm -rf {targetPath}/*").ConfigureAwait(true);
+               await commandSession.ExecuteCommandAsync($"mkdir -p {targetPath}").ConfigureAwait(true);
+            }
+         }
+
+         // copy files using SCP
+         await session.UploadFolderRecursiveAsync(sourcePath, targetPath);
       }
    }
 }

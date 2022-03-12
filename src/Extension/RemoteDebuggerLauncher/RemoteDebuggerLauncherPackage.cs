@@ -35,9 +35,9 @@ namespace RemoteDebuggerLauncher
    [ProvideService(typeof(SLoggerService), IsAsyncQueryable = true)]
    [InstalledProductRegistration("#110", "#112", Generated.AssemblyVersion.Version, IconResourceID = 400)]
    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-   [ProvideOptionPage(typeof(RemoteDebuggerLauncherDeviceOptionsPage), PackageConstants.OptionsCategory, PackageConstants.OptionsPageDevice, 0, 0, true)]
-   [ProvideOptionPage(typeof(RemoteDebuggerLauncherLocalOptionsPage), PackageConstants.OptionsCategory, PackageConstants.OptionsPageLocal, 0, 0, true)]
-   [ProvideProfile(typeof(RemoteDebuggerLauncherDeviceOptionsPage), PackageConstants.OptionsCategory, "My Settings", 106, 107, isToolsOptionPage: true, DescriptionResourceID = 108)]
+   [ProvideOptionPage(typeof(RemoteDebuggerLauncherDeviceOptionsPage), PackageConstants.Options.Category, PackageConstants.Options.PageDevice, 0, 0, true)]
+   [ProvideOptionPage(typeof(RemoteDebuggerLauncherLocalOptionsPage), PackageConstants.Options.Category, PackageConstants.Options.PageLocal, 0, 0, true)]
+   [ProvideProfile(typeof(RemoteDebuggerLauncherDeviceOptionsPage), PackageConstants.Options.Category, "My Settings", 106, 107, isToolsOptionPage: true, DescriptionResourceID = 108)]
    [Guid(RemoteDebuggerLauncherPackage.PackageGuidString)]
    public sealed class RemoteDebuggerLauncherPackage : AsyncPackage
    {

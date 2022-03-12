@@ -29,28 +29,44 @@ namespace RemoteDebuggerLauncher
          outputWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
       }
 
-      /// <summary>
-      /// Writes the supplied message to the VS debug output pane.
-      /// </summary>
-      /// <param name="message">The message to write.</param>
-      public void WriteOutputDebugPane(string message)
+      /// <inheritdoc />
+      public void WriteOutputDebugPane(string message, bool activate)
       {
          ThreadHelper.ThrowIfNotOnUIThread();
 
-         var pane = EnsurePane(VSConstants.OutputWindowPaneGuid.DebugPane_guid, true);
+         var pane = EnsurePane(VSConstants.OutputWindowPaneGuid.DebugPane_guid, "Debug", activate);
          pane.OutputStringThreadSafe(message);
       }
 
-      private IVsOutputWindowPane EnsurePane(Guid guid, bool activate)
+
+      /// <inheritdoc />
+      public void WriteOutputExtensionPane(string message, bool activate)
       {
          ThreadHelper.ThrowIfNotOnUIThread();
 
-         IVsOutputWindowPane pane;
+         var pane = EnsurePane(PackageConstants.OutputPaneGuid, PackageConstants.OutputPaneName, activate);
+         pane.OutputStringThreadSafe(message);
+      }
 
-         int result = outputWindow.GetPane(ref guid, out pane);
+      public void WriteLineOutputExtensionPane(string message, bool activate)
+      {
+         ThreadHelper.ThrowIfNotOnUIThread();
+
+         var pane = EnsurePane(PackageConstants.OutputPaneGuid, PackageConstants.OutputPaneName, activate);
+         pane.OutputStringThreadSafe(message + "\r\n");
+      }
+
+      private IVsOutputWindowPane EnsurePane(Guid guid, string name, bool activate)
+      {
+         ThreadHelper.ThrowIfNotOnUIThread();
+
+         int result = outputWindow.GetPane(ref guid, out IVsOutputWindowPane pane);
          if (result != VSConstants.S_OK)
          {
-            result = outputWindow.CreatePane(ref guid, "Debug", 1, 1);
+            result = outputWindow.CreatePane(ref guid, name, 1, 1);
+            ErrorHandler.ThrowOnFailure(result);
+
+            result = outputWindow.GetPane(ref guid, out pane);
             ErrorHandler.ThrowOnFailure(result);
          }
 

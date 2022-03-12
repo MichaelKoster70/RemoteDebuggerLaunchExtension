@@ -8,6 +8,7 @@
 using System;
 using System.Threading.Tasks;
 using Renci.SshNet;
+using Renci.SshNet.Common;
 
 namespace RemoteDebuggerLauncher
 {
@@ -32,21 +33,31 @@ namespace RemoteDebuggerLauncher
       /// <returns>A <see cref="Task{String}" /> holding the command response.</returns>
       public Task<string> ExecuteCommandAsync(string commandText)
       {
-         return Task.Run(() => ExecuteCommand(commandText));
-      }
-
-      /// <summary>
-      /// Executes a SSH command.
-      /// </summary>
-      /// <param name="commandText">The command text.</param>
-      /// <returns>A <see cref="String" /> holding the command response.</returns>
-      public string ExecuteCommand(string commandText)
-      {
-         EnsureConnected();
-         using (var command = client.RunCommand(commandText))
+         ThrowIf.ArgumentNullOrEmpty(commandText, nameof(commandText));
+         return Task.Run(() =>
          {
-            return command.Result;
-         }
+            EnsureConnected();
+            try
+            {
+               using (var command = client.RunCommand(commandText))
+               {
+                  if (command.ExitStatus != 0)
+                  {
+                     throw new SecureShellSessionException(command.Error, command.ExitStatus);
+                  }
+
+                  return command.Result;
+               }
+            }
+            catch (SshException e)
+            {
+               throw new SecureShellSessionException(e.Message, e);
+            }
+            catch (InvalidOperationException e)
+            {
+               throw new SecureShellSessionException(e.Message, e);
+            }
+         });
       }
 
       private void EnsureConnected()

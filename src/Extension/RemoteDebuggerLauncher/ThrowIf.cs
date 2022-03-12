@@ -46,5 +46,21 @@ namespace RemoteDebuggerLauncher
             throw new ArgumentNullException(name);
          }
       }
+
+      /// <summary>
+      /// Throws an <see cref="ArgumentException" /> if the <paramref name="value" /> is null or an empty string.
+      /// </summary>
+      /// <typeparam name="T"></typeparam>
+      /// <param name="value">The argument value to check.</param>
+      /// <param name="name">The parameter name to report.</param>
+      /// <exception cref="ArgumentException">If <paramref name="value" /> is null.</exception>
+      [ContractArgumentValidator]
+      public static void ArgumentNullOrEmpty([ValidatedNotNull] string value, string name)
+      {
+         if (string.IsNullOrEmpty(value))
+         {
+            throw new ArgumentException(name);
+         }
+      }
    }
 }

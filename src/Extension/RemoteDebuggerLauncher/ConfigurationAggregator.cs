@@ -196,7 +196,7 @@ namespace RemoteDebuggerLauncher
          }
 
          // No path configured, relay on built-in defaults
-         return PackageConstants.OptionsDefaultValueDotNetInstallFolderPath;
+         return PackageConstants.Options.DefaultValueDotNetInstallFolderPath;
       }
 
       /// <summary>
@@ -228,7 +228,7 @@ namespace RemoteDebuggerLauncher
          }
 
          // No path configured, relay on built-in defaults
-         return PackageConstants.OptionsDefaultValueDotNetInstallFolderPath;
+         return PackageConstants.Options.DefaultValueDotNetInstallFolderPath;
       }
 
       /// <summary>
@@ -260,7 +260,30 @@ namespace RemoteDebuggerLauncher
          }
 
          // No path configured, relay on built-in defaults
-         return PackageConstants.OptionsDefaultValueAppFolderPath;
+         return PackageConstants.Options.DefaultValueAppFolderPath;
+      }
+
+      /// <summary>
+      /// Queries the command line arguments to be passed to the starting executable.
+      /// </summary>
+      /// <returns>A <see langword="string"/> holding the arguments.</returns>
+      /// <remarks>
+      /// The following configuration provides are queried, first match wins
+      /// - selected launch profile
+      /// </remarks>
+      public string QueryCommandLineArguments()
+      {
+         if (launchProfile.OtherSettings.TryGetValue(SecureShellRemoteLaunchProfile.commandLineArgsProperty, out var settingsValue))
+         {
+            if (settingsValue is string profileCommandLineArgs && !string.IsNullOrEmpty(profileCommandLineArgs))
+            {
+               // Launch profile has args specified => use it
+               return profileCommandLineArgs;
+            }
+         }
+
+         // No args configured
+         return string.Empty;
       }
    }
 }

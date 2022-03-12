@@ -6,19 +6,15 @@
 // ----------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using Renci.SshNet;
+using Renci.SshNet.Common;
 
 namespace RemoteDebuggerLauncher
 {
-   internal class SecureShellSession : IDisposable
+   internal class SecureShellSession
    {
-      private bool disposedValue;
-
-      private SshClient sshClient; // == null
       private readonly SecureShellSessionSettings settings;
 
       internal SecureShellSession(SecureShellSessionSettings settings)
@@ -53,25 +49,58 @@ namespace RemoteDebuggerLauncher
       /// <returns>A <see cref="Task{String}"/> holding the command response.</returns>
       public Task<string> ExecuteSingleCommandAsync(string commandText)
       {
-         return Task.Run(() => ExecuteSingleCommand(commandText));
+         return Task.Run(() =>
+         {
+            try
+            {
+               using (var client = CreateSshClient())
+               {
+                  client.ConnectionInfo.Timeout = TimeSpan.FromSeconds(5);
+                  client.Connect();
+                  using (var command = client.RunCommand(commandText))
+                  {
+                     return command.Result;
+                  }
+               }
+            }
+            catch (SshException e)
+            {
+               throw new SecureShellSessionException(e.Message, e);
+            }
+            catch (InvalidOperationException e)
+            {
+               throw new SecureShellSessionException(e.Message, e);
+            }
+         });
       }
 
-      /// <summary>
-      /// Executes single SSH command.
-      /// </summary>
-      /// <param name="commandText">The command text.</param>
-      /// <returns>A <see cref="String"/> holding the command response.</returns>
-      public string ExecuteSingleCommand(string commandText)
+      public Task UploadFolderRecursiveAsync (string localSourcePath,  string remoteTargetPath)
       {
-         using (var client = CreateSshClient())
+         ThrowIf.ArgumentNullOrEmpty(localSourcePath, nameof(localSourcePath));
+         ThrowIf.ArgumentNullOrEmpty(remoteTargetPath, nameof(remoteTargetPath));
+
+         return Task.Run(() =>
          {
-            client.ConnectionInfo.Timeout = TimeSpan.FromSeconds(5);
-            client.Connect();
-            using (var command = client.RunCommand(commandText))
+            try
             {
-               return command.Result;
-            }            
-         }
+               var sourcePathInfo = new DirectoryInfo(localSourcePath);
+               using (var client = CreateScpClient())
+               {
+                  // for the moment, we assume that the path names does not have any character that have special meaning for a Linux host
+                  client.RemotePathTransformation = RemotePathTransformation.None;
+                  client.Connect();
+                  client.Upload(sourcePathInfo, remoteTargetPath);
+               }
+            }
+            catch (SshException e)
+            {
+               throw new SecureShellSessionException(e.Message, e);
+            }
+            catch (InvalidOperationException e)
+            {
+               throw new SecureShellSessionException(e.Message, e);
+            }
+         });
       }
 
       public ISecureShellSessionCommanding CreateCommandSession()
@@ -95,33 +124,18 @@ namespace RemoteDebuggerLauncher
          }
       }
 
-      /// <summary>
-      /// Releases unmanaged and - optionally - managed resources.
-      /// </summary>
-      /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-      protected virtual void Dispose(bool disposing)
+      private ScpClient CreateScpClient()
       {
-         if (!disposedValue)
+         switch (settings.Authentication)
          {
-            if (disposing)
-            {
-               // dispose managed state (managed objects)
-               sshClient?.Dispose();
-               sshClient = null;
-            }
-
-            // free unmanaged resources (unmanaged objects) and override finalizer
-            disposedValue = true;
+            case AuthenticationKind.Password:
+               return new ScpClient(settings.HostName, settings.UserName, "");
+            case AuthenticationKind.PrivateKey:
+               var key = new PrivateKeyFile(settings.PrivateKeyFile);
+               return new ScpClient(settings.HostName, settings.UserName, key);
+            default:
+               throw new InvalidOperationException("unsupported authentication");
          }
-      }
-
-      /// <summary>
-      /// Disposes this instance.
-      /// </summary>
-      public void Dispose()
-      {
-         Dispose(disposing: true);
-         GC.SuppressFinalize(this);
       }
    }
 }
