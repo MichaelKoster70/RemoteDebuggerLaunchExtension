@@ -52,10 +52,13 @@
       <EnumValue Name="privateKey" DisplayName="Private Key"/>
    </EnumProperty>
 
-   <StringProperty Name="password"
+   <!--<StringProperty Name="password"
                    DisplayName="Password"
                    Description="The password to be used for connecting to the target device."
                    Subcategory="Remote Devices">
+      <StringProperty.DataSource>
+         <DataSource PersistedName="password" Persistence="LaunchProfileWithInterception" HasConfigurationCondition="False" />
+      </StringProperty.DataSource>
       <StringProperty.ValueEditors>
          <ValueEditor EditorType="PasswordString" />
       </StringProperty.ValueEditors>
@@ -64,7 +67,7 @@
             <NameValuePair.Value>(eq "Password" (unevaluated "SecureShellRemoteLaunch" "authentication"))</NameValuePair.Value>
          </NameValuePair>
       </StringProperty.Metadata>
-   </StringProperty>
+   </StringProperty>-->
 
    <StringProperty Name="privateKey"
                    DisplayName="Private key"

@@ -6,23 +6,26 @@
 // ----------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EnvDTE;
-using EnvDTE80;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
 namespace RemoteDebuggerLauncher
 {
+   /// <summary>
+   /// Logging Service implementation writing to a custom Visual Studio Output Window
+   /// Implements the <see cref="RemoteDebuggerLauncher.SLoggerService" />
+   /// Implements the <see cref="RemoteDebuggerLauncher.ILoggerService" />
+   /// </summary>
+   /// <seealso cref="RemoteDebuggerLauncher.SLoggerService" />
+   /// <seealso cref="RemoteDebuggerLauncher.ILoggerService" />
    internal class LoggerService : SLoggerService, ILoggerService
    {
-      //private DTE2 dte;
       private readonly IVsOutputWindow outputWindow;
 
+      /// <summary>
+      /// Initializes a new instance of the <see cref="LoggerService"/> class.
+      /// </summary>
       public LoggerService()
       {
          ThreadHelper.ThrowIfNotOnUIThread();

@@ -6,16 +6,12 @@
 // ----------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
 
 namespace RemoteDebuggerLauncher
 {
-   internal class RemoteDebuggerLauncherDeviceOptionsPage : DialogPage
+   internal class DeviceOptionsPage : DialogPage
    {
       [Category("Remote Device")]
       [DisplayName("User name")]

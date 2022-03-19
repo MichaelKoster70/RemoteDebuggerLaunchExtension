@@ -62,27 +62,28 @@
     <Compile Include="AdapterLaunchConfiguration.cs" />
     <Compile Include="AdapterProviderKind.cs" />
     <Compile Include="AuthenticationKind.cs" />
+    <Compile Include="Commands\InstallDebugger.cs" />
+    <Compile Include="Commands\InstallDotnet.cs" />
+    <Compile Include="LaunchProfile\PasswordPropertyValueProvider.cs" />
     <Compile Include="SecureShellSessionCommanding.cs" />
-    <Compile Include="ILoggerService.cs" />
-    <Compile Include="IOptionsPageAccessor.cs" />
+    <Compile Include="Services\ILoggerService.cs" />
+    <Compile Include="Services\IOptionsPageAccessor.cs" />
     <Compile Include="ISecureShellSessionCommanding.cs" />
-    <Compile Include="LoggerService.cs" />
-    <Compile Include="OptionsPageAccessorService.cs" />
+    <Compile Include="Services\LoggerService.cs" />
+    <Compile Include="Services\OptionsPageAccessorService.cs" />
     <Compile Include="RemoteDebuggerLauncherException.cs" />
     <Compile Include="SecureShellRemoteOperations.cs" />
     <Compile Include="SecureShellSessionException.cs" />
     <Compile Include="UnixPath.cs" />
     <Compile Include="ConfigurationAggregator.cs" />
     <Compile Include="ProjectSystemConfiguredProjectExtensions.cs" />
-    <Compile Include="RemoteDebuggerLauncherLocalOptionsPage.cs">
+    <Compile Include="Options\LocalOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="RemoteDebuggerLauncherDeviceOptionsPage.cs">
+    <Compile Include="Options\DeviceOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SecureShellSessionSettings.cs" />
-    <Compile Include="LaunchProfileExtensions.cs" />
-    <Compile Include="PackageHelper.cs" />
     <Compile Include="SecureShellSession.cs" />
     <Compile Include="ThrowIf.cs" />
     <Compile Include="PackageConstants.cs" />
@@ -129,7 +130,12 @@
     <PackageReference Include="Microsoft.VisualStudio.ProjectSystem">
       <Version>17.0.1313-pre</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Managed.VS" Version="2.0.6142705" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Managed">
+      <Version>2.0.6142705</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Managed.VS">
+      <Version>2.0.6142705</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK" Version="17.0.1313-pre" />
     <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK.Tools" Version="17.0.1313-pre" />
     <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.1.32210.191" ExcludeAssets="runtime">
@@ -154,6 +160,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <VSCTCompile Include="RemoteDebuggerLauncherPackage.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+    </VSCTCompile>
+    <Content Include="Resources\InstallDebugger.png" />
+    <Content Include="Resources\InstallDotnet.png" />
     <Content Include="Resources\VSPackage.ico" />
   </ItemGroup>
   <ItemGroup>

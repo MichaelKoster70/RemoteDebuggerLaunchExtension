@@ -6,24 +6,20 @@
 // ----------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
 
 namespace RemoteDebuggerLauncher
 {
-   internal class RemoteDebuggerLauncherLocalOptionsPage : DialogPage
+   internal class LocalOptionsPage : DialogPage
    {
       [Category("Local Settings")]
-      [DisplayName("PuTTY Installation Path")]
-      [Description("The path where PuTTY is installed.")]
+      [DisplayName("Adapter provider")]
+      [Description("The remote connectivity provider.")]
       public AdapterProviderKind AdapterProvider { get; set; } = AdapterProviderKind.WindowsSSH;
 
       [Category("Local Settings")]
-      [DisplayName("PuTTY Installation Path")]
+      [DisplayName("PuTTY installation path")]
       [Description("The path where PuTTY is installed.")]
       [DefaultValue("")]
       public string PuttyInstallPath { get; set; } = String.Empty;

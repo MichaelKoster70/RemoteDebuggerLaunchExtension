@@ -5,27 +5,22 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Composition;
-using System.IO;
 using System.Threading.Tasks;
-using EnvDTE80;
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
-using Microsoft.VisualStudio.ProjectSystem.Properties;
 using Microsoft.VisualStudio.ProjectSystem.VS.Debug;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Threading;
 
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// This class provides a
-   /// Implements the <see cref="Microsoft.VisualStudio.ProjectSystem.VS.Debug.IDebugProfileLaunchTargetsProvider" />
+   /// This class provides a custom Launch Profile that deploys and launches the VS Code debugger on a Linux based remote device.
+   /// Implements the <see cref=IDebugProfileLaunchTargetsProvider" />
    /// </summary>
-   /// <seealso cref="Microsoft.VisualStudio.ProjectSystem.VS.Debug.IDebugProfileLaunchTargetsProvider" />
+   /// <seealso cref="IDebugProfileLaunchTargetsProvider" />
    [Export(typeof(IDebugProfileLaunchTargetsProvider))]
    [AppliesTo(PackageConstants.AppliesToLaunchProfiles)]
    [Order(50)]
@@ -41,6 +36,7 @@ namespace RemoteDebuggerLauncher
 
       public Task OnAfterLaunchAsync(DebugLaunchOptions launchOptions, ILaunchProfile profile)
       {
+         // no actions needed
          return Task.CompletedTask;
       }
 
@@ -70,7 +66,6 @@ namespace RemoteDebuggerLauncher
 
       public async Task<IReadOnlyList<IDebugLaunchSettings>> QueryDebugTargetsAsync(DebugLaunchOptions launchOptions, ILaunchProfile profile)
       {
-         //await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
          var optionsPageAccessor = await AsyncServiceProvider.GlobalProvider.GetServiceAsync<SOptionsPageAccessor, IOptionsPageAccessor>();
          var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
          var launchSettings = await CreateLaunchSettingsAsync(launchOptions, configurationAggregator);

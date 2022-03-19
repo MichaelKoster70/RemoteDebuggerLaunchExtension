@@ -35,10 +35,11 @@ namespace RemoteDebuggerLauncher
    [ProvideService(typeof(SLoggerService), IsAsyncQueryable = true)]
    [InstalledProductRegistration("#110", "#112", Generated.AssemblyVersion.Version, IconResourceID = 400)]
    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-   [ProvideOptionPage(typeof(RemoteDebuggerLauncherDeviceOptionsPage), PackageConstants.Options.Category, PackageConstants.Options.PageDevice, 0, 0, true)]
-   [ProvideOptionPage(typeof(RemoteDebuggerLauncherLocalOptionsPage), PackageConstants.Options.Category, PackageConstants.Options.PageLocal, 0, 0, true)]
-   [ProvideProfile(typeof(RemoteDebuggerLauncherDeviceOptionsPage), PackageConstants.Options.Category, "My Settings", 106, 107, isToolsOptionPage: true, DescriptionResourceID = 108)]
+   [ProvideOptionPage(typeof(DeviceOptionsPage), PackageConstants.Options.Category, PackageConstants.Options.PageDevice, 0, 0, true)]
+   [ProvideOptionPage(typeof(LocalOptionsPage), PackageConstants.Options.Category, PackageConstants.Options.PageLocal, 0, 0, true)]
+   [ProvideProfile(typeof(DeviceOptionsPage), PackageConstants.Options.Category, "My Settings", 106, 107, isToolsOptionPage: true, DescriptionResourceID = 108)]
    [Guid(RemoteDebuggerLauncherPackage.PackageGuidString)]
+   [ProvideMenuResource("Menus.ctmenu", 1)]
    public sealed class RemoteDebuggerLauncherPackage : AsyncPackage
    {
       /// <summary>RemoteDebuggerLauncherPackage GUID string.</summary>
@@ -62,10 +63,12 @@ namespace RemoteDebuggerLauncher
          // When initialized asynchronously, the current thread may be a background thread at this point.
          // Do any initialization that requires the UI thread after switching to the UI thread.
          await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+         await InstallDebugger.InitializeAsync(this);
+         await InstallDotnet.InitializeAsync(this);
       }
       #endregion
 
-      #region private Methods
+      #region Private Methods
       private  Task<object> CreateServiceAsync(IAsyncServiceContainer container, CancellationToken cancellationToken,Type serviceType)
       {
          if (typeof(SOptionsPageAccessor) == serviceType)

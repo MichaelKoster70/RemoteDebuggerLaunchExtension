@@ -56,6 +56,10 @@ namespace RemoteDebuggerLauncher
          {
             /// <summary>Name the connection adapter when using Windows SSH.</summary>
             public const string AdapterNameWindowsSSH = "ssh.exe";
+
+            /// <summary>Name the connection adapter when using PuTTY.</summary>
+            public const string AdapterNamePuTTY = "plink.exe";
+
          }
       }
 

@@ -19,7 +19,7 @@ using Newtonsoft.Json.Linq;
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// Class AdapterLaunchConfiguration.
+   /// Utility class to generate the JSON object required to configure the VS Code Debugger Adapter.
    /// </summary>
    /// <remarks>
    /// The launch.json configuration property described in https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md behave as followed
@@ -34,7 +34,7 @@ namespace RemoteDebuggerLauncher
          public string Version => "0.2.0";
 
          [JsonProperty("name")]
-         public string Name => ".NET Core Launch - Framework Dependant";
+         public string Name { get; set; }
 
          [JsonProperty("request")]
          public string Request => "launch";
@@ -48,18 +48,20 @@ namespace RemoteDebuggerLauncher
          [JsonProperty("$adapterArgs")]
          public string AdapterArgs { get; set; }
 
-         /// <summary>The program to debug</summary>
+         /// <summary>The program to debug.</summary>
          /// <remarks>Must be the path to dotnet(.exe) for framework dependant programs</remarks>
          [JsonProperty("program")]
          public string Program { get; set; }
 
-         /// <summary>Command line arguments, the first being the .NET assembly to launch</summary>
+         /// <summary>Command line arguments, the first being the .NET assembly to launch.</summary>
          [JsonProperty("args")]
          public List<string> Args { get; } = new List<string>();
 
          [JsonProperty("cwd")]
          public string CurrentWorkingDirectory { get; set; }
 
+         /// <summary>The VS Code console option.</summary>
+         /// <remarks>Have no effect in a remote debugger scenario.</remarks>
          [JsonProperty("console")]
          public string Console => "internalConsole";
 
@@ -73,20 +75,52 @@ namespace RemoteDebuggerLauncher
          ThrowIf.ArgumentNull(configurationAggregator, nameof(configurationAggregator));
          ThrowIf.ArgumentNull(configuredProject, nameof(configuredProject));
 
+         var program = UnixPath.Combine(configurationAggregator.QueryDotNetInstallFolderPath(), PackageConstants.Dotnet.BinaryName);
+         var appFolderPath = configurationAggregator.QueryAppFolderPath();
+         var assemblyFileName = await configuredProject.GetAssemblyFileNameAsync();
+
+         var config = CreateAndSetAdapter(configurationAggregator);
+         config.Name = ".NET Core Launch - Framework dependant";
+         config.Program = program;
+         config.Args.Add($"./{assemblyFileName}");
+         config.CurrentWorkingDirectory = appFolderPath;
+         config.AppendCommandLineArguments(configurationAggregator);
+
+         return JsonConvert.SerializeObject(config);
+      }
+
+      public static async Task<string> CreateSelfContainedAsync(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject)
+      {
+         ThrowIf.ArgumentNull(configurationAggregator, nameof(configurationAggregator));
+         ThrowIf.ArgumentNull(configuredProject, nameof(configuredProject));
+
+         var program = UnixPath.Combine(configurationAggregator.QueryDotNetInstallFolderPath(), PackageConstants.Dotnet.BinaryName);
+         var appFolderPath = configurationAggregator.QueryAppFolderPath();
+         var assemblyFileName = await configuredProject.GetAssemblyFileNameAsync();
+
+         var config = CreateAndSetAdapter(configurationAggregator);
+         config.Name = ".NET Core Launch - Self contained";
+         config.Program = program;
+         config.Args.Add($"./{assemblyFileName}");
+         config.CurrentWorkingDirectory = appFolderPath;
+         config.AppendCommandLineArguments(configurationAggregator);
+
+         return JsonConvert.SerializeObject(config);
+      }
+
+      private static LaunchConfiguration CreateAndSetAdapter(ConfigurationAggregator configurationAggregator)
+      {
+         // Collect the configurable options
          var provider = configurationAggregator.QueryAdapterProvider();
          var hostName = configurationAggregator.QueryHostName();
          var userName = configurationAggregator.QueryUserName();
          var privateKey = configurationAggregator.QueryPrivateKeyFilePath();
-         var program = UnixPath.Combine(configurationAggregator.QueryDotNetInstallFolderPath(), PackageConstants.Dotnet.BinaryName);
          var vsdbgPath = UnixPath.Combine(configurationAggregator.QueryDebuggerInstallFolderPath(), PackageConstants.Debugger.BinaryName);
-         var commandLineArgs = configurationAggregator.QueryCommandLineArguments();
 
-         var appFolderPath = configurationAggregator.QueryAppFolderPath();
-         var assemblyFileName = await configuredProject.GetAssemblyFileNameAsync();
-
+         // assemble the adapter and adapterArg values
          string adapter = string.Empty;
          string adapterArgs = string.Empty;
-         switch(provider)
+         switch (provider)
          {
             case AdapterProviderKind.WindowsSSH:
                adapter = PackageConstants.DebugLaunchSettings.Options.AdapterNameWindowsSSH;
@@ -95,7 +129,9 @@ namespace RemoteDebuggerLauncher
                break;
 
             case AdapterProviderKind.PuTTY:
-               adapter = PackageConstants.DebugLaunchSettings.Options.AdapterNameWindowsSSH;
+               adapter = PackageConstants.DebugLaunchSettings.Options.AdapterNamePuTTY;
+               adapterArgs += string.IsNullOrEmpty(privateKey) ? $"-i {privateKey}" : string.Empty;
+               adapterArgs += $"{userName}@{hostName} {vsdbgPath} --interpreter=vscode";
                break;
          }
 
@@ -103,21 +139,20 @@ namespace RemoteDebuggerLauncher
          {
             Adapter = adapter,
             AdapterArgs = adapterArgs,
-            Program = program,
-            Args =
-            {
-               $"./{assemblyFileName}"
-            },
-            CurrentWorkingDirectory = appFolderPath,
          };
+
+         return config;
+      }
+
+      private static void AppendCommandLineArguments(this LaunchConfiguration config, ConfigurationAggregator configurationAggregator)
+      {
+         var commandLineArgs = configurationAggregator.QueryCommandLineArguments();
 
          if (!String.IsNullOrEmpty(commandLineArgs))
          {
             var args = commandLineArgs.Split(' ');
             Array.ForEach(args, (arg) => config.Args.Add(arg));
          }
-
-         return JsonConvert.SerializeObject(config);
       }
    }
 }

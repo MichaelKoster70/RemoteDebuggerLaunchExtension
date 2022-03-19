@@ -128,6 +128,20 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <summary>
+      /// Queries the password to be used to establish a connection to the remote device.
+      /// </summary>
+      /// <returns>A <see langword="string"/> holding the password; an empty string if no key is configured.</returns>
+      /// <remarks>
+      /// The following configuration provides are queried, first match wins
+      /// - selected launch profile
+      /// </remarks>
+      public string QueryPassword()
+      {
+         //NOT IMPLEMEN
+         return "";
+      }
+
+      /// <summary>
       /// Queries the adapter provider to be used to establish a connection to the remote device.
       /// </summary>
       /// <returns>A <see cref="AdapterProviderKind"/> instance.</returns>
@@ -135,6 +149,7 @@ namespace RemoteDebuggerLauncher
       /// The following configuration provides are queried, first match wins
       /// - selected launch profile
       /// - Tools/Options settings
+      /// - built-in default
       /// </remarks>
       public AdapterProviderKind QueryAdapterProvider()
       {
