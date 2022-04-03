@@ -288,13 +288,11 @@ namespace RemoteDebuggerLauncher
       /// </remarks>
       public string QueryCommandLineArguments()
       {
-         if (launchProfile.OtherSettings.TryGetValue(SecureShellRemoteLaunchProfile.commandLineArgsProperty, out var settingsValue))
+         var profileCommandLineArgs = launchProfile.CommandLineArgs;
+
+         if (!string.IsNullOrEmpty(profileCommandLineArgs))
          {
-            if (settingsValue is string profileCommandLineArgs && !string.IsNullOrEmpty(profileCommandLineArgs))
-            {
-               // Launch profile has args specified => use it
-               return profileCommandLineArgs;
-            }
+            return profileCommandLineArgs;
          }
 
          // No args configured

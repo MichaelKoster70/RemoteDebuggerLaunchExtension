@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.ProjectSystem.Properties;
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// Holds ProjectSystem Rule Exports
+   /// Holds ProjectSystem Rule Exports for the custom launch profile
    /// </summary>
    public static class SecureShellRemoteLaunchRuleExporter
    {
@@ -19,7 +19,7 @@ namespace RemoteDebuggerLauncher
           xamlResourceAssemblyName: Generated.AssemblyVersion.Name + ", Version=" + Generated.AssemblyVersion.Version + ", Culture=Neutral, PublicKeyToken=cdf80caaf8a1ba3e",
           xamlResourceStreamName: "XamlRuleToCode:SecureShellRemoteLaunchProfile.xaml",
           context: PropertyPageContexts.Project)]
-      [AppliesTo(PackageConstants.AppliesToLaunchProfiles)]
+      [AppliesTo(PackageConstants.LaunchProfile.AppliesTo)]
       [Order(orderPrecedence: 0)]
 #pragma warning disable CS0649 // unused, required for the attribute
       public static int MyLaunchProfileRule;

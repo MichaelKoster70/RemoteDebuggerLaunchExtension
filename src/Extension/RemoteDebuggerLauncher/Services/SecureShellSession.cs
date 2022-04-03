@@ -90,6 +90,7 @@ namespace RemoteDebuggerLauncher
                   client.RemotePathTransformation = RemotePathTransformation.None;
                   client.Connect();
                   client.Upload(sourcePathInfo, remoteTargetPath);
+                  client.Uploading += Client_Uploading;
                }
             }
             catch (SshException e)
@@ -101,6 +102,10 @@ namespace RemoteDebuggerLauncher
                throw new SecureShellSessionException(e.Message, e);
             }
          });
+      }
+
+      private void Client_Uploading(object sender, ScpUploadEventArgs e)
+      {
       }
 
       public ISecureShellSessionCommanding CreateCommandSession()

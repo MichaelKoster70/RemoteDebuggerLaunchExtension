@@ -5,15 +5,8 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-namespace RemoteDebuggerLauncher
-{
-   /// <summary>The supported SSH authentication kinds</summary>
-   internal enum AuthenticationKind
-   {
-      /// <summary>Password based authentication.</summary>
-      Password,
+using System.Reflection;
 
-      /// <summary>Private key based authentication.</summary>
-      PrivateKey,
-   }
-}
+// General Information specific for this assembly
+[assembly: AssemblyTitle("Remote Debugger Launcher UI")]
+[assembly: AssemblyDescription("Remote Debugger Launcher VS Extension for .NET Projects UI elements")]

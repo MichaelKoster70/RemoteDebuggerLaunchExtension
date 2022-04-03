@@ -22,7 +22,7 @@ namespace RemoteDebuggerLauncher
    /// </summary>
    /// <seealso cref="IDebugProfileLaunchTargetsProvider" />
    [Export(typeof(IDebugProfileLaunchTargetsProvider))]
-   [AppliesTo(PackageConstants.AppliesToLaunchProfiles)]
+   [AppliesTo(PackageConstants.LaunchProfile.AppliesTo + " + CPS")]
    [Order(50)]
    internal class SecureShellRemoteLaunchTargetsProvider : IDebugProfileLaunchTargetsProvider
    {
@@ -61,7 +61,7 @@ namespace RemoteDebuggerLauncher
 
          // Step 3: Deploy application to target folder
          var outputPath = await configuredProject.GetOutputDirectoryPathAsync();
-         await remoteOperations.DeployAsync(outputPath, true);
+         await remoteOperations.DeployRemoteFolderAsync(outputPath, true);
       }
 
       public async Task<IReadOnlyList<IDebugLaunchSettings>> QueryDebugTargetsAsync(DebugLaunchOptions launchOptions, ILaunchProfile profile)
@@ -75,6 +75,8 @@ namespace RemoteDebuggerLauncher
 
       private async Task<DebugLaunchSettings> CreateLaunchSettingsAsync(DebugLaunchOptions launchOptions, ConfigurationAggregator configurationAggregator)
       {
+         var loggerService = await ServiceProvider.GetGlobalServiceAsync<SLoggerService, ILoggerService>();
+
          // must be executed on the UI thread
          await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
@@ -82,7 +84,7 @@ namespace RemoteDebuggerLauncher
          {
             LaunchOperation = DebugLaunchOperation.CreateProcess,
             Executable = "dotnet",
-            Options = await AdapterLaunchConfiguration.CreateFrameworkDependantAsync(configurationAggregator, configuredProject),
+            Options = await AdapterLaunchConfiguration.CreateFrameworkDependantAsync(configurationAggregator, configuredProject, loggerService),
             LaunchDebugEngineGuid = PackageConstants.DebugLaunchSettings.EngineGuid,
             Project = configuredProject.UnconfiguredProject.Services.HostObject as IVsHierarchy
          };

@@ -36,8 +36,9 @@
          group as the part of a menu contained between two lines. The parent of a group
          must be a menu. -->
     <Menus>
-      <Menu guid="guidRemoteDebuggerLauncherPackageCmdSet" id="menuidToolsItem" type="Menu">
-         <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidToolsItem" />
+      <Menu guid="guidRemoteDebuggerLauncherPackageCmdSet" id="menuidToolsItem" priority="0x0100" type="Menu">
+        <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidToolsItem" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <ButtonText>Remote Debugger Launcher</ButtonText>
         </Strings>
@@ -66,12 +67,6 @@
               <CommandFlag>DefaultInvisible</CommandFlag>
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node /> -->
-       <Button guid="guidRemoteDebuggerLauncherPackageCmdSet" id="menuidToolsItem2" priority="0x0100" type="MenuButton">
-        <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidCommands" />
-        <Strings>
-          <ButtonText>FOOr</ButtonText>
-        </Strings>
-      </Button>
         <Button guid="guidRemoteDebuggerLauncherPackageCmdSet" id="cmdidInstallDebugger" priority="0x0100" type="Button">
         <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidCommands" />
         <Icon guid="guidImages" id="bmpPic1" />
@@ -86,8 +81,15 @@
           <ButtonText>Install .NET runtime</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidRemoteDebuggerLauncherPackageCmdSet" id="cmdidCleanOutputCommand" priority="0x0102" type="Button">
+        <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidCommands" />
+        <Icon guid="guidImages2" id="bmpPic1" />
+        <Strings>
+          <ButtonText>Clean remote target path</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
-
+  
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
     <Bitmaps>
       <!--  The bitmap id is defined in a way that is a little bit different from the others:
@@ -97,8 +99,13 @@
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
       <Bitmap guid="guidImages" href="Resources\InstallDebugger.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
       <Bitmap guid="guidImages1" href="Resources\InstallDotnet.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
+      <Bitmap guid="guidImages2" href="Resources\CleanOutputCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
     </Bitmaps>
   </Commands>
+
+  <VisibilityConstraints>
+    <VisibilityItem guid="guidRemoteDebuggerLauncherPackageCmdSet" id="menuidToolsItem" context="UICONTEXT_SolutionExistsAndNotBuildingAndNotDebugging"></VisibilityItem>
+  </VisibilityConstraints>
 
   <Symbols>
     <!-- This is the package guid. -->
@@ -106,12 +113,13 @@
 
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidRemoteDebuggerLauncherPackageCmdSet" value="{67dde3fd-abea-469b-939f-02a3178c91e7}">
-      <IDSymbol name="menuidToolsItem" value="0x1000"/>
-      <IDSymbol name="menuidToolsItem2" value="0x1001"/>
-      <IDSymbol name="groupidToolsItem" value="0x1010"/>
+      <IDSymbol name="menuidToolsItem" value="0x1000" />
+      <IDSymbol name="groupidToolsItem" value="0x1010" />
       <IDSymbol name="groupidCommands" value="0x1020" />
       <IDSymbol name="cmdidInstallDebugger" value="0x0100" />
-      <IDSymbol name="cmdidInstallDotnet" value="0x0101"  />
+      <IDSymbol name="cmdidInstallDotnet" value="0x0101" />
+      <IDSymbol name="cmdidCleanOutputCommand" value="0x0102" />
+      <IDSymbol value="4129" name="cmdidToolWindow1Command" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{0b0c1900-6a3f-402f-a9b0-07ed947b34e9}">
@@ -124,6 +132,24 @@
     </GuidSymbol>
   
     <GuidSymbol value="{9c3387b2-7615-44ff-bb32-1f7cc776251f}" name="guidImages1">
+      <IDSymbol name="bmpPic1" value="1" />
+      <IDSymbol name="bmpPic2" value="2" />
+      <IDSymbol name="bmpPicSearch" value="3" />
+      <IDSymbol name="bmpPicX" value="4" />
+      <IDSymbol name="bmpPicArrows" value="5" />
+      <IDSymbol name="bmpPicStrikethrough" value="6" />
+    </GuidSymbol>
+  
+    <GuidSymbol value="{4b8a98d3-18d0-4426-8800-65f477dd42d4}" name="guidImages2">
+      <IDSymbol name="bmpPic1" value="1" />
+      <IDSymbol name="bmpPic2" value="2" />
+      <IDSymbol name="bmpPicSearch" value="3" />
+      <IDSymbol name="bmpPicX" value="4" />
+      <IDSymbol name="bmpPicArrows" value="5" />
+      <IDSymbol name="bmpPicStrikethrough" value="6" />
+    </GuidSymbol>
+  
+    <GuidSymbol value="{d531c182-955d-4621-ac3c-291d89c7dce2}" name="guidImages3">
       <IDSymbol name="bmpPic1" value="1" />
       <IDSymbol name="bmpPic2" value="2" />
       <IDSymbol name="bmpPicSearch" value="3" />

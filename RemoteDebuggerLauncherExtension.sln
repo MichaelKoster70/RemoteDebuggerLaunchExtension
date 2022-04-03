@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extension", "Extension", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteDebuggerLauncher", "src\Extension\RemoteDebuggerLauncher\RemoteDebuggerLauncher.csproj", "{E95FF607-9D76-4ED8-BE5F-F5254CAC4963}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteDebuggerLauncher.UI", "src\Extension\RemoteDebuggerLauncher.UI\RemoteDebuggerLauncher.UI.csproj", "{9BB8C19C-9BD2-4F3F-8800-951B4851E794}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,14 @@ Global
 		{E95FF607-9D76-4ED8-BE5F-F5254CAC4963}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E95FF607-9D76-4ED8-BE5F-F5254CAC4963}.Release|x86.ActiveCfg = Release|x86
 		{E95FF607-9D76-4ED8-BE5F-F5254CAC4963}.Release|x86.Build.0 = Release|x86
+		{9BB8C19C-9BD2-4F3F-8800-951B4851E794}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BB8C19C-9BD2-4F3F-8800-951B4851E794}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BB8C19C-9BD2-4F3F-8800-951B4851E794}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9BB8C19C-9BD2-4F3F-8800-951B4851E794}.Debug|x86.Build.0 = Debug|Any CPU
+		{9BB8C19C-9BD2-4F3F-8800-951B4851E794}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BB8C19C-9BD2-4F3F-8800-951B4851E794}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BB8C19C-9BD2-4F3F-8800-951B4851E794}.Release|x86.ActiveCfg = Release|Any CPU
+		{9BB8C19C-9BD2-4F3F-8800-951B4851E794}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,6 +52,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{6AA140D9-4DB5-4A8A-8C82-F1A3DE1AA359} = {5A452CB0-92FC-4F9D-8EAB-16FC3D579F8B}
 		{E95FF607-9D76-4ED8-BE5F-F5254CAC4963} = {0122F772-056D-4FF0-BAB1-33E0F0C80BA8}
+		{9BB8C19C-9BD2-4F3F-8800-951B4851E794} = {0122F772-056D-4FF0-BAB1-33E0F0C80BA8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28E2E12F-EC94-41FB-BF65-3D5B09E077DE}

@@ -9,7 +9,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>SigningKey.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\SigningKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\VSPackage.ico</ApplicationIcon>
@@ -33,8 +33,8 @@
     <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
     <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
     <CopyOutputSymbolsToOutputDirectory>true</CopyOutputSymbolsToOutputDirectory>
-    <!--<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-    <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\Generated</CompilerGeneratedFilesOutputPath>-->
+    <!--<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>-->
+    <!--<CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\Generated</CompilerGeneratedFilesOutputPath>-->
     <StartAction>Program</StartAction>
     <StartProgram Condition="'$(DevEnvDir)' != ''">$(DevEnvDir)devenv.exe</StartProgram>
     <StartArguments>/rootsuffix Exp</StartArguments>
@@ -59,46 +59,57 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AdapterLaunchConfiguration.cs" />
-    <Compile Include="AdapterProviderKind.cs" />
-    <Compile Include="AuthenticationKind.cs" />
-    <Compile Include="Commands\InstallDebugger.cs" />
-    <Compile Include="Commands\InstallDotnet.cs" />
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Commands\LaunchProfileAccess.cs" />
+    <Compile Include="Commands\CleanOutputCommand.cs" />
+    <Compile Include="Extensions\VsInteropExtensions.cs" />
+    <Compile Include="Extensions\AsyncServiceProviderExtensions.cs" />
+    <Compile Include="LaunchProfile\AdapterLaunchConfiguration.cs" />
+    <Compile Include="Shared\AdapterProviderKind.cs" />
+    <Compile Include="Shared\AuthenticationKind.cs" />
+    <Compile Include="Commands\InstallDebuggerCommand.cs" />
+    <Compile Include="Commands\InstallDotnetCommand.cs" />
     <Compile Include="LaunchProfile\PasswordPropertyValueProvider.cs" />
-    <Compile Include="SecureShellSessionCommanding.cs" />
+    <Compile Include="Services\SecureShellSessionCommanding.cs" />
     <Compile Include="Services\ILoggerService.cs" />
     <Compile Include="Services\IOptionsPageAccessor.cs" />
-    <Compile Include="ISecureShellSessionCommanding.cs" />
+    <Compile Include="Services\ISecureShellSessionCommanding.cs" />
     <Compile Include="Services\LoggerService.cs" />
     <Compile Include="Services\OptionsPageAccessorService.cs" />
-    <Compile Include="RemoteDebuggerLauncherException.cs" />
-    <Compile Include="SecureShellRemoteOperations.cs" />
-    <Compile Include="SecureShellSessionException.cs" />
-    <Compile Include="UnixPath.cs" />
+    <Compile Include="Infrastructure\RemoteDebuggerLauncherException.cs" />
+    <Compile Include="Services\SecureShellRemoteOperations.cs" />
+    <Compile Include="Services\SecureShellSessionException.cs" />
+    <Compile Include="Infrastructure\UnixPath.cs" />
     <Compile Include="ConfigurationAggregator.cs" />
-    <Compile Include="ProjectSystemConfiguredProjectExtensions.cs" />
+    <Compile Include="Extensions\ProjectSystemConfiguredProjectExtensions.cs" />
     <Compile Include="Options\LocalOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Options\DeviceOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SecureShellSessionSettings.cs" />
-    <Compile Include="SecureShellSession.cs" />
-    <Compile Include="ThrowIf.cs" />
+    <Compile Include="Services\SecureShellSessionSettings.cs" />
+    <Compile Include="Services\SecureShellSession.cs" />
+    <Compile Include="Infrastructure\ThrowIf.cs" />
     <Compile Include="PackageConstants.cs" />
-    <Compile Include="SecureShellRemoteLaunchRuleExporter.cs" />
-    <Compile Include="SecureShellRemoteLaunchTargetsProvider.cs" />
+    <Compile Include="LaunchProfile\SecureShellRemoteLaunchRuleExporter.cs" />
+    <Compile Include="LaunchProfile\SecureShellRemoteLaunchTargetsProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteDebuggerLauncherPackage.cs" />
   </ItemGroup>
   <ItemGroup>
     <CompilerVisibleProperty Include="RootNamespace" />
-    <None Include="SigningKey.snk" />
+    <None Include="..\..\SigningKey.snk">
+      <Link>SigningKey.snk</Link>
+    </None>
+    <None Include="Commands\readme.md" />
+    <None Include="Extensions\readme.md" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
-    <XamlPropertyRule Include="SecureShellRemoteLaunchProfile.xaml">
+    <XamlPropertyRule Include="LaunchProfile\SecureShellRemoteLaunchProfile.xaml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Generator>MSBuild:GenerateRuleSourceFromXaml</Generator>
       <SubType>Designer</SubType>
@@ -150,12 +161,17 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Tools\SourceGenerators\SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false">
+    <ProjectReference Include="..\..\Tools\SourceGenerators\SourceGenerators.csproj" OutputItemType="Analyzer" PrivateAssets="all" ReferenceOutputAssembly="false">
       <Project>{0F40D13C-CF48-4F35-B998-39931C2371F0}</Project>
       <Name>SourceGenerators</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RemoteDebuggerLauncher.UI\RemoteDebuggerLauncher.UI.csproj">
+      <Project>{9bb8c19c-9bd2-4f3f-8800-951b4851e794}</Project>
+      <Name>RemoteDebuggerLauncher.UI</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\CleanOutputCommand.png" />
     <Content Include="license.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -174,7 +190,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

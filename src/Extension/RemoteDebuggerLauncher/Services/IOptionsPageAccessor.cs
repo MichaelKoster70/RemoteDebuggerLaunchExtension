@@ -5,6 +5,8 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
@@ -59,7 +61,7 @@ namespace RemoteDebuggerLauncher
    /// <summary>
    /// Defines the service type for the options page accessor service.
    /// </summary>
-   [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "By design, using VS naming standards")]
+   [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "By design, using VS naming standards")]
    internal interface SOptionsPageAccessor
    {
    }

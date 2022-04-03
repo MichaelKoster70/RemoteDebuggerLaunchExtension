@@ -5,8 +5,18 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-using System.Reflection;
+namespace RemoteDebuggerLauncher
+{
+   public class VersionViewModel : ViewModelBase
+   {
+      public VersionViewModel(string name, string displayName)
+      {
+         Name = name;
+         DisplayName = displayName;
+      }
 
-// General Information specific for this assembly
-[assembly: AssemblyTitle("Remote Debugger Launcher")]
-[assembly: AssemblyDescription("Remote Debugger Launcher VS Extension for .NET Projects")]
+      public string Name { get; }
+
+      public string DisplayName { get; }
+   }
+}

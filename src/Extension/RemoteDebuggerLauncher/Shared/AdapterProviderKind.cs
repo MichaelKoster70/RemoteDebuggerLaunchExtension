@@ -5,8 +5,18 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-using System.Reflection;
 
-// General Information specific for this assembly
-[assembly: AssemblyTitle("Remote Debugger Launcher")]
-[assembly: AssemblyDescription("Remote Debugger Launcher VS Extension for .NET Projects")]
+namespace RemoteDebuggerLauncher
+{
+   /// <summary>
+   /// Defines the supported connection adapter kind.
+   /// </summary>
+   internal enum AdapterProviderKind
+   {
+      /// <summary>The built-in Windows SSH.</summary>
+      WindowsSSH,
+
+      /// <summary>PuTTY, command line.</summary>
+      PuTTY
+   }
+}

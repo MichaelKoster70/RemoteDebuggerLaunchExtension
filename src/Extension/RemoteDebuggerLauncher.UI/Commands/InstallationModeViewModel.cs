@@ -5,18 +5,18 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-
 namespace RemoteDebuggerLauncher
 {
-   /// <summary>
-   /// Defines the supported connection adapter kind.
-   /// </summary>
-   internal enum AdapterProviderKind
+   public class InstallationModeViewModel : ViewModelBase
    {
-      /// <summary>The built-in Windows SSH.</summary>
-      WindowsSSH,
+      public InstallationModeViewModel(bool mode, string displayName)
+      {
+         Mode = mode;
+         DisplayName = displayName;
+      }
 
-      /// <summary>PuTTY</summary>
-      PuTTY
+      bool Mode { get; }
+
+      public string DisplayName { get; }
    }
 }

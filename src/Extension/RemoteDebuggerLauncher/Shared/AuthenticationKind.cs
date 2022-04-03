@@ -5,16 +5,15 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-using System.IO;
-
 namespace RemoteDebuggerLauncher
 {
-   internal static class UnixPath
+   /// <summary>The supported SSH authentication kinds.</summary>
+   internal enum AuthenticationKind
    {
-      public static string Combine(string path1, string path2)
-      {
-         var combinedPath = Path.Combine(path1, path2);
-         return combinedPath.Replace("\\", "/");
-      }
+      /// <summary>Password based authentication.</summary>
+      Password,
+
+      /// <summary>Private key based authentication.</summary>
+      PrivateKey,
    }
 }

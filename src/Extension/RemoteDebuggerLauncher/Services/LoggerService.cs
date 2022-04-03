@@ -13,11 +13,9 @@ using Microsoft.VisualStudio.Shell.Interop;
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// Logging Service implementation writing to a custom Visual Studio Output Window
-   /// Implements the <see cref="RemoteDebuggerLauncher.SLoggerService" />
+   /// Logging Service implementation writing to a custom Visual Studio Output Window.
    /// Implements the <see cref="RemoteDebuggerLauncher.ILoggerService" />
    /// </summary>
-   /// <seealso cref="RemoteDebuggerLauncher.SLoggerService" />
    /// <seealso cref="RemoteDebuggerLauncher.ILoggerService" />
    internal class LoggerService : SLoggerService, ILoggerService
    {
@@ -47,15 +45,27 @@ namespace RemoteDebuggerLauncher
       {
          ThreadHelper.ThrowIfNotOnUIThread();
 
-         var pane = EnsurePane(PackageConstants.OutputPaneGuid, PackageConstants.OutputPaneName, activate);
+         var pane = EnsurePane(PackageConstants.OutputWindow.OutputPaneGuid, PackageConstants.OutputWindow.OutputPaneName, activate);
          pane.OutputStringThreadSafe(message);
       }
 
+      /// <inheritdoc />
+      public void WriteOutputExtensionPane(bool predicate, string message, bool activate = true)
+      {
+         ThreadHelper.ThrowIfNotOnUIThread();
+
+         if (predicate)
+         {
+            WriteLineOutputExtensionPane(message, activate);
+         }
+      }
+
+      /// <inheritdoc />
       public void WriteLineOutputExtensionPane(string message, bool activate)
       {
          ThreadHelper.ThrowIfNotOnUIThread();
 
-         var pane = EnsurePane(PackageConstants.OutputPaneGuid, PackageConstants.OutputPaneName, activate);
+         var pane = EnsurePane(PackageConstants.OutputWindow.OutputPaneGuid, PackageConstants.OutputWindow.OutputPaneName, activate);
          pane.OutputStringThreadSafe(message + "\r\n");
       }
 

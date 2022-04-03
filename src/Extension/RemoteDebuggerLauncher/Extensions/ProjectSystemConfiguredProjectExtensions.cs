@@ -11,6 +11,9 @@ using Microsoft.VisualStudio.ProjectSystem;
 
 namespace RemoteDebuggerLauncher
 {
+   /// <summary>
+   /// Extension methods for the Project System <see cref="ConfiguredProject"/> class.
+   /// </summary>
    internal static class ProjectSystemConfiguredProjectExtensions
    {
       public static async Task<string> GetOutputDirectoryPathAsync(this ConfiguredProject configuredProject)

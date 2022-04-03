@@ -1,46 +1,43 @@
-﻿using System;
+﻿// ----------------------------------------------------------------------------
+// <copyright company="Michael Koster">
+//   Copyright (c) Michael Koster. All rights reserved.
+//   Licensed under the MIT License.
+// </copyright>
+// ----------------------------------------------------------------------------
+
+using System;
 using System.ComponentModel.Design;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Task = System.Threading.Tasks.Task;
 
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
    /// Command handler
    /// </summary>
-   internal sealed class InstallDebugger
+   internal sealed class InstallDebuggerCommand
    {
-      /// <summary>
-      /// Command ID.
-      /// </summary>
+      /// <summary>Command ID.</summary>
       public const int CommandId = 0x0100;
 
-      /// <summary>
-      /// Command menu group (command set GUID).
-      /// </summary>
-      public static readonly Guid CommandSet = new Guid("67dde3fd-abea-469b-939f-02a3178c91e7");
-
-      /// <summary>
-      /// VS Package that provides this command, not null.
-      /// </summary>
+      /// <summary>Package that provides this command, not null.</summary>
       private readonly AsyncPackage package;
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="InstallDebugger"/> class.
+      /// Initializes a new instance of the <see cref="InstallDebuggerCommand"/> class.
       /// Adds our command handlers for menu (commands must exist in the command table file)
       /// </summary>
       /// <param name="package">Owner package, not null.</param>
       /// <param name="commandService">Command service to add command to, not null.</param>
-      private InstallDebugger(AsyncPackage package, OleMenuCommandService commandService)
+      private InstallDebuggerCommand(AsyncPackage package, OleMenuCommandService commandService)
       {
          this.package = package ?? throw new ArgumentNullException(nameof(package));
          commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
-         var menuCommandID = new CommandID(CommandSet, CommandId);
+         var menuCommandID = new CommandID(PackageConstants.Commands.CommandSet, CommandId);
          var menuItem = new MenuCommand(this.Execute, menuCommandID);
          commandService.AddCommand(menuItem);
       }
@@ -48,7 +45,7 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// Gets the instance of the command.
       /// </summary>
-      public static InstallDebugger Instance
+      public static InstallDebuggerCommand Instance
       {
          get;
          private set;
@@ -57,13 +54,7 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// Gets the service provider from the owner package.
       /// </summary>
-      private Microsoft.VisualStudio.Shell.IAsyncServiceProvider ServiceProvider
-      {
-         get
-         {
-            return this.package;
-         }
-      }
+      private IAsyncServiceProvider ServiceProvider => package;
 
       /// <summary>
       /// Initializes the singleton instance of the command.
@@ -76,13 +67,12 @@ namespace RemoteDebuggerLauncher
          await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
          OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
-         Instance = new InstallDebugger(package, commandService);
+         Instance = new InstallDebuggerCommand(package, commandService);
       }
 
       /// <summary>
       /// This function is the callback used to execute the command when the menu item is clicked.
-      /// See the constructor to see how the menu item is associated with this function using
-      /// OleMenuCommandService service and MenuCommand class.
+      /// See the constructor to see how the menu item is associated with this function using OleMenuCommandService service and MenuCommand class.
       /// </summary>
       /// <param name="sender">Event sender.</param>
       /// <param name="e">Event args.</param>
@@ -90,7 +80,7 @@ namespace RemoteDebuggerLauncher
       {
          ThreadHelper.ThrowIfNotOnUIThread();
          string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
-         string title = "InstallDebugger";
+         string title = "Install Debugger";
 
          // Show a message box to prove we were here
          VsShellUtilities.ShowMessageBox(

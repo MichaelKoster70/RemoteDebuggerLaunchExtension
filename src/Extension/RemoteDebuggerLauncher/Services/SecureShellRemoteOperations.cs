@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// Holds the high level operations performed on the remote device
+   /// Holds the high level operations performed on the remote device.
    /// </summary>
    internal class SecureShellRemoteOperations
    {
@@ -39,10 +39,11 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <summary>
-      /// Creates a <see cref="SecureShellRemoteOperations"/> with settings read from the supplied configuration.
+      /// Creates a <see cref="SecureShellRemoteOperations" /> with settings read from the supplied configuration.
       /// </summary>
-      /// <param name="configurationAggregator">The configuration aggregator.</param>
-      /// <returns>SecureShellOperations.</returns>
+      /// <param name="configurationAggregator">The configuration aggregator to read the settings from.</param>
+      /// <param name="logger">The logger instance to use.</param>
+      /// <returns>A <see cref="SecureShellRemoteOperations" /> instance.</returns>
       /// <exception cref="ArgumentNullException">configurationAggregator is null.</exception>
       public static SecureShellRemoteOperations Create(ConfigurationAggregator configurationAggregator, ILoggerService logger)
       {
@@ -51,6 +52,12 @@ namespace RemoteDebuggerLauncher
          var session = SecureShellSession.Create(configurationAggregator);
          return new SecureShellRemoteOperations(configurationAggregator, session, logger);
       }
+
+      /// <summary>
+      /// Gets or sets a value indicating whether the Host name should be logged to the output pane.
+      /// </summary>
+      /// <value><c>true</c> to append to log; otherwise, <c>false</c>.</value>
+      public bool LogHost { get; set; }
 
       /// <summary>
       /// Checks whether a connection with the remove device can be established.
@@ -74,10 +81,28 @@ namespace RemoteDebuggerLauncher
          }
       }
 
+      public async Task<string> QueryUserHomeDirectoryAsync()
+      {
+         try
+         {
+            logger.WriteLineOutputExtensionPane("--------------------------------------------------");
+            logger.WriteOutputExtensionPane(LogHost, $"[SSH {session.Settings.UserName}@{ session.Settings.HostName}]");
+            logger.WriteOutputExtensionPane("Query User Home: ");
+            var result = (await session.ExecuteSingleCommandAsync("pwd").ConfigureAwait(true)).Trim('\n');
+            logger.WriteLineOutputExtensionPane(result);
+            return result;
+         }
+         catch (SecureShellSessionException ex)
+         {
+            logger.WriteOutputExtensionPane($"FAILED: {ex.Message})\r\n");
+            return string.Empty;
+         }
+      }
+
       /// <summary>
       /// Tries to install the VS Code assuming the target device has a direct internet connection.
       /// </summary>
-      /// <returns>A <see cref="Tasl{Boolean}"/>representing the asynchronous operation: <c>true</c> if successful; else <c>false</c>.</returns>
+      /// <returns>A <see cref="Task{Boolean}"/>representing the asynchronous operation: <c>true</c> if successful; else <c>false</c>.</returns>
       public async Task<bool> TryInstallVsDbgOnlineAsync()
       {
          try
@@ -113,12 +138,13 @@ namespace RemoteDebuggerLauncher
          try
          {
             logger.WriteLineOutputExtensionPane("--------------------------------------------------");
+            logger.WriteOutputExtensionPane(LogHost, $"[SSH {session.Settings.UserName}@{ session.Settings.HostName}]");
             logger.WriteLineOutputExtensionPane("Installing VS Code Debugger Offline");
 
             // Get the CPU architecture to determine which runtime ID to use, ignoring MacOS and Alpine based Linux when determining the needed runtime ID.
             string runtimeId;
             var cpuArchitecture = (await session.ExecuteSingleCommandAsync("uname -m").ConfigureAwait(true)).Trim('\n');
-            switch(cpuArchitecture)
+            switch (cpuArchitecture)
             {
                case "armv7l":
                   runtimeId = "linux-arm";
@@ -185,12 +211,13 @@ namespace RemoteDebuggerLauncher
          }
       }
 
-      public async Task DeployAsync(string sourcePath, bool clean)
+      public async Task DeployRemoteFolderAsync(string sourcePath, bool clean)
       {
          var targetPath = configurationAggregator.QueryAppFolderPath();
 
          logger.WriteLineOutputExtensionPane("--------------------------------------------------");
-         logger.WriteLineOutputExtensionPane($"Deploying Source: {sourcePath}, Target: {targetPath}");
+         logger.WriteOutputExtensionPane(LogHost, $"[SSH {session.Settings.UserName}@{ session.Settings.HostName}]");
+         logger.WriteLineOutputExtensionPane($"Deploying source: {sourcePath}, sarget: {targetPath}");
 
          // Clean the remote target if requested
          if (clean)
@@ -204,6 +231,88 @@ namespace RemoteDebuggerLauncher
 
          // copy files using SCP
          await session.UploadFolderRecursiveAsync(sourcePath, targetPath);
+      }
+
+      public async Task CleanRemoteFolderAsync()
+      {
+         try
+         {
+            var targetPath = configurationAggregator.QueryAppFolderPath();
+
+            logger.WriteLineOutputExtensionPane("--------------------------------------------------");
+            logger.WriteOutputExtensionPane(LogHost, $"[SSH {session.Settings.UserName}@{ session.Settings.HostName}]");
+            logger.WriteLineOutputExtensionPane($"Cleaning target: {targetPath}");
+
+            using (var commandSession = session.CreateCommandSession())
+            {
+               await commandSession.ExecuteCommandAsync($"[ -d {targetPath} ] | rm -rf {targetPath}/*").ConfigureAwait(true);
+               await commandSession.ExecuteCommandAsync($"mkdir -p {targetPath}").ConfigureAwait(true);
+            }
+         }
+         catch (SecureShellSessionException ex)
+         {
+            logger.WriteLineOutputExtensionPane($"FAILED: {ex.Message}");
+            throw;
+         }
+      }
+
+      public Task<bool> TryInstallDotNetSDKOnlineAsync()
+      {
+         return TryInstallDotNetSDKOnlineAsync("LTS");
+      }
+
+      /// <summary>
+      /// Tries to install the .NET SDK assuming the target device has a direct internet connection.
+      /// </summary>
+      /// <returns>A <see cref="Task{Boolean}"/>representing the asynchronous operation: <c>true</c> if successful; else <c>false</c>.</returns>
+      public async Task<bool> TryInstallDotNetSDKOnlineAsync(string channel)
+      {
+         try
+         {
+            using (var commands = session.CreateCommandSession())
+            {
+               logger.WriteLineOutputExtensionPane("--------------------------------------------------");
+               logger.WriteLineOutputExtensionPane("Installing .NET SDK Online\r\n");
+
+               var dotnetInstallPath = configurationAggregator.QueryDotNetInstallFolderPath();
+               var result = await commands.ExecuteCommandAsync($"curl -sSL {PackageConstants.Dotnet.GetInstallDotnetShUrl} | sh /dev/stdin --channel {channel} --install-dir {dotnetInstallPath}");
+               logger.WriteOutputExtensionPane(result);
+            }
+         }
+         catch (SecureShellSessionException ex)
+         {
+            logger.WriteOutputExtensionPane($"FAILED to install .NET SDK: {ex.Message})\r\n");
+            return false;
+         }
+
+         return true;
+      }
+
+      /// <summary>
+      /// Tries to install the .NET SDK assuming the target device has a direct internet connection.
+      /// </summary>
+      /// <returns>A <see cref="Task{Boolean}"/>representing the asynchronous operation: <c>true</c> if successful; else <c>false</c>.</returns>
+      public async Task<bool> TryInstallDotNetRuntimeOnlineAsync(string channel, string runtime)
+      {
+         try
+         {
+            using (var commands = session.CreateCommandSession())
+            {
+               logger.WriteLineOutputExtensionPane("--------------------------------------------------");
+               logger.WriteLineOutputExtensionPane("Installing .NET runtime Online\r\n");
+
+               var dotnetInstallPath = configurationAggregator.QueryDotNetInstallFolderPath();
+               var result = await commands.ExecuteCommandAsync($"curl -sSL {PackageConstants.Dotnet.GetInstallDotnetShUrl} | sh /dev/stdin --channel {channel} --runtime {runtime} --install-dir {dotnetInstallPath}");
+               logger.WriteOutputExtensionPane(result);
+            }
+         }
+         catch (SecureShellSessionException ex)
+         {
+            logger.WriteOutputExtensionPane($"FAILED to install .NET runtime: {ex.Message})\r\n");
+            return false;
+         }
+
+         return true;
       }
    }
 }

@@ -6,6 +6,7 @@
 // ----------------------------------------------------------------------------
 
 using System;
+using Microsoft.VisualStudio;
 
 namespace RemoteDebuggerLauncher
 {
@@ -39,12 +40,21 @@ namespace RemoteDebuggerLauncher
       {
          /// <summary>The name of the 'dotnet' binary.</summary>
          public const string BinaryName = "dotnet";
+
+         /// <summary>The URL of the install script to install .NET manually on a Linux system.</summary>
+         public const string GetInstallDotnetShUrl = "https://dot.net/v1/dotnet-install.sh";
+
+         /// <summary>The URL of the install script to install .NET manually on a windows system.</summary>
+         public const string GetInstallDotnetPs1Url = "https://dot.net/v1/dotnet-install.ps1";
       }
 
       public static class LaunchProfile
       {
          /// <summary>The command name for the 'SecureShellRemoteLaunchProfile' Launch Profile.</summary>
          public const string CommandName = "SecureShellRemoteLaunch";
+
+         /// <summary>CPS 'AppliesTo attribute value for the custom Launch Profile.</summary>
+         public const string AppliesTo = "LaunchProfiles";
       }
 
       public static class DebugLaunchSettings
@@ -59,25 +69,17 @@ namespace RemoteDebuggerLauncher
 
             /// <summary>Name the connection adapter when using PuTTY.</summary>
             public const string AdapterNamePuTTY = "plink.exe";
-
          }
       }
 
-      /// <summary>CPS 'AppliesTo attribute value for the custom Launch Profile.</summary>
-      public const string AppliesToLaunchProfiles = "LaunchProfiles";
+      public static class OutputWindow
+      {
+         /// <summary>The GUID for the custom output pane.</summary>
+         public static readonly Guid OutputPaneGuid = new Guid("772F56E5-2D88-40FB-9006-50B9C72A2A97");
 
-
-
-      /// <summary>The command name for the 'SecureShellRemoteLaunchProfile' Launch Profile Name.</summary>
-      public const string SecureShellRemoteLaunchProfileName = "SecureShellRemoteLaunchProfile";
-
-
-
-      /// <summary>The GUID for the custom output pane.</summary>
-      public static readonly Guid OutputPaneGuid = new Guid("772F56E5-2D88-40FB-9006-50B9C72A2A97");
-
-      /// <summary>The name for the custom output pane.</summary>
-      public const string OutputPaneName = "Remote Debugger";
+         /// <summary>The name for the custom output pane.</summary>
+         public const string OutputPaneName = "Remote Debugger";
+      }
 
       public static class Debugger
       {
@@ -87,8 +89,14 @@ namespace RemoteDebuggerLauncher
          public const string GetVsDbgShUrl = "https://aka.ms/getvsdbgsh";
          public const string GetVsDbgPs1Url = "https://aka.ms/getvsdbgps1";
 
-         /// <summary>Directory unter %localappdata% where to cache the remote debugger downloads.</summary>
-         public const string DownloadCacheFolder = @"RemoteDebuggerLauncher\vs2022";
+         /// <summary>Directory under %localappdata% where to cache the remote debugger downloads.</summary>
+         public const string DownloadCacheFolder = @"RemoteDebuggerLauncher\vsdbg\vs2022";
+      }
+
+      public static class Commands
+      {
+         /// <summary>Command menu group (command set GUID).</summary>
+         public static readonly Guid CommandSet = new Guid("67dde3fd-abea-469b-939f-02a3178c91e7");
       }
    }
 }

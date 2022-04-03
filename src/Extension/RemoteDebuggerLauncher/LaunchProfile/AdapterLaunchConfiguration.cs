@@ -70,7 +70,7 @@ namespace RemoteDebuggerLauncher
          public Dictionary<string, JToken> ConfigurationProperties { get; } = new Dictionary<string, JToken>();
       }
 
-      public static async Task<string> CreateFrameworkDependantAsync(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject)
+      public static async Task<string> CreateFrameworkDependantAsync(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject, ILoggerService logger)
       {
          ThrowIf.ArgumentNull(configurationAggregator, nameof(configurationAggregator));
          ThrowIf.ArgumentNull(configuredProject, nameof(configuredProject));
@@ -78,15 +78,52 @@ namespace RemoteDebuggerLauncher
          var program = UnixPath.Combine(configurationAggregator.QueryDotNetInstallFolderPath(), PackageConstants.Dotnet.BinaryName);
          var appFolderPath = configurationAggregator.QueryAppFolderPath();
          var assemblyFileName = await configuredProject.GetAssemblyFileNameAsync();
+         var assemblyFileDirectory = ".";
+         var workingDirectory = appFolderPath;
+
+         // check whether the path values should be normalized
+         var shouldNormalizeProgram = UnixPath.ShouldBeNormalized(program);
+         var shouldNormalizeAppFolderPath = UnixPath.ShouldBeNormalized(appFolderPath);
+         if (shouldNormalizeProgram || shouldNormalizeAppFolderPath)
+         {
+            var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, logger);
+            var homeDirectory = await remoteOperations.QueryUserHomeDirectoryAsync();
+            if (!string.IsNullOrEmpty(homeDirectory))
+            {
+               // we have a home directory
+               program = UnixPath.Normalize(program, homeDirectory);
+               appFolderPath = UnixPath.Normalize(appFolderPath, homeDirectory);
+               assemblyFileDirectory = appFolderPath;
+               workingDirectory = appFolderPath;
+            }
+            else
+            {
+               // no home directory found
+               // program: keep as configured
+               // appFolderPath: keep as configured
+               // assemblyFileDirectory: keep current directory
+               // workingDirectory: keep appFolderPath
+            }
+         }
+         else
+         {
+            // we only use absolut pathes
+            // program: keep as configured
+            // appFolderPath: keep as configured
+            assemblyFileDirectory = appFolderPath;
+            workingDirectory = appFolderPath;
+         }
 
          var config = CreateAndSetAdapter(configurationAggregator);
          config.Name = ".NET Core Launch - Framework dependant";
          config.Program = program;
-         config.Args.Add($"./{assemblyFileName}");
-         config.CurrentWorkingDirectory = appFolderPath;
+         config.Args.Add($"{assemblyFileDirectory}/{assemblyFileName}");
+         config.CurrentWorkingDirectory = workingDirectory;
          config.AppendCommandLineArguments(configurationAggregator);
 
-         return JsonConvert.SerializeObject(config);
+         var launchConfigurationJson = JsonConvert.SerializeObject(config);
+         logger.WriteLineOutputExtensionPane($"Options: {launchConfigurationJson}");
+         return launchConfigurationJson;
       }
 
       public static async Task<string> CreateSelfContainedAsync(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject)
@@ -124,13 +161,13 @@ namespace RemoteDebuggerLauncher
          {
             case AdapterProviderKind.WindowsSSH:
                adapter = PackageConstants.DebugLaunchSettings.Options.AdapterNameWindowsSSH;
-               adapterArgs += string.IsNullOrEmpty(privateKey) ? $"-i {privateKey}" : string.Empty;
+               adapterArgs += !string.IsNullOrEmpty(privateKey) ? $"-i {privateKey} " : string.Empty;
                adapterArgs += $"{userName}@{hostName} {vsdbgPath} --interpreter=vscode";
                break;
 
             case AdapterProviderKind.PuTTY:
                adapter = PackageConstants.DebugLaunchSettings.Options.AdapterNamePuTTY;
-               adapterArgs += string.IsNullOrEmpty(privateKey) ? $"-i {privateKey}" : string.Empty;
+               adapterArgs += !string.IsNullOrEmpty(privateKey) ? $"-i {privateKey} " : string.Empty;
                adapterArgs += $"{userName}@{hostName} {vsdbgPath} --interpreter=vscode";
                break;
          }

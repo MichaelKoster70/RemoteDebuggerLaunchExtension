@@ -5,6 +5,8 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
@@ -29,6 +31,14 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// Writes the supplied message a custom pane.
       /// </summary>
+      /// <param name="predicate">predicate whether to write the message or not.</param>
+      /// <param name="message">The message to write.</param>
+      /// <param name="activate"><c>true</c> to activate the pane; else <c>false</c></param>
+      void WriteOutputExtensionPane(bool predicate, string message, bool activate = true);
+
+      /// <summary>
+      /// Writes the supplied message a custom pane.
+      /// </summary>
       /// <param name="message">The message to write.</param>
       /// <param name="activate"><c>true</c> to activate the pane; else <c>false</c></param>
       void WriteLineOutputExtensionPane(string message, bool activate = true);
@@ -37,6 +47,7 @@ namespace RemoteDebuggerLauncher
    /// <summary>
    /// Defines the service type for the logger service.
    /// </summary>
+   [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "By design, using VS naming standards")]
    internal interface SLoggerService
    {
 

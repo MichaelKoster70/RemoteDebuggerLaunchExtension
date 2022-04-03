@@ -5,15 +5,11 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.ProjectSystem.Debug;
-
 namespace RemoteDebuggerLauncher
 {
+   /// <summary>
+   /// Container for Secure Shell sessions holding all required settings,
+   /// </summary>
    internal class SecureShellSessionSettings
    {
       private SecureShellSessionSettings(ConfigurationAggregator configurationAggregator)
