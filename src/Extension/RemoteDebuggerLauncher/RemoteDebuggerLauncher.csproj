@@ -67,6 +67,9 @@
     <Compile Include="Extensions\VsInteropExtensions.cs" />
     <Compile Include="Extensions\AsyncServiceProviderExtensions.cs" />
     <Compile Include="LaunchProfile\AdapterLaunchConfiguration.cs" />
+    <Compile Include="Services\CustomPSHostUserInterface.cs" />
+    <Compile Include="Services\CustomRawUserInterface.cs" />
+    <Compile Include="Services\CustomPSHost.cs" />
     <Compile Include="Shared\AdapterProviderKind.cs" />
     <Compile Include="Shared\AuthenticationKind.cs" />
     <Compile Include="Commands\InstallDebuggerCommand.cs" />
@@ -168,6 +171,10 @@
     <ProjectReference Include="..\RemoteDebuggerLauncher.UI\RemoteDebuggerLauncher.UI.csproj">
       <Project>{9bb8c19c-9bd2-4f3f-8800-951b4851e794}</Project>
       <Name>RemoteDebuggerLauncher.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RemoteDebuggerLauncherShared\RemoteDebuggerLauncherShared.csproj">
+      <Project>{93e8395b-2fcf-46ec-ad25-c7b4083be047}</Project>
+      <Name>RemoteDebuggerLauncherShared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

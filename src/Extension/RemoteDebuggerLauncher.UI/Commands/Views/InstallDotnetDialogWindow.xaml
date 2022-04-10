@@ -88,7 +88,8 @@
                 IsReadOnly="False"
                 ToolTip="{x:Static local:Resources.VersionDescription}"
                 ItemsSource="{Binding Versions}"
-                Text="{Binding SelectedVersion}"
+                SelectedItem="{Binding SelectedItem}"
+                Text="{Binding SelectedText}"
                 SelectedValuePath="Name"
                 DisplayMemberPath="DisplayName">
          <!--<ComboBox.ItemTemplate>

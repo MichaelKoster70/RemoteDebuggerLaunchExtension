@@ -86,8 +86,48 @@ namespace RemoteDebuggerLauncher
          {
             DataContext = viewModel
          };
+
          var result = dialog.ShowDialog();
 
+         if (result.HasValue && result.Value)
+         {
+#pragma warning disable VSTHRD102 // Implement internal logic asynchronously
+            package.JoinableTaskFactory.Run(async () =>
+            {
+               // get all services we need
+               var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync().ConfigureAwait(false);
+               var projectService = await ServiceProvider.GetProjectServiceAsync().ConfigureAwait(false);
+               var optionsPageAccessor = await ServiceProvider.GetServiceAsync<SOptionsPageAccessor, IOptionsPageAccessor>();
+               var loggerService = await ServiceProvider.GetServiceAsync<SLoggerService, ILoggerService>();
+
+               // do the remaining work on the UI thread
+               await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+               var lauchProfileAccess = new LaunchProfileAccess(dte, projectService);
+               var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync();
+
+               foreach (var profile in profiles)
+               {
+                  var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
+                  var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService);
+                  remoteOperations.LogHost = true;
+                  loggerService.WriteLineOutputExtensionPane($"========== {profile.Name} ==========");
+                  var onlineMode = viewModel.SelectedInstallationModeOnline;
+
+                  bool success = false;
+                  if (onlineMode)
+                  {
+                     success = await remoteOperations.TryInstallDotNetOnlineAsync(viewModel.SelectedInstallationKind, viewModel.SelectedVersion);
+                  }
+
+                  if (!success)
+                  {
+                     await remoteOperations.TryInstallDotNetOfflineAsync(viewModel.SelectedInstallationKind, viewModel.SelectedVersion);
+                  }
+               }
+            });
+#pragma warning restore VSTHRD102 // Implement internal logic asynchronously
+         }
       }
    }
 }

@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Threading;
+using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher
 {
@@ -33,24 +34,23 @@ namespace RemoteDebuggerLauncher
 
          InstallationTypes = new List<InstallationTypeViewModel>()
          {
-            new InstallationTypeViewModel (InstallationType.Sdk, Resources.InstallationTypeSdkDisplayName),
-            new InstallationTypeViewModel (InstallationType.RuntimeNet, Resources.InstallationTypeRuntimeNetDisplayName),
-            new InstallationTypeViewModel (InstallationType.RuntimeAspNet, Resources.InstallationTypeRuntimeAspnetDisplayName)
+            new InstallationTypeViewModel (DotnetInstallationKind.Sdk, Resources.InstallationTypeSdkDisplayName),
+            new InstallationTypeViewModel (DotnetInstallationKind.RuntimeNet, Resources.InstallationTypeRuntimeNetDisplayName),
+            new InstallationTypeViewModel (DotnetInstallationKind.RuntimeAspNet, Resources.InstallationTypeRuntimeAspnetDisplayName)
          };
 
          Versions = new List<VersionViewModel>()
          {
-            new VersionViewModel ("current", Resources.VersionCurrentDisplayName),
-            new VersionViewModel ("lts", Resources.VersionLtsDisplayName)
+            new VersionViewModel (Constants.Dotnet.ChannelCurrent, Resources.VersionCurrentDisplayName),
+            new VersionViewModel (Constants.Dotnet.ChannelLTS, Resources.VersionLtsDisplayName)
          };
 
          // set the default values
          SelectedInstallationMode = InstallationModes[0];
          SelectedInstallationType = InstallationTypes[0];
-         SelectedVersion = Versions[1].Name;
+         SelectedItem = Versions[1];
+         SelectedText = SelectedItem.DisplayName;
       }
-
-      public bool Online { get; set; } = true;
 
       public IList<InstallationModeViewModel> InstallationModes { get; }
 
@@ -66,6 +66,8 @@ namespace RemoteDebuggerLauncher
          }
       }
 
+      public bool SelectedInstallationModeOnline => SelectedInstallationMode.Mode;
+
       public IList<InstallationTypeViewModel> InstallationTypes { get; }
 
       public InstallationTypeViewModel SelectedInstallationType
@@ -80,9 +82,21 @@ namespace RemoteDebuggerLauncher
          }
       }
 
+      public DotnetInstallationKind SelectedInstallationKind => SelectedInstallationType.Kind;
+
       public IList<VersionViewModel> Versions { get; }
 
-      public string SelectedVersion { get; set; }
+      public VersionViewModel SelectedItem { get; set; }
+
+      public string SelectedText { get; set; }
+
+      public string SelectedVersion
+      {
+         get
+         {
+            return SelectedItem?.Name ?? SelectedText;
+         }
+      }
 
       //public InstallationTypeViewModel SelectedInstallationType
       //{

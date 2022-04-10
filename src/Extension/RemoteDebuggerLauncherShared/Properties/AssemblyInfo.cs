@@ -4,12 +4,10 @@
 //   Licensed under the MIT License.
 // </copyright>
 // ----------------------------------------------------------------------------
-namespace RemoteDebuggerLauncher
-{
-   public enum InstallationType
-   {
-      Sdk,
-      RuntimeNet,
-      RuntimeAspNet
-   }
-}
+
+using System.Reflection;
+
+// General Information specific for this assembly
+[assembly: AssemblyTitle("Remote Debugger Launcher: Shared")]
+[assembly: AssemblyDescription("Holding shared types for the Remote Debugger Launcher VS Extension")]
+

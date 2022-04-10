@@ -56,7 +56,7 @@ namespace RemoteDebuggerLauncher
 
          if (predicate)
          {
-            WriteLineOutputExtensionPane(message, activate);
+            WriteOutputExtensionPane(message, activate);
          }
       }
 

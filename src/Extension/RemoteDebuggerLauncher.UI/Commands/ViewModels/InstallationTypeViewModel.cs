@@ -5,17 +5,23 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
+using RemoteDebuggerLauncher.Shared;
+
 namespace RemoteDebuggerLauncher
 {
+   /// <summary>
+   /// ViewModel for the Install Type ComboBox.
+   /// </summary>
+   /// <seealso cref="RemoteDebuggerLauncher.ViewModelBase" />
    public class InstallationTypeViewModel : ViewModelBase
    {
-      public InstallationTypeViewModel(InstallationType type, string displayName)
+      public InstallationTypeViewModel(DotnetInstallationKind kind, string displayName)
       {
-         Type = type;
+         Kind = kind;
          DisplayName = displayName;
       }
 
-      InstallationType Type { get;  }
+      public DotnetInstallationKind Kind { get; }
       public string DisplayName { get; }
    }
 }

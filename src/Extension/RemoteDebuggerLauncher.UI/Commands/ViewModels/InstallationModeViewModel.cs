@@ -15,7 +15,7 @@ namespace RemoteDebuggerLauncher
          DisplayName = displayName;
       }
 
-      bool Mode { get; }
+      public bool Mode { get; }
 
       public string DisplayName { get; }
    }

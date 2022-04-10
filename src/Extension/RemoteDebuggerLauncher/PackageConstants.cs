@@ -46,6 +46,9 @@ namespace RemoteDebuggerLauncher
 
          /// <summary>The URL of the install script to install .NET manually on a windows system.</summary>
          public const string GetInstallDotnetPs1Url = "https://dot.net/v1/dotnet-install.ps1";
+
+         /// <summary>Directory under %localappdata% where to cache the .NET downloads.</summary>
+         public const string DownloadCacheFolder = @"RemoteDebuggerLauncher\dotnet";
       }
 
       public static class LaunchProfile
