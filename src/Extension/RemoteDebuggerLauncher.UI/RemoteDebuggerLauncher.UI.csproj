@@ -66,11 +66,19 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\Models\VersionViewModel.cs" />
+    <Compile Include="Commands\ViewModels\InstallDebuggerViewModel.cs" />
+    <Compile Include="Commands\ViewModels\VersionViewModel.cs" />
     <Compile Include="Commands\ViewModels\InstallationModeViewModel.cs" />
     <Compile Include="Commands\ViewModels\InstallationTypeViewModel.cs" />
-    <Compile Include="Commands\ViewModels\InstallDotnetModel.cs" />
+    <Compile Include="Commands\Models\InstallDotnetModel.cs" />
+    <Compile Include="Commands\Views\InstallDebuggerDialogWindow.xaml.cs">
+      <DependentUpon>InstallDebuggerDialogWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\ViewModelBase.cs" />
+    <Page Include="Commands\Views\InstallDebuggerDialogWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Commands\Views\InstallDotnetDialogWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

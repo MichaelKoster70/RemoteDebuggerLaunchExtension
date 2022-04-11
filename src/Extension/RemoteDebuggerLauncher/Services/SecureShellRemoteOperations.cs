@@ -104,9 +104,11 @@ namespace RemoteDebuggerLauncher
       #region VS Code Debugger
       /// <summary>
       /// Tries to install the VS Code assuming the target device has a direct internet connection.
+      /// Removes the previous installation if present.
       /// </summary>
-      /// <returns>A <see cref="Task{Boolean}"/>representing the asynchronous operation: <c>true</c> if successful; else <c>false</c>.</returns>
-      public async Task<bool> TryInstallVsDbgOnlineAsync(string version = PackageConstants.Debugger.Version)
+      /// <param name="version">The version to install.</param>
+      /// <returns>A <see cref="Task{Boolean}" />representing the asynchronous operation: <c>true</c> if successful; else <c>false</c>.</returns>
+      public async Task<bool> TryInstallVsDbgOnlineAsync(string version = Constants.Debugger.VersionLatest)
       {
          try
          {
@@ -117,7 +119,8 @@ namespace RemoteDebuggerLauncher
                logger.WriteLineOutputExtensionPane("Installing VS Code Debugger Online");
 
                var debuggerInstallPath = configurationAggregator.QueryDebuggerInstallFolderPath();
-               var result = await commands.ExecuteCommandAsync($"curl -sSL {PackageConstants.Debugger.GetVsDbgShUrl} | sh /dev/stdin -v {version} -l {debuggerInstallPath}");
+               var command = $"curl -sSL {PackageConstants.Debugger.GetVsDbgShUrl} | sh /dev/stdin -u -v {version} -l {debuggerInstallPath}";
+               var result = await commands.ExecuteCommandAsync(command);
                logger.WriteOutputExtensionPane(result);
             }
          }
@@ -132,12 +135,13 @@ namespace RemoteDebuggerLauncher
 
       /// <summary>
       /// Tries to install the VS Code assuming the target device has no internet connection.
+      /// Removes the previous installation if present.
       /// </summary>
       /// <returns>A <see cref="Task"/>representing the asynchronous operation.</returns>
       /// <remarks>
       /// The downloaded vsdbg version gets cached under %localappdata%\RemoteDebuggerLauncher\vsdbg\vs2022
       /// </remarks>
-      public async Task TryInstallVsDbgOfflineAsync(string version = PackageConstants.Debugger.Version)
+      public async Task TryInstallVsDbgOfflineAsync(string version = Constants.Debugger.VersionLatest)
       {
          try
          {
@@ -177,7 +181,7 @@ namespace RemoteDebuggerLauncher
 
             using (var commandSession = session.CreateCommandSession())
             {
-               // remove all files in the target folder, in case the
+               // remove all files in the target folder, in case the debugger was installed before
                await commandSession.ExecuteCommandAsync($"[ -d {debuggerInstallPath} ] | rm -rf {debuggerInstallPath}/*");
 
                // create the directory if it does not jet exist
@@ -191,7 +195,6 @@ namespace RemoteDebuggerLauncher
             }
 
             logger.WriteLineOutputExtensionPane("DONE");
-
          }
          catch (SecureShellSessionException ex)
          {
@@ -207,7 +210,7 @@ namespace RemoteDebuggerLauncher
 
          logger.WriteLineOutputExtensionPane("--------------------------------------------------");
          logger.WriteOutputExtensionPane(LogHost, $"[SSH {session.Settings.UserName}@{ session.Settings.HostName}] ");
-         logger.WriteLineOutputExtensionPane($"Deploying source: {sourcePath}, sarget: {targetPath}");
+         logger.WriteLineOutputExtensionPane($"Deploying source: {sourcePath}, target: {targetPath}");
 
          // Clean the remote target if requested
          if (clean)
@@ -362,78 +365,14 @@ namespace RemoteDebuggerLauncher
       {
          try
          {
-            using (var commands = session.CreateCommandSession())
-            {
-               logger.WriteLineOutputExtensionPane("--------------------------------------------------");
-               logger.WriteOutputExtensionPane(LogHost, $"[SSH {session.Settings.UserName}@{ session.Settings.HostName}] ");
-               logger.WriteLineOutputExtensionPane("Installing .NET SDK Offline");
+            logger.WriteLineOutputExtensionPane("--------------------------------------------------");
+            logger.WriteOutputExtensionPane(LogHost, $"[SSH {session.Settings.UserName}@{ session.Settings.HostName}] ");
+            logger.WriteLineOutputExtensionPane("Installing .NET SDK Offline");
 
-               // Get the CPU architecture to determine which runtime ID to use, ignoring MacOS and Alpine based Linux when determining the needed runtime ID.
-               string runtimeId = await GetRuntimeIdAsync();
+            var installerPath = await DownloadDotnetAsync(channel);
+            await InstallDotnetAsync(installerPath);
 
-               var dotnetInstallPath = configurationAggregator.QueryDotNetInstallFolderPath();
-               string installScript;
-               string dotnetDownloadUrl; 
-
-               logger.WriteLineOutputExtensionPane($"Downloading script URL: {PackageConstants.Dotnet.GetInstallDotnetPs1Url}, RuntimeID: {runtimeId}");
-
-               // Download the PS1 script to install .NET
-               using (var httpClient = new HttpClient())
-               {
-                  using (var response = await httpClient.GetAsync(PackageConstants.Dotnet.GetInstallDotnetPs1Url))
-                  {
-                     response.EnsureSuccessStatusCode();
-                     installScript = await response.Content.ReadAsStringAsync();
-                  }
-
-                  // Create the runspace so that you can access the pipeline.
-                  CustomPSHost host = new CustomPSHost();
-
-                  using (var runSpace = RunspaceFactory.CreateRunspace(host))
-                  {
-                     runSpace.Open();
-
-                     // Create the pipeline.
-                     using (Pipeline pipe = runSpace.CreatePipeline())
-                     {
-                        var command = new Command(installScript, true);
-                        command.Parameters.Add("-Channel", channel);
-                        command.Parameters.Add("-Architecture", "x64");
-                        command.Parameters.Add("-DryRun");
-                        pipe.Commands.Add(command);
-
-                        pipe.Commands.Add("out-default");
-                        pipe.Commands[0].MergeMyResults(PipelineResultTypes.Error, PipelineResultTypes.Output);
-
-                        pipe.Invoke();
-                      }
-                  }
-
-                  // parse the download URL from the script output
-                  if(host.HasError)
-                  {
-                     throw new SecureShellSessionException($"Script execution failed with '{host.ErrorText}'");
-                  }
-
-                  dotnetDownloadUrl = host.OutputLines.FirstOrDefault(l => l.Contains("URL #0 - primary")).Split(' ').LastOrDefault()?.Trim();
-                  dotnetDownloadUrl = dotnetDownloadUrl.Replace("win-x64", runtimeId).Replace(".zip", ".tar.gz");
-                  logger.WriteLineOutputExtensionPane($"Downloading {dotnetDownloadUrl} ");
-
-                  var filePath = Path.Combine(PackageConstants.Dotnet.DownloadCacheFolder, Path.GetFileName(dotnetDownloadUrl));
-
-                  // download the payload file, store in the cache folder
-                  using (var response = await httpClient.GetAsync(dotnetDownloadUrl))
-                  {
-                     response.EnsureSuccessStatusCode();
-
-                     using (var stream = File.Create(filePath))
-                     {
-                        await response.Content.CopyToAsync(stream);
-                     }
-                  }
-
-               }
-            }
+            logger.WriteOutputExtensionPane("OK");
          }
          catch (SecureShellSessionException ex)
          {
@@ -449,16 +388,14 @@ namespace RemoteDebuggerLauncher
       {
          try
          {
-            using (var commands = session.CreateCommandSession())
-            {
-               logger.WriteLineOutputExtensionPane("--------------------------------------------------");
-               logger.WriteOutputExtensionPane(LogHost, $"[SSH {session.Settings.UserName}@{ session.Settings.HostName}] ");
-               logger.WriteLineOutputExtensionPane("Installing .NET runtime Online\r\n");
+            logger.WriteLineOutputExtensionPane("--------------------------------------------------");
+            logger.WriteOutputExtensionPane(LogHost, $"[SSH {session.Settings.UserName}@{ session.Settings.HostName}] ");
+            logger.WriteLineOutputExtensionPane("Installing .NET runtime Offline");
 
-               var dotnetInstallPath = configurationAggregator.QueryDotNetInstallFolderPath();
-               var result = await commands.ExecuteCommandAsync($"curl -sSL {PackageConstants.Dotnet.GetInstallDotnetShUrl} | sh /dev/stdin --channel {channel} --runtime {runtime} --install-dir {dotnetInstallPath}");
-               logger.WriteOutputExtensionPane(result);
-            }
+            var installerPath = await DownloadDotnetAsync(channel, runtime);
+            await InstallDotnetAsync(installerPath);
+
+            logger.WriteOutputExtensionPane("OK");
          }
          catch (SecureShellSessionException ex)
          {
@@ -487,6 +424,108 @@ namespace RemoteDebuggerLauncher
          }
 
          return runtimeId;
+      }
+
+      private static string BuildDownloadCacheFilePath(string relativePath, string filName)
+      {
+         var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+         var directoryPath = Path.Combine(localAppData, relativePath);
+         var targetPath = Path.Combine(directoryPath, filName);
+
+         if (!Directory.Exists(directoryPath))
+         {
+            Directory.CreateDirectory(directoryPath);
+         }
+
+         return targetPath;
+      }
+
+      private async Task<string> DownloadDotnetAsync(string channel, string runtime = null)
+      {
+         // Get the CPU architecture to determine which runtime ID to use, ignoring MacOS and Alpine based Linux when determining the needed runtime ID.
+         string runtimeId = await GetRuntimeIdAsync();
+
+         var dotnetInstallPath = configurationAggregator.QueryDotNetInstallFolderPath();
+         string installScript;
+         string dotnetDownloadUrl;
+
+         logger.WriteLineOutputExtensionPane($"Downloading script URL: {PackageConstants.Dotnet.GetInstallDotnetPs1Url}, RuntimeID: {runtimeId}");
+
+         // Download the PS1 script to install .NET
+         using (var httpClient = new HttpClient())
+         {
+            using (var response = await httpClient.GetAsync(PackageConstants.Dotnet.GetInstallDotnetPs1Url))
+            {
+               response.EnsureSuccessStatusCode();
+               installScript = await response.Content.ReadAsStringAsync();
+            }
+
+            // Create the runspace so that you can access the pipeline.
+            CustomPSHost host = new CustomPSHost();
+
+            using (var runSpace = RunspaceFactory.CreateRunspace(host))
+            {
+               runSpace.Open();
+
+               // Create the pipeline.
+               using (Pipeline pipe = runSpace.CreatePipeline())
+               {
+                  var command = new Command(installScript, true);
+                  command.Parameters.Add("-Channel", channel);
+                  if (!String.IsNullOrEmpty(runtime))
+                  {
+                     command.Parameters.Add("-Runtime", runtime);
+                  }
+                  command.Parameters.Add("-Architecture", "x64");
+                  command.Parameters.Add("-DryRun");
+                  pipe.Commands.Add(command);
+
+                  pipe.Commands.Add("out-default");
+                  pipe.Commands[0].MergeMyResults(PipelineResultTypes.Error, PipelineResultTypes.Output);
+
+                  pipe.Invoke();
+               }
+            }
+
+            // parse the download URL from the script output
+            if (host.HasError)
+            {
+               throw new SecureShellSessionException($"Script execution failed with '{host.ErrorText}'");
+            }
+
+            dotnetDownloadUrl = host.OutputLines.FirstOrDefault(l => l.Contains("URL #0 - primary")).Split(' ').LastOrDefault()?.Trim();
+            dotnetDownloadUrl = dotnetDownloadUrl.Replace("win-x64", runtimeId).Replace(".zip", ".tar.gz");
+            logger.WriteLineOutputExtensionPane($"Downloading {dotnetDownloadUrl} ");
+
+            var filePath = BuildDownloadCacheFilePath(PackageConstants.Dotnet.DownloadCacheFolder, Path.GetFileName(dotnetDownloadUrl));
+
+            // download the payload file, store in the cache folder
+            using (var response = await httpClient.GetAsync(dotnetDownloadUrl))
+            {
+               response.EnsureSuccessStatusCode();
+
+               using (var stream = File.Create(filePath))
+               {
+                  await response.Content.CopyToAsync(stream);
+               }
+            }
+
+            return filePath;
+         }
+      }
+      private async Task InstallDotnetAsync(string filePath)
+      {
+         using (var commands = session.CreateCommandSession())
+         {
+            var dotnetInstallPath = configurationAggregator.QueryDotNetInstallFolderPath();
+            var fileName = Path.GetFileName(filePath);
+
+            var userHome = (await commands.ExecuteCommandAsync("pwd").ConfigureAwait(true)).Trim('\n');
+            var targetPath = UnixPath.Combine(userHome, fileName);
+
+            //"mkdir - p $HOME / dotnet && tar zxf dotnet-sdk - 6.0.201 - linux - x64.tar.gz - C $HOME / dotnet";
+            await session.UploadFileAsync(filePath, targetPath);
+         }
       }
    }
 }

@@ -104,6 +104,36 @@ namespace RemoteDebuggerLauncher
          });
       }
 
+      public Task UploadFileAsync(string localSourcePath, string remoteTargetPath)
+      {
+         ThrowIf.ArgumentNullOrEmpty(localSourcePath, nameof(localSourcePath));
+         ThrowIf.ArgumentNullOrEmpty(remoteTargetPath, nameof(remoteTargetPath));
+
+         return Task.Run(() =>
+         {
+            try
+            {
+               var sourcePathInfo = new FileInfo(localSourcePath);
+               using (var client = CreateScpClient())
+               {
+                  // for the moment, we assume that the path names does not have any character that have special meaning for a Linux host
+                  client.RemotePathTransformation = RemotePathTransformation.None;
+                  client.Connect();
+                  client.Upload(sourcePathInfo, remoteTargetPath);
+                  client.Uploading += Client_Uploading;
+               }
+            }
+            catch (SshException e)
+            {
+               throw new SecureShellSessionException(e.Message, e);
+            }
+            catch (InvalidOperationException e)
+            {
+               throw new SecureShellSessionException(e.Message, e);
+            }
+         });
+      }
+
       private void Client_Uploading(object sender, ScpUploadEventArgs e)
       {
       }

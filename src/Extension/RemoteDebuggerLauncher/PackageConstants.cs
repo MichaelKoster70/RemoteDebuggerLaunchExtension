@@ -88,7 +88,6 @@ namespace RemoteDebuggerLauncher
       {
          /// <summary>The name of the VS debugger binary.</summary>
          public const string BinaryName = "vsdbg";
-         public const string Version = "latest";
          public const string GetVsDbgShUrl = "https://aka.ms/getvsdbgsh";
          public const string GetVsDbgPs1Url = "https://aka.ms/getvsdbgps1";
 

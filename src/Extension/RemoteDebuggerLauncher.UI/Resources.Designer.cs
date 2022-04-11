@@ -63,9 +63,27 @@ namespace RemoteDebuggerLauncher {
         /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
-        public static string CancelButtonLabel {
+        public static string CommonCancelButtonLabel {
             get {
-                return ResourceManager.GetString("CancelButtonLabel", resourceCulture);
+                return ResourceManager.GetString("CommonCancelButtonLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install Mode.
+        /// </summary>
+        public static string CommonDialogModeLabel {
+            get {
+                return ResourceManager.GetString("CommonDialogModeLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string CommonOkButtonLabel {
+            get {
+                return ResourceManager.GetString("CommonOkButtonLabel", resourceCulture);
             }
         }
         
@@ -98,40 +116,47 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SDK: Install the full .NET SDK
-        ///Runtime dotnet: Install only the .NET runtime
-        ///Runtime aspnet: Install the ASP.NET runtime.
+        ///   Looks up a localized string similar to Select the version and installation type, then click OK to install..
         /// </summary>
-        public static string InstallationTypeDescription {
+        public static string InstallDebuggerDialogHeaderText {
             get {
-                return ResourceManager.GetString("InstallationTypeDescription", resourceCulture);
+                return ResourceManager.GetString("InstallDebuggerDialogHeaderText", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Runtime: aspnet.
+        ///   Looks up a localized string similar to Install VS Code Debugger on target host.
         /// </summary>
-        public static string InstallationTypeRuntimeAspnetDisplayName {
+        public static string InstallDebuggerDialogTitle {
             get {
-                return ResourceManager.GetString("InstallationTypeRuntimeAspnetDisplayName", resourceCulture);
+                return ResourceManager.GetString("InstallDebuggerDialogTitle", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Runtime: dotnet.
+        ///   Looks up a localized string similar to Latest: The latest version of the Debugger.
         /// </summary>
-        public static string InstallationTypeRuntimeNetDisplayName {
+        public static string InstallDebuggerVersionDescription {
             get {
-                return ResourceManager.GetString("InstallationTypeRuntimeNetDisplayName", resourceCulture);
+                return ResourceManager.GetString("InstallDebuggerVersionDescription", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SDK.
+        ///   Looks up a localized string similar to Latest.
         /// </summary>
-        public static string InstallationTypeSdkDisplayName {
+        public static string InstallDebuggerVersionLatestDisplayName {
             get {
-                return ResourceManager.GetString("InstallationTypeSdkDisplayName", resourceCulture);
+                return ResourceManager.GetString("InstallDebuggerVersionLatestDisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visual Studio 2022.
+        /// </summary>
+        public static string InstallDebuggerVersionVs2022DisplayName {
+            get {
+                return ResourceManager.GetString("InstallDebuggerVersionVs2022DisplayName", resourceCulture);
             }
         }
         
@@ -141,15 +166,6 @@ namespace RemoteDebuggerLauncher {
         public static string InstallDotnetDialogHeaderText {
             get {
                 return ResourceManager.GetString("InstallDotnetDialogHeaderText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Install Mode.
-        /// </summary>
-        public static string InstallDotnetDialogModeLabel {
-            get {
-                return ResourceManager.GetString("InstallDotnetDialogModeLabel", resourceCulture);
             }
         }
         
@@ -181,20 +197,49 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to OK.
+        ///   Looks up a localized string similar to SDK: Install the full .NET SDK
+        ///Runtime dotnet: Install only the .NET runtime
+        ///Runtime aspnet: Install the ASP.NET runtime.
         /// </summary>
-        public static string OkButtonLabel {
+        public static string InstallDotnetInstallationTypeDescription {
             get {
-                return ResourceManager.GetString("OkButtonLabel", resourceCulture);
+                return ResourceManager.GetString("InstallDotnetInstallationTypeDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Runtime: aspnet.
+        /// </summary>
+        public static string InstallDotnetInstallationTypeRuntimeAspnetDisplayName {
+            get {
+                return ResourceManager.GetString("InstallDotnetInstallationTypeRuntimeAspnetDisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Runtime: dotnet.
+        /// </summary>
+        public static string InstallDotnetInstallationTypeRuntimeNetDisplayName {
+            get {
+                return ResourceManager.GetString("InstallDotnetInstallationTypeRuntimeNetDisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SDK.
+        /// </summary>
+        public static string InstallDotnetInstallationTypeSdkDisplayName {
+            get {
+                return ResourceManager.GetString("InstallDotnetInstallationTypeSdkDisplayName", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Current.
         /// </summary>
-        public static string VersionCurrentDisplayName {
+        public static string InstallDotnetVersionCurrentDisplayName {
             get {
-                return ResourceManager.GetString("VersionCurrentDisplayName", resourceCulture);
+                return ResourceManager.GetString("InstallDotnetVersionCurrentDisplayName", resourceCulture);
             }
         }
         
@@ -202,18 +247,18 @@ namespace RemoteDebuggerLauncher {
         ///   Looks up a localized string similar to Current: The most recent current version of .NET
         ///LTS: The most recent LTS version of .NET.
         /// </summary>
-        public static string VersionDescription {
+        public static string InstallDotnetVersionDescription {
             get {
-                return ResourceManager.GetString("VersionDescription", resourceCulture);
+                return ResourceManager.GetString("InstallDotnetVersionDescription", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to LTS.
         /// </summary>
-        public static string VersionLtsDisplayName {
+        public static string InstallDotnetVersionLtsDisplayName {
             get {
-                return ResourceManager.GetString("VersionLtsDisplayName", resourceCulture);
+                return ResourceManager.GetString("InstallDotnetVersionLtsDisplayName", resourceCulture);
             }
         }
     }

@@ -11,12 +11,11 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// Command handler
+   /// Command handler for the Install VS Code Debugger command.
    /// </summary>
    internal sealed class InstallDebuggerCommand
    {
@@ -79,17 +78,52 @@ namespace RemoteDebuggerLauncher
       private void Execute(object sender, EventArgs e)
       {
          ThreadHelper.ThrowIfNotOnUIThread();
-         string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
-         string title = "Install Debugger";
 
-         // Show a message box to prove we were here
-         VsShellUtilities.ShowMessageBox(
-             this.package,
-             message,
-             title,
-             OLEMSGICON.OLEMSGICON_INFO,
-             OLEMSGBUTTON.OLEMSGBUTTON_OK,
-             OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+         var viewModel = new InstallDebuggerViewModel(ThreadHelper.JoinableTaskFactory);
+         var dialog = new InstallDebuggerDialogWindow()
+         {
+            DataContext = viewModel
+         };
+
+         var result = dialog.ShowDialog();
+
+         if (result.HasValue && result.Value)
+         {
+#pragma warning disable VSTHRD102 // Implement internal logic asynchronously
+            package.JoinableTaskFactory.RunAsync(async () =>
+            {
+               // get all services we need
+               var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync().ConfigureAwait(false);
+               var projectService = await ServiceProvider.GetProjectServiceAsync().ConfigureAwait(false);
+               var optionsPageAccessor = await ServiceProvider.GetServiceAsync<SOptionsPageAccessor, IOptionsPageAccessor>();
+               var loggerService = await ServiceProvider.GetServiceAsync<SLoggerService, ILoggerService>();
+
+               // do the remaining work on the UI thread
+               await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+               var lauchProfileAccess = new LaunchProfileAccess(dte, projectService);
+               var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync();
+
+               foreach (var profile in profiles)
+               {
+                  var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
+                  var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService);
+                  remoteOperations.LogHost = true;
+                  loggerService.WriteLineOutputExtensionPane($"========== {profile.Name} ==========");
+                  var success = viewModel.SelectedInstallationModeOnline;
+                  if (success)
+                  {
+                     success = await remoteOperations.TryInstallVsDbgOnlineAsync(viewModel.SelectedVersion);
+                  }
+
+                  if (!success)
+                  {
+                     await remoteOperations.TryInstallVsDbgOfflineAsync(viewModel.SelectedVersion);
+                  }
+               }
+            });
+#pragma warning restore VSTHRD102 // Implement internal logic asynchronously
+         } // end Task.Run
       }
    }
 }

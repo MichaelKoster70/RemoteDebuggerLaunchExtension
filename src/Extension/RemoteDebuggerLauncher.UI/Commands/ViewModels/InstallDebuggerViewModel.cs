@@ -14,12 +14,11 @@ using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher
 {
-   public class InstallDotnetViewModel : ViewModelBase
+   public class InstallDebuggerViewModel : ViewModelBase
    {
       private InstallationModeViewModel selectedInstallationMode;
-      private InstallationTypeViewModel selectedInstallationType;
 
-      public InstallDotnetViewModel(JoinableTaskFactory joinableTaskFactory)
+      public InstallDebuggerViewModel(JoinableTaskFactory joinableTaskFactory)
       {
          // wire-up commands
          OkCommand = new DelegateCommand<DialogWindow>(HandleOkCommand, canExecute => Validate(), joinableTaskFactory);
@@ -32,23 +31,15 @@ namespace RemoteDebuggerLauncher
             new InstallationModeViewModel (false, Resources.InstallationModeOfflineDisplayName),
          };
 
-         InstallationTypes = new List<InstallationTypeViewModel>()
-         {
-            new InstallationTypeViewModel (DotnetInstallationKind.Sdk, Resources.InstallDotnetInstallationTypeSdkDisplayName),
-            new InstallationTypeViewModel (DotnetInstallationKind.RuntimeNet, Resources.InstallDotnetInstallationTypeRuntimeNetDisplayName),
-            new InstallationTypeViewModel (DotnetInstallationKind.RuntimeAspNet, Resources.InstallDotnetInstallationTypeRuntimeAspnetDisplayName)
-         };
-
          Versions = new List<VersionViewModel>()
          {
-            new VersionViewModel (Constants.Dotnet.ChannelCurrent, Resources.InstallDotnetVersionCurrentDisplayName),
-            new VersionViewModel (Constants.Dotnet.ChannelLTS, Resources.InstallDotnetVersionLtsDisplayName)
+            new VersionViewModel (Constants.Debugger.VersionLatest, Resources.InstallDebuggerVersionLatestDisplayName),
+            new VersionViewModel (Constants.Debugger.VersionVs2022, Resources.InstallDebuggerVersionVs2022DisplayName)
          };
 
          // set the default values
          SelectedInstallationMode = InstallationModes[0];
-         SelectedInstallationType = InstallationTypes[0];
-         SelectedItem = Versions[1];
+         SelectedItem = Versions[0];
          SelectedText = SelectedItem.DisplayName;
       }
 
@@ -68,22 +59,6 @@ namespace RemoteDebuggerLauncher
 
       public bool SelectedInstallationModeOnline => SelectedInstallationMode.Mode;
 
-      public IList<InstallationTypeViewModel> InstallationTypes { get; }
-
-      public InstallationTypeViewModel SelectedInstallationType
-      {
-         get => selectedInstallationType;
-         set
-         {
-            if (SetProperty(ref selectedInstallationType, value))
-            {
-               OkCommand.RaiseCanExecuteChanged();
-            }
-         }
-      }
-
-      public DotnetInstallationKind SelectedInstallationKind => SelectedInstallationType.Kind;
-
       public IList<VersionViewModel> Versions { get; }
 
       public VersionViewModel SelectedItem { get; set; }
@@ -97,18 +72,6 @@ namespace RemoteDebuggerLauncher
             return SelectedItem?.Name ?? SelectedText;
          }
       }
-
-      //public InstallationTypeViewModel SelectedInstallationType
-      //{
-      //   get => selectedInstallationType;
-      //   set
-      //   {
-      //      if (SetProperty(ref selectedInstallationType, value))
-      //      {
-      //         OkCommand.RaiseCanExecuteChanged();
-      //      }
-      //   }
-      //}
 
       public DelegateCommand<DialogWindow> OkCommand { get; }
 

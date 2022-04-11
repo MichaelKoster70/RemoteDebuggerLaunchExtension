@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CancelButtonLabel" xml:space="preserve">
+  <data name="CommonCancelButtonLabel" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="CommonDialogModeLabel" xml:space="preserve">
+    <value>Install Mode</value>
+  </data>
+  <data name="CommonOkButtonLabel" xml:space="preserve">
+    <value>OK</value>
   </data>
   <data name="InstallationModeDescription" xml:space="preserve">
     <value>Online: Target device has internet access, can download and install in it's own
@@ -130,25 +136,23 @@ Offline: Target device no internet access, PC will download and trigger install<
   <data name="InstallationModeOnlineDisplayName" xml:space="preserve">
     <value>Online</value>
   </data>
-  <data name="InstallationTypeDescription" xml:space="preserve">
-    <value>SDK: Install the full .NET SDK
-Runtime dotnet: Install only the .NET runtime
-Runtime aspnet: Install the ASP.NET runtime</value>
+  <data name="InstallDebuggerDialogHeaderText" xml:space="preserve">
+    <value>Select the version and installation type, then click OK to install.</value>
   </data>
-  <data name="InstallationTypeRuntimeAspnetDisplayName" xml:space="preserve">
-    <value>Runtime: aspnet</value>
+  <data name="InstallDebuggerDialogTitle" xml:space="preserve">
+    <value>Install VS Code Debugger on target host</value>
   </data>
-  <data name="InstallationTypeRuntimeNetDisplayName" xml:space="preserve">
-    <value>Runtime: dotnet</value>
+  <data name="InstallDebuggerVersionDescription" xml:space="preserve">
+    <value>Latest: The latest version of the Debugger</value>
   </data>
-  <data name="InstallationTypeSdkDisplayName" xml:space="preserve">
-    <value>SDK</value>
+  <data name="InstallDebuggerVersionLatestDisplayName" xml:space="preserve">
+    <value>Latest</value>
+  </data>
+  <data name="InstallDebuggerVersionVs2022DisplayName" xml:space="preserve">
+    <value>Visual Studio 2022</value>
   </data>
   <data name="InstallDotnetDialogHeaderText" xml:space="preserve">
     <value>Select the version of .NET and installation type, then click OK to install.</value>
-  </data>
-  <data name="InstallDotnetDialogModeLabel" xml:space="preserve">
-    <value>Install Mode</value>
   </data>
   <data name="InstallDotnetDialogTitle" xml:space="preserve">
     <value>Install .NET on target host</value>
@@ -159,17 +163,28 @@ Runtime aspnet: Install the ASP.NET runtime</value>
   <data name="InstallDotnetDialogVersionLabel" xml:space="preserve">
     <value>Version</value>
   </data>
-  <data name="OkButtonLabel" xml:space="preserve">
-    <value>OK</value>
+  <data name="InstallDotnetInstallationTypeDescription" xml:space="preserve">
+    <value>SDK: Install the full .NET SDK
+Runtime dotnet: Install only the .NET runtime
+Runtime aspnet: Install the ASP.NET runtime</value>
   </data>
-  <data name="VersionCurrentDisplayName" xml:space="preserve">
+  <data name="InstallDotnetInstallationTypeRuntimeAspnetDisplayName" xml:space="preserve">
+    <value>Runtime: aspnet</value>
+  </data>
+  <data name="InstallDotnetInstallationTypeRuntimeNetDisplayName" xml:space="preserve">
+    <value>Runtime: dotnet</value>
+  </data>
+  <data name="InstallDotnetInstallationTypeSdkDisplayName" xml:space="preserve">
+    <value>SDK</value>
+  </data>
+  <data name="InstallDotnetVersionCurrentDisplayName" xml:space="preserve">
     <value>Current</value>
   </data>
-  <data name="VersionDescription" xml:space="preserve">
+  <data name="InstallDotnetVersionDescription" xml:space="preserve">
     <value>Current: The most recent current version of .NET
 LTS: The most recent LTS version of .NET</value>
   </data>
-  <data name="VersionLtsDisplayName" xml:space="preserve">
+  <data name="InstallDotnetVersionLtsDisplayName" xml:space="preserve">
     <value>LTS</value>
   </data>
 </root>

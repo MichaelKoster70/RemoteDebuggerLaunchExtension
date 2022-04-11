@@ -36,9 +36,10 @@ namespace RemoteDebuggerLauncher
          ThrowIf.ArgumentNullOrEmpty(commandText, nameof(commandText));
          return Task.Run(() =>
          {
-            EnsureConnected();
             try
             {
+               EnsureConnected();
+
                using (var command = client.RunCommand(commandText))
                {
                   if (command.ExitStatus != 0)
