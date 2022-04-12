@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Threading;
 
 namespace RemoteDebuggerLauncher
 {
@@ -24,6 +25,8 @@ namespace RemoteDebuggerLauncher
 
       /// <summary>Package that provides this command, not null.</summary>
       private readonly AsyncPackage package;
+
+      private JoinableTask joinableTask;
 
       /// <summary>
       /// Initializes a new instance of the <see cref="InstallDebuggerCommand"/> class.
@@ -79,6 +82,20 @@ namespace RemoteDebuggerLauncher
       {
          ThreadHelper.ThrowIfNotOnUIThread();
 
+         if (joinableTask != null)
+         {
+#pragma warning disable VSTHRD102 // Implement internal logic asynchronously
+            try
+            {
+               joinableTask.Join();
+            }
+            finally
+            {
+               joinableTask = null;
+            }
+#pragma warning restore VSTHRD102 // Implement internal logic asynchronously
+         }
+
          var viewModel = new InstallDebuggerViewModel(ThreadHelper.JoinableTaskFactory);
          var dialog = new InstallDebuggerDialogWindow()
          {
@@ -89,41 +106,46 @@ namespace RemoteDebuggerLauncher
 
          if (result.HasValue && result.Value)
          {
-#pragma warning disable VSTHRD102 // Implement internal logic asynchronously
-            package.JoinableTaskFactory.RunAsync(async () =>
+            joinableTask = package.JoinableTaskFactory.RunAsync(async () =>
             {
-               // get all services we need
-               var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync().ConfigureAwait(false);
-               var projectService = await ServiceProvider.GetProjectServiceAsync().ConfigureAwait(false);
-               var optionsPageAccessor = await ServiceProvider.GetServiceAsync<SOptionsPageAccessor, IOptionsPageAccessor>();
-               var loggerService = await ServiceProvider.GetServiceAsync<SLoggerService, ILoggerService>();
-
-               // do the remaining work on the UI thread
-               await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-               var lauchProfileAccess = new LaunchProfileAccess(dte, projectService);
-               var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync();
-
-               foreach (var profile in profiles)
+               try
                {
-                  var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
-                  var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService);
-                  remoteOperations.LogHost = true;
-                  loggerService.WriteLineOutputExtensionPane($"========== {profile.Name} ==========");
-                  var success = viewModel.SelectedInstallationModeOnline;
-                  if (success)
-                  {
-                     success = await remoteOperations.TryInstallVsDbgOnlineAsync(viewModel.SelectedVersion);
-                  }
+                  // get all services we need
+                  var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync().ConfigureAwait(false);
+                  var projectService = await ServiceProvider.GetProjectServiceAsync().ConfigureAwait(false);
+                  var optionsPageAccessor = await ServiceProvider.GetServiceAsync<SOptionsPageAccessor, IOptionsPageAccessor>();
+                  var loggerService = await ServiceProvider.GetServiceAsync<SLoggerService, ILoggerService>();
 
-                  if (!success)
+                  // do the remaining work on the UI thread
+                  await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                  var lauchProfileAccess = new LaunchProfileAccess(dte, projectService);
+                  var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync();
+
+                  foreach (var profile in profiles)
                   {
-                     await remoteOperations.TryInstallVsDbgOfflineAsync(viewModel.SelectedVersion);
+                     var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
+                     var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService);
+                     remoteOperations.LogHost = true;
+                     loggerService.WriteLineOutputExtensionPane($"========== {profile.Name} ==========");
+                     var success = viewModel.SelectedInstallationModeOnline;
+                     if (success)
+                     {
+                        success = await remoteOperations.TryInstallVsDbgOnlineAsync(viewModel.SelectedVersion);
+                     }
+
+                     if (!success)
+                     {
+                        await remoteOperations.TryInstallVsDbgOfflineAsync(viewModel.SelectedVersion);
+                     }
                   }
                }
-            });
-#pragma warning restore VSTHRD102 // Implement internal logic asynchronously
-         } // end Task.Run
+               finally
+               {
+                  joinableTask = null;
+               }
+            }); // end Task.Run
+         } 
       }
    }
 }
