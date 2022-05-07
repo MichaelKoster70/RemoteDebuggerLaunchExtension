@@ -12,7 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-
+using Microsoft.VisualStudio.Threading;
 
 namespace RemoteDebuggerLauncher
 {
@@ -26,6 +26,10 @@ namespace RemoteDebuggerLauncher
 
       /// <summary>VS Package that provides this command, not null.</summary>
       private readonly AsyncPackage package;
+
+      /// <summary>Running task instance to prevent multiple executions.</summary>
+      private JoinableTask joinableTask;
+
 
       /// <summary>
       /// Initializes a new instance of the <see cref="InstallDotnetCommand"/> class.
@@ -92,38 +96,45 @@ namespace RemoteDebuggerLauncher
          if (result.HasValue && result.Value)
          {
 #pragma warning disable VSTHRD102 // Implement internal logic asynchronously
-            package.JoinableTaskFactory.Run(async () =>
+            joinableTask = package.JoinableTaskFactory.RunAsync(async () =>
             {
-               // get all services we need
-               var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync().ConfigureAwait(false);
-               var projectService = await ServiceProvider.GetProjectServiceAsync().ConfigureAwait(false);
-               var optionsPageAccessor = await ServiceProvider.GetServiceAsync<SOptionsPageAccessor, IOptionsPageAccessor>();
-               var loggerService = await ServiceProvider.GetServiceAsync<SLoggerService, ILoggerService>();
-
-               // do the remaining work on the UI thread
-               await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-               var lauchProfileAccess = new LaunchProfileAccess(dte, projectService);
-               var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync();
-
-               foreach (var profile in profiles)
+               try
                {
-                  var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
-                  var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService);
-                  remoteOperations.LogHost = true;
-                  loggerService.WriteLineOutputExtensionPane($"========== {profile.Name} ==========");
-                  var onlineMode = viewModel.SelectedInstallationModeOnline;
+                  // get all services we need
+                  var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync().ConfigureAwait(false);
+                  var projectService = await ServiceProvider.GetProjectServiceAsync().ConfigureAwait(false);
+                  var optionsPageAccessor = await ServiceProvider.GetServiceAsync<SOptionsPageAccessor, IOptionsPageAccessor>();
+                  var loggerService = await ServiceProvider.GetServiceAsync<SLoggerService, ILoggerService>();
 
-                  bool success = false;
-                  if (onlineMode)
-                  {
-                     success = await remoteOperations.TryInstallDotNetOnlineAsync(viewModel.SelectedInstallationKind, viewModel.SelectedVersion);
-                  }
+                  // do the remaining work on the UI thread
+                  await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-                  if (!success)
+                  var lauchProfileAccess = new LaunchProfileAccess(dte, projectService);
+                  var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync();
+
+                  foreach (var profile in profiles)
                   {
-                     await remoteOperations.TryInstallDotNetOfflineAsync(viewModel.SelectedInstallationKind, viewModel.SelectedVersion);
+                     var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
+                     var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService);
+                     remoteOperations.LogHost = true;
+                     loggerService.WriteLineOutputExtensionPane($"========== {profile.Name} ==========");
+                     var onlineMode = viewModel.SelectedInstallationModeOnline;
+
+                     bool success = false;
+                     if (onlineMode)
+                     {
+                        success = await remoteOperations.TryInstallDotNetOnlineAsync(viewModel.SelectedInstallationKind, viewModel.SelectedVersion);
+                     }
+
+                     if (!success)
+                     {
+                        await remoteOperations.TryInstallDotNetOfflineAsync(viewModel.SelectedInstallationKind, viewModel.SelectedVersion);
+                     }
                   }
+               }
+               finally
+               {
+                  joinableTask = null;
                }
             });
 #pragma warning restore VSTHRD102 // Implement internal logic asynchronously

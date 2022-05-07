@@ -26,6 +26,7 @@ namespace RemoteDebuggerLauncher
       /// <summary>Package that provides this command, not null.</summary>
       private readonly AsyncPackage package;
 
+      /// <summary>Running task instance to prevent multiple executions.</summary>
       private JoinableTask joinableTask;
 
       /// <summary>
@@ -82,18 +83,20 @@ namespace RemoteDebuggerLauncher
       {
          ThreadHelper.ThrowIfNotOnUIThread();
 
+         // check, if the command is already running
          if (joinableTask != null)
          {
-#pragma warning disable VSTHRD102 // Implement internal logic asynchronously
-            try
-            {
-               joinableTask.Join();
-            }
-            finally
-            {
-               joinableTask = null;
-            }
-#pragma warning restore VSTHRD102 // Implement internal logic asynchronously
+            return;
+//#pragma warning disable VSTHRD102 // Implement internal logic asynchronously
+//            try
+//            {
+//               joinableTask.Join();
+//            }
+//            finally
+//            {
+//               joinableTask = null;
+//            }
+//#pragma warning restore VSTHRD102 // Implement internal logic asynchronously
          }
 
          var viewModel = new InstallDebuggerViewModel(ThreadHelper.JoinableTaskFactory);
