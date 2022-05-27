@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extension", "Extension", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteDebuggerLauncher", "src\Extension\RemoteDebuggerLauncher\RemoteDebuggerLauncher.csproj", "{E95FF607-9D76-4ED8-BE5F-F5254CAC4963}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteDebuggerLauncher.UI", "src\Extension\RemoteDebuggerLauncher.UI\RemoteDebuggerLauncher.UI.csproj", "{9BB8C19C-9BD2-4F3F-8800-951B4851E794}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteDebuggerLauncherUI", "src\Extension\RemoteDebuggerLauncher.UI\RemoteDebuggerLauncherUI.csproj", "{9BB8C19C-9BD2-4F3F-8800-951B4851E794}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteDebuggerLauncherShared", "src\Extension\RemoteDebuggerLauncherShared\RemoteDebuggerLauncherShared.csproj", "{93E8395B-2FCF-46EC-AD25-C7B4083BE047}"
 EndProject

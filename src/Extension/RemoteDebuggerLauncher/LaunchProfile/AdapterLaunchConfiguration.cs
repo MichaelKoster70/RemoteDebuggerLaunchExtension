@@ -70,7 +70,7 @@ namespace RemoteDebuggerLauncher
          public Dictionary<string, JToken> ConfigurationProperties { get; } = new Dictionary<string, JToken>();
       }
 
-      public static async Task<string> CreateFrameworkDependantAsync(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject, ILoggerService logger)
+      public static async Task<string> CreateFrameworkDependantAsync(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject, ILoggerService logger, SecureShellRemoteOperations remoteOperations)
       {
          ThrowIf.ArgumentNull(configurationAggregator, nameof(configurationAggregator));
          ThrowIf.ArgumentNull(configuredProject, nameof(configuredProject));
@@ -86,7 +86,6 @@ namespace RemoteDebuggerLauncher
          var shouldNormalizeAppFolderPath = UnixPath.ShouldBeNormalized(appFolderPath);
          if (shouldNormalizeProgram || shouldNormalizeAppFolderPath)
          {
-            var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, logger);
             var homeDirectory = await remoteOperations.QueryUserHomeDirectoryAsync();
             if (!string.IsNullOrEmpty(homeDirectory))
             {
@@ -122,7 +121,7 @@ namespace RemoteDebuggerLauncher
          config.AppendCommandLineArguments(configurationAggregator);
 
          var launchConfigurationJson = JsonConvert.SerializeObject(config);
-         logger.WriteLineOutputExtensionPane($"Options: {launchConfigurationJson}");
+         logger.WriteLine($"Options: {launchConfigurationJson}");
          return launchConfigurationJson;
       }
 

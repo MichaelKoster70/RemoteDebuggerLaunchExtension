@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Threading;
 
 namespace RemoteDebuggerLauncher
@@ -130,7 +131,7 @@ namespace RemoteDebuggerLauncher
                      var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
                      var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService);
                      remoteOperations.LogHost = true;
-                     loggerService.WriteLineOutputExtensionPane($"========== {profile.Name} ==========");
+                     loggerService.WriteLine($"========== {profile.Name} ==========");
                      var success = viewModel.SelectedInstallationModeOnline;
                      if (success)
                      {

@@ -9,11 +9,12 @@ using System;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using RemoteDebuggerLauncher.Extensions;
 
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// Logging Service implementation writing to a custom Visual Studio Output Window.
+   /// Logging Service implementation writing to a custom Visual Studio Output Window Pane.
    /// Implements the <see cref="RemoteDebuggerLauncher.ILoggerService" />
    /// </summary>
    /// <seealso cref="RemoteDebuggerLauncher.ILoggerService" />
@@ -31,7 +32,7 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <inheritdoc />
-      public void WriteOutputDebugPane(string message, bool activate)
+      public void WriteOutputDebugPane(string message, bool activate = true)
       {
          ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -41,32 +42,52 @@ namespace RemoteDebuggerLauncher
 
 
       /// <inheritdoc />
-      public void WriteOutputExtensionPane(string message, bool activate)
+      public void Write(string message, bool activate = true)
       {
          ThreadHelper.ThrowIfNotOnUIThread();
 
          var pane = EnsurePane(PackageConstants.OutputWindow.OutputPaneGuid, PackageConstants.OutputWindow.OutputPaneName, activate);
-         pane.OutputStringThreadSafe(message);
+         pane.OutputStringNoPump(message);
       }
 
       /// <inheritdoc />
-      public void WriteOutputExtensionPane(bool predicate, string message, bool activate = true)
+      public void Write(bool predicate, string message, object arg0, object arg1, bool activate = true)
       {
          ThreadHelper.ThrowIfNotOnUIThread();
 
          if (predicate)
          {
-            WriteOutputExtensionPane(message, activate);
+            Write(string.Format(message, arg0, arg1), activate);
          }
       }
 
       /// <inheritdoc />
-      public void WriteLineOutputExtensionPane(string message, bool activate)
+      public void Write(string message, object arg0, bool activate = true)
+      {
+         ThreadHelper.ThrowIfNotOnUIThread();
+         Write(string.Format(message, arg0), activate);
+      }
+
+      /// <inheritdoc />
+      public void Write(string message, object arg0, object arg1, bool activate = true)
+      {
+         ThreadHelper.ThrowIfNotOnUIThread();
+         Write(string.Format(message, arg0, arg1), activate);
+      }
+
+      /// <inheritdoc />
+      public void WriteLine(string message, bool activate)
       {
          ThreadHelper.ThrowIfNotOnUIThread();
 
          var pane = EnsurePane(PackageConstants.OutputWindow.OutputPaneGuid, PackageConstants.OutputWindow.OutputPaneName, activate);
-         pane.OutputStringThreadSafe(message + "\r\n");
+         pane.OutputStringNoPump(message + "\r\n");
+      }
+
+      public void WriteLine(string message, object arg0, bool activate = true)
+      {
+         ThreadHelper.ThrowIfNotOnUIThread();
+         WriteLine(string.Format(message, arg0), activate);
       }
 
       private IVsOutputWindowPane EnsurePane(Guid guid, string name, bool activate)

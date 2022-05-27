@@ -261,5 +261,41 @@ namespace RemoteDebuggerLauncher {
                 return ResourceManager.GetString("InstallDotnetVersionLtsDisplayName", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connecting to {0}@{1} ... .
+        /// </summary>
+        public static string RemoteCommandCheckConnectionConnectingTo {
+            get {
+                return ResourceManager.GetString("RemoteCommandCheckConnectionConnectingTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FAILED: {0}.
+        /// </summary>
+        public static string RemoteCommandCommonFailed {
+            get {
+                return ResourceManager.GetString("RemoteCommandCommonFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [SSH {0}@{1}] .
+        /// </summary>
+        public static string RemoteCommandCommonSshTarget {
+            get {
+                return ResourceManager.GetString("RemoteCommandCommonSshTarget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string RemoteCommandCommonSuccess {
+            get {
+                return ResourceManager.GetString("RemoteCommandCommonSuccess", resourceCulture);
+            }
+        }
     }
 }

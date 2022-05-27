@@ -14,7 +14,9 @@ using System.Management.Automation.Runspaces;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Shell.Interop;
 using RemoteDebuggerLauncher.Shared;
+using Constants = RemoteDebuggerLauncher.Shared.Constants;
 
 namespace RemoteDebuggerLauncher
 {
@@ -26,6 +28,7 @@ namespace RemoteDebuggerLauncher
       private readonly ConfigurationAggregator configurationAggregator;
       private readonly SecureShellSession session;
       private readonly ILoggerService logger;
+      private readonly IStatusbarService statusbar;
 
       /// <summary>
       /// Initializes a new instance of the <see cref="SecureShellRemoteOperations" /> class.
@@ -33,11 +36,12 @@ namespace RemoteDebuggerLauncher
       /// <param name="configurationAggregator">The configuration aggregator.</param>
       /// <param name="session">The session to use.</param>
       /// <param name="logger">The logger service instance to use.</param>
-      internal SecureShellRemoteOperations(ConfigurationAggregator configurationAggregator, SecureShellSession session, ILoggerService logger)
+      internal SecureShellRemoteOperations(ConfigurationAggregator configurationAggregator, SecureShellSession session, ILoggerService logger, IStatusbarService statusbar)
       {
          this.configurationAggregator = configurationAggregator;
          this.session = session;
          this.logger = logger;
+         this.statusbar = statusbar;
       }
 
       /// <summary>
@@ -45,14 +49,15 @@ namespace RemoteDebuggerLauncher
       /// </summary>
       /// <param name="configurationAggregator">The configuration aggregator to read the settings from.</param>
       /// <param name="logger">The logger instance to use.</param>
+      /// <param name="statusbar">Optional statusbar service to report progress.</param>
       /// <returns>A <see cref="SecureShellRemoteOperations" /> instance.</returns>
       /// <exception cref="ArgumentNullException">configurationAggregator is null.</exception>
-      public static SecureShellRemoteOperations Create(ConfigurationAggregator configurationAggregator, ILoggerService logger)
+      public static SecureShellRemoteOperations Create(ConfigurationAggregator configurationAggregator, ILoggerService logger, IStatusbarService statusbar = null)
       {
          ThrowIf.ArgumentNull(configurationAggregator, nameof(configurationAggregator));
 
          var session = SecureShellSession.Create(configurationAggregator);
-         return new SecureShellRemoteOperations(configurationAggregator, session, logger);
+         return new SecureShellRemoteOperations(configurationAggregator, session, logger, statusbar);
       }
 
       /// <summary>
@@ -70,15 +75,22 @@ namespace RemoteDebuggerLauncher
       {
          try
          {
-            logger.WriteLineOutputExtensionPane("--------------------------------------------------");
-            logger.WriteOutputExtensionPane($"Connecting to {session.Settings.UserName}@{ session.Settings.HostName}... ");
+            string statusText = string.Format(Resources.RemoteCommandCheckConnectionConnectingTo, session.Settings.UserName, session.Settings.HostName);
+
+            logger.WriteLine("--------------------------------------------------");
+            logger.Write(statusText);
+            statusbar?.SetText(statusText);
+
             await session.ExecuteSingleCommandAsync("hello echo").ConfigureAwait(true);
-            logger.WriteLineOutputExtensionPane("OK");
+
+            logger.WriteLine(Resources.RemoteCommandCommonSuccess);
+            statusText += Resources.RemoteCommandCommonSuccess;
+            statusbar?.SetText(statusText);
          }
          catch (Exception ex)
          {
             // whatever exception is thrown indicates a problem
-            logger.WriteLineOutputExtensionPane($"FAILED: {ex.Message}");
+            logger.WriteLine(Resources.RemoteCommandCommonFailed, ex.Message);
             throw new RemoteDebuggerLauncherException($"Cannot connect to {session.Settings.UserName}@{ session.Settings.HostName} : {ex.Message}");
          }
       }
@@ -87,16 +99,16 @@ namespace RemoteDebuggerLauncher
       {
          try
          {
-            logger.WriteLineOutputExtensionPane("--------------------------------------------------");
-            logger.WriteOutputExtensionPane(LogHost, $"[SSH {session.Settings.UserName}@{ session.Settings.HostName}]");
-            logger.WriteOutputExtensionPane("Query User Home: ");
+            logger.WriteLine("--------------------------------------------------");
+            logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            logger.Write("Query User Home: ");
             var result = (await session.ExecuteSingleCommandAsync("pwd").ConfigureAwait(true)).Trim('\n');
-            logger.WriteLineOutputExtensionPane(result);
+            logger.WriteLine(result);
             return result;
          }
          catch (SecureShellSessionException ex)
          {
-            logger.WriteOutputExtensionPane($"FAILED: {ex.Message})\r\n");
+            logger.WriteLine(Resources.RemoteCommandCommonFailed, ex.Message);
             return string.Empty;
          }
       }
@@ -114,19 +126,19 @@ namespace RemoteDebuggerLauncher
          {
             using (var commands = session.CreateCommandSession())
             {
-               logger.WriteLineOutputExtensionPane("--------------------------------------------------");
-               logger.WriteOutputExtensionPane(LogHost, $"[SSH {session.Settings.UserName}@{ session.Settings.HostName}] ");
-               logger.WriteLineOutputExtensionPane("Installing VS Code Debugger Online");
+               logger.WriteLine("--------------------------------------------------");
+               logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+               logger.WriteLine("Installing VS Code Debugger Online");
 
                var debuggerInstallPath = configurationAggregator.QueryDebuggerInstallFolderPath();
                var command = $"curl -sSL {PackageConstants.Debugger.GetVsDbgShUrl} | sh /dev/stdin -u -v {version} -l {debuggerInstallPath}";
                var result = await commands.ExecuteCommandAsync(command);
-               logger.WriteOutputExtensionPane(result);
+               logger.Write(result);
             }
          }
          catch (SecureShellSessionException ex)
          {
-            logger.WriteOutputExtensionPane($"FAILED to install debugger: {ex.Message})\r\n");
+            logger.Write($"FAILED to install debugger: {ex.Message})\r\n");
             return false;
          }
 
@@ -145,9 +157,9 @@ namespace RemoteDebuggerLauncher
       {
          try
          {
-            logger.WriteLineOutputExtensionPane("--------------------------------------------------");
-            logger.WriteOutputExtensionPane(LogHost, $"[SSH {session.Settings.UserName}@{ session.Settings.HostName}] ");
-            logger.WriteLineOutputExtensionPane("Installing VS Code Debugger Offline");
+            logger.WriteLine("--------------------------------------------------");
+            logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            logger.WriteLine("Installing VS Code Debugger Offline");
 
             // Get the CPU architecture to determine which runtime ID to use, ignoring MacOS and Alpine based Linux when determining the needed runtime ID.
             string runtimeId = await GetRuntimeIdAsync();
@@ -156,7 +168,7 @@ namespace RemoteDebuggerLauncher
             var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             var downloadCachePath = Path.Combine(localAppData, PackageConstants.Debugger.DownloadCacheFolder, runtimeId);
 
-            logger.WriteOutputExtensionPane($"Downloading URL:{PackageConstants.Debugger.GetVsDbgPs1Url}, Version: {version}, RuntimeID:{runtimeId}\r\n");
+            logger.Write($"Downloading URL:{PackageConstants.Debugger.GetVsDbgPs1Url}, Version: {version}, RuntimeID:{runtimeId}\r\n");
 
             // Download the PS1 script to install the debugger
             using (var httpClient = new HttpClient())
@@ -177,7 +189,7 @@ namespace RemoteDebuggerLauncher
 
             var debuggerInstallPath = configurationAggregator.QueryDebuggerInstallFolderPath();
 
-            logger.WriteOutputExtensionPane("$Installing ");
+            logger.Write("$Installing ");
 
             using (var commandSession = session.CreateCommandSession())
             {
@@ -194,11 +206,11 @@ namespace RemoteDebuggerLauncher
                await commandSession.ExecuteCommandAsync($"chmod +x {debuggerInstallPath}/{PackageConstants.Debugger.BinaryName}");
             }
 
-            logger.WriteLineOutputExtensionPane("DONE");
+            logger.WriteLine("DONE");
          }
          catch (SecureShellSessionException ex)
          {
-            logger.WriteLineOutputExtensionPane($"FAILED to install debugger: {ex.Message}");
+            logger.WriteLine($"FAILED to install debugger: {ex.Message}");
             throw;
          }
       }
@@ -208,9 +220,11 @@ namespace RemoteDebuggerLauncher
       {
          var targetPath = configurationAggregator.QueryAppFolderPath();
 
-         logger.WriteLineOutputExtensionPane("--------------------------------------------------");
-         logger.WriteOutputExtensionPane(LogHost, $"[SSH {session.Settings.UserName}@{ session.Settings.HostName}] ");
-         logger.WriteLineOutputExtensionPane($"Deploying source: {sourcePath}, target: {targetPath}");
+         logger.WriteLine("--------------------------------------------------");
+         logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+         logger.WriteLine($"Deploying source: {sourcePath}, target: {targetPath}");
+
+         statusbar.SetText("Deploying application...");
 
          // Clean the remote target if requested
          if (clean)
@@ -232,9 +246,9 @@ namespace RemoteDebuggerLauncher
          {
             var targetPath = configurationAggregator.QueryAppFolderPath();
 
-            logger.WriteLineOutputExtensionPane("--------------------------------------------------");
-            logger.WriteOutputExtensionPane(LogHost, $"[SSH {session.Settings.UserName}@{ session.Settings.HostName}] ");
-            logger.WriteLineOutputExtensionPane($"Cleaning target: {targetPath}");
+            logger.WriteLine("--------------------------------------------------");
+            logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            logger.WriteLine($"Cleaning target: {targetPath}");
 
             using (var commandSession = session.CreateCommandSession())
             {
@@ -244,7 +258,7 @@ namespace RemoteDebuggerLauncher
          }
          catch (SecureShellSessionException ex)
          {
-            logger.WriteLineOutputExtensionPane($"FAILED: {ex.Message}");
+            logger.WriteLine($"FAILED: {ex.Message}");
             throw;
          }
       }
@@ -307,18 +321,18 @@ namespace RemoteDebuggerLauncher
          {
             using (var commands = session.CreateCommandSession())
             {
-               logger.WriteLineOutputExtensionPane("--------------------------------------------------");
-               logger.WriteOutputExtensionPane(LogHost, $"[SSH {session.Settings.UserName}@{ session.Settings.HostName}] ");
-               logger.WriteLineOutputExtensionPane("Installing .NET SDK Online");
+               logger.WriteLine("--------------------------------------------------");
+               logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+               logger.WriteLine("Installing .NET SDK Online");
 
                var dotnetInstallPath = configurationAggregator.QueryDotNetInstallFolderPath();
                var result = await commands.ExecuteCommandAsync($"curl -sSL {PackageConstants.Dotnet.GetInstallDotnetShUrl} | bash /dev/stdin --channel {channel} --install-dir {dotnetInstallPath}");
-               logger.WriteOutputExtensionPane(result);
+               logger.Write(result);
             }
          }
          catch (SecureShellSessionException ex)
          {
-            logger.WriteOutputExtensionPane($"FAILED to install .NET SDK: {ex.Message})\r\n");
+            logger.Write($"FAILED to install .NET SDK: {ex.Message})\r\n");
             return false;
          }
 
@@ -337,24 +351,23 @@ namespace RemoteDebuggerLauncher
          {
             using (var commands = session.CreateCommandSession())
             {
-               logger.WriteLineOutputExtensionPane("--------------------------------------------------");
-               logger.WriteOutputExtensionPane(LogHost, $"[SSH {session.Settings.UserName}@{ session.Settings.HostName}] ");
-               logger.WriteLineOutputExtensionPane("Installing .NET runtime Online\r\n");
+               logger.WriteLine("--------------------------------------------------");
+               logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+               logger.WriteLine("Installing .NET runtime Online\r\n");
 
                var dotnetInstallPath = configurationAggregator.QueryDotNetInstallFolderPath();
                var result = await commands.ExecuteCommandAsync($"curl -sSL {PackageConstants.Dotnet.GetInstallDotnetShUrl} | bash /dev/stdin --channel {channel} --runtime {runtime} --install-dir {dotnetInstallPath}");
-               logger.WriteOutputExtensionPane(result);
+               logger.Write(result);
             }
          }
          catch (SecureShellSessionException ex)
          {
-            logger.WriteOutputExtensionPane($"FAILED to install .NET runtime: {ex.Message})\r\n");
+            logger.Write($"FAILED to install .NET runtime: {ex.Message})\r\n");
             return false;
          }
 
          return true;
       }
-
 
       /// <summary>
       /// Tries to install the .NET SDK assuming the target device has no internet connection.
@@ -365,18 +378,18 @@ namespace RemoteDebuggerLauncher
       {
          try
          {
-            logger.WriteLineOutputExtensionPane("--------------------------------------------------");
-            logger.WriteOutputExtensionPane(LogHost, $"[SSH {session.Settings.UserName}@{ session.Settings.HostName}] ");
-            logger.WriteLineOutputExtensionPane("Installing .NET SDK Offline");
+            logger.WriteLine("--------------------------------------------------");
+            logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            logger.WriteLine("Installing .NET SDK Offline");
 
             var installerPath = await DownloadDotnetAsync(channel);
             await InstallDotnetAsync(installerPath);
 
-            logger.WriteOutputExtensionPane("OK");
+            logger.Write(Resources.RemoteCommandCommonSuccess);
          }
          catch (SecureShellSessionException ex)
          {
-            logger.WriteLineOutputExtensionPane($"FAILED to install .NET SDK: {ex.Message}");
+            logger.WriteLine($"FAILED to install .NET SDK: {ex.Message}");
          }
       }
 
@@ -388,18 +401,18 @@ namespace RemoteDebuggerLauncher
       {
          try
          {
-            logger.WriteLineOutputExtensionPane("--------------------------------------------------");
-            logger.WriteOutputExtensionPane(LogHost, $"[SSH {session.Settings.UserName}@{ session.Settings.HostName}] ");
-            logger.WriteLineOutputExtensionPane("Installing .NET runtime Offline");
+            logger.WriteLine("--------------------------------------------------");
+            logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            logger.WriteLine("Installing .NET runtime Offline");
 
             var installerPath = await DownloadDotnetAsync(channel, runtime);
             await InstallDotnetAsync(installerPath);
 
-            logger.WriteOutputExtensionPane("OK");
+            logger.Write(Resources.RemoteCommandCommonSuccess);
          }
          catch (SecureShellSessionException ex)
          {
-            logger.WriteLineOutputExtensionPane($"FAILED to install .NET runtime: {ex.Message}");
+            logger.WriteLine($"FAILED to install .NET runtime: {ex.Message}");
          }
       }
       #endregion
@@ -449,7 +462,7 @@ namespace RemoteDebuggerLauncher
          string installScript;
          string dotnetDownloadUrl;
 
-         logger.WriteLineOutputExtensionPane($"Downloading script URL: {PackageConstants.Dotnet.GetInstallDotnetPs1Url}, RuntimeID: {runtimeId}");
+         logger.WriteLine($"Downloading script URL: {PackageConstants.Dotnet.GetInstallDotnetPs1Url}, RuntimeID: {runtimeId}");
 
          // Download the PS1 script to install .NET
          using (var httpClient = new HttpClient())
@@ -495,7 +508,7 @@ namespace RemoteDebuggerLauncher
 
             dotnetDownloadUrl = host.OutputLines.FirstOrDefault(l => l.Contains("URL #0 - primary")).Split(' ').LastOrDefault()?.Trim();
             dotnetDownloadUrl = dotnetDownloadUrl.Replace("win-x64", runtimeId).Replace(".zip", ".tar.gz");
-            logger.WriteLineOutputExtensionPane($"Downloading {dotnetDownloadUrl} ");
+            logger.WriteLine($"Downloading {dotnetDownloadUrl} ");
 
             var filePath = BuildDownloadCacheFilePath(PackageConstants.Dotnet.DownloadCacheFolder, Path.GetFileName(dotnetDownloadUrl));
 

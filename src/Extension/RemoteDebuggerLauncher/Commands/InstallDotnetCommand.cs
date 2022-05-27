@@ -95,7 +95,6 @@ namespace RemoteDebuggerLauncher
 
          if (result.HasValue && result.Value)
          {
-#pragma warning disable VSTHRD102 // Implement internal logic asynchronously
             joinableTask = package.JoinableTaskFactory.RunAsync(async () =>
             {
                try
@@ -117,7 +116,7 @@ namespace RemoteDebuggerLauncher
                      var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
                      var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService);
                      remoteOperations.LogHost = true;
-                     loggerService.WriteLineOutputExtensionPane($"========== {profile.Name} ==========");
+                     loggerService.WriteLine($"========== {profile.Name} ==========");
                      var onlineMode = viewModel.SelectedInstallationModeOnline;
 
                      bool success = false;
@@ -137,8 +136,7 @@ namespace RemoteDebuggerLauncher
                   joinableTask = null;
                }
             });
-#pragma warning restore VSTHRD102 // Implement internal logic asynchronously
-         }
+        }
       }
    }
 }

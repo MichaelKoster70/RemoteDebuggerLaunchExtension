@@ -32,6 +32,7 @@ namespace RemoteDebuggerLauncher
    [ProvideBindingPath]
    [ProvideService(typeof(SOptionsPageAccessor), IsAsyncQueryable = true)]
    [ProvideService(typeof(SLoggerService), IsAsyncQueryable = true)]
+   [ProvideService(typeof(SStatusbarService), IsAsyncQueryable = true)]
    [InstalledProductRegistration("#110", "#112", Generated.AssemblyVersion.Version, IconResourceID = 400)]
    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
    [ProvideOptionPage(typeof(DeviceOptionsPage), PackageConstants.Options.Category, PackageConstants.Options.PageDevice, 0, 0, true)]
@@ -60,6 +61,7 @@ namespace RemoteDebuggerLauncher
 
          AddService(typeof(SOptionsPageAccessor), CreateServiceAsync, true);
          AddService(typeof(SLoggerService), CreateServiceAsync, true);
+         AddService(typeof(SStatusbarService), CreateServiceAsync, true);
 
          // When initialized asynchronously, the current thread may be a background thread at this point.
          // Do any initialization that requires the UI thread after switching to the UI thread.
@@ -102,13 +104,15 @@ namespace RemoteDebuggerLauncher
       {
          if (typeof(SOptionsPageAccessor) == serviceType)
          {
-            var serviceInstance = new OptionsPageAccessorService(this);
-            return Task.FromResult<object>(serviceInstance);
+            return Task.FromResult<object>(new OptionsPageAccessorService(this));
          }
          else if(typeof(SLoggerService) == serviceType)
          {
-            var serviceInstance = new LoggerService();
-            return Task.FromResult<object>(serviceInstance);
+            return Task.FromResult<object>(new LoggerService());
+         }
+         else if (typeof(SStatusbarService) == serviceType)
+         {
+            return Task.FromResult<object>(new StatusbarService());
          }
 
          return Task.FromResult<object>(null);

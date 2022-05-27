@@ -83,7 +83,7 @@
 
    <StringProperty Name="dotNetInstallFolderPath"
                    DisplayName=".NET install folder path"
-                   Description="The folder path where the .NET framework is installed on the target device."
+                   Description="The folder path where the .NET runtime is installed on the target device."
                    Subcategory="Remote Devices"/>
 
    <StringProperty Name="debuggerInstallFolderPath"

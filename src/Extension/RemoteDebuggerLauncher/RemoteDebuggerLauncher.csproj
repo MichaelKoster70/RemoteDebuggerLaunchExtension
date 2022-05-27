@@ -64,12 +64,15 @@
     </Compile>
     <Compile Include="Commands\LaunchProfileAccess.cs" />
     <Compile Include="Commands\CleanOutputCommand.cs" />
+    <Compile Include="Extensions\IVsOutputWindowPaneExtensions.cs" />
     <Compile Include="Extensions\VsInteropExtensions.cs" />
     <Compile Include="Extensions\AsyncServiceProviderExtensions.cs" />
     <Compile Include="LaunchProfile\AdapterLaunchConfiguration.cs" />
     <Compile Include="Services\CustomPSHostUserInterface.cs" />
     <Compile Include="Services\CustomRawUserInterface.cs" />
     <Compile Include="Services\CustomPSHost.cs" />
+    <Compile Include="Services\IStatusbarService.cs" />
+    <Compile Include="Services\StatusbarService.cs" />
     <Compile Include="Shared\AdapterProviderKind.cs" />
     <Compile Include="Shared\AuthenticationKind.cs" />
     <Compile Include="Commands\InstallDebuggerCommand.cs" />
@@ -168,9 +171,9 @@
       <Project>{0F40D13C-CF48-4F35-B998-39931C2371F0}</Project>
       <Name>SourceGenerators</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RemoteDebuggerLauncher.UI\RemoteDebuggerLauncher.UI.csproj">
+    <ProjectReference Include="..\RemoteDebuggerLauncher.UI\RemoteDebuggerLauncherUI.csproj">
       <Project>{9bb8c19c-9bd2-4f3f-8800-951b4851e794}</Project>
-      <Name>RemoteDebuggerLauncher.UI</Name>
+      <Name>RemoteDebuggerLauncherUI</Name>
     </ProjectReference>
     <ProjectReference Include="..\RemoteDebuggerLauncherShared\RemoteDebuggerLauncherShared.csproj">
       <Project>{93e8395b-2fcf-46ec-ad25-c7b4083be047}</Project>

@@ -187,4 +187,20 @@ LTS: The most recent LTS version of .NET</value>
   <data name="InstallDotnetVersionLtsDisplayName" xml:space="preserve">
     <value>LTS</value>
   </data>
+  <data name="RemoteCommandCheckConnectionConnectingTo" xml:space="preserve">
+    <value>Connecting to {0}@{1} ... </value>
+    <comment>Remote command Check Connection: Connecting to text</comment>
+  </data>
+  <data name="RemoteCommandCommonFailed" xml:space="preserve">
+    <value>FAILED: {0}</value>
+    <comment>Remote command Common: failure completion text</comment>
+  </data>
+  <data name="RemoteCommandCommonSshTarget" xml:space="preserve">
+    <value>[SSH {0}@{1}] </value>
+    <comment>Remote command Common: SSH target message prefix</comment>
+  </data>
+  <data name="RemoteCommandCommonSuccess" xml:space="preserve">
+    <value>OK</value>
+    <comment>Remote command Common: success completion text</comment>
+  </data>
 </root>
