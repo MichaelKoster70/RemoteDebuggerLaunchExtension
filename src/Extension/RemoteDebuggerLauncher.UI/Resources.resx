@@ -126,6 +126,9 @@
   <data name="CommonOkButtonLabel" xml:space="preserve">
     <value>OK</value>
   </data>
+  <data name="CommonStartSessionMarker" xml:space="preserve">
+    <value>--------------------------------------------------</value>
+  </data>
   <data name="InstallationModeDescription" xml:space="preserve">
     <value>Online: Target device has internet access, can download and install in it's own
 Offline: Target device no internet access, PC will download and trigger install</value>
@@ -187,13 +190,22 @@ LTS: The most recent LTS version of .NET</value>
   <data name="InstallDotnetVersionLtsDisplayName" xml:space="preserve">
     <value>LTS</value>
   </data>
-  <data name="RemoteCommandCheckConnectionConnectingTo" xml:space="preserve">
+  <data name="RemoteCommandCheckConnectionOutputPaneConnectingTo" xml:space="preserve">
     <value>Connecting to {0}@{1} ... </value>
     <comment>Remote command Check Connection: Connecting to text</comment>
+  </data>
+  <data name="RemoteCommandCheckConnectionStatusbarCompletedSuccess" xml:space="preserve">
+    <value>Checking connection to {0} OK</value>
+  </data>
+  <data name="RemoteCommandCheckConnectionStatusbarProgress" xml:space="preserve">
+    <value>Checking connection to {0}</value>
   </data>
   <data name="RemoteCommandCommonFailed" xml:space="preserve">
     <value>FAILED: {0}</value>
     <comment>Remote command Common: failure completion text</comment>
+  </data>
+  <data name="RemoteCommandCommonProfile" xml:space="preserve">
+    <value>Processing profile {0}</value>
   </data>
   <data name="RemoteCommandCommonSshTarget" xml:space="preserve">
     <value>[SSH {0}@{1}] </value>
@@ -202,5 +214,83 @@ LTS: The most recent LTS version of .NET</value>
   <data name="RemoteCommandCommonSuccess" xml:space="preserve">
     <value>OK</value>
     <comment>Remote command Common: success completion text</comment>
+  </data>
+  <data name="RemoteCommandDeployRemoveFolderCaption" xml:space="preserve">
+    <value>Deploying application - Source: {0}, Target: {1}</value>
+  </data>
+  <data name="RemoteCommandDeployRemoveFolderCompletedSuccess" xml:space="preserve">
+    <value>Deploying application OK</value>
+  </data>
+  <data name="RemoteCommandDeployRemoveFolderStatusbarProgress" xml:space="preserve">
+    <value>Deploying application ...</value>
+  </data>
+  <data name="RemoteCommandInstallDebuggerCaption" xml:space="preserve">
+    <value>Installing VS Code Debugger</value>
+  </data>
+  <data name="RemoteCommandInstallDebuggerOfflineCaption" xml:space="preserve">
+    <value>Installing VS Code Debugger from host</value>
+  </data>
+  <data name="RemoteCommandInstallDebuggerOfflineFailed" xml:space="preserve">
+    <value>Installing VS Code Debugger from host FAILED: {0}</value>
+  </data>
+  <data name="RemoteCommandInstallDebuggerOfflineProgressDownloading" xml:space="preserve">
+    <value>Downloading - URL: {0}, Version: {1}, RuntimeID: {2} </value>
+  </data>
+  <data name="RemoteCommandInstallDebuggerOfflineProgressInstalling" xml:space="preserve">
+    <value>Installing </value>
+  </data>
+  <data name="RemoteCommandInstallDebuggerOnlineCaption" xml:space="preserve">
+    <value>Installing VS Code Debugger direct from internet</value>
+  </data>
+  <data name="RemoteCommandInstallDebuggerOnlineFailed" xml:space="preserve">
+    <value>Installing VS Code Debugger direct from internet FAILED: {0}</value>
+  </data>
+  <data name="RemoteCommandInstallDebuggerStatusbarText" xml:space="preserve">
+    <value>Installing VS Code Debugger on targets ...</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetCaption" xml:space="preserve">
+    <value>Installing .NET</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetDownloadingPayload" xml:space="preserve">
+    <value>Downloading binaries - URL: {0} </value>
+  </data>
+  <data name="RemoteCommandInstallDotnetDownloadingScript" xml:space="preserve">
+    <value>Downloading script - URL: {0}, RuntimeID: {1} </value>
+  </data>
+  <data name="RemoteCommandInstallDotnetDownloadingSkipped" xml:space="preserve">
+    <value>Skipped downloading, use cache - file: {0}</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetRuntimeOfflineCaption" xml:space="preserve">
+    <value>Installing .NET runtime from host</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetRuntimeOfflineFailed" xml:space="preserve">
+    <value>Installing .NET runtime from host FAILED: {0}</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetRuntimeOnlineCaption" xml:space="preserve">
+    <value>Installing .NET runtime direct from internet</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetRuntimeOnlineFailed" xml:space="preserve">
+    <value>Installing .NET runtime direct from internet FAILED: {0}</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetScriptExecutionFailed" xml:space="preserve">
+    <value>Script execution failed with '{0}'</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetSdkOfflineCaption" xml:space="preserve">
+    <value>Installing .NET SDK from host</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetSdkOfflineFailed" xml:space="preserve">
+    <value>Installing .NET SDK from host FAILED: {0}</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetSdkOnlineCaption" xml:space="preserve">
+    <value>Installing .NET SDK direct from internet</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetSdkOnlineFailed" xml:space="preserve">
+    <value>Installing .NET SDK direct from internet FAILED: {0}</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetStatusbarText" xml:space="preserve">
+    <value>Installing .NET on targets ...</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetUploadingPayload" xml:space="preserve">
+    <value>Uploading binaries - target: {0}</value>
   </data>
 </root>

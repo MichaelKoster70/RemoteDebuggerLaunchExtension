@@ -19,6 +19,15 @@ namespace RemoteDebuggerLauncher
       /// </summary>
       /// <param name="text">The text to display in the status text area.</param>
       void SetText(string text);
+
+      /// <summary>
+      /// Sets the status bar text in the text area.
+      /// </summary>
+      /// <param name="text">The text to display in the status text area.</param>
+      /// <param name="arg0">The first object to format.</param>
+      void SetText(string text, object arg0);
+
+      void Clear();
    }
 
    /// <summary>

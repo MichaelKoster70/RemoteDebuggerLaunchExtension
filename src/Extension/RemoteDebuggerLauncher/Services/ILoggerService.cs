@@ -63,6 +63,24 @@ namespace RemoteDebuggerLauncher
       /// <param name="activate"><c>true</c> to activate the pane; else <c>false</c></param>
       void WriteLine(string message, object arg0, bool activate = true);
 
+      /// <summary>
+      /// Writes the supplied message a custom pane.
+      /// </summary>
+      /// <param name="message">The message to write.</param>
+      /// <param name="arg0">The first object to format.</param>
+      /// <param name="arg2">The third object to format.</param>
+      /// <param name="activate"><c>true</c> to activate the pane; else <c>false</c></param>
+      void WriteLine(string message, object arg0, object arg1, bool activate = true);
+
+      /// <summary>
+      /// Writes the supplied message a custom pane.
+      /// </summary>
+      /// <param name="message">The message to write.</param>
+      /// <param name="arg0">The first object to format.</param>
+      /// <param name="arg1">The second object to format.</param>
+      /// <param name="arg2">The third object to format.</param>
+      /// <param name="activate"><c>true</c> to activate the pane; else <c>false</c></param>
+      void WriteLine(string message, object arg0, object arg1, object arg2, bool activate = true);
    }
 
    /// <summary>

@@ -70,7 +70,6 @@
     <Compile Include="Commands\ViewModels\VersionViewModel.cs" />
     <Compile Include="Commands\ViewModels\InstallationModeViewModel.cs" />
     <Compile Include="Commands\ViewModels\InstallationTypeViewModel.cs" />
-    <Compile Include="Commands\Models\InstallDotnetModel.cs" />
     <Compile Include="Commands\Views\InstallDebuggerDialogWindow.xaml.cs">
       <DependentUpon>InstallDebuggerDialogWindow.xaml</DependentUpon>
     </Compile>

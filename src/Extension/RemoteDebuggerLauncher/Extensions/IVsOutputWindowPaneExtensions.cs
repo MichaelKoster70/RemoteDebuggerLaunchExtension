@@ -5,21 +5,22 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
 namespace RemoteDebuggerLauncher.Extensions
 {
+   /// <summary>
+   /// Extension method providing VS output pane extension methods
+   /// </summary>
    internal static class IVsOutputWindowPaneExtensions
    {
       public static void OutputStringNoPump(this IVsOutputWindowPane pane, string pszOutputString)
       {
          Requires.NotNull(pane, nameof(pane));
+
+         ThreadHelper.ThrowIfNotOnUIThread();
 
          if (pane is IVsOutputWindowPaneNoPump noPumpPane)
          {

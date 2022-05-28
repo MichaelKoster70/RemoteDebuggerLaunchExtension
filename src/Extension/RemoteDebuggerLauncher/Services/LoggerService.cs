@@ -90,6 +90,19 @@ namespace RemoteDebuggerLauncher
          WriteLine(string.Format(message, arg0), activate);
       }
 
+      public void WriteLine(string message, object arg0, object arg1, bool activate = true)
+      {
+         ThreadHelper.ThrowIfNotOnUIThread();
+         WriteLine(string.Format(message, arg0, arg1), activate);
+      }
+
+
+      public void WriteLine(string message, object arg0, object arg1, object arg2, bool activate = true)
+      {
+         ThreadHelper.ThrowIfNotOnUIThread();
+         WriteLine(string.Format(message, arg0, arg1, arg2), activate);
+      }
+
       private IVsOutputWindowPane EnsurePane(Guid guid, string name, bool activate)
       {
          ThreadHelper.ThrowIfNotOnUIThread();

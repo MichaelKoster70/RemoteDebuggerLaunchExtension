@@ -88,16 +88,6 @@ namespace RemoteDebuggerLauncher
          if (joinableTask != null)
          {
             return;
-//#pragma warning disable VSTHRD102 // Implement internal logic asynchronously
-//            try
-//            {
-//               joinableTask.Join();
-//            }
-//            finally
-//            {
-//               joinableTask = null;
-//            }
-//#pragma warning restore VSTHRD102 // Implement internal logic asynchronously
          }
 
          var viewModel = new InstallDebuggerViewModel(ThreadHelper.JoinableTaskFactory);
@@ -112,6 +102,8 @@ namespace RemoteDebuggerLauncher
          {
             joinableTask = package.JoinableTaskFactory.RunAsync(async () =>
             {
+               var statusbarService = await ServiceProvider.GetServiceAsync<SStatusbarService, IStatusbarService>();
+
                try
                {
                   // get all services we need
@@ -126,12 +118,18 @@ namespace RemoteDebuggerLauncher
                   var lauchProfileAccess = new LaunchProfileAccess(dte, projectService);
                   var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync();
 
+                  statusbarService.SetText(Resources.RemoteCommandInstallDebuggerStatusbarText);
+                  loggerService.WriteLine(Resources.CommonStartSessionMarker);
+
                   foreach (var profile in profiles)
                   {
                      var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
                      var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService);
+
                      remoteOperations.LogHost = true;
-                     loggerService.WriteLine($"========== {profile.Name} ==========");
+
+                     loggerService.WriteLine(Resources.RemoteCommandCommonProfile, profile.Name);
+
                      var success = viewModel.SelectedInstallationModeOnline;
                      if (success)
                      {
@@ -144,11 +142,16 @@ namespace RemoteDebuggerLauncher
                      }
                   }
                }
+               catch(Exception exception)
+               {
+                  VsShellUtilities.ShowMessageBox(package, exception.Message, Resources.RemoteCommandInstallDebuggerCaption, OLEMSGICON.OLEMSGICON_CRITICAL, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+               }
                finally
                {
+                  statusbarService.Clear();
                   joinableTask = null;
                }
-            }); // end Task.Run
+            });
          } 
       }
    }

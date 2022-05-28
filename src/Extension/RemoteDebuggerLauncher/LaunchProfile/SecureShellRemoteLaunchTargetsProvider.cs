@@ -82,6 +82,8 @@ namespace RemoteDebuggerLauncher
          // the rest must be executed on the UI thread
          await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
+
+
          // validate that target is reachable
          await remoteOperations.CheckConnectionThrowAsync();
 

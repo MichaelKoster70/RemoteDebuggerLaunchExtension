@@ -19,7 +19,7 @@ namespace RemoteDebuggerLauncher
    internal class CustomPSHost : PSHost
    {
       #region Private Fields
-      /// <summary>The identifier of this PSHost implementation.</summary>
+      /// <summary>The identifier of this Powershell host implementation.</summary>
       private Guid instanceId = Guid.NewGuid();
 
       /// <summary>The culture information of the thread that created this object.</summary>

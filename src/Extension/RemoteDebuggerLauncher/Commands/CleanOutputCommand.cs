@@ -97,12 +97,14 @@ namespace RemoteDebuggerLauncher
             var lauchProfileAccess = new LaunchProfileAccess(dte, projectService);
             var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync();
 
+            loggerService.WriteLine(Resources.CommonStartSessionMarker);
+
             foreach (var profile in profiles)
             {
                var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
                var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService);
                remoteOperations.LogHost = true;
-               loggerService.WriteLine($"========== {profile.Name} ==========");
+               loggerService.WriteLine(Resources.RemoteCommandCommonProfile, profile.Name);
                await remoteOperations.CleanRemoteFolderAsync();
             }
          });

@@ -8,6 +8,8 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Threading;
 using Renci.SshNet;
 using Renci.SshNet.Common;
 
@@ -74,7 +76,7 @@ namespace RemoteDebuggerLauncher
          });
       }
 
-      public Task UploadFolderRecursiveAsync (string localSourcePath,  string remoteTargetPath)
+      public Task UploadFolderRecursiveAsync (string localSourcePath,  string remoteTargetPath, ILoggerService progressLogger = null)
       {
          ThrowIf.ArgumentNullOrEmpty(localSourcePath, nameof(localSourcePath));
          ThrowIf.ArgumentNullOrEmpty(remoteTargetPath, nameof(remoteTargetPath));
@@ -86,11 +88,53 @@ namespace RemoteDebuggerLauncher
                var sourcePathInfo = new DirectoryInfo(localSourcePath);
                using (var client = CreateScpClient())
                {
+                  long progressBefore = 0;
+                  string filenameBefore = string.Empty;
+
                   // for the moment, we assume that the path names does not have any character that have special meaning for a Linux host
                   client.RemotePathTransformation = RemotePathTransformation.None;
+
+                  if (progressLogger != null)
+                  {
+                     // attach progress loggger if available
+#pragma warning disable VSTHRD101 // Avoid unsupported async delegates
+                     client.Uploading += async (s, e) =>
+                     {
+                        if (filenameBefore == e.Filename)
+                        {
+                           // same file
+                           if (e.Uploaded == e.Size)
+                           {
+                              await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                              progressLogger.WriteLine(".");
+                           }
+                           else
+                           {
+                              long progressNow = 100 * e.Uploaded / e.Size;
+                              if (progressNow > progressBefore && progressNow % 10 == 0)
+                              {
+                                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                                 progressBefore = progressNow;
+                                 progressLogger.Write(".");
+                              }
+                           }
+                        }
+                        else
+                        {
+                           // new file
+                           filenameBefore = e.Filename;
+                           progressBefore = 0;
+                           await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                           progressLogger.Write($"Uploading {e.Filename} .");
+                        }
+
+                        await TaskScheduler.Default;
+                     };
+#pragma warning restore VSTHRD101 // Avoid unsupported async delegates
+                  }
+
                   client.Connect();
                   client.Upload(sourcePathInfo, remoteTargetPath);
-                  client.Uploading += Client_Uploading;
                }
             }
             catch (SshException e)
@@ -104,7 +148,7 @@ namespace RemoteDebuggerLauncher
          });
       }
 
-      public Task UploadFileAsync(string localSourcePath, string remoteTargetPath)
+      public Task UploadFileAsync(string localSourcePath, string remoteTargetPath, ILoggerService progressLogger = null)
       {
          ThrowIf.ArgumentNullOrEmpty(localSourcePath, nameof(localSourcePath));
          ThrowIf.ArgumentNullOrEmpty(remoteTargetPath, nameof(remoteTargetPath));
@@ -114,13 +158,43 @@ namespace RemoteDebuggerLauncher
             try
             {
                var sourcePathInfo = new FileInfo(localSourcePath);
+
                using (var client = CreateScpClient())
                {
+                  long progressBefore = 0;
+
                   // for the moment, we assume that the path names does not have any character that have special meaning for a Linux host
                   client.RemotePathTransformation = RemotePathTransformation.None;
+                  
+                  if (progressLogger != null)
+                  {
+                     // attach progress loggger if available
+#pragma warning disable VSTHRD101 // Avoid unsupported async delegates
+                     client.Uploading += async (s, e) =>
+                     {
+                        if (e.Uploaded == e.Size)
+                        {
+                           await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                           progressLogger.WriteLine(".");
+                        }
+                        else
+                        {
+                           long progressNow = 100 * e.Uploaded / e.Size;
+                           if (progressNow > progressBefore && progressNow % 10 == 0)
+                           {
+                              await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                              progressBefore = progressNow;
+                              progressLogger.Write(".");
+                           }
+                        }
+
+                        await TaskScheduler.Default;
+                     };
+#pragma warning restore VSTHRD101 // Avoid unsupported async delegates
+                  }
+
                   client.Connect();
                   client.Upload(sourcePathInfo, remoteTargetPath);
-                  client.Uploading += Client_Uploading;
                }
             }
             catch (SshException e)
@@ -132,10 +206,6 @@ namespace RemoteDebuggerLauncher
                throw new SecureShellSessionException(e.Message, e);
             }
          });
-      }
-
-      private void Client_Uploading(object sender, ScpUploadEventArgs e)
-      {
       }
 
       public ISecureShellSessionCommanding CreateCommandSession()

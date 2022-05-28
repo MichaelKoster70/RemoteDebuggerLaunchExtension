@@ -7,8 +7,6 @@
 
 using System;
 using System.ComponentModel.Design;
-using System.Globalization;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -17,7 +15,7 @@ using Microsoft.VisualStudio.Threading;
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// Command handler to install the current .NET runtime on the target device.
+   /// Command handler to install the current .NET runtime or SDK on the target device.
    /// </summary>
    internal sealed class InstallDotnetCommand
    {
@@ -29,7 +27,6 @@ namespace RemoteDebuggerLauncher
 
       /// <summary>Running task instance to prevent multiple executions.</summary>
       private JoinableTask joinableTask;
-
 
       /// <summary>
       /// Initializes a new instance of the <see cref="InstallDotnetCommand"/> class.
@@ -85,6 +82,13 @@ namespace RemoteDebuggerLauncher
       {
          ThreadHelper.ThrowIfNotOnUIThread();
 
+         // check, if the command is already running
+         if (joinableTask != null)
+         {
+            return;
+         }
+
+         // bring up config dialog
          var viewModel = new InstallDotnetViewModel(ThreadHelper.JoinableTaskFactory);
          var dialog = new InstallDotnetDialogWindow()
          {
@@ -93,10 +97,13 @@ namespace RemoteDebuggerLauncher
 
          var result = dialog.ShowDialog();
 
+         // process 
          if (result.HasValue && result.Value)
          {
             joinableTask = package.JoinableTaskFactory.RunAsync(async () =>
             {
+               var statusbarService = await ServiceProvider.GetServiceAsync<SStatusbarService, IStatusbarService>();
+
                try
                {
                   // get all services we need
@@ -111,16 +118,20 @@ namespace RemoteDebuggerLauncher
                   var lauchProfileAccess = new LaunchProfileAccess(dte, projectService);
                   var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync();
 
+                  statusbarService.SetText(Resources.RemoteCommandInstallDotnetStatusbarText);
+                  loggerService.WriteLine(Resources.CommonStartSessionMarker);
+
                   foreach (var profile in profiles)
                   {
                      var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
                      var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService);
-                     remoteOperations.LogHost = true;
-                     loggerService.WriteLine($"========== {profile.Name} ==========");
-                     var onlineMode = viewModel.SelectedInstallationModeOnline;
 
-                     bool success = false;
-                     if (onlineMode)
+                     remoteOperations.LogHost = true;
+
+                     loggerService.WriteLine(Resources.RemoteCommandCommonProfile, profile.Name);
+
+                     bool success = viewModel.SelectedInstallationModeOnline;
+                     if (success)
                      {
                         success = await remoteOperations.TryInstallDotNetOnlineAsync(viewModel.SelectedInstallationKind, viewModel.SelectedVersion);
                      }
@@ -131,12 +142,17 @@ namespace RemoteDebuggerLauncher
                      }
                   }
                }
+               catch (Exception exception)
+               {
+                  VsShellUtilities.ShowMessageBox(package, exception.Message, Resources.RemoteCommandInstallDotnetCaption, OLEMSGICON.OLEMSGICON_CRITICAL, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+               }
                finally
                {
+                  statusbarService.Clear();
                   joinableTask = null;
                }
             });
-        }
+         }
       }
    }
 }
