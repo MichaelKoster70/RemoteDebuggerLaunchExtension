@@ -165,7 +165,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Tools\SourceGenerators\SourceGenerators.csproj" OutputItemType="Analyzer" PrivateAssets="all" ReferenceOutputAssembly="false">
+    <ProjectReference Include="..\..\Tools\SourceGenerators\SourceGenerators.csproj" OutputItemType="Analyzer" PrivateAssets="all" ReferenceOutputAssembly="false" ExcludeAssets="all" >
       <Project>{0F40D13C-CF48-4F35-B998-39931C2371F0}</Project>
       <Name>SourceGenerators</Name>
     </ProjectReference>
