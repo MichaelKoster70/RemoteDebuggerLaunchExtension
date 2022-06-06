@@ -68,9 +68,9 @@
     <Compile Include="Extensions\VsInteropExtensions.cs" />
     <Compile Include="Extensions\AsyncServiceProviderExtensions.cs" />
     <Compile Include="LaunchProfile\AdapterLaunchConfiguration.cs" />
-    <Compile Include="Services\CustomPSHostUserInterface.cs" />
-    <Compile Include="Services\CustomRawUserInterface.cs" />
-    <Compile Include="Services\CustomPSHost.cs" />
+    <Compile Include="Services\PowerShellHost\CaptureOutputPSHostUserInterface.cs" />
+    <Compile Include="Services\PowerShellHost\ConsoleRawUserInterface.cs" />
+    <Compile Include="Services\PowerShellHost\CaptureOutputPSHost.cs" />
     <Compile Include="Services\IStatusbarService.cs" />
     <Compile Include="Services\StatusbarService.cs" />
     <Compile Include="Shared\AdapterProviderKind.cs" />
@@ -124,7 +124,6 @@
     </XamlPropertyRule>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -137,33 +136,32 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Framework" Version="17.0.0" />
-    <PackageReference Include="Microsoft.PowerShell.5.1.ReferenceAssemblies">
-      <Version>1.0.0</Version>
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.2.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.1.0-2.21558.8" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
+      <Version>3.3.2</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Interop">
-      <Version>17.1.32210.191</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem">
-      <Version>17.0.1313-pre</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Managed">
-      <Version>2.0.6142705</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Managed.VS">
-      <Version>2.0.6142705</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK" Version="17.0.1313-pre" />
-    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK.Tools" Version="17.0.1313-pre" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.PowerShell.5.1.ReferenceAssemblies" Version="1.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem" Version="17.2.340-pre" />
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Managed" Version="17.2.0-beta1-20407-01" />
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Managed.VS" Version="17.2.0-beta1-20407-01" />
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK" Version="17.2.340-pre" />
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK.Tools" Version="17.2.340-pre" />
     <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.1.32210.191" ExcludeAssets="runtime">
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.1.4054" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.1.1035-preview2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="SSH.NET">
-      <Version>2020.0.1</Version>
+      <Version>2020.0.2</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -181,7 +179,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\CleanOutputCommand.png" />
     <Content Include="license.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -189,8 +186,7 @@
     <VSCTCompile Include="RemoteDebuggerLauncherPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>
-    <Content Include="Resources\InstallDebugger.png" />
-    <Content Include="Resources\InstallDotnet.png" />
+    <Content Include="Resources\Commands.png" />
     <Content Include="Resources\VSPackage.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -200,6 +196,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

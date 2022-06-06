@@ -106,16 +106,16 @@ namespace RemoteDebuggerLauncher
                            if (e.Uploaded == e.Size)
                            {
                               await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                              progressLogger.WriteLine(".");
+                              progressLogger.WriteLine(Resources.RemoteCommandUploadOutputPaneDone);
                            }
                            else
                            {
                               long progressNow = 100 * e.Uploaded / e.Size;
-                              if (progressNow > progressBefore && progressNow % 10 == 0)
+                              if ((progressNow > progressBefore) && (progressNow % 10 == 0))
                               {
-                                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                                  progressBefore = progressNow;
-                                 progressLogger.Write(".");
+                                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                                 progressLogger.Write(Resources.RemoteCommandUploadOutputPaneProgress);
                               }
                            }
                         }
@@ -126,6 +126,11 @@ namespace RemoteDebuggerLauncher
                            progressBefore = 0;
                            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                            progressLogger.Write($"Uploading {e.Filename} .");
+
+                           if (e.Uploaded == e.Size)
+                           {
+                              progressLogger.WriteLine(Resources.RemoteCommandUploadOutputPaneDone);
+                           }
                         }
 
                         await TaskScheduler.Default;
@@ -175,16 +180,16 @@ namespace RemoteDebuggerLauncher
                         if (e.Uploaded == e.Size)
                         {
                            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                           progressLogger.WriteLine(".");
+                           progressLogger.WriteLine(Resources.RemoteCommandUploadOutputPaneDone);
                         }
                         else
                         {
                            long progressNow = 100 * e.Uploaded / e.Size;
-                           if (progressNow > progressBefore && progressNow % 10 == 0)
+                           if ((progressNow > progressBefore) && (progressNow % 10 == 0))
                            {
-                              await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                               progressBefore = progressNow;
-                              progressLogger.Write(".");
+                              await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                              progressLogger.Write(Resources.RemoteCommandUploadOutputPaneProgress);
                            }
                         }
 

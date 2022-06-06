@@ -8,15 +8,15 @@
 using System;
 using System.Management.Automation.Host;
 
-namespace RemoteDebuggerLauncher
+namespace RemoteDebuggerLauncher.PowerShellHost
 {
    /// <summary>
-   /// A sample implementation of the PSHostRawUserInterface for console
-   /// applications. Members of this class that easily map to the .NET
-   /// console class are implemented. More complex methods are not
-   /// implemented and throw a NotImplementedException exception.
+   /// Provides a implementation of the PSHostRawUserInterface for console applications. 
+   /// Members of this class that easily map to the .NET console class are implemented.    
+   /// Implements the <see cref="PSHostRawUserInterface"/> interface.
    /// </summary>
-   internal class CustomRawUserInterface : PSHostRawUserInterface
+   /// <seealso cref="PSHostRawUserInterface" />
+   internal class ConsoleRawUserInterface : PSHostRawUserInterface
    {
       /// <summary>
       /// Gets or sets the background color of the displayed text.

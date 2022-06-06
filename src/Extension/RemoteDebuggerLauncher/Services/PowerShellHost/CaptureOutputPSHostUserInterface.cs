@@ -13,17 +13,17 @@ using System.Management.Automation.Host;
 using System.Security;
 using System.Text;
 
-namespace RemoteDebuggerLauncher
+namespace RemoteDebuggerLauncher.PowerShellHost
 {
    /// <summary>
    /// Provides a PowerShell Host UI storing all script outputs.
-   /// Implements the <see cref="PSHostUserInterface" />
+   /// Implements the <see cref="PSHostUserInterface" /> interface.
    /// </summary>
-   /// <seealso cref="System.Management.Automation.Host.PSHostUserInterface" />
-   internal class CustomPSHostUserInterface : PSHostUserInterface
+   /// <seealso cref="PSHostUserInterface" />
+   internal class OutputCapturePSHostUserInterface : PSHostUserInterface
    {
       #region Private Fields
-      private readonly CustomRawUserInterface rawUi = new CustomRawUserInterface();
+      private readonly ConsoleRawUserInterface rawUi = new ConsoleRawUserInterface();
       private readonly StringBuilder outputText = new StringBuilder();
       private readonly StringBuilder errorText = new StringBuilder();
       private readonly StringBuilder warningText = new StringBuilder();
@@ -38,12 +38,11 @@ namespace RemoteDebuggerLauncher
       /// Gets an instance of the PSRawUserInterface class for this host application.
       /// </summary>
       /// <value>A reference to an instance of the hosting application's implementation of a class derived from
-      /// <see cref="T:System.Management.Automation.Host.PSHostUserInterface" />, or null to indicate that
-      /// low-level user interaction is not supported.</value>
+      /// <see cref="PSHostUserInterface" />, or null to indicate that low-level user interaction is not supported.</value>
       public override PSHostRawUserInterface RawUI => rawUi;
       #endregion
 
-      #region CustomPSHostUserInterface Properties
+      #region OutputCapturePSHostUserInterface Properties
       /// <summary>
       /// Gets the output lines written by the executed commandss
       /// </summary>
@@ -234,6 +233,7 @@ namespace RemoteDebuggerLauncher
       }
       #endregion
 
+      #region OutputCapturePSHostUserInterface Methods
       public void Reset()
       {
          outputText.Clear();
@@ -243,5 +243,6 @@ namespace RemoteDebuggerLauncher
          debugText.Clear();
          outputLines = null;
       }
+      #endregion
    }
 }

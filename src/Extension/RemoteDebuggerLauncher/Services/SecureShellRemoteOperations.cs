@@ -14,6 +14,7 @@ using System.Management.Automation.Runspaces;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using RemoteDebuggerLauncher.PowerShellHost;
 using RemoteDebuggerLauncher.Shared;
 using Constants = RemoteDebuggerLauncher.Shared.Constants;
 
@@ -122,8 +123,8 @@ namespace RemoteDebuggerLauncher
             using (var commands = session.CreateCommandSession())
             {
                logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-               logger.WriteLine(Resources.RemoteCommandInstallDebuggerOnlineCaption);
-               statusbar?.SetText(Resources.RemoteCommandInstallDebuggerOnlineCaption);
+               logger.WriteLine(Resources.RemoteCommandInstallDebuggerOnlineCommonProgress);
+               statusbar?.SetText(Resources.RemoteCommandInstallDebuggerOnlineCommonProgress);
 
                var debuggerInstallPath = configurationAggregator.QueryDebuggerInstallFolderPath();
                var command = $"curl -sSL {PackageConstants.Debugger.GetVsDbgShUrl} | sh /dev/stdin -u -v {version} -l {debuggerInstallPath}";
@@ -133,7 +134,7 @@ namespace RemoteDebuggerLauncher
          }
          catch (SecureShellSessionException ex)
          {
-            logger.WriteLine(Resources.RemoteCommandInstallDebuggerOnlineFailed, ex.Message);
+            logger.WriteLine(Resources.RemoteCommandInstallDebuggerOnlineCompletedFailed, ex.Message);
             return false;
          }
 
@@ -153,8 +154,8 @@ namespace RemoteDebuggerLauncher
          try
          {
             logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-            logger.WriteLine(Resources.RemoteCommandInstallDebuggerOfflineCaption);
-            statusbar?.SetText(Resources.RemoteCommandInstallDebuggerOfflineCaption);
+            logger.WriteLine(Resources.RemoteCommandInstallDebuggerOfflineCommonProgress);
+            statusbar?.SetText(Resources.RemoteCommandInstallDebuggerOfflineCommonProgress);
 
             // Get the CPU architecture to determine which runtime ID to use, ignoring MacOS and Alpine based Linux when determining the needed runtime ID.
             string runtimeId = await GetRuntimeIdAsync();
@@ -163,7 +164,7 @@ namespace RemoteDebuggerLauncher
             var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             var downloadCachePath = Path.Combine(localAppData, PackageConstants.Debugger.DownloadCacheFolder, runtimeId);
 
-            logger.WriteLine(Resources.RemoteCommandInstallDebuggerOfflineProgressDownloading, PackageConstants.Debugger.GetVsDbgPs1Url, version, runtimeId);
+            logger.WriteLine(Resources.RemoteCommandInstallDebuggerOfflineOutputPaneProgressDownloading, PackageConstants.Debugger.GetVsDbgPs1Url, version, runtimeId);
 
             // Download the PS1 script to install the debugger
             using (var httpClient = new HttpClient())
@@ -184,7 +185,7 @@ namespace RemoteDebuggerLauncher
 
             var debuggerInstallPath = configurationAggregator.QueryDebuggerInstallFolderPath();
 
-            logger.Write(Resources.RemoteCommandInstallDebuggerOfflineProgressInstalling);
+            logger.Write(Resources.RemoteCommandInstallDebuggerOfflineOutputPaneProgressInstalling);
 
             using (var commandSession = session.CreateCommandSession())
             {
@@ -201,12 +202,14 @@ namespace RemoteDebuggerLauncher
                await commandSession.ExecuteCommandAsync($"chmod +x {debuggerInstallPath}/{PackageConstants.Debugger.BinaryName}");
             }
 
-            logger.WriteLine(Resources.RemoteCommandCommonSuccess);
+            // installation completed successfully
+            logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            logger.WriteLine(Resources.RemoteCommandInstallDebuggerOfflineCompletedSuccess);
          }
          catch (SecureShellSessionException ex)
          {
             logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-            logger.WriteLine(Resources.RemoteCommandInstallDebuggerOfflineFailed, ex.Message);
+            logger.WriteLine(Resources.RemoteCommandInstallDebuggerOfflineCompletedFailed, ex.Message);
             throw;
          }
       }
@@ -217,7 +220,7 @@ namespace RemoteDebuggerLauncher
          var targetPath = configurationAggregator.QueryAppFolderPath();
 
          logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-         logger.WriteLine(Resources.RemoteCommandDeployRemoveFolderCaption, sourcePath, targetPath);
+         logger.WriteLine(Resources.RemoteCommandDeployRemoveFolderOutputPaneProgress, sourcePath, targetPath);
          statusbar?.SetText(Resources.RemoteCommandDeployRemoveFolderStatusbarProgress);
 
          // Clean the remote target if requested
@@ -232,8 +235,10 @@ namespace RemoteDebuggerLauncher
 
          // copy files using SCP
          await session.UploadFolderRecursiveAsync(sourcePath, targetPath, logger);
+         
+         logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+         logger.WriteLine(Resources.RemoteCommandDeployRemoveFolderCompletedSuccess);
          statusbar?.SetText(Resources.RemoteCommandDeployRemoveFolderCompletedSuccess);
-
       }
 
       public async Task CleanRemoteFolderAsync()
@@ -243,17 +248,21 @@ namespace RemoteDebuggerLauncher
             var targetPath = configurationAggregator.QueryAppFolderPath();
 
             logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-            logger.WriteLine($"Cleaning - target: {targetPath}");
+            logger.WriteLine(Resources.RemoteCommandCleanRemoteFolderCaption, targetPath);
+            statusbar?.SetText(Resources.RemoteCommandCleanRemoteFolderStatusbarProgress);
 
             using (var commandSession = session.CreateCommandSession())
             {
                await commandSession.ExecuteCommandAsync($"[ -d {targetPath} ] | rm -rf {targetPath}/*").ConfigureAwait(true);
                await commandSession.ExecuteCommandAsync($"mkdir -p {targetPath}").ConfigureAwait(true);
             }
+
+            logger.WriteLine(Resources.RemoteCommandCleanRemoteFolderCompletedSuccess);
          }
          catch (SecureShellSessionException ex)
          {
-            logger.WriteLine($"FAILED: {ex.Message}");
+            logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            logger.WriteLine(Resources.RemoteCommandCleanRemoteFolderCompletedFailed, ex.Message);
             throw;
          }
       }
@@ -317,7 +326,7 @@ namespace RemoteDebuggerLauncher
             using (var commands = session.CreateCommandSession())
             {
                logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-               logger.WriteLine(Resources.RemoteCommandInstallDotnetSdkOnlineCaption);
+               logger.WriteLine(Resources.RemoteCommandInstallDotnetSdkOnlineOutputPaneProgress);
 
                var dotnetInstallPath = configurationAggregator.QueryDotNetInstallFolderPath();
                var result = await commands.ExecuteCommandAsync($"curl -sSL {PackageConstants.Dotnet.GetInstallDotnetShUrl} | bash /dev/stdin --channel {channel} --install-dir {dotnetInstallPath}");
@@ -327,7 +336,7 @@ namespace RemoteDebuggerLauncher
          catch (SecureShellSessionException ex)
          {
             logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-            logger.WriteLine(Resources.RemoteCommandInstallDotnetSdkOnlineFailed, ex.Message);
+            logger.WriteLine(Resources.RemoteCommandInstallDotnetSdkOnlineCompletedFailed, ex.Message);
             return false;
          }
 
@@ -347,17 +356,20 @@ namespace RemoteDebuggerLauncher
             using (var commands = session.CreateCommandSession())
             {
                logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-               logger.WriteLine(Resources.RemoteCommandInstallDotnetRuntimeOnlineCaption);
+               logger.WriteLine(Resources.RemoteCommandInstallDotnetRuntimeOnlineOutputPaneProgress);
 
                var dotnetInstallPath = configurationAggregator.QueryDotNetInstallFolderPath();
                var result = await commands.ExecuteCommandAsync($"curl -sSL {PackageConstants.Dotnet.GetInstallDotnetShUrl} | bash /dev/stdin --channel {channel} --runtime {runtime} --install-dir {dotnetInstallPath}");
                logger.Write(result);
             }
+
+            logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            logger.WriteLine(Resources.RemoteCommandInstallDotnetRuntimeOnlineCompletedSuccess);
          }
          catch (SecureShellSessionException ex)
          {
             logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-            logger.WriteLine(Resources.RemoteCommandInstallDotnetRuntimeOnlineFailed, ex.Message);
+            logger.WriteLine(Resources.RemoteCommandInstallDotnetRuntimeOnlineCompletedFailed, ex.Message);
             return false;
          }
 
@@ -374,17 +386,19 @@ namespace RemoteDebuggerLauncher
          try
          {
             logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-            logger.WriteLine(Resources.RemoteCommandInstallDotnetSdkOfflineCaption);
+            logger.WriteLine(Resources.RemoteCommandInstallDotnetSdkOfflineOutputPaneProgress);
 
             var installerPath = await DownloadDotnetAsync(channel);
             await InstallDotnetAsync(installerPath);
 
-            logger.Write(Resources.RemoteCommandCommonSuccess);
+            logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            logger.WriteLine(Resources.RemoteCommandInstallDotnetSdkOfflineCompletedSuccess);
+
          }
          catch (SecureShellSessionException ex)
          {
             logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-            logger.WriteLine(Resources.RemoteCommandInstallDotnetSdkOfflineFailed, ex.Message);
+            logger.WriteLine(Resources.RemoteCommandInstallDotnetSdkOfflineCompletedFailed, ex.Message);
          }
       }
 
@@ -397,17 +411,18 @@ namespace RemoteDebuggerLauncher
          try
          {
             logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-            logger.WriteLine(Resources.RemoteCommandInstallDotnetRuntimeOfflineCaption);
+            logger.WriteLine(Resources.RemoteCommandInstallDotnetRuntimeOfflineOutputPaneProgress);
 
             var installerPath = await DownloadDotnetAsync(channel, runtime);
             await InstallDotnetAsync(installerPath);
 
-            logger.Write(Resources.RemoteCommandCommonSuccess);
+            logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            logger.WriteLine(Resources.RemoteCommandInstallDotnetRuntimeOfflineCompletedSuccess);
          }
          catch (SecureShellSessionException ex)
          {
             logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-            logger.WriteLine(Resources.RemoteCommandInstallDotnetRuntimeOfflineFailed, ex.Message);
+            logger.WriteLine(Resources.RemoteCommandInstallDotnetRuntimeOfflineCompletedFailed, ex.Message);
          }
       }
       #endregion
@@ -458,7 +473,7 @@ namespace RemoteDebuggerLauncher
          string dotnetDownloadUrl;
 
          logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-         logger.Write(Resources.RemoteCommandInstallDotnetDownloadingScript, PackageConstants.Dotnet.GetInstallDotnetPs1Url, runtimeId);
+         logger.Write(Resources.RemoteCommandInstallDotnetOfflineOutputPaneDownloadingScript, PackageConstants.Dotnet.GetInstallDotnetPs1Url, runtimeId);
 
          // Download the PS1 script to install .NET
          using (var httpClient = new HttpClient())
@@ -471,7 +486,7 @@ namespace RemoteDebuggerLauncher
             }
 
             // Create the runspace so that you can access the pipeline.
-            CustomPSHost host = new CustomPSHost();
+            var host = new CaptureOutputPSHost();
 
             using (var runSpace = RunspaceFactory.CreateRunspace(host))
             {
@@ -511,7 +526,7 @@ namespace RemoteDebuggerLauncher
             {
                // download the payload file, store in the cache folder
                logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-               logger.Write(Resources.RemoteCommandInstallDotnetDownloadingPayload, dotnetDownloadUrl);
+               logger.Write(Resources.RemoteCommandInstallDotnetOfflineOutputPaneDownloadingPayload, dotnetDownloadUrl);
 
                using (var response = await httpClient.GetAsync(dotnetDownloadUrl))
                {
@@ -529,7 +544,7 @@ namespace RemoteDebuggerLauncher
             {
                // skip download, use the cache
                logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-               logger.WriteLine(Resources.RemoteCommandInstallDotnetDownloadingSkipped, Path.GetFileName(dotnetDownloadUrl));
+               logger.WriteLine(Resources.RemoteCommandInstallDotnetOfflineOutputPaneDownloadingSkipped, Path.GetFileName(dotnetDownloadUrl));
             }
 
             return filePath;
@@ -544,13 +559,22 @@ namespace RemoteDebuggerLauncher
             var fileName = Path.GetFileName(filePath);
 
             var userHome = (await commands.ExecuteCommandAsync("pwd").ConfigureAwait(true)).Trim('\n');
+            
             var targetPath = UnixPath.Combine(userHome, fileName);
+            var installPath = UnixPath.Normalize(configurationAggregator.QueryDotNetInstallFolderPath(), userHome);
 
             //"mkdir - p $HOME / dotnet && tar zxf dotnet-sdk - 6.0.201 - linux - x64.tar.gz - C $HOME / dotnet";
             logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-            logger.Write(Resources.RemoteCommandInstallDotnetUploadingPayload, targetPath);
+            logger.Write(Resources.RemoteCommandInstallDotnetOfflineOutputPaneUploadingPayload, targetPath);
 
             await session.UploadFileAsync(filePath, targetPath, logger);
+
+            logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            logger.Write(Resources.RemoteCommandInstallDotnetOfflineOutputPaneInstalling, fileName);
+
+            var response = await commands.ExecuteCommandAsync($"mkdir -p {installPath}"); 
+            await commands.ExecuteCommandAsync($"tar zxf {targetPath} -C {installPath}");
+            await commands.ExecuteCommandAsync($"rm -f {targetPath}");
 
             logger.WriteLine(Resources.RemoteCommandCommonSuccess);
          }

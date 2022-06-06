@@ -9,27 +9,28 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Management.Automation.Host;
+using System.Threading;
 
-namespace RemoteDebuggerLauncher
+namespace RemoteDebuggerLauncher.PowerShellHost
 {
    /// <summary>
-   /// Implements a custom PowerShell Host.
+   /// Implements a PowerShell Host capturing the script outputs.
    /// </summary>
    /// <seealso cref="PSHost" />
-   internal class CustomPSHost : PSHost
+   internal class CaptureOutputPSHost : PSHost
    {
       #region Private Fields
       /// <summary>The identifier of this Powershell host implementation.</summary>
       private Guid instanceId = Guid.NewGuid();
 
       /// <summary>The culture information of the thread that created this object.</summary>
-      private readonly CultureInfo originalCultureInfo = System.Threading.Thread.CurrentThread.CurrentCulture;
+      private readonly CultureInfo originalCultureInfo = Thread.CurrentThread.CurrentCulture;
 
       /// <summary>The UI culture information of the thread that created this object.</summary>
-      private readonly CultureInfo originalUICultureInfo = System.Threading.Thread.CurrentThread.CurrentUICulture;
+      private readonly CultureInfo originalUICultureInfo = Thread.CurrentThread.CurrentUICulture;
 
       /// <summary>A reference to the implementation of the PSHostUserInterface.</summary>
-      private readonly CustomPSHostUserInterface hostUserInterface = new CustomPSHostUserInterface();
+      private readonly OutputCapturePSHostUserInterface hostUserInterface = new OutputCapturePSHostUserInterface();
       #endregion
 
       #region PSHost Properties
@@ -58,14 +59,14 @@ namespace RemoteDebuggerLauncher
       /// Gets a string that contains the name of this host implementation.
       /// </summary>
       /// <value>The name identifier of the hosting application.</value>
-      public override string Name => nameof(CustomPSHost);
+      public override string Name => nameof(CaptureOutputPSHost);
 
       /// <summary>
       /// Gets an instance of the implementation of the PSHostUserInterface class for this application. 
       /// This instance is allocated once at startup time and returned every time thereafter.
       /// </summary>
       /// <value>A reference to an instance of the hosting application's implementation of a class derived from
-      /// <see cref="T:System.Management.Automation.Host.PSHostUserInterface" />, or null to indicate that user interaction is not supported.</value>
+      /// <see cref="PSHostUserInterface" />, or null to indicate that user interaction is not supported.</value>
       public override PSHostUserInterface UI => hostUserInterface;
 
       /// <summary>

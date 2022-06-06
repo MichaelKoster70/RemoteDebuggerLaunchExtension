@@ -299,6 +299,42 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cleaning - target: {0}.
+        /// </summary>
+        public static string RemoteCommandCleanRemoteFolderCaption {
+            get {
+                return ResourceManager.GetString("RemoteCommandCleanRemoteFolderCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cleaning FAILED: {0}.
+        /// </summary>
+        public static string RemoteCommandCleanRemoteFolderCompletedFailed {
+            get {
+                return ResourceManager.GetString("RemoteCommandCleanRemoteFolderCompletedFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cleaning OK.
+        /// </summary>
+        public static string RemoteCommandCleanRemoteFolderCompletedSuccess {
+            get {
+                return ResourceManager.GetString("RemoteCommandCleanRemoteFolderCompletedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cleaning ....
+        /// </summary>
+        public static string RemoteCommandCleanRemoteFolderStatusbarProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandCleanRemoteFolderStatusbarProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FAILED: {0}.
         /// </summary>
         public static string RemoteCommandCommonFailed {
@@ -335,20 +371,20 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Deploying application - Source: {0}, Target: {1}.
-        /// </summary>
-        public static string RemoteCommandDeployRemoveFolderCaption {
-            get {
-                return ResourceManager.GetString("RemoteCommandDeployRemoveFolderCaption", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Deploying application OK.
         /// </summary>
         public static string RemoteCommandDeployRemoveFolderCompletedSuccess {
             get {
                 return ResourceManager.GetString("RemoteCommandDeployRemoveFolderCompletedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deploying application - Source: {0}, Target: {1}.
+        /// </summary>
+        public static string RemoteCommandDeployRemoveFolderOutputPaneProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandDeployRemoveFolderOutputPaneProgress", resourceCulture);
             }
         }
         
@@ -364,149 +400,203 @@ namespace RemoteDebuggerLauncher {
         /// <summary>
         ///   Looks up a localized string similar to Installing VS Code Debugger.
         /// </summary>
-        public static string RemoteCommandInstallDebuggerCaption {
+        public static string RemoteCommandInstallDebuggerCommandCaption {
             get {
-                return ResourceManager.GetString("RemoteCommandInstallDebuggerCaption", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Installing VS Code Debugger from host.
-        /// </summary>
-        public static string RemoteCommandInstallDebuggerOfflineCaption {
-            get {
-                return ResourceManager.GetString("RemoteCommandInstallDebuggerOfflineCaption", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Installing VS Code Debugger from host FAILED: {0}.
-        /// </summary>
-        public static string RemoteCommandInstallDebuggerOfflineFailed {
-            get {
-                return ResourceManager.GetString("RemoteCommandInstallDebuggerOfflineFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Downloading - URL: {0}, Version: {1}, RuntimeID: {2} .
-        /// </summary>
-        public static string RemoteCommandInstallDebuggerOfflineProgressDownloading {
-            get {
-                return ResourceManager.GetString("RemoteCommandInstallDebuggerOfflineProgressDownloading", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Installing .
-        /// </summary>
-        public static string RemoteCommandInstallDebuggerOfflineProgressInstalling {
-            get {
-                return ResourceManager.GetString("RemoteCommandInstallDebuggerOfflineProgressInstalling", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Installing VS Code Debugger direct from internet.
-        /// </summary>
-        public static string RemoteCommandInstallDebuggerOnlineCaption {
-            get {
-                return ResourceManager.GetString("RemoteCommandInstallDebuggerOnlineCaption", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Installing VS Code Debugger direct from internet FAILED: {0}.
-        /// </summary>
-        public static string RemoteCommandInstallDebuggerOnlineFailed {
-            get {
-                return ResourceManager.GetString("RemoteCommandInstallDebuggerOnlineFailed", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandInstallDebuggerCommandCaption", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Installing VS Code Debugger on targets ....
         /// </summary>
-        public static string RemoteCommandInstallDebuggerStatusbarText {
+        public static string RemoteCommandInstallDebuggerCommandStatusbarProgress {
             get {
-                return ResourceManager.GetString("RemoteCommandInstallDebuggerStatusbarText", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandInstallDebuggerCommandStatusbarProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing VS Code Debugger from host.
+        /// </summary>
+        public static string RemoteCommandInstallDebuggerOfflineCommonProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandInstallDebuggerOfflineCommonProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing VS Code Debugger from host FAILED: {0}.
+        /// </summary>
+        public static string RemoteCommandInstallDebuggerOfflineCompletedFailed {
+            get {
+                return ResourceManager.GetString("RemoteCommandInstallDebuggerOfflineCompletedFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing VS Code Debugger from host OK.
+        /// </summary>
+        public static string RemoteCommandInstallDebuggerOfflineCompletedSuccess {
+            get {
+                return ResourceManager.GetString("RemoteCommandInstallDebuggerOfflineCompletedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloading - URL: {0}, Version: {1}, RuntimeID: {2} .
+        /// </summary>
+        public static string RemoteCommandInstallDebuggerOfflineOutputPaneProgressDownloading {
+            get {
+                return ResourceManager.GetString("RemoteCommandInstallDebuggerOfflineOutputPaneProgressDownloading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing .
+        /// </summary>
+        public static string RemoteCommandInstallDebuggerOfflineOutputPaneProgressInstalling {
+            get {
+                return ResourceManager.GetString("RemoteCommandInstallDebuggerOfflineOutputPaneProgressInstalling", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing VS Code Debugger direct from internet.
+        /// </summary>
+        public static string RemoteCommandInstallDebuggerOnlineCommonProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandInstallDebuggerOnlineCommonProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing VS Code Debugger direct from internet FAILED: {0}.
+        /// </summary>
+        public static string RemoteCommandInstallDebuggerOnlineCompletedFailed {
+            get {
+                return ResourceManager.GetString("RemoteCommandInstallDebuggerOnlineCompletedFailed", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Installing .NET.
         /// </summary>
-        public static string RemoteCommandInstallDotnetCaption {
+        public static string RemoteCommandInstallDotnetCommandCaption {
             get {
-                return ResourceManager.GetString("RemoteCommandInstallDotnetCaption", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandInstallDotnetCommandCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing .NET on targets ....
+        /// </summary>
+        public static string RemoteCommandInstallDotnetCommandStatusbarText {
+            get {
+                return ResourceManager.GetString("RemoteCommandInstallDotnetCommandStatusbarText", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Downloading binaries - URL: {0} .
         /// </summary>
-        public static string RemoteCommandInstallDotnetDownloadingPayload {
+        public static string RemoteCommandInstallDotnetOfflineOutputPaneDownloadingPayload {
             get {
-                return ResourceManager.GetString("RemoteCommandInstallDotnetDownloadingPayload", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandInstallDotnetOfflineOutputPaneDownloadingPayload", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Downloading script - URL: {0}, RuntimeID: {1} .
         /// </summary>
-        public static string RemoteCommandInstallDotnetDownloadingScript {
+        public static string RemoteCommandInstallDotnetOfflineOutputPaneDownloadingScript {
             get {
-                return ResourceManager.GetString("RemoteCommandInstallDotnetDownloadingScript", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandInstallDotnetOfflineOutputPaneDownloadingScript", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Skipped downloading, use cache - file: {0}.
         /// </summary>
-        public static string RemoteCommandInstallDotnetDownloadingSkipped {
+        public static string RemoteCommandInstallDotnetOfflineOutputPaneDownloadingSkipped {
             get {
-                return ResourceManager.GetString("RemoteCommandInstallDotnetDownloadingSkipped", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandInstallDotnetOfflineOutputPaneDownloadingSkipped", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Installing .NET runtime from host.
+        ///   Looks up a localized string similar to Installing, this may take a while - file: {0} .
         /// </summary>
-        public static string RemoteCommandInstallDotnetRuntimeOfflineCaption {
+        public static string RemoteCommandInstallDotnetOfflineOutputPaneInstalling {
             get {
-                return ResourceManager.GetString("RemoteCommandInstallDotnetRuntimeOfflineCaption", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandInstallDotnetOfflineOutputPaneInstalling", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uploading binaries - target: {0} .
+        /// </summary>
+        public static string RemoteCommandInstallDotnetOfflineOutputPaneUploadingPayload {
+            get {
+                return ResourceManager.GetString("RemoteCommandInstallDotnetOfflineOutputPaneUploadingPayload", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Installing .NET runtime from host FAILED: {0}.
         /// </summary>
-        public static string RemoteCommandInstallDotnetRuntimeOfflineFailed {
+        public static string RemoteCommandInstallDotnetRuntimeOfflineCompletedFailed {
             get {
-                return ResourceManager.GetString("RemoteCommandInstallDotnetRuntimeOfflineFailed", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandInstallDotnetRuntimeOfflineCompletedFailed", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Installing .NET runtime direct from internet.
+        ///   Looks up a localized string similar to Installing .NET runtime from host OK.
         /// </summary>
-        public static string RemoteCommandInstallDotnetRuntimeOnlineCaption {
+        public static string RemoteCommandInstallDotnetRuntimeOfflineCompletedSuccess {
             get {
-                return ResourceManager.GetString("RemoteCommandInstallDotnetRuntimeOnlineCaption", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandInstallDotnetRuntimeOfflineCompletedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing .NET runtime from host.
+        /// </summary>
+        public static string RemoteCommandInstallDotnetRuntimeOfflineOutputPaneProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandInstallDotnetRuntimeOfflineOutputPaneProgress", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Installing .NET runtime direct from internet FAILED: {0}.
         /// </summary>
-        public static string RemoteCommandInstallDotnetRuntimeOnlineFailed {
+        public static string RemoteCommandInstallDotnetRuntimeOnlineCompletedFailed {
             get {
-                return ResourceManager.GetString("RemoteCommandInstallDotnetRuntimeOnlineFailed", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandInstallDotnetRuntimeOnlineCompletedFailed", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Script execution failed with &apos;{0}&apos;.
+        ///   Looks up a localized string similar to Installing .NET runtime direct from internet OK.
+        /// </summary>
+        public static string RemoteCommandInstallDotnetRuntimeOnlineCompletedSuccess {
+            get {
+                return ResourceManager.GetString("RemoteCommandInstallDotnetRuntimeOnlineCompletedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing .NET runtime direct from internet.
+        /// </summary>
+        public static string RemoteCommandInstallDotnetRuntimeOnlineOutputPaneProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandInstallDotnetRuntimeOnlineOutputPaneProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloading .NET - Powershell script execution failed with &apos;{0}&apos;.
         /// </summary>
         public static string RemoteCommandInstallDotnetScriptExecutionFailed {
             get {
@@ -515,56 +605,74 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Installing .NET SDK from host.
-        /// </summary>
-        public static string RemoteCommandInstallDotnetSdkOfflineCaption {
-            get {
-                return ResourceManager.GetString("RemoteCommandInstallDotnetSdkOfflineCaption", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Installing .NET SDK from host FAILED: {0}.
         /// </summary>
-        public static string RemoteCommandInstallDotnetSdkOfflineFailed {
+        public static string RemoteCommandInstallDotnetSdkOfflineCompletedFailed {
             get {
-                return ResourceManager.GetString("RemoteCommandInstallDotnetSdkOfflineFailed", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandInstallDotnetSdkOfflineCompletedFailed", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Installing .NET SDK direct from internet.
+        ///   Looks up a localized string similar to Installing .NET SDK from host OK.
         /// </summary>
-        public static string RemoteCommandInstallDotnetSdkOnlineCaption {
+        public static string RemoteCommandInstallDotnetSdkOfflineCompletedSuccess {
             get {
-                return ResourceManager.GetString("RemoteCommandInstallDotnetSdkOnlineCaption", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandInstallDotnetSdkOfflineCompletedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing .NET SDK from host.
+        /// </summary>
+        public static string RemoteCommandInstallDotnetSdkOfflineOutputPaneProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandInstallDotnetSdkOfflineOutputPaneProgress", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Installing .NET SDK direct from internet FAILED: {0}.
         /// </summary>
-        public static string RemoteCommandInstallDotnetSdkOnlineFailed {
+        public static string RemoteCommandInstallDotnetSdkOnlineCompletedFailed {
             get {
-                return ResourceManager.GetString("RemoteCommandInstallDotnetSdkOnlineFailed", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandInstallDotnetSdkOnlineCompletedFailed", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Installing .NET on targets ....
+        ///   Looks up a localized string similar to Installing .NET SDK direct from internet OK.
         /// </summary>
-        public static string RemoteCommandInstallDotnetStatusbarText {
+        public static string RemoteCommandInstallDotnetSdkOnlineCompletedSuccess {
             get {
-                return ResourceManager.GetString("RemoteCommandInstallDotnetStatusbarText", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandInstallDotnetSdkOnlineCompletedSuccess", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Uploading binaries - target: {0}.
+        ///   Looks up a localized string similar to Installing .NET SDK direct from internet.
         /// </summary>
-        public static string RemoteCommandInstallDotnetUploadingPayload {
+        public static string RemoteCommandInstallDotnetSdkOnlineOutputPaneProgress {
             get {
-                return ResourceManager.GetString("RemoteCommandInstallDotnetUploadingPayload", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandInstallDotnetSdkOnlineOutputPaneProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  ok.
+        /// </summary>
+        public static string RemoteCommandUploadOutputPaneDone {
+            get {
+                return ResourceManager.GetString("RemoteCommandUploadOutputPaneDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ..
+        /// </summary>
+        public static string RemoteCommandUploadOutputPaneProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandUploadOutputPaneProgress", resourceCulture);
             }
         }
     }

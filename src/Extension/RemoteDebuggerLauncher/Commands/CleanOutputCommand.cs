@@ -85,27 +85,41 @@ namespace RemoteDebuggerLauncher
 #pragma warning disable VSTHRD102 // Implement internal logic asynchronously
          package.JoinableTaskFactory.Run(async () =>
          {
-            // get all services we need
-            var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync().ConfigureAwait(false);
-            var projectService = await ServiceProvider.GetProjectServiceAsync().ConfigureAwait(false);
-            var optionsPageAccessor = await ServiceProvider.GetServiceAsync<SOptionsPageAccessor, IOptionsPageAccessor>();
-            var loggerService = await ServiceProvider.GetServiceAsync<SLoggerService, ILoggerService>();
+            var statusbarService = await ServiceProvider.GetServiceAsync<SStatusbarService, IStatusbarService>();
 
-            // do the remaining work on the UI thread
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            var lauchProfileAccess = new LaunchProfileAccess(dte, projectService);
-            var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync();
-
-            loggerService.WriteLine(Resources.CommonStartSessionMarker);
-
-            foreach (var profile in profiles)
+            try
             {
-               var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
-               var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService);
-               remoteOperations.LogHost = true;
-               loggerService.WriteLine(Resources.RemoteCommandCommonProfile, profile.Name);
-               await remoteOperations.CleanRemoteFolderAsync();
+               // get all services we need
+               var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync().ConfigureAwait(false);
+               var projectService = await ServiceProvider.GetProjectServiceAsync().ConfigureAwait(false);
+               var optionsPageAccessor = await ServiceProvider.GetServiceAsync<SOptionsPageAccessor, IOptionsPageAccessor>();
+               var loggerService = await ServiceProvider.GetServiceAsync<SLoggerService, ILoggerService>();
+
+               // do the remaining work on the UI thread
+               await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+               var lauchProfileAccess = new LaunchProfileAccess(dte, projectService);
+               var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync();
+
+               loggerService.WriteLine(Resources.CommonStartSessionMarker);
+
+               foreach (var profile in profiles)
+               {
+                  var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
+                  var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService);
+                  remoteOperations.LogHost = true;
+                  loggerService.WriteLine(Resources.RemoteCommandCommonProfile, profile.Name);
+                  await remoteOperations.CleanRemoteFolderAsync();
+               }
+            }
+            catch(Exception exception)
+            {
+               VsShellUtilities.ShowMessageBox(package, exception.Message, Resources.RemoteCommandInstallDebuggerCommandCaption, OLEMSGICON.OLEMSGICON_CRITICAL, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+
+            }
+            finally
+            {
+               statusbarService.Clear();
             }
          });
 #pragma warning restore VSTHRD102 // Implement internal logic asynchronously

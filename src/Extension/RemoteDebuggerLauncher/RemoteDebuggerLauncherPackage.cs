@@ -6,8 +6,6 @@
 // ----------------------------------------------------------------------------
 
 using System;
-using System.ComponentModel.Design;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,7 +35,7 @@ namespace RemoteDebuggerLauncher
    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
    [ProvideOptionPage(typeof(DeviceOptionsPage), PackageConstants.Options.Category, PackageConstants.Options.PageDevice, 0, 0, true)]
    [ProvideOptionPage(typeof(LocalOptionsPage), PackageConstants.Options.Category, PackageConstants.Options.PageLocal, 0, 0, true)]
-   [ProvideProfile(typeof(DeviceOptionsPage), PackageConstants.Options.Category, "My Settings", 106, 107, isToolsOptionPage: true, DescriptionResourceID = 108)]
+   [ProvideProfile(typeof(DeviceOptionsPage), PackageConstants.Options.Category, "Remote Debugger Settings", 106, 107, isToolsOptionPage: true, DescriptionResourceID = 108)]
    [Guid(RemoteDebuggerLauncherPackage.PackageGuidString)]
    [ProvideMenuResource("Menus.ctmenu", 1)]
    public sealed class RemoteDebuggerLauncherPackage : AsyncPackage //, IOleCommandTarget

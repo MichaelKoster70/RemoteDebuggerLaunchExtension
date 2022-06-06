@@ -118,7 +118,7 @@ namespace RemoteDebuggerLauncher
                   var lauchProfileAccess = new LaunchProfileAccess(dte, projectService);
                   var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync();
 
-                  statusbarService.SetText(Resources.RemoteCommandInstallDotnetStatusbarText);
+                  statusbarService.SetText(Resources.RemoteCommandInstallDotnetCommandStatusbarText);
                   loggerService.WriteLine(Resources.CommonStartSessionMarker);
 
                   foreach (var profile in profiles)
@@ -144,7 +144,7 @@ namespace RemoteDebuggerLauncher
                }
                catch (Exception exception)
                {
-                  VsShellUtilities.ShowMessageBox(package, exception.Message, Resources.RemoteCommandInstallDotnetCaption, OLEMSGICON.OLEMSGICON_CRITICAL, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+                  VsShellUtilities.ShowMessageBox(package, exception.Message, Resources.RemoteCommandInstallDotnetCommandCaption, OLEMSGICON.OLEMSGICON_CRITICAL, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
                }
                finally
                {

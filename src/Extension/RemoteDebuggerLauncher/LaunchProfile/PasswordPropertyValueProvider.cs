@@ -9,6 +9,7 @@ using System;
 using System.Collections.Immutable;
 using Microsoft.Build.Framework.XamlTypes;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
+using Microsoft.VisualStudio.ProjectSystem.Properties;
 
 namespace RemoteDebuggerLauncher
 {
@@ -19,7 +20,7 @@ namespace RemoteDebuggerLauncher
    /// <remarks>
    /// Implemented once the required interfaces are publically available
    /// </remarks>
-   internal sealed class PasswordPropertyValueProvider // : ILaunchProfileExtensionValueProvider
+   internal sealed class PasswordPropertyValueProvider : ILaunchProfileExtensionValueProvider
    {
       public string OnGetPropertyValue(string propertyName, ILaunchProfile launchProfile, ImmutableDictionary<string, object> globalSettings, Rule rule)
       {
