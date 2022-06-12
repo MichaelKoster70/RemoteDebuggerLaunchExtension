@@ -225,7 +225,7 @@ namespace RemoteDebuggerLauncher
          switch (settings.Authentication)
          {
             case AuthenticationKind.Password:
-               return new SshClient(settings.HostName, settings.UserName, "");
+               return new SshClient(settings.HostName, settings.UserName, settings.Password);
             case AuthenticationKind.PrivateKey:
                var key = new PrivateKeyFile(settings.PrivateKeyFile);
                return new SshClient(settings.HostName, settings.UserName, key);
@@ -239,7 +239,7 @@ namespace RemoteDebuggerLauncher
          switch (settings.Authentication)
          {
             case AuthenticationKind.Password:
-               return new ScpClient(settings.HostName, settings.UserName, "");
+               return new ScpClient(settings.HostName, settings.UserName, settings.Password);
             case AuthenticationKind.PrivateKey:
                var key = new PrivateKeyFile(settings.PrivateKeyFile);
                return new ScpClient(settings.HostName, settings.UserName, key);

@@ -97,6 +97,37 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <summary>
+      /// Queries the autentication to be used to establish a connection to the remote device.
+      /// </summary>
+      /// <returns>A <see cref="AuthenticationKind"/> holding the authentication kind.</returns>
+      /// <remarks>
+      /// The following configuration provides are queried, first match wins
+      /// - selected launch profile
+      /// - 
+      /// </remarks>
+      public AuthenticationKind QueryAuthenication()
+      {
+         if (launchProfile.OtherSettings.TryGetValue(SecureShellRemoteLaunchProfile.authenticationProperty, out var settingsValue))
+         {
+            if (settingsValue is string authenticationKind && !string.IsNullOrEmpty(authenticationKind))
+            {
+               switch (authenticationKind)
+               {
+                  case SecureShellRemoteLaunchProfile.authenticationValues.privateKey:
+                     return AuthenticationKind.PrivateKey;
+                  case SecureShellRemoteLaunchProfile.authenticationValues.password:
+                     return AuthenticationKind.Password;
+                  default:
+                     return AuthenticationKind.PrivateKey;
+               }
+            }
+         }
+
+         // default to private key auth
+         return AuthenticationKind.PrivateKey;
+      }
+
+      /// <summary>
       /// Queries the private key to be used to establish a connection to the remote device.
       /// </summary>
       /// <returns>A <see langword="string"/> holding the private key file path; an empty string if no key is configured.</returns>
@@ -137,8 +168,24 @@ namespace RemoteDebuggerLauncher
       /// </remarks>
       public string QueryPassword()
       {
-         //NOT IMPLEMEN
-         return "";
+         if (launchProfile.OtherSettings.TryGetValue(SecureShellRemoteLaunchProfile.privateKeyProperty, out var settingsValue))
+         {
+            if (settingsValue is string profilePrivateKey && !string.IsNullOrEmpty(profilePrivateKey))
+            {
+               // Launch profile has a key file  specified => use it
+               return profilePrivateKey;
+            }
+         }
+
+         var optionsPrivateKey = optionsPageAccessor.QueryPrivateKeyFilePath();
+         if (!string.IsNullOrEmpty(optionsPrivateKey))
+         {
+            // Options has a user name specified => use it
+            return optionsPrivateKey;
+         }
+
+         // No private key available, rely on defaults
+         return string.Empty;
       }
 
       /// <summary>
