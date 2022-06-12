@@ -48,26 +48,26 @@
                    DisplayName="Authentication"
                    Description="The authentication mechanism to be used."
                    Subcategory="Remote Devices">
-      <!--<EnumValue Name="password" DisplayName="Password"/>-->
+      <EnumValue Name="password" DisplayName="Password"/>
       <EnumValue Name="privateKey" DisplayName="Private Key"/>
    </EnumProperty>
 
-   <!--<StringProperty Name="password"
+   <StringProperty Name="password"
                    DisplayName="Password"
                    Description="The password to be used for connecting to the target device."
                    Subcategory="Remote Devices">
-      <StringProperty.DataSource>
-         <DataSource PersistedName="password" Persistence="LaunchProfileWithInterception" HasConfigurationCondition="False" />
-      </StringProperty.DataSource>
+      <!--<StringProperty.DataSource>
+            <DataSource PersistedName="password" Persistence="LaunchProfile" HasConfigurationCondition="False" />
+      </StringProperty.DataSource>-->
       <StringProperty.ValueEditors>
          <ValueEditor EditorType="PasswordString" />
       </StringProperty.ValueEditors>
       <StringProperty.Metadata>
          <NameValuePair Name="VisibilityCondition">
-            <NameValuePair.Value>(eq "Password" (unevaluated "SecureShellRemoteLaunch" "authentication"))</NameValuePair.Value>
+            <NameValuePair.Value>(eq "password" (unevaluated "SecureShellRemoteLaunch" "authentication"))</NameValuePair.Value>
          </NameValuePair>
       </StringProperty.Metadata>
-   </StringProperty>-->
+   </StringProperty>
 
    <StringProperty Name="privateKey"
                    DisplayName="Private key"
@@ -76,7 +76,7 @@
                    Subcategory="Remote Devices">
       <StringProperty.Metadata>
          <NameValuePair Name="VisibilityCondition">
-            <NameValuePair.Value>(eq "Private Key" (unevaluated "SecureShellRemoteLaunch" "authentication"))</NameValuePair.Value>
+            <NameValuePair.Value>(eq "privateKey" (unevaluated "SecureShellRemoteLaunch" "authentication"))</NameValuePair.Value>
          </NameValuePair>
       </StringProperty.Metadata>
    </StringProperty>
