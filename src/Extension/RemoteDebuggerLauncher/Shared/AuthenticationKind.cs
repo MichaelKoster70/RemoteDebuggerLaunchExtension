@@ -14,6 +14,6 @@ namespace RemoteDebuggerLauncher
       Password,
 
       /// <summary>Private key based authentication.</summary>
-      PrivateKey,
+      PrivateKey
    }
 }

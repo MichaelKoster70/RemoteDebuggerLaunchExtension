@@ -48,23 +48,20 @@
                    DisplayName="Authentication"
                    Description="The authentication mechanism to be used."
                    Subcategory="Remote Devices">
-      <EnumValue Name="password" DisplayName="Password"/>
-      <EnumValue Name="privateKey" DisplayName="Private Key"/>
+        <EnumValue Name="password" DisplayName="Password"/>
+        <EnumValue Name="privateKey" DisplayName="Private Key"/>
    </EnumProperty>
 
-   <StringProperty Name="password"
+    <StringProperty Name="password"
                    DisplayName="Password"
                    Description="The password to be used for connecting to the target device."
                    Subcategory="Remote Devices">
-      <!--<StringProperty.DataSource>
-            <DataSource PersistedName="password" Persistence="LaunchProfile" HasConfigurationCondition="False" />
-      </StringProperty.DataSource>-->
-      <StringProperty.ValueEditors>
+        <StringProperty.ValueEditors>
          <ValueEditor EditorType="PasswordString" />
       </StringProperty.ValueEditors>
       <StringProperty.Metadata>
          <NameValuePair Name="VisibilityCondition">
-            <NameValuePair.Value>(eq "password" (unevaluated "SecureShellRemoteLaunch" "authentication"))</NameValuePair.Value>
+                <NameValuePair.Value>(and (eq "password" (unevaluated "SecureShellRemoteLaunch" "authentication")) (eq "putty" (unevaluated "SecureShellRemoteLaunch" "sshProvider")))</NameValuePair.Value>
          </NameValuePair>
       </StringProperty.Metadata>
    </StringProperty>
