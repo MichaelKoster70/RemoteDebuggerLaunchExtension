@@ -32,12 +32,6 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <inheritdoc />
-      public AdapterProviderKind QueryAdapterProvider()
-      {
-         return GetLocalPage().AdapterProvider;
-      }
-
-      /// <inheritdoc />
       public string QueryDotNetInstallFolderPath()
       {
          return GetDevicePage().DotNetInstallFolderPath;
@@ -53,12 +47,6 @@ namespace RemoteDebuggerLauncher
       public string QueryAppFolderPath()
       {
          return GetDevicePage().AppFolderPath;
-      }
-
-      /// <inheritdoc />
-      public string QueryPuttyInstallPath()
-      {
-         return GetLocalPage().PuttyInstallPath;
       }
 
       private DeviceOptionsPage GetDevicePage()

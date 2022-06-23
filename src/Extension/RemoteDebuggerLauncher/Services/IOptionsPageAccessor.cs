@@ -27,12 +27,6 @@ namespace RemoteDebuggerLauncher
       string QueryPrivateKeyFilePath();
 
       /// <summary>
-      /// Queries the adapter provider to be used to establish a connection to the remote device from the device option page.
-      /// </summary>
-      /// <returns>One of the <see cref="AdapterProviderKind"/> values, <c>AdapterProviderKind.WindowsSSH</c> if not configured</returns>
-      AdapterProviderKind QueryAdapterProvider();
-
-      /// <summary>
       /// Queries the folder path where the .NET framework is installed on the remote device from the device option page.
       /// </summary>
       /// <returns>A <see langword="string"/> holding the path, <c>string.Empty</c> if not configured.</returns>
@@ -49,12 +43,6 @@ namespace RemoteDebuggerLauncher
       /// </summary>
       /// <returns>A <see langword="string"/> holding the path, <c>string.Empty</c> if not configured.</returns>
       string QueryAppFolderPath();
-
-      /// <summary>
-      /// Queries the path where PuTTY is installed from the local option page.
-      /// </summary>
-      /// <returns>A <see langword="string"/> holding the path, <c>string.Empty</c> if not configured.</returns>
-      string QueryPuttyInstallPath();
    }
 
 

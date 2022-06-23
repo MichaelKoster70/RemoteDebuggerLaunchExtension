@@ -20,14 +20,6 @@
    <Rule.DataSource>
       <DataSource Persistence="LaunchProfile" HasConfigurationCondition="False" ItemType="LaunchProfile"/>
    </Rule.DataSource>
-
-   <EnumProperty Name="sshProvider"
-                 DisplayName="SSH Provider"
-                 Description="The tool providing the SSH connection."
-                 Subcategory="Infrastructure">
-      <EnumValue Name="windowsSSH" DisplayName="Windows SSH"/>
-      <EnumValue Name="putty" DisplayName="PuTTY"/>
-   </EnumProperty>
    
    <StringProperty Name="commandLineArgs"
                    DisplayName="Command line arguments"
@@ -44,39 +36,12 @@
                    Description="The user name to be used for connecting to the target device."
                    Subcategory="Remote Devices"/>
 
-   <EnumProperty Name="authentication" 
-                   DisplayName="Authentication"
-                   Description="The authentication mechanism to be used."
-                   Subcategory="Remote Devices">
-        <EnumValue Name="password" DisplayName="Password"/>
-        <EnumValue Name="privateKey" DisplayName="Private Key"/>
-   </EnumProperty>
-
-    <StringProperty Name="password"
-                   DisplayName="Password"
-                   Description="The password to be used for connecting to the target device."
-                   Subcategory="Remote Devices">
-        <StringProperty.ValueEditors>
-         <ValueEditor EditorType="PasswordString" />
-      </StringProperty.ValueEditors>
-      <StringProperty.Metadata>
-         <NameValuePair Name="VisibilityCondition">
-                <NameValuePair.Value>(and (eq "password" (unevaluated "SecureShellRemoteLaunch" "authentication")) (eq "putty" (unevaluated "SecureShellRemoteLaunch" "sshProvider")))</NameValuePair.Value>
-         </NameValuePair>
-      </StringProperty.Metadata>
-   </StringProperty>
-
-   <StringProperty Name="privateKey"
+    <StringProperty Name="privateKey"
                    DisplayName="Private key"
                    Description="The private key to be used for connecting to the target device."
                    Subtype="file"
                    Subcategory="Remote Devices">
-      <StringProperty.Metadata>
-         <NameValuePair Name="VisibilityCondition">
-            <NameValuePair.Value>(eq "privateKey" (unevaluated "SecureShellRemoteLaunch" "authentication"))</NameValuePair.Value>
-         </NameValuePair>
-      </StringProperty.Metadata>
-   </StringProperty>
+    </StringProperty>
 
    <StringProperty Name="dotNetInstallFolderPath"
                    DisplayName=".NET install folder path"

@@ -13,15 +13,5 @@ namespace RemoteDebuggerLauncher
 {
    internal class LocalOptionsPage : DialogPage
    {
-      [Category("Local Settings")]
-      [DisplayName("Adapter provider")]
-      [Description("The remote connectivity provider.")]
-      public AdapterProviderKind AdapterProvider { get; set; } = AdapterProviderKind.WindowsSSH;
-
-      [Category("Local Settings")]
-      [DisplayName("PuTTY installation path")]
-      [Description("The path where PuTTY is installed.")]
-      [DefaultValue("")]
-      public string PuttyInstallPath { get; set; } = String.Empty;
    }
 }

@@ -129,6 +129,15 @@
   <data name="CommonStartSessionMarker" xml:space="preserve">
     <value>--------------------------------------------------</value>
   </data>
+  <data name="ExceptionMessagePuttyNoPathProvided" xml:space="preserve">
+    <value>No installation path for PuTTY provided.</value>
+  </data>
+  <data name="ExceptionMessagePuttyNotInstalled" xml:space="preserve">
+    <value>PuTTY command line tool (plink.exe) is not availabe under '{0}'.</value>
+  </data>
+  <data name="ExceptionMessageWindowsSshDoeNotSupportPassword" xml:space="preserve">
+    <value>The Windows Built-in SSH provider does not support password authentication. Please configure a private key.</value>
+  </data>
   <data name="InstallationModeDescription" xml:space="preserve">
     <value>Online: Target device has internet access, can download and install in it's own
 Offline: Target device no internet access, PC will download and trigger install</value>
@@ -322,6 +331,9 @@ LTS: The most recent LTS version of .NET</value>
   </data>
   <data name="RemoteCommandInstallDotnetSdkOnlineOutputPaneProgress" xml:space="preserve">
     <value>Installing .NET SDK direct from internet</value>
+  </data>
+  <data name="RemoteCommandLanchingDebugger" xml:space="preserve">
+    <value>Launching debugger ...</value>
   </data>
   <data name="RemoteCommandUploadOutputPaneDone" xml:space="preserve">
     <value> ok</value>

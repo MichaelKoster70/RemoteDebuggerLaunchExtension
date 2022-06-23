@@ -97,6 +97,33 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No installation path for PuTTY provided..
+        /// </summary>
+        public static string ExceptionMessagePuttyNoPathProvided {
+            get {
+                return ResourceManager.GetString("ExceptionMessagePuttyNoPathProvided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PuTTY command line tool (plink.exe) is not availabe under &apos;{0}&apos;..
+        /// </summary>
+        public static string ExceptionMessagePuttyNotInstalled {
+            get {
+                return ResourceManager.GetString("ExceptionMessagePuttyNotInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Windows Built-in SSH provider does not support password authentication. Please configure a private key..
+        /// </summary>
+        public static string ExceptionMessageWindowsSshDoeNotSupportPassword {
+            get {
+                return ResourceManager.GetString("ExceptionMessageWindowsSshDoeNotSupportPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Online: Target device has internet access, can download and install in it&apos;s own
         ///Offline: Target device no internet access, PC will download and trigger install.
         /// </summary>
@@ -655,6 +682,15 @@ namespace RemoteDebuggerLauncher {
         public static string RemoteCommandInstallDotnetSdkOnlineOutputPaneProgress {
             get {
                 return ResourceManager.GetString("RemoteCommandInstallDotnetSdkOnlineOutputPaneProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launching debugger ....
+        /// </summary>
+        public static string RemoteCommandLanchingDebugger {
+            get {
+                return ResourceManager.GetString("RemoteCommandLanchingDebugger", resourceCulture);
             }
         }
         

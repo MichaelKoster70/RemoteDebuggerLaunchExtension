@@ -16,26 +16,14 @@ namespace RemoteDebuggerLauncher
       {
          HostName = configurationAggregator.QueryHostName();
          UserName = configurationAggregator.QueryUserName();
-         Authentication = configurationAggregator.QueryAuthenication();
-         if (Authentication == AuthenticationKind.PrivateKey)
-         {
-            PrivateKeyFile = configurationAggregator.QueryPrivateKeyFilePath();
-         }
-         else
-         {
-            Password = configurationAggregator.QueryPassword();
-         }
+         PrivateKeyFile = configurationAggregator.QueryPrivateKeyFilePath();
       }
 
       public string HostName { get; private set; }
 
       public string UserName { get; private set; }
 
-      public AuthenticationKind Authentication { get; private set; }
-
-      public string PrivateKeyFile { get; private set; } = string.Empty;
-
-      public string Password { get; private set; } = string.Empty;
+      public string PrivateKeyFile { get; private set; }
 
       public static SecureShellSessionSettings Create(ConfigurationAggregator configurationAggregator)
       {

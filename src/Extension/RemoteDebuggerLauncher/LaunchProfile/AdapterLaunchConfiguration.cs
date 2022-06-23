@@ -147,29 +147,17 @@ namespace RemoteDebuggerLauncher
       private static LaunchConfiguration CreateAndSetAdapter(ConfigurationAggregator configurationAggregator)
       {
          // Collect the configurable options
-         var provider = configurationAggregator.QueryAdapterProvider();
          var hostName = configurationAggregator.QueryHostName();
          var userName = configurationAggregator.QueryUserName();
-         var privateKey = configurationAggregator.QueryPrivateKeyFilePath();
          var vsdbgPath = UnixPath.Combine(configurationAggregator.QueryDebuggerInstallFolderPath(), PackageConstants.Debugger.BinaryName);
 
          // assemble the adapter and adapterArg values
-         string adapter = string.Empty;
+         string adapter = PackageConstants.DebugLaunchSettings.Options.AdapterNameWindowsSSH;
          string adapterArgs = string.Empty;
-         switch (provider)
-         {
-            case AdapterProviderKind.WindowsSSH:
-               adapter = PackageConstants.DebugLaunchSettings.Options.AdapterNameWindowsSSH;
-               adapterArgs += !string.IsNullOrEmpty(privateKey) ? $"-i {privateKey} " : string.Empty;
-               adapterArgs += $"{userName}@{hostName} {vsdbgPath} --interpreter=vscode";
-               break;
 
-            case AdapterProviderKind.PuTTY:
-               adapter = PackageConstants.DebugLaunchSettings.Options.AdapterNamePuTTY;
-               adapterArgs += !string.IsNullOrEmpty(privateKey) ? $"-i {privateKey} " : string.Empty;
-               adapterArgs += $"{userName}@{hostName} {vsdbgPath} --interpreter=vscode";
-               break;
-         }
+         var privateKey = configurationAggregator.QueryPrivateKeyFilePath();
+         adapterArgs += !string.IsNullOrEmpty(privateKey) ? $"-i {privateKey} " : string.Empty;
+         adapterArgs += $"{userName}@{hostName} {vsdbgPath} --interpreter=vscode";
 
          var config = new LaunchConfiguration()
          {

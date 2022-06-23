@@ -29,12 +29,14 @@ namespace RemoteDebuggerLauncher
    {
       private readonly ConfiguredProject configuredProject;
       private readonly IProjectThreadingService threadingService;
+      private readonly IDebugTokenReplacer tokenReplacer;
 
       [ImportingConstructor]
-      public SecureShellRemoteLaunchTargetsProvider(ConfiguredProject configuredProject, IProjectThreadingService threadingService)
+      public SecureShellRemoteLaunchTargetsProvider(ConfiguredProject configuredProject, IProjectThreadingService threadingService, IDebugTokenReplacer tokenReplacer)
       {
          this.configuredProject = configuredProject;
          this.threadingService = threadingService;
+         this.tokenReplacer = tokenReplacer;
       }
 
       public Task OnAfterLaunchAsync(DebugLaunchOptions launchOptions, ILaunchProfile profile)
@@ -49,7 +51,10 @@ namespace RemoteDebuggerLauncher
          var loggerService = await AsyncServiceProvider.GlobalProvider.GetServiceAsync<SLoggerService, ILoggerService>();
          var statusbarService = await AsyncServiceProvider.GlobalProvider.GetServiceAsync<SStatusbarService, IStatusbarService>();
 
-         var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
+         // get environment variables and msbuild properties resolved
+         var resolveddProfile = await tokenReplacer.ReplaceTokensInProfileAsync(profile);
+
+         var configurationAggregator = ConfigurationAggregator.Create(resolveddProfile, optionsPageAccessor);
          var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService, statusbarService);
 
          await threadingService.JoinableTaskFactory.SwitchToMainThreadAsync();
@@ -67,6 +72,8 @@ namespace RemoteDebuggerLauncher
          // Step 3: Deploy application to target folder
          var outputPath = await configuredProject.GetOutputDirectoryPathAsync();
          await remoteOperations.DeployRemoteFolderAsync(outputPath, true);
+
+         statusbarService.SetText(Resources.RemoteCommandLanchingDebugger);
       }
 
       public async Task<IReadOnlyList<IDebugLaunchSettings>> QueryDebugTargetsAsync(DebugLaunchOptions launchOptions, ILaunchProfile profile)
@@ -75,14 +82,15 @@ namespace RemoteDebuggerLauncher
          var loggerService = await AsyncServiceProvider.GlobalProvider.GetServiceAsync<SLoggerService, ILoggerService>();
          var statusbarService = await AsyncServiceProvider.GlobalProvider.GetServiceAsync<SStatusbarService, IStatusbarService>();
 
-         var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
+         // get environment variables and msbuild properties resolved
+         var resolveddProfile = await tokenReplacer.ReplaceTokensInProfileAsync(profile);
+
+         var configurationAggregator = ConfigurationAggregator.Create(resolveddProfile, optionsPageAccessor);
 
          var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService, statusbarService);
 
          // the rest must be executed on the UI thread
          await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-
 
          // validate that target is reachable
          await remoteOperations.CheckConnectionThrowAsync();

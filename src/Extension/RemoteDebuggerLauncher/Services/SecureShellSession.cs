@@ -222,30 +222,14 @@ namespace RemoteDebuggerLauncher
 
       private SshClient CreateSshClient()
       {
-         switch (settings.Authentication)
-         {
-            case AuthenticationKind.Password:
-               return new SshClient(settings.HostName, settings.UserName, settings.Password);
-            case AuthenticationKind.PrivateKey:
-               var key = new PrivateKeyFile(settings.PrivateKeyFile);
-               return new SshClient(settings.HostName, settings.UserName, key);
-            default:
-               throw new InvalidOperationException("unsupported authentication");
-         }
+         var key = new PrivateKeyFile(settings.PrivateKeyFile);
+         return new SshClient(settings.HostName, settings.UserName, key);
       }
 
       private ScpClient CreateScpClient()
       {
-         switch (settings.Authentication)
-         {
-            case AuthenticationKind.Password:
-               return new ScpClient(settings.HostName, settings.UserName, settings.Password);
-            case AuthenticationKind.PrivateKey:
-               var key = new PrivateKeyFile(settings.PrivateKeyFile);
-               return new ScpClient(settings.HostName, settings.UserName, key);
-            default:
-               throw new InvalidOperationException("unsupported authentication");
-         }
+         var key = new PrivateKeyFile(settings.PrivateKeyFile);
+         return new ScpClient(settings.HostName, settings.UserName, key);
       }
    }
 }

@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -97,37 +98,6 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <summary>
-      /// Queries the autentication to be used to establish a connection to the remote device.
-      /// </summary>
-      /// <returns>A <see cref="AuthenticationKind"/> holding the authentication kind.</returns>
-      /// <remarks>
-      /// The following configuration provides are queried, first match wins
-      /// - selected launch profile
-      /// - 
-      /// </remarks>
-      public AuthenticationKind QueryAuthenication()
-      {
-         if (launchProfile.OtherSettings.TryGetValue(SecureShellRemoteLaunchProfile.authenticationProperty, out var settingsValue))
-         {
-            if (settingsValue is string authenticationKind && !string.IsNullOrEmpty(authenticationKind))
-            {
-               switch (authenticationKind)
-               {
-                  case SecureShellRemoteLaunchProfile.authenticationValues.privateKey:
-                     return AuthenticationKind.PrivateKey;
-                  case SecureShellRemoteLaunchProfile.authenticationValues.password:
-                     return AuthenticationKind.Password;
-                  default:
-                     return AuthenticationKind.PrivateKey;
-               }
-            }
-         }
-
-         // default to private key auth
-         return AuthenticationKind.PrivateKey;
-      }
-
-      /// <summary>
       /// Queries the private key to be used to establish a connection to the remote device.
       /// </summary>
       /// <returns>A <see langword="string"/> holding the private key file path; an empty string if no key is configured.</returns>
@@ -159,77 +129,6 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <summary>
-      /// Queries the password to be used to establish a connection to the remote device.
-      /// </summary>
-      /// <returns>A <see langword="string"/> holding the password; an empty string if no key is configured.</returns>
-      /// <remarks>
-      /// The following configuration provides are queried, first match wins
-      /// - selected launch profile
-      /// </remarks>
-      public string QueryPassword()
-      {
-         if (launchProfile.OtherSettings.TryGetValue(SecureShellRemoteLaunchProfile.privateKeyProperty, out var settingsValue))
-         {
-            if (settingsValue is string profilePrivateKey && !string.IsNullOrEmpty(profilePrivateKey))
-            {
-               // Launch profile has a key file  specified => use it
-               return profilePrivateKey;
-            }
-         }
-
-         var optionsPrivateKey = optionsPageAccessor.QueryPrivateKeyFilePath();
-         if (!string.IsNullOrEmpty(optionsPrivateKey))
-         {
-            // Options has a user name specified => use it
-            return optionsPrivateKey;
-         }
-
-         // No private key available, rely on defaults
-         return string.Empty;
-      }
-
-      /// <summary>
-      /// Queries the adapter provider to be used to establish a connection to the remote device.
-      /// </summary>
-      /// <returns>A <see cref="AdapterProviderKind"/> instance.</returns>
-      /// <remarks>
-      /// The following configuration provides are queried, first match wins
-      /// - selected launch profile
-      /// - Tools/Options settings
-      /// - built-in default
-      /// </remarks>
-      public AdapterProviderKind QueryAdapterProvider()
-      {
-         if (launchProfile.OtherSettings.TryGetValue(SecureShellRemoteLaunchProfile.sshProviderProperty, out var settingsValue))
-         {
-            if (settingsValue is string profileProvider)
-            {
-               switch (profileProvider)
-               {
-                  case SecureShellRemoteLaunchProfile.sshProviderValues.windowsSSH:
-                     return AdapterProviderKind.WindowsSSH;
-                  case SecureShellRemoteLaunchProfile.sshProviderValues.putty:
-                     return AdapterProviderKind.PuTTY;
-                  default:
-                     break;
-               }
-            }
-         }
-
-         var optionsProvider = optionsPageAccessor.QueryAdapterProvider();
-
-         switch (optionsProvider)
-         {
-            case AdapterProviderKind.WindowsSSH:
-               return optionsProvider;
-            case AdapterProviderKind.PuTTY:
-               return optionsProvider;
-            default:
-               return AdapterProviderKind.WindowsSSH;
-         }
-      }
-
-      /// <summary>
       /// Queries the folder path where the .NET framework is installed on the remote device.
       /// </summary>
       /// <returns>A <see langword="string"/> holding the path.</returns>
@@ -237,7 +136,7 @@ namespace RemoteDebuggerLauncher
       /// The following configuration provides are queried, first match wins
       /// - selected launch profile
       /// - Tools/Options settings
-      /// - Built-in defaults
+      /// - Built-in defaults (~/.dotnet)
       /// </remarks>
       public string QueryDotNetInstallFolderPath()
       {

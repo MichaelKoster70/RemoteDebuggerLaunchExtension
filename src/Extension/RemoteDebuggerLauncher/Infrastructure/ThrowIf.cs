@@ -7,6 +7,7 @@
 
 using System;
 using System.Diagnostics.Contracts;
+using System.IO;
 using Microsoft;
 
 namespace RemoteDebuggerLauncher
@@ -21,13 +22,41 @@ namespace RemoteDebuggerLauncher
       /// </summary>
       /// <typeparam name="T">The type of component</typeparam>
       /// <param name="component">The component instance to validate.</param>
-      /// <exception cref="System.InvalidOperationException"></exception>
+      /// <exception cref="InvalidOperationException"></exception>
       public static void NotPresent<T>(T component)
       {
          if (component == null)
          {
             var componentType = typeof(T);
             throw new InvalidOperationException($"{componentType.FullName} is not present");
+         }
+      }
+
+      /// <summary>
+      /// Throws an exception if the supplied file does not exist.
+      /// </summary>
+      /// <param name="filePath">The absolute path to the file to validate.</param>
+      /// <param name="exceptionMessage">The exception message to use.</param>
+      /// <exception cref="RemoteDebuggerLauncherException"></exception>
+      public static void FileNotPresent(string filePath, string exceptionMessage)
+      {
+         if (!File.Exists(filePath))
+         {
+            throw new RemoteDebuggerLauncherException(exceptionMessage);
+         }
+      }
+
+      /// <summary>
+      /// Throws an exception if the supplied file does not exist.
+      /// </summary>
+      /// <param name="filePath">The absolute path to the file to validate.</param>
+      /// <param name="exceptionMessage">The exception message to use.</param>
+      /// <exception cref="RemoteDebuggerLauncherException"></exception>
+      public static void EmptyFilePath(string filePath, string exceptionMessage)
+      {
+         if (string.IsNullOrWhiteSpace(filePath))
+         {
+            throw new RemoteDebuggerLauncherException(exceptionMessage);
          }
       }
 
