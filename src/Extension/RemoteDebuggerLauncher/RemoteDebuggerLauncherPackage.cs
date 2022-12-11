@@ -57,6 +57,7 @@ namespace RemoteDebuggerLauncher
       {
          await base.InitializeAsync(cancellationToken, progress);
 
+         // Add services implemented in this package
          AddService(typeof(SOptionsPageAccessor), CreateServiceAsync, true);
          AddService(typeof(SLoggerService), CreateServiceAsync, true);
          AddService(typeof(SStatusbarService), CreateServiceAsync, true);

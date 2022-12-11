@@ -72,17 +72,17 @@
     <Compile Include="Services\PowerShellHost\CaptureOutputPSHostUserInterface.cs" />
     <Compile Include="Services\PowerShellHost\ConsoleRawUserInterface.cs" />
     <Compile Include="Services\PowerShellHost\CaptureOutputPSHost.cs" />
-    <Compile Include="Services\IStatusbarService.cs" />
-    <Compile Include="Services\ServiceExtensions.cs" />
-    <Compile Include="Services\StatusbarService.cs" />
+    <Compile Include="Services\Interface\IStatusbarService.cs" />
+    <Compile Include="Services\Interface\ServiceExtensions.cs" />
+    <Compile Include="Services\Implementation\StatusbarService.cs" />
     <Compile Include="Commands\InstallDebuggerCommand.cs" />
     <Compile Include="Commands\InstallDotnetCommand.cs" />
     <Compile Include="Services\SecureShellSessionCommanding.cs" />
-    <Compile Include="Services\ILoggerService.cs" />
-    <Compile Include="Services\IOptionsPageAccessor.cs" />
+    <Compile Include="Services\Interface\ILoggerService.cs" />
+    <Compile Include="Services\Interface\IOptionsPageAccessor.cs" />
     <Compile Include="Services\ISecureShellSessionCommanding.cs" />
-    <Compile Include="Services\LoggerService.cs" />
-    <Compile Include="Services\OptionsPageAccessorService.cs" />
+    <Compile Include="Services\Implementation\LoggerService.cs" />
+    <Compile Include="Services\Implementation\OptionsPageAccessorService.cs" />
     <Compile Include="Infrastructure\RemoteDebuggerLauncherException.cs" />
     <Compile Include="Services\SecureShellRemoteOperations.cs" />
     <Compile Include="Services\SecureShellSessionException.cs" />
@@ -112,6 +112,7 @@
     </None>
     <None Include="Commands\readme.md" />
     <None Include="Extensions\readme.md" />
+    <None Include="Services\Interface\readme.md" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
