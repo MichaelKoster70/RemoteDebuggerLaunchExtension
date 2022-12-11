@@ -21,12 +21,12 @@ using Constants = RemoteDebuggerLauncher.Shared.Constants;
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// Holds the high level operations performed on the remote device.
+   /// Impplementation of the <see cref="ISecureShellRemoteOperationsService"/> interface.
    /// </summary>
-   internal class SecureShellRemoteOperations
+   internal class SecureShellRemoteOperationsService : ISecureShellRemoteOperationsService
    {
       private readonly ConfigurationAggregator configurationAggregator;
-      private readonly SecureShellSession session;
+      private readonly ISecureShellSessionService session;
       private readonly ILoggerService logger;
       private readonly IStatusbarService statusbar;
 
@@ -36,7 +36,7 @@ namespace RemoteDebuggerLauncher
       /// <param name="configurationAggregator">The configuration aggregator.</param>
       /// <param name="session">The session to use.</param>
       /// <param name="logger">The logger service instance to use.</param>
-      internal SecureShellRemoteOperations(ConfigurationAggregator configurationAggregator, SecureShellSession session, ILoggerService logger, IStatusbarService statusbar)
+      internal SecureShellRemoteOperationsService(ConfigurationAggregator configurationAggregator, ISecureShellSessionService session, ILoggerService logger, IStatusbarService statusbar)
       {
          this.configurationAggregator = configurationAggregator;
          this.session = session;
@@ -44,33 +44,10 @@ namespace RemoteDebuggerLauncher
          this.statusbar = statusbar;
       }
 
-      /// <summary>
-      /// Creates a <see cref="SecureShellRemoteOperations" /> with settings read from the supplied configuration.
-      /// </summary>
-      /// <param name="configurationAggregator">The configuration aggregator to read the settings from.</param>
-      /// <param name="logger">The logger instance to use.</param>
-      /// <param name="statusbar">Optional statusbar service to report progress.</param>
-      /// <returns>A <see cref="SecureShellRemoteOperations" /> instance.</returns>
-      /// <exception cref="ArgumentNullException">configurationAggregator is null.</exception>
-      public static SecureShellRemoteOperations Create(ConfigurationAggregator configurationAggregator, ILoggerService logger, IStatusbarService statusbar = null)
-      {
-         ThrowIf.ArgumentNull(configurationAggregator, nameof(configurationAggregator));
-
-         var session = SecureShellSession.Create(configurationAggregator);
-         return new SecureShellRemoteOperations(configurationAggregator, session, logger, statusbar);
-      }
-
-      /// <summary>
-      /// Gets or sets a value indicating whether the Host name should be logged to the output pane.
-      /// </summary>
-      /// <value><c>true</c> to append to log; otherwise, <c>false</c>.</value>
+      /// <inheritdoc />
       public bool LogHost { get; set; }
 
-      /// <summary>
-      /// Checks whether a connection with the remove device can be established.
-      /// </summary>
-      /// <returns>A Task representing the asynchronous operation.</returns>
-      /// <exception cref="RemoteDebuggerLauncherException">Thrown when connection cannot be established.</exception>
+      /// <inheritdoc />
       public async Task CheckConnectionThrowAsync()
       {
          try
@@ -87,10 +64,11 @@ namespace RemoteDebuggerLauncher
          {
             // whatever exception is thrown indicates a problem
             logger.WriteLine(Resources.RemoteCommandCommonFailed, ex.Message);
-            throw new RemoteDebuggerLauncherException($"Cannot connect to {session.Settings.UserName}@{ session.Settings.HostName} : {ex.Message}");
+            throw new RemoteDebuggerLauncherException($"Cannot connect to {session.Settings.UserName}@{session.Settings.HostName} : {ex.Message}");
          }
       }
 
+      /// <inheritdoc />
       public async Task<string> QueryUserHomeDirectoryAsync()
       {
          try
@@ -109,13 +87,7 @@ namespace RemoteDebuggerLauncher
       }
 
       #region VS Code Debugger
-      /// <summary>
-      /// Tries to install the VS Code assuming the target device has a direct internet connection.
-      /// Removes the previous installation if present.
-      /// </summary>
-      /// <param name="version">The version to install.</param>
-      /// <returns>A <see cref="Task{Boolean}" />representing the asynchronous operation: <c>true</c> if successful; else <c>false</c>.</returns>
-      /// <remarks>See https://docs.microsoft.com/en-us/dotnet/iot/debugging?tabs=self-contained&pivots=vscode</remarks>
+      /// <inheritdoc />
       public async Task<bool> TryInstallVsDbgOnlineAsync(string version = Constants.Debugger.VersionLatest)
       {
          try
@@ -141,14 +113,7 @@ namespace RemoteDebuggerLauncher
          return true;
       }
 
-      /// <summary>
-      /// Tries to install the VS Code assuming the target device has no internet connection.
-      /// Removes the previous installation if present.
-      /// </summary>
-      /// <returns>A <see cref="Task"/>representing the asynchronous operation.</returns>
-      /// <remarks>
-      /// The downloaded vsdbg version gets cached under %localappdata%\RemoteDebuggerLauncher\vsdbg\vs2022
-      /// </remarks>
+      /// <inheritdoc />
       public async Task TryInstallVsDbgOfflineAsync(string version = Constants.Debugger.VersionLatest)
       {
          try
@@ -215,6 +180,8 @@ namespace RemoteDebuggerLauncher
       }
       #endregion
 
+      #region Deployment
+      /// <inheritdoc />
       public async Task DeployRemoteFolderAsync(string sourcePath, bool clean)
       {
          var targetPath = configurationAggregator.QueryAppFolderPath();
@@ -235,12 +202,13 @@ namespace RemoteDebuggerLauncher
 
          // copy files using SCP
          await session.UploadFolderRecursiveAsync(sourcePath, targetPath, logger);
-         
+
          logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
          logger.WriteLine(Resources.RemoteCommandDeployRemoveFolderCompletedSuccess);
          statusbar?.SetText(Resources.RemoteCommandDeployRemoveFolderCompletedSuccess);
       }
 
+       /// <inheritdoc />
       public async Task CleanRemoteFolderAsync()
       {
          try
@@ -266,19 +234,13 @@ namespace RemoteDebuggerLauncher
             throw;
          }
       }
+      #endregion
 
       #region .NET install
-      /// <summary>
-      /// Tries to install .NET assuming the target device has a direct internet connection.
-      /// </summary>
-      /// <param name="kind">The kind of installation to perform.</param>
-      /// <param name="channel">The channel source holding the version to install.</param>
-      /// <returns>A <see cref="Task{Boolean}" />representing the asynchronous operation: <c>true</c> if successful; else <c>false</c>.</returns>
-      /// <exception cref="System.NotSupportedException">runtime kind not supported.</exception>
-      /// <remarks>See Microsoft Docs: https://docs.microsoft.com/en-us/dotnet/core/install/linux-scripted-manual</remarks>
+      /// <inheritdoc />
       public Task<bool> TryInstallDotNetOnlineAsync(DotnetInstallationKind kind, string channel)
       {
-         switch(kind)
+         switch (kind)
          {
             case DotnetInstallationKind.Sdk:
                return TryInstallDotNetSDKOnlineAsync(channel);
@@ -291,13 +253,7 @@ namespace RemoteDebuggerLauncher
          }
       }
 
-      /// <summary>
-      /// Tries to install .NET assuming the target device has no internet connection.
-      /// </summary>
-      /// <param name="kind">The kind of installation to perform.</param>
-      /// <param name="channel">The channel source holding the version to install.</param>
-      /// <returns>A <see cref="Task"/>representing the asynchronous operation.</returns>
-      /// <exception cref="System.NotSupportedException">runtime kind not supported.</exception>
+      /// <inheritdoc />
       public Task TryInstallDotNetOfflineAsync(DotnetInstallationKind kind, string channel)
       {
          switch (kind)
@@ -349,6 +305,7 @@ namespace RemoteDebuggerLauncher
       /// <param name="channel">The channel source holding the version to install.</param>
       /// <param name="runtime">The runtime  to install.</param>
       /// <returns>A <see cref="Task{Boolean}" />representing the asynchronous operation: <c>true</c> if successful; else <c>false</c>.</returns>
+      /// <remarks>See Microsoft Docs: https://docs.microsoft.com/en-us/dotnet/core/install/linux-scripted-manual</remarks>
       private async Task<bool> TryInstallDotNetRuntimeOnlineAsync(string channel, string runtime)
       {
          try
@@ -559,7 +516,7 @@ namespace RemoteDebuggerLauncher
             var fileName = Path.GetFileName(filePath);
 
             var userHome = (await commands.ExecuteCommandAsync("pwd").ConfigureAwait(true)).Trim('\n');
-            
+
             var targetPath = UnixPath.Combine(userHome, fileName);
             var installPath = UnixPath.Normalize(configurationAggregator.QueryDotNetInstallFolderPath(), userHome);
 
@@ -572,7 +529,7 @@ namespace RemoteDebuggerLauncher
             logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
             logger.Write(Resources.RemoteCommandInstallDotnetOfflineOutputPaneInstalling, fileName);
 
-            var response = await commands.ExecuteCommandAsync($"mkdir -p {installPath}"); 
+            var response = await commands.ExecuteCommandAsync($"mkdir -p {installPath}");
             await commands.ExecuteCommandAsync($"tar zxf {targetPath} -C {installPath}");
             await commands.ExecuteCommandAsync($"rm -f {targetPath}");
 

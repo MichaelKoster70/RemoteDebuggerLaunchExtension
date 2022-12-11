@@ -15,11 +15,11 @@ using Renci.SshNet.Common;
 
 namespace RemoteDebuggerLauncher
 {
-   internal class SecureShellSession
+   internal class SecureShellSessionService : ISecureShellSessionService
    {
       private readonly SecureShellSessionSettings settings;
 
-      internal SecureShellSession(SecureShellSessionSettings settings)
+      internal SecureShellSessionService(SecureShellSessionSettings settings)
       {
          this.settings = settings ?? throw new ArgumentNullException(nameof(settings));
       }
@@ -30,19 +30,6 @@ namespace RemoteDebuggerLauncher
       /// <value>The settings.</value>
       public SecureShellSessionSettings Settings => settings;
 
-      /// <summary>
-      /// Creates an <see cref="SecureShellSession"/> with settings read from the supplied configuration.
-      /// </summary>
-      /// <param name="configurationAggregator">The configuration aggregator.</param>
-      /// <returns>An <see cref="SecureShellSession"/> instance</returns>
-      /// <exception cref="ArgumentNullException">configurationAggregator is null.</exception>
-      public static SecureShellSession Create(ConfigurationAggregator configurationAggregator)
-      {
-         ThrowIf.ArgumentNull(configurationAggregator, nameof(configurationAggregator));
-         var settings = SecureShellSessionSettings.Create(configurationAggregator);
-
-         return new SecureShellSession(settings);
-      }
 
       /// <summary>
       /// Executes a single SSH command asynchronous.
@@ -76,6 +63,7 @@ namespace RemoteDebuggerLauncher
          });
       }
 
+      /// <inheritdoc/>
       public Task UploadFolderRecursiveAsync (string localSourcePath,  string remoteTargetPath, ILoggerService progressLogger = null)
       {
          ThrowIf.ArgumentNullOrEmpty(localSourcePath, nameof(localSourcePath));
@@ -153,6 +141,7 @@ namespace RemoteDebuggerLauncher
          });
       }
 
+      /// <inheritdoc/>
       public Task UploadFileAsync(string localSourcePath, string remoteTargetPath, ILoggerService progressLogger = null)
       {
          ThrowIf.ArgumentNullOrEmpty(localSourcePath, nameof(localSourcePath));
@@ -213,11 +202,12 @@ namespace RemoteDebuggerLauncher
          });
       }
 
-      public ISecureShellSessionCommanding CreateCommandSession()
+      /// <inheritdoc/>
+      public ISecureShellSessionCommandingService CreateCommandSession()
       {
          var client = CreateSshClient();
          client.ConnectionInfo.Timeout = TimeSpan.FromSeconds(5);
-         return new SecureShellSessionCommanding(client);
+         return new SecureShellSessionCommandingService(client);
       }
 
       private SshClient CreateSshClient()

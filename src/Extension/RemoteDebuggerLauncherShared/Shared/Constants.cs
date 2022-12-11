@@ -20,10 +20,19 @@ namespace RemoteDebuggerLauncher.Shared
          /// <summary>Name of the current LTS channel expected by the .NET install scripts.</summary>
          public const string ChannelLTS = "LTS";
 
-         /// <summary>Name of the Current channel expected by the .NET install scripts.</summary>
-         public const string ChannelCurrent = "Current";
+         /// <summary>Name of the STS channel expected by the .NET install scripts.</summary>
+         public const string ChannelSTS = "STS";
 
+         /// <summary>Name of the 7.0 channel expected by the .NET install scripts.</summary>
+         public const string Channel70 = "7.0";
+
+         /// <summary>Name of the 6.0 channel expected by the .NET install scripts.</summary>
+         public const string Channel60 = "6.0";
+
+         /// <summary>Name of complete runtime expected by the .NET install scripts.</summary>
          public const string RuntimeNet = "dotnet";
+
+         /// <summary>Name of the ASP.NET runtime expected by the .NET install scripts.</summary>
          public const string RuntimeAspNet = "aspnetcore";
       }
    }

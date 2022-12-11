@@ -70,7 +70,7 @@ namespace RemoteDebuggerLauncher
          public Dictionary<string, JToken> ConfigurationProperties { get; } = new Dictionary<string, JToken>();
       }
 
-      public static async Task<string> CreateFrameworkDependantAsync(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject, ILoggerService logger, SecureShellRemoteOperations remoteOperations)
+      public static async Task<string> CreateFrameworkDependantAsync(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject, ILoggerService logger, ISecureShellRemoteOperationsService remoteOperations)
       {
          ThrowIf.ArgumentNull(configurationAggregator, nameof(configurationAggregator));
          ThrowIf.ArgumentNull(configuredProject, nameof(configuredProject));

@@ -5,7 +5,6 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
 
 namespace RemoteDebuggerLauncher
 {

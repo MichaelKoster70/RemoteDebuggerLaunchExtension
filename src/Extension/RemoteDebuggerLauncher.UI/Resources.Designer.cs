@@ -271,17 +271,26 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Current.
+        ///   Looks up a localized string similar to 6.0.
         /// </summary>
-        public static string InstallDotnetVersionCurrentDisplayName {
+        public static string InstallDotnetVersion60DisplayName {
             get {
-                return ResourceManager.GetString("InstallDotnetVersionCurrentDisplayName", resourceCulture);
+                return ResourceManager.GetString("InstallDotnetVersion60DisplayName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Current: The most recent current version of .NET
-        ///LTS: The most recent LTS version of .NET.
+        ///   Looks up a localized string similar to 7.0.
+        /// </summary>
+        public static string InstallDotnetVersion70DisplayName {
+            get {
+                return ResourceManager.GetString("InstallDotnetVersion70DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latest STS:  The most recent Standard Term Support release of .NET
+        ///Latest LTS:  The most recent Long Term Support release of .NET.
         /// </summary>
         public static string InstallDotnetVersionDescription {
             get {
@@ -290,11 +299,20 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to LTS.
+        ///   Looks up a localized string similar to Latest LTS.
         /// </summary>
-        public static string InstallDotnetVersionLtsDisplayName {
+        public static string InstallDotnetVersionLatestLtsDisplayName {
             get {
-                return ResourceManager.GetString("InstallDotnetVersionLtsDisplayName", resourceCulture);
+                return ResourceManager.GetString("InstallDotnetVersionLatestLtsDisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latest STS.
+        /// </summary>
+        public static string InstallDotnetVersionLatestStsDisplayName {
+            get {
+                return ResourceManager.GetString("InstallDotnetVersionLatestStsDisplayName", resourceCulture);
             }
         }
         

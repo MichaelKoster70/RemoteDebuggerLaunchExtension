@@ -33,16 +33,6 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <inheritdoc />
-      public void WriteOutputDebugPane(string message, bool activate = true)
-      {
-         ThreadHelper.ThrowIfNotOnUIThread();
-
-         var pane = EnsurePane(VSConstants.OutputWindowPaneGuid.DebugPane_guid, "Debug", activate);
-         pane.OutputStringThreadSafe(message);
-      }
-
-
-      /// <inheritdoc />
       public void Write(string message, bool activate = true)
       {
          ThreadHelper.ThrowIfNotOnUIThread();

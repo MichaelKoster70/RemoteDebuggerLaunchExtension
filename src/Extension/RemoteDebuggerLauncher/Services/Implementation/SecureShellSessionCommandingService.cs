@@ -12,25 +12,24 @@ using Renci.SshNet.Common;
 
 namespace RemoteDebuggerLauncher
 {
-   internal class SecureShellSessionCommanding : ISecureShellSessionCommanding
+   /// <summary>
+   /// Implementation of the <see cref="ISecureShellSessionCommandingService"/>.
+   /// </summary>
+   internal class SecureShellSessionCommandingService : ISecureShellSessionCommandingService
    {
       private readonly SshClient client;
       private bool disposedValue;
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="SecureShellSessionCommanding"/> class.
+      /// Initializes a new instance of the <see cref="SecureShellSessionCommandingService"/> class.
       /// </summary>
       /// <param name="client">The SSH client.</param>
-      public SecureShellSessionCommanding(SshClient client)
+      public SecureShellSessionCommandingService(SshClient client)
       {
          this.client = client;
       }
 
-      /// <summary>
-      /// Executes a SSH command asynchronous.
-      /// </summary>
-      /// <param name="commandText">The command text.</param>
-      /// <returns>A <see cref="Task{String}" /> holding the command response.</returns>
+      /// <inheritdoc/>
       public Task<string> ExecuteCommandAsync(string commandText)
       {
          ThrowIf.ArgumentNullOrEmpty(commandText, nameof(commandText));

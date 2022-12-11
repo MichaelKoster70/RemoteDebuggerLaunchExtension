@@ -10,7 +10,10 @@ using System.Threading.Tasks;
 
 namespace RemoteDebuggerLauncher
 {
-   internal interface ISecureShellSessionCommanding : IDisposable
+   /// <summary>
+   /// Interface for the Secure Shell (SSH) commanding session executing multiple commands in a single SSH session.
+   /// </summary>
+   internal interface ISecureShellSessionCommandingService : IDisposable
    {
       /// <summary>
       /// Executes a SSH command asynchronous.

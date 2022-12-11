@@ -68,7 +68,11 @@
     <Compile Include="Extensions\VsInteropExtensions.cs" />
     <Compile Include="Extensions\AsyncServiceProviderExtensions.cs" />
     <Compile Include="Infrastructure\ProtectedDataHelper.cs" />
-    <Compile Include="LaunchProfile\AdapterLaunchConfiguration.cs" />
+    <Compile Include="ProjectSystem\LaunchProfile\AdapterLaunchConfiguration.cs" />
+    <Compile Include="Services\Interface\ISecureShellSessionService.cs" />
+    <Compile Include="Services\Interface\SecureShellRemoteOperations.cs" />
+    <Compile Include="Services\Interface\SecureShellSession.cs" />
+    <Compile Include="Services\Interface\ISecureShellRemoteOperationsService.cs" />
     <Compile Include="Services\PowerShellHost\CaptureOutputPSHostUserInterface.cs" />
     <Compile Include="Services\PowerShellHost\ConsoleRawUserInterface.cs" />
     <Compile Include="Services\PowerShellHost\CaptureOutputPSHost.cs" />
@@ -77,30 +81,30 @@
     <Compile Include="Services\Implementation\StatusbarService.cs" />
     <Compile Include="Commands\InstallDebuggerCommand.cs" />
     <Compile Include="Commands\InstallDotnetCommand.cs" />
-    <Compile Include="Services\SecureShellSessionCommanding.cs" />
+    <Compile Include="Services\Implementation\SecureShellSessionCommandingService.cs" />
     <Compile Include="Services\Interface\ILoggerService.cs" />
     <Compile Include="Services\Interface\IOptionsPageAccessor.cs" />
-    <Compile Include="Services\ISecureShellSessionCommanding.cs" />
+    <Compile Include="Services\Interface\ISecureShellSessionCommandingService.cs" />
     <Compile Include="Services\Implementation\LoggerService.cs" />
     <Compile Include="Services\Implementation\OptionsPageAccessorService.cs" />
     <Compile Include="Infrastructure\RemoteDebuggerLauncherException.cs" />
-    <Compile Include="Services\SecureShellRemoteOperations.cs" />
-    <Compile Include="Services\SecureShellSessionException.cs" />
+    <Compile Include="Services\Implementation\SecureShellRemoteOperationsService.cs" />
+    <Compile Include="Services\Interface\SecureShellSessionException.cs" />
     <Compile Include="Infrastructure\UnixPath.cs" />
     <Compile Include="ConfigurationAggregator.cs" />
-    <Compile Include="Extensions\ProjectSystemConfiguredProjectExtensions.cs" />
+    <Compile Include="ProjectSystem\Extensions\ProjectSystemConfiguredProjectExtensions.cs" />
     <Compile Include="Options\LocalOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Options\DeviceOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Services\SecureShellSessionSettings.cs" />
-    <Compile Include="Services\SecureShellSession.cs" />
+    <Compile Include="Services\Interface\SecureShellSessionSettings.cs" />
+    <Compile Include="Services\Implementation\SecureShellSessionService.cs" />
     <Compile Include="Infrastructure\ThrowIf.cs" />
     <Compile Include="PackageConstants.cs" />
-    <Compile Include="LaunchProfile\SecureShellRemoteLaunchRuleExporter.cs" />
-    <Compile Include="LaunchProfile\SecureShellRemoteLaunchTargetsProvider.cs" />
+    <Compile Include="ProjectSystem\LaunchProfile\SecureShellRemoteLaunchRuleExporter.cs" />
+    <Compile Include="ProjectSystem\LaunchProfile\SecureShellRemoteLaunchTargetsProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteDebuggerLauncherPackage.cs" />
     <Compile Include="Utilities\ShellUtilities.cs" />
@@ -112,12 +116,14 @@
     </None>
     <None Include="Commands\readme.md" />
     <None Include="Extensions\readme.md" />
+    <None Include="ProjectSystem\Extensions\readme.md" />
+    <None Include="ProjectSystem\readme.md" />
     <None Include="Resources\readme.md" />
     <None Include="Services\Interface\readme.md" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
-    <XamlPropertyRule Include="LaunchProfile\SecureShellRemoteLaunchProfile.xaml">
+    <XamlPropertyRule Include="ProjectSystem\LaunchProfile\SecureShellRemoteLaunchProfile.xaml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Generator>MSBuild:GenerateRuleSourceFromXaml</Generator>
       <SubType>Designer</SubType>
@@ -197,9 +203,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ProjectSystem\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

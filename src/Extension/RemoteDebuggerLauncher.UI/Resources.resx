@@ -189,15 +189,21 @@ Runtime aspnet: Install the ASP.NET runtime</value>
   <data name="InstallDotnetInstallationTypeSdkDisplayName" xml:space="preserve">
     <value>SDK</value>
   </data>
-  <data name="InstallDotnetVersionCurrentDisplayName" xml:space="preserve">
-    <value>Current</value>
+  <data name="InstallDotnetVersion60DisplayName" xml:space="preserve">
+    <value>6.0</value>
+  </data>
+  <data name="InstallDotnetVersion70DisplayName" xml:space="preserve">
+    <value>7.0</value>
   </data>
   <data name="InstallDotnetVersionDescription" xml:space="preserve">
-    <value>Current: The most recent current version of .NET
-LTS: The most recent LTS version of .NET</value>
+    <value>Latest STS:  The most recent Standard Term Support release of .NET
+Latest LTS:  The most recent Long Term Support release of .NET</value>
   </data>
-  <data name="InstallDotnetVersionLtsDisplayName" xml:space="preserve">
-    <value>LTS</value>
+  <data name="InstallDotnetVersionLatestLtsDisplayName" xml:space="preserve">
+    <value>Latest LTS</value>
+  </data>
+  <data name="InstallDotnetVersionLatestStsDisplayName" xml:space="preserve">
+    <value>Latest STS</value>
   </data>
   <data name="RemoteCommandCheckConnectionOutputPaneConnectingTo" xml:space="preserve">
     <value>Connecting to {0}@{1} ... </value>

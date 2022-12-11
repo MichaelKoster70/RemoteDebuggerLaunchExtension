@@ -41,8 +41,10 @@ namespace RemoteDebuggerLauncher
 
          Versions = new List<VersionViewModel>()
          {
-            new VersionViewModel (Constants.Dotnet.ChannelCurrent, Resources.InstallDotnetVersionCurrentDisplayName),
-            new VersionViewModel (Constants.Dotnet.ChannelLTS, Resources.InstallDotnetVersionLtsDisplayName)
+            new VersionViewModel (Constants.Dotnet.ChannelSTS, Resources.InstallDotnetVersionLatestStsDisplayName),
+            new VersionViewModel (Constants.Dotnet.ChannelLTS, Resources.InstallDotnetVersionLatestLtsDisplayName),
+            new VersionViewModel (Constants.Dotnet.Channel70, Resources.InstallDotnetVersion70DisplayName),
+            new VersionViewModel (Constants.Dotnet.Channel60, Resources.InstallDotnetVersion60DisplayName)
          };
 
          // set the default values

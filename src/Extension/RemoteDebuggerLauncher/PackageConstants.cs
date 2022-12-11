@@ -6,7 +6,6 @@
 // ----------------------------------------------------------------------------
 
 using System;
-using Microsoft.VisualStudio;
 
 namespace RemoteDebuggerLauncher
 {
@@ -15,6 +14,9 @@ namespace RemoteDebuggerLauncher
    /// </summary>
    internal static class PackageConstants
    {
+      /// <summary>
+      /// VS Options related constants.
+      /// </summary>
       public static class Options
       {
          /// <summary>The Category name in the Tools=>Options used for this extension.</summary>
@@ -36,6 +38,9 @@ namespace RemoteDebuggerLauncher
          public const string DefaultValueAppFolderPath = "~/project";
       }
 
+      /// <summary>
+      /// .NET related constants.
+      /// </summary>
       public static class Dotnet
       {
          /// <summary>The name of the 'dotnet' binary.</summary>
@@ -51,6 +56,9 @@ namespace RemoteDebuggerLauncher
          public const string DownloadCacheFolder = @"RemoteDebuggerLauncher\dotnet";
       }
 
+      /// <summary>
+      /// Launch Profile related constants.
+      /// </summary>
       public static class LaunchProfile
       {
          /// <summary>The command name for the 'SecureShellRemoteLaunchProfile' Launch Profile.</summary>
@@ -69,9 +77,6 @@ namespace RemoteDebuggerLauncher
          {
             /// <summary>Name the connection adapter when using Windows SSH.</summary>
             public const string AdapterNameWindowsSSH = "ssh.exe";
-
-            /// <summary>Name the connection adapter when using PuTTY.</summary>
-            public const string AdapterNamePuTTY = "plink.exe";
          }
       }
 
