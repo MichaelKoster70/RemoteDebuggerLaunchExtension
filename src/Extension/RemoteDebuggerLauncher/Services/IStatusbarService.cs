@@ -5,7 +5,6 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
 
 namespace RemoteDebuggerLauncher
 {
@@ -28,13 +27,5 @@ namespace RemoteDebuggerLauncher
       void SetText(string text, object arg0);
 
       void Clear();
-   }
-
-   /// <summary>
-   /// Defines the service type for the status bar service.
-   /// </summary>
-   [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "By design, using VS naming standards")]
-   internal interface SStatusbarService
-   {
    }
 }

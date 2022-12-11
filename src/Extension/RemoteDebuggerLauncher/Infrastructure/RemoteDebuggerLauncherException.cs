@@ -20,6 +20,7 @@ namespace RemoteDebuggerLauncher
       /// </summary>
       public RemoteDebuggerLauncherException()
       {
+         //EMPTY_BODY
       }
 
       /// <summary>
@@ -28,6 +29,7 @@ namespace RemoteDebuggerLauncher
       /// <param name="message">The error message that explains the reason for the exception.</param>
       public RemoteDebuggerLauncherException(string message) : base(message)
       {
+         //EMPTY_BODY
       }
 
       /// <summary>
@@ -38,7 +40,7 @@ namespace RemoteDebuggerLauncher
       /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (<see langword="Nothing" /> in Visual Basic) if no inner exception is specified.</param>
       public RemoteDebuggerLauncherException(string message, Exception innerException) : base(message, innerException)
       {
-
+         //EMPTY_BODY
       }
 
       /// <summary>
@@ -48,6 +50,7 @@ namespace RemoteDebuggerLauncher
       /// <param name="context">The <see cref="StreamingContext" /> that contains contextual information about the source or destination.</param>
       protected RemoteDebuggerLauncherException(SerializationInfo info, StreamingContext context) : base(info, context)
       {
+         //EMPTY_BODY
       }
    }
 }

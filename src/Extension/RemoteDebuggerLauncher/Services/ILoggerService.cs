@@ -83,12 +83,5 @@ namespace RemoteDebuggerLauncher
       void WriteLine(string message, object arg0, object arg1, object arg2, bool activate = true);
    }
 
-   /// <summary>
-   /// Defines the service type for the logger service.
-   /// </summary>
-   [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "By design, using VS naming standards")]
-   internal interface SLoggerService
-   {
 
-   }
 }

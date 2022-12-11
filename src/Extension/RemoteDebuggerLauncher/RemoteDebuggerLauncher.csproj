@@ -73,6 +73,7 @@
     <Compile Include="Services\PowerShellHost\ConsoleRawUserInterface.cs" />
     <Compile Include="Services\PowerShellHost\CaptureOutputPSHost.cs" />
     <Compile Include="Services\IStatusbarService.cs" />
+    <Compile Include="Services\ServiceExtensions.cs" />
     <Compile Include="Services\StatusbarService.cs" />
     <Compile Include="Commands\InstallDebuggerCommand.cs" />
     <Compile Include="Commands\InstallDotnetCommand.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="LaunchProfile\SecureShellRemoteLaunchTargetsProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteDebuggerLauncherPackage.cs" />
+    <Compile Include="Utilities\ShellUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <CompilerVisibleProperty Include="RootNamespace" />

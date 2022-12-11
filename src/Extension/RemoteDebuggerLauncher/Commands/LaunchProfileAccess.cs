@@ -22,6 +22,11 @@ namespace RemoteDebuggerLauncher
       private readonly DTE2 dte;
       readonly IProjectService projectService;
 
+      /// <summary>
+      /// Initializes a new instance of the <see cref="LaunchProfileAccess"/> class.
+      /// </summary>
+      /// <param name="dte">The top level VS aurtomation model instance to use.</param>
+      /// <param name="projectService">The CPS project service instance to use.</param>
       public LaunchProfileAccess(DTE2 dte, IProjectService projectService)
       {
          this.dte = dte;
@@ -29,7 +34,7 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <summary>
-      /// Get all active launch profiles in the  active VS session.
+      /// Get all active launch profiles in the active VS session.
       /// </summary>
       /// <returns>A <see cref="Task{IList{ILaunchProfile}}"/> representing the asynchronous operation.</returns>
       public async Task<IList<ILaunchProfile>> GetActiveLaunchProfilesAsync()

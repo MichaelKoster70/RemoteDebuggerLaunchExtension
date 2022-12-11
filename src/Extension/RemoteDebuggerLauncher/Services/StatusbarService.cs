@@ -5,6 +5,7 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -47,5 +48,13 @@ namespace RemoteDebuggerLauncher
          ThreadHelper.ThrowIfNotOnUIThread();
          _ = statusbar.Clear();
       }
+   }
+
+   /// <summary>
+   /// Defines the service type for the status bar service.
+   /// </summary>
+   [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "By design, using VS naming standards")]
+   internal interface SStatusbarService
+   {
    }
 }

@@ -48,8 +48,8 @@ namespace RemoteDebuggerLauncher
       public async Task OnBeforeLaunchAsync(DebugLaunchOptions launchOptions, ILaunchProfile profile)
       {
          var optionsPageAccessor = await ServiceProvider.GetGlobalServiceAsync<SOptionsPageAccessor, IOptionsPageAccessor>();
-         var loggerService = await AsyncServiceProvider.GlobalProvider.GetServiceAsync<SLoggerService, ILoggerService>();
-         var statusbarService = await AsyncServiceProvider.GlobalProvider.GetServiceAsync<SStatusbarService, IStatusbarService>();
+         var loggerService = await AsyncServiceProvider.GlobalProvider.GetLoggerServiceAsync();
+         var statusbarService = await AsyncServiceProvider.GlobalProvider.GetStatusbarServiceAsync();
 
          // get environment variables and msbuild properties resolved
          var resolveddProfile = await tokenReplacer.ReplaceTokensInProfileAsync(profile);
@@ -79,8 +79,8 @@ namespace RemoteDebuggerLauncher
       public async Task<IReadOnlyList<IDebugLaunchSettings>> QueryDebugTargetsAsync(DebugLaunchOptions launchOptions, ILaunchProfile profile)
       {
          var optionsPageAccessor = await AsyncServiceProvider.GlobalProvider.GetServiceAsync<SOptionsPageAccessor, IOptionsPageAccessor>();
-         var loggerService = await AsyncServiceProvider.GlobalProvider.GetServiceAsync<SLoggerService, ILoggerService>();
-         var statusbarService = await AsyncServiceProvider.GlobalProvider.GetServiceAsync<SStatusbarService, IStatusbarService>();
+         var loggerService = await AsyncServiceProvider.GlobalProvider.GetLoggerServiceAsync();
+         var statusbarService = await AsyncServiceProvider.GlobalProvider.GetStatusbarServiceAsync();
 
          // get environment variables and msbuild properties resolved
          var resolveddProfile = await tokenReplacer.ReplaceTokensInProfileAsync(profile);

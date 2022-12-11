@@ -85,7 +85,7 @@ namespace RemoteDebuggerLauncher
 #pragma warning disable VSTHRD102 // Implement internal logic asynchronously
          package.JoinableTaskFactory.Run(async () =>
          {
-            var statusbarService = await ServiceProvider.GetServiceAsync<SStatusbarService, IStatusbarService>();
+            var statusbarService = await ServiceProvider.GetStatusbarServiceAsync();
 
             try
             {
@@ -93,7 +93,7 @@ namespace RemoteDebuggerLauncher
                var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync().ConfigureAwait(false);
                var projectService = await ServiceProvider.GetProjectServiceAsync().ConfigureAwait(false);
                var optionsPageAccessor = await ServiceProvider.GetServiceAsync<SOptionsPageAccessor, IOptionsPageAccessor>();
-               var loggerService = await ServiceProvider.GetServiceAsync<SLoggerService, ILoggerService>();
+               var loggerService = await ServiceProvider.GetLoggerServiceAsync();
 
                // do the remaining work on the UI thread
                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
@@ -114,7 +114,7 @@ namespace RemoteDebuggerLauncher
             }
             catch(Exception exception)
             {
-               VsShellUtilities.ShowMessageBox(package, exception.Message, Resources.RemoteCommandInstallDebuggerCommandCaption, OLEMSGICON.OLEMSGICON_CRITICAL, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+               ShellUtilities.ShowErrorMessageBox(package, exception.Message);
             }
             finally
             {
