@@ -5,6 +5,8 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace RemoteDebuggerLauncher
 {
    internal class OptionsPageAccessorService : SOptionsPageAccessor,  IOptionsPageAccessor
@@ -68,5 +70,13 @@ namespace RemoteDebuggerLauncher
 
          return localPage;
       }
+   }
+
+   /// <summary>
+   /// Defines the service type for the options page accessor service.
+   /// </summary>
+   [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "By design, using VS naming standards")]
+   internal interface SOptionsPageAccessor
+   {
    }
 }

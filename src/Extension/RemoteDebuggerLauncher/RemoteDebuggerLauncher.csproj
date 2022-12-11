@@ -64,7 +64,7 @@
     </Compile>
     <Compile Include="Commands\LaunchProfileAccess.cs" />
     <Compile Include="Commands\CleanOutputCommand.cs" />
-    <Compile Include="Extensions\IVsOutputWindowPaneExtensions.cs" />
+    <Compile Include="Services\Implementation\IVsOutputWindowPaneExtensions.cs" />
     <Compile Include="Extensions\VsInteropExtensions.cs" />
     <Compile Include="Extensions\AsyncServiceProviderExtensions.cs" />
     <Compile Include="Infrastructure\ProtectedDataHelper.cs" />
@@ -112,6 +112,7 @@
     </None>
     <None Include="Commands\readme.md" />
     <None Include="Extensions\readme.md" />
+    <None Include="Resources\readme.md" />
     <None Include="Services\Interface\readme.md" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>

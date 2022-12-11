@@ -22,8 +22,8 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// Gets the automation model top level object service (aka DTE2).
       /// </summary>
-      /// <param name="serviceProvider">The service provider.</param>
-      /// <returns>A <see cref="Task{DTE2}"/> representing the async method.</returns>
+      /// <param name="serviceProvider">The service provider to query.</param>
+      /// <returns>The <see cref="DTE2"/> service interface. Never null.</returns>
       public static Task<DTE2> GetAutomationModelTopLevelObjectServiceAsync(this IAsyncServiceProvider serviceProvider)
       {
          return serviceProvider.GetServiceAsync<SDTE, DTE2>();
@@ -32,8 +32,8 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// Gets the CPS (Common Project System) service.
       /// </summary>
-      /// <param name="serviceProvider">The service provider.</param>
-      /// <returns>A <see cref="Task{IProjectService}"/> representing the async method.</returns>
+      /// <param name="serviceProvider">The service provider to query.</param>
+      /// <returns>The <see cref="IProjectService"/> service interface.</returns>
       public static async Task<IProjectService> GetProjectServiceAsync(this IAsyncServiceProvider serviceProvider)
       {
          IComponentModel componentModel = await serviceProvider.GetServiceAsync<SComponentModel, IComponentModel>();

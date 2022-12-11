@@ -47,7 +47,7 @@ namespace RemoteDebuggerLauncher
 
       public async Task OnBeforeLaunchAsync(DebugLaunchOptions launchOptions, ILaunchProfile profile)
       {
-         var optionsPageAccessor = await ServiceProvider.GetGlobalServiceAsync<SOptionsPageAccessor, IOptionsPageAccessor>();
+         var optionsPageAccessor = await AsyncServiceProvider.GlobalProvider.GetOptionsPageServiceAsync();
          var loggerService = await AsyncServiceProvider.GlobalProvider.GetLoggerServiceAsync();
          var statusbarService = await AsyncServiceProvider.GlobalProvider.GetStatusbarServiceAsync();
 
@@ -76,9 +76,15 @@ namespace RemoteDebuggerLauncher
          statusbarService.SetText(Resources.RemoteCommandLanchingDebugger);
       }
 
+      /// <summary>
+      /// Called in response to an F5/Ctrl+F5 operation to get the debug launch settings to pass to the debugger for the active profile
+      /// </summary>
+      /// <param name="launchOptions"></param>
+      /// <param name="profile"></param>
+      /// <returns></returns>
       public async Task<IReadOnlyList<IDebugLaunchSettings>> QueryDebugTargetsAsync(DebugLaunchOptions launchOptions, ILaunchProfile profile)
       {
-         var optionsPageAccessor = await AsyncServiceProvider.GlobalProvider.GetServiceAsync<SOptionsPageAccessor, IOptionsPageAccessor>();
+         var optionsPageAccessor = await AsyncServiceProvider.GlobalProvider.GetOptionsPageServiceAsync();
          var loggerService = await AsyncServiceProvider.GlobalProvider.GetLoggerServiceAsync();
          var statusbarService = await AsyncServiceProvider.GlobalProvider.GetStatusbarServiceAsync();
 

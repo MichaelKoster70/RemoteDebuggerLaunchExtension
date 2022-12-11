@@ -109,7 +109,7 @@ namespace RemoteDebuggerLauncher
                   // get all services we need
                   var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync().ConfigureAwait(false);
                   var projectService = await ServiceProvider.GetProjectServiceAsync().ConfigureAwait(false);
-                  var optionsPageAccessor = await ServiceProvider.GetServiceAsync<SOptionsPageAccessor, IOptionsPageAccessor>();
+                  var optionsPageAccessor = await ServiceProvider.GetOptionsPageServiceAsync();
                   var loggerService = await ServiceProvider.GetLoggerServiceAsync();
 
                   // do the remaining work on the UI thread

@@ -76,7 +76,7 @@ namespace RemoteDebuggerLauncher.PowerShellHost
       public override Version Version => new Version(1, 0, 0, 0);
       #endregion
 
-      #region CustomPSHost Properties
+      #region CaptureOutputPSHost Properties
       /// <summary>
       /// Gets the output lines written by the executed commandss
       /// </summary>

@@ -49,11 +49,11 @@ namespace RemoteDebuggerLauncher.PowerShellHost
       {
          get
          {
-            throw new NotImplementedException("The method or operation is not implemented.");
+            throw new NotImplementedException($"The property '{nameof(CursorPosition)}' is not implemented.");
          }
          set
          {
-            throw new NotImplementedException("The method or operation is not implemented.");
+            throw new NotImplementedException($"The property '{nameof(CursorPosition)}' is not implemented.");
          }
       }
 
@@ -143,7 +143,7 @@ namespace RemoteDebuggerLauncher.PowerShellHost
       /// <returns>Throws a NotImplementedException exception.</returns>
       public override BufferCell[,] GetBufferContents(Rectangle rectangle)
       {
-         throw new NotImplementedException("The method or operation is not implemented.");
+         throw new NotImplementedException($"The method '{nameof(BufferCell)}' is not implemented.");
       }
 
       /// <summary>
@@ -156,7 +156,7 @@ namespace RemoteDebuggerLauncher.PowerShellHost
       /// <exception cref="System.NotImplementedException">The method or operation is not implemented.</exception>
       public override KeyInfo ReadKey(ReadKeyOptions options)
       {
-         throw new NotImplementedException("The method or operation is not implemented.");
+         throw new NotImplementedException($"The method '{nameof(ReadKey)}' is not implemented.");
       }
 
       /// <summary>
@@ -170,7 +170,7 @@ namespace RemoteDebuggerLauncher.PowerShellHost
       /// <exception cref="System.NotImplementedException">The method or operation is not implemented.</exception>
       public override void ScrollBufferContents(Rectangle source, Coordinates destination, Rectangle clip, BufferCell fill)
       {
-         throw new NotImplementedException("The method or operation is not implemented.");
+         throw new NotImplementedException($"The method '{nameof(ScrollBufferContents)}' is not implemented.");
       }
 
       /// <summary>
@@ -181,7 +181,7 @@ namespace RemoteDebuggerLauncher.PowerShellHost
       /// <exception cref="System.NotImplementedException">The method or operation is not implemented.</exception>
       public override void SetBufferContents(Coordinates origin, BufferCell[,] contents)
       {
-         throw new NotImplementedException("The method or operation is not implemented.");
+         throw new NotImplementedException($"The method '{nameof(SetBufferContents)}' is not implemented.");
       }
 
       /// <summary>
@@ -193,7 +193,7 @@ namespace RemoteDebuggerLauncher.PowerShellHost
       /// <exception cref="System.NotImplementedException">The method or operation is not implemented.</exception>
       public override void SetBufferContents(Rectangle rectangle, BufferCell fill)
       {
-         throw new NotImplementedException("The method or operation is not implemented.");
+         throw new NotImplementedException($"The method '{nameof(SetBufferContents)}' is not implemented.");
       }
    }
 }

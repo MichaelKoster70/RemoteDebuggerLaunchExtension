@@ -40,5 +40,16 @@ namespace RemoteDebuggerLauncher
       {
          return asyncServieProvier.GetServiceAsync<SLoggerService, ILoggerService>();
       }
+
+      /// <summary>
+      /// Gets the Options Page Accessor service interface from a service provider.
+      /// </summary>
+      /// <param name="asyncServieProvier">The service provider to query.</param>
+      /// <returns>The <see cref="IOptionsPageAccessor"/> service interface. Never null.</returns>
+      /// <exception cref="ServiceUnavailableException">The service could not be acquired.<exception>
+      public static Task<IOptionsPageAccessor> GetOptionsPageServiceAsync(this IAsyncServiceProvider asyncServieProvier)
+      {
+         return asyncServieProvier.GetServiceAsync<SOptionsPageAccessor, IOptionsPageAccessor>();
+      }
    }
 }

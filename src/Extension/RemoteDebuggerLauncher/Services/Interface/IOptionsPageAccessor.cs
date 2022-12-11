@@ -44,13 +44,4 @@ namespace RemoteDebuggerLauncher
       /// <returns>A <see langword="string"/> holding the path, <c>string.Empty</c> if not configured.</returns>
       string QueryAppFolderPath();
    }
-
-
-   /// <summary>
-   /// Defines the service type for the options page accessor service.
-   /// </summary>
-   [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "By design, using VS naming standards")]
-   internal interface SOptionsPageAccessor
-   {
-   }
 }
