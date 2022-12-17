@@ -129,14 +129,8 @@
   <data name="CommonStartSessionMarker" xml:space="preserve">
     <value>--------------------------------------------------</value>
   </data>
-  <data name="ExceptionMessagePuttyNoPathProvided" xml:space="preserve">
-    <value>No installation path for PuTTY provided.</value>
-  </data>
-  <data name="ExceptionMessagePuttyNotInstalled" xml:space="preserve">
-    <value>PuTTY command line tool (plink.exe) is not availabe under '{0}'.</value>
-  </data>
-  <data name="ExceptionMessageWindowsSshDoeNotSupportPassword" xml:space="preserve">
-    <value>The Windows Built-in SSH provider does not support password authentication. Please configure a private key.</value>
+  <data name="ExceptionMessageSecureShellSessionNoUserName" xml:space="preserve">
+    <value>no username provided.</value>
   </data>
   <data name="InstallationModeDescription" xml:space="preserve">
     <value>Online: Target device has internet access, can download and install in it's own

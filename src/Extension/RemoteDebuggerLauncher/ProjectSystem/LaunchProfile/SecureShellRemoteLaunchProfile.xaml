@@ -20,12 +20,16 @@
    <Rule.DataSource>
       <DataSource Persistence="LaunchProfile" HasConfigurationCondition="False" ItemType="LaunchProfile"/>
    </Rule.DataSource>
-   
+
    <StringProperty Name="commandLineArgs"
                    DisplayName="Command line arguments"
                    Description="Command line arguments to pass to the executable."
-                   Subcategory="Remote Devices"/>
-
+                   Subcategory="Remote Devices">
+      <StringProperty.ValueEditors>
+         <ValueEditor EditorType="MultiLineString" />
+      </StringProperty.ValueEditors>
+   </StringProperty>
+   
    <StringProperty Name="hostName"
                    DisplayName="Host name"
                    Description="The DNS name or IP address of the target device."
@@ -36,12 +40,20 @@
                    Description="The user name to be used for connecting to the target device."
                    Subcategory="Remote Devices"/>
 
-    <StringProperty Name="privateKey"
+   <StringProperty Name="privateKey"
                    DisplayName="Private key"
                    Description="The private key to be used for connecting to the target device."
                    Subtype="file"
                    Subcategory="Remote Devices">
-    </StringProperty>
+   </StringProperty>
+
+   <StringProperty Name="environmentVariables"
+                   DisplayName="Environment variables"
+                   Description="The environment variables to set prior to running the process.">
+      <StringProperty.ValueEditors>
+         <ValueEditor EditorType="NameValueList" />
+      </StringProperty.ValueEditors>
+   </StringProperty>
 
    <StringProperty Name="dotNetInstallFolderPath"
                    DisplayName=".NET install folder path"
@@ -49,12 +61,17 @@
                    Subcategory="Remote Devices"/>
 
    <StringProperty Name="debuggerInstallFolderPath"
-                   DisplayName="Debugger install folder path"
-                   Description="The folder path where the VS code debugger is installed on the target device."
+                   DisplayName="install folder path"
+                   Description="The folder path where the VS Code debugger is installed on the target device."
                    Subcategory="Remote Devices"/>
 
    <StringProperty Name="appFolderPath"
                    DisplayName="App folder path"
                    Description="The path on the target device where the application binaries will get deployed to.."
                    Subcategory="Remote Devices"/>
+
+   <BoolProperty Name="installDebuggerOnDeploy"
+                  DisplayName="Install debugger"
+                  Description="Installs the latest VS Code debugger on the target before launching the target application."
+                  Subcategory="Deployment Options" />
 </Rule>

@@ -113,7 +113,7 @@ namespace RemoteDebuggerLauncher
             if (settingsValue is string profilePrivateKey && !string.IsNullOrEmpty(profilePrivateKey))
             {
                // Launch profile has a key file  specified => use it
-               return profilePrivateKey;
+               return Environment.ExpandEnvironmentVariables(profilePrivateKey);
             }
          }
 
@@ -121,7 +121,7 @@ namespace RemoteDebuggerLauncher
          if (!string.IsNullOrEmpty(optionsPrivateKey))
          {
             // Options has a user name specified => use it
-            return optionsPrivateKey;
+            return Environment.ExpandEnvironmentVariables(optionsPrivateKey);
          }
 
          // No private key available, rely on defaults
@@ -243,6 +243,30 @@ namespace RemoteDebuggerLauncher
 
          // No args configured
          return string.Empty;
+      }
+
+      /// <summary>
+      /// Queries the flag whether to install the VS code debugger on deploy.
+      /// </summary>
+      /// <returns>A <see langword="bool"/> holding the arguments.</returns>
+      /// <remarks>
+      /// The following configuration provides are queried, first match wins
+      /// - selected launch profile
+      /// - built-in default (false)
+      /// </remarks>
+      public bool QueryInstallDebuggerOnDeploy()
+      {
+         if (launchProfile.OtherSettings.TryGetValue(SecureShellRemoteLaunchProfile.installDebuggerOnDeployProperty, out var settingsValue))
+         {
+            if (settingsValue is bool installDebuggerOnDeploy)
+            {
+               // Launch profile value => use if
+               return installDebuggerOnDeploy;
+            }
+         }
+
+         //rely on built-in default
+         return false;
       }
    }
 }

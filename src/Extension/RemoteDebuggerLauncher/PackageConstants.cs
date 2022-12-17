@@ -28,6 +28,9 @@ namespace RemoteDebuggerLauncher
          /// <summary>The options page name holding local settings.</summary>
          public const string PageLocal = "Local";
 
+         /// <summary>The default value for the SSH private key file.</summary>
+         public const string DefaultValuePrivateKey = @"%userprofile%\.ssh\id_rsa";
+
          /// <summary>The default value for the .NET installation path on the device page.</summary>
          public const string DefaultValueDotNetInstallFolderPath = "~/.dotnet";
 

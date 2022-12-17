@@ -21,7 +21,8 @@ namespace RemoteDebuggerLauncher
       [Category("Remote Device")]
       [DisplayName("Private key")]
       [Description("The default private key to be used for connecting to the target device.")]
-      public string PrivateKey { get; set; } = String.Empty;
+      [DefaultValue(PackageConstants.Options.DefaultValuePrivateKey)]
+      public string PrivateKey { get; set; } = PackageConstants.Options.DefaultValuePrivateKey;
 
       [Category("Remote Device")]
       [DisplayName(".NET install folder path")]

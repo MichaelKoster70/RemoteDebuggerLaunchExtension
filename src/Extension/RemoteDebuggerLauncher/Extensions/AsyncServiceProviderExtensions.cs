@@ -15,7 +15,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// Extension methods for the <see cref="IAsyncServiceProvider"/> interface simplifying access to VS services.
+   /// Extension methods for the <see cref="IAsyncServiceProvider"/> interface simplifying access to Visual Studio services.
    /// </summary>
    internal static class AsyncServiceProviderExtensions
    {

@@ -63,10 +63,15 @@ namespace RemoteDebuggerLauncher
          await remoteOperations.CheckConnectionThrowAsync();
 
          // Step 2: try to install the latest debugger version
-         var succeeded = await remoteOperations.TryInstallVsDbgOnlineAsync().ConfigureAwait(true);
-         if (!succeeded)
+         bool installDebugger = configurationAggregator.QueryInstallDebuggerOnDeploy();
+         if (installDebugger)
          {
-            await remoteOperations.TryInstallVsDbgOfflineAsync().ConfigureAwait(true);
+            // only install the debugger if configured in launch profile
+            var succeeded = await remoteOperations.TryInstallVsDbgOnlineAsync().ConfigureAwait(true);
+            if (!succeeded)
+            {
+               await remoteOperations.TryInstallVsDbgOfflineAsync().ConfigureAwait(true);
+            }
          }
 
          // Step 3: Deploy application to target folder

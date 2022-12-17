@@ -212,6 +212,10 @@ namespace RemoteDebuggerLauncher
 
       private SshClient CreateSshClient()
       {
+         if (string.IsNullOrWhiteSpace(settings.UserName))
+         {
+            throw new SecureShellSessionException(Resources.ExceptionMessageSecureShellSessionNoUserName);
+         }
          var key = new PrivateKeyFile(settings.PrivateKeyFile);
          return new SshClient(settings.HostName, settings.UserName, key);
       }

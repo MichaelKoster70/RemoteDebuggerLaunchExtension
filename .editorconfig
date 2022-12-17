@@ -247,3 +247,9 @@ dotnet_diagnostic.CA1012.severity = warning
 
 # CA1014: Mark assemblies with CLSCompliant
 dotnet_diagnostic.CA1014.severity = warning
+
+# XAML files
+[*.xaml]
+indent_size = 3
+indent_style = space
+tab_width = 3

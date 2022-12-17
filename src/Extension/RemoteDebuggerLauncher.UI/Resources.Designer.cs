@@ -97,29 +97,11 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No installation path for PuTTY provided..
+        ///   Looks up a localized string similar to no username provided..
         /// </summary>
-        public static string ExceptionMessagePuttyNoPathProvided {
+        public static string ExceptionMessageSecureShellSessionNoUserName {
             get {
-                return ResourceManager.GetString("ExceptionMessagePuttyNoPathProvided", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to PuTTY command line tool (plink.exe) is not availabe under &apos;{0}&apos;..
-        /// </summary>
-        public static string ExceptionMessagePuttyNotInstalled {
-            get {
-                return ResourceManager.GetString("ExceptionMessagePuttyNotInstalled", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The Windows Built-in SSH provider does not support password authentication. Please configure a private key..
-        /// </summary>
-        public static string ExceptionMessageWindowsSshDoeNotSupportPassword {
-            get {
-                return ResourceManager.GetString("ExceptionMessageWindowsSshDoeNotSupportPassword", resourceCulture);
+                return ResourceManager.GetString("ExceptionMessageSecureShellSessionNoUserName", resourceCulture);
             }
         }
         

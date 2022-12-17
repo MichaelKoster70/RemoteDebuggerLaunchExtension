@@ -70,6 +70,14 @@ namespace RemoteDebuggerLauncher
          public Dictionary<string, JToken> ConfigurationProperties { get; } = new Dictionary<string, JToken>();
       }
 
+      /// <summary>
+      /// Create a launch configuration JSON for a .NET framework dependant application.
+      /// </summary>
+      /// <param name="configurationAggregator">The configuration aggregator to read the config from.</param>
+      /// <param name="configuredProject">The CPS project to get the configuration for.</param>
+      /// <param name="logger">The logger for diagnostics logging.</param>
+      /// <param name="remoteOperations">The remote operation service to use.</param>
+      /// <returns>A JSON configuration object.</returns>
       public static async Task<string> CreateFrameworkDependantAsync(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject, ILoggerService logger, ISecureShellRemoteOperationsService remoteOperations)
       {
          ThrowIf.ArgumentNull(configurationAggregator, nameof(configurationAggregator));
