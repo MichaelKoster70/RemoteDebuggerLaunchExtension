@@ -99,6 +99,12 @@ namespace RemoteDebuggerLauncher
       #endregion
 
       #region Private Methods
+      /// Factory methods responsible to create service instances registered in this package.
+      /// </summary>
+      /// <param name="container">The container holding the services.</param>
+      /// <param name="cancellationToken">A cancellation token to monitor for creation cancellation.</param>
+      /// <param name="serviceType">The type of service to create.</param>
+      /// <returns>A task representing the service instance. <c>null</c> if the service cannot be found.</returns>
       private Task<object> CreateServiceAsync(IAsyncServiceContainer container, CancellationToken cancellationToken,Type serviceType)
       {
          if (typeof(SOptionsPageAccessor) == serviceType)
