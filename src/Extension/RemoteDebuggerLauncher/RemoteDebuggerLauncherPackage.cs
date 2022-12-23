@@ -40,8 +40,6 @@ namespace RemoteDebuggerLauncher
    [ProvideMenuResource("Menus.ctmenu", 1)]
    public sealed class RemoteDebuggerLauncherPackage : AsyncPackage //, IOleCommandTarget
    {
-      //private IOleCommandTarget packageCommandTarget;
-
       /// <summary>RemoteDebuggerLauncherPackage GUID string.</summary>
       public const string PackageGuidString = "624a755d-54e4-4069-84ec-e63cb53582f5";
 
@@ -66,36 +64,10 @@ namespace RemoteDebuggerLauncher
          // Do any initialization that requires the UI thread after switching to the UI thread.
          await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
-         //packageCommandTarget = await this.GetServiceAsync(typeof(IOleCommandTarget)) as IOleCommandTarget;
-
          await InstallDebuggerCommand.InitializeAsync(this);
          await InstallDotnetCommand.InitializeAsync(this);
          await CleanOutputCommand.InitializeAsync(this);
       }
-      #endregion
-
-      #region IOleCommandTarget
-      //public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
-      //{
-      //   ThreadHelper.ThrowIfNotOnUIThread();
-
-      //   return pkgCommandTarget.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
-      //}
-
-      //public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
-      //{
-      //   ThreadHelper.ThrowIfNotOnUIThread();
-      //   if (pguidCmdGroup == PackageConstants.Commands.CommandSet)
-      //   {
-      //      switch (prgCmds[0].cmdID)
-      //      {
-      //         case 0x1000:
-      //            prgCmds[0].cmdf |= (uint)(OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED);
-      //            return VSConstants.S_OK;
-      //      }
-      //   }
-      //   return pkgCommandTarget.QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
-      //}
       #endregion
 
       #region Private Methods
