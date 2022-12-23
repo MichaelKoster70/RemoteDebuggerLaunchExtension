@@ -42,6 +42,15 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <summary>
+      /// VS Settings related constants.
+      /// </summary>
+      public static class Settings
+      {
+         /// <summary>The settings section name.</summary>
+         public const string Name = "Remote Debugger Settings";
+      }
+
+      /// <summary>
       /// .NET related constants.
       /// </summary>
       public static class Dotnet
