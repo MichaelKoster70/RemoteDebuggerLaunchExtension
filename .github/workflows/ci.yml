@@ -1,0 +1,18 @@
+name: CI
+on: [push]
+
+jobs:
+  build:
+    name: Build VS Extension
+    runs-on: windows-2022
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # setup MSBUILD and VS
+    - name: Setup MSBUILD
+      uses: "./eng/actions/steps/setup-msbuild"
+    
+    - name: Build Solution
+      uses: "./eng/actions/steps/build-solution"
