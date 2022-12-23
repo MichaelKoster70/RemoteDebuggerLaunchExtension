@@ -26,6 +26,9 @@ namespace RemoteDebuggerLauncher
       /// <param name="arg0">The first object to format.</param>
       void SetText(string text, object arg0);
 
+      /// <summary>
+      /// Clears the status bar text.
+      /// </summary>
       void Clear();
    }
 }

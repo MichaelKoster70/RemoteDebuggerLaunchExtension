@@ -14,6 +14,9 @@ using Microsoft.VisualStudio.Shell;
 
 namespace RemoteDebuggerLauncher
 {
+   /// <summary>
+   /// Extension Methods the <see cref="DTE2"/> interface.
+   /// </summary>
    internal static class VsInteropExtensions
    {
       /// <summary>

@@ -13,14 +13,14 @@ using Microsoft;
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// Helper class providing validation services.
+   /// Helper class providing data and argument validation services.
    /// </summary>
    internal static class ThrowIf
    {
       /// <summary>
       /// Throws an exception if the supplied component is null.
       /// </summary>
-      /// <typeparam name="T">The type of component</typeparam>
+      /// <typeparam name="T">The type of component.</typeparam>
       /// <param name="component">The component instance to validate.</param>
       /// <exception cref="InvalidOperationException"></exception>
       public static void NotPresent<T>(T component)

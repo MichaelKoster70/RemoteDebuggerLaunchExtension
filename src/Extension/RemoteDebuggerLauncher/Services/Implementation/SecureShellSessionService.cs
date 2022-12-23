@@ -15,6 +15,11 @@ using Renci.SshNet.Common;
 
 namespace RemoteDebuggerLauncher
 {
+   /// <summary>
+   /// Secure Shell (SSH) session service.
+   /// Implements the <see cref="ISecureShellSessionService"/> interface.
+   /// </summary>
+   /// <seealso cref="ISecureShellSessionService"/>
    internal class SecureShellSessionService : ISecureShellSessionService
    {
       private readonly SecureShellSessionSettings settings;
@@ -24,18 +29,10 @@ namespace RemoteDebuggerLauncher
          this.settings = settings ?? throw new ArgumentNullException(nameof(settings));
       }
 
-      /// <summary>
-      /// Gets the session settings.
-      /// </summary>
-      /// <value>The settings.</value>
+      /// <inheritdoc/>
       public SecureShellSessionSettings Settings => settings;
 
-
-      /// <summary>
-      /// Executes a single SSH command asynchronous.
-      /// </summary>
-      /// <param name="commandText">The command text.</param>
-      /// <returns>A <see cref="Task{String}"/> holding the command response.</returns>
+      /// <inheritdoc/>
       public Task<string> ExecuteSingleCommandAsync(string commandText)
       {
          return Task.Run(() =>

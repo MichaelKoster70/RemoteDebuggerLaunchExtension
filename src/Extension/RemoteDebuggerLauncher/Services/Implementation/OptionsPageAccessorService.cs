@@ -9,6 +9,11 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace RemoteDebuggerLauncher
 {
+   /// <summary>
+   /// The VS options page accessor service.
+   /// Implements the <see cref="IOptionsPageAccessor"/> interface.
+   /// </summary>
+   /// <seealso cref="IOptionsPageAccessor" />
    internal class OptionsPageAccessorService : SOptionsPageAccessor,  IOptionsPageAccessor
    {
       private readonly RemoteDebuggerLauncherPackage package;
@@ -16,6 +21,10 @@ namespace RemoteDebuggerLauncher
       private DeviceOptionsPage devicePage;
       private LocalOptionsPage localPage;
 
+      /// <summary>
+      /// Initializes an new instance of the <see cref="OptionsPageAccessorService"/> class.
+      /// </summary>
+      /// <param name="package">The package where to get the options pages from.</param>
       public OptionsPageAccessorService(RemoteDebuggerLauncherPackage package)
       {
          this.package = package;

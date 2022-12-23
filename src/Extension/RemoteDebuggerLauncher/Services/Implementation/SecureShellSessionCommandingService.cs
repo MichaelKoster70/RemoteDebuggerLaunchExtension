@@ -13,8 +13,10 @@ using Renci.SshNet.Common;
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// Implementation of the <see cref="ISecureShellSessionCommandingService"/>.
+   /// Secure Shell (SSH) commanding session executing multiple commands in a single SSH session.
+   /// Implements the <see cref="ISecureShellSessionCommandingService"/> interface.
    /// </summary>
+   /// <seealso cref="ISecureShellSessionCommandingService"/>
    internal class SecureShellSessionCommandingService : ISecureShellSessionCommandingService
    {
       private readonly SshClient client;

@@ -12,7 +12,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// Utiliy class providing shell related services.
+   /// Utiliy class providing VS shell related services.
    /// </summary>
    internal static class ShellUtilities
    {

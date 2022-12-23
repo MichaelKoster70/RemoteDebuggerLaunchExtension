@@ -116,13 +116,20 @@
     </None>
     <None Include="Commands\readme.md" />
     <None Include="Extensions\readme.md" />
+    <None Include="Infrastructure\readme.md" />
+    <None Include="Options\readme.md" />
     <None Include="ProjectSystem\Extensions\readme.md" />
+    <None Include="ProjectSystem\LaunchProfile\readme.md" />
     <None Include="ProjectSystem\readme.md" />
+    <None Include="readme.md" />
     <None Include="Resources\readme.md" />
+    <None Include="Services\Implementation\readme.md" />
     <None Include="Services\Interface\readme.md" />
+    <None Include="Services\readme.md" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Utilities\readme.md" />
     <XamlPropertyRule Include="ProjectSystem\LaunchProfile\SecureShellRemoteLaunchProfile.xaml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Generator>MSBuild:GenerateRuleSourceFromXaml</Generator>
@@ -173,7 +180,7 @@
       <Name>SourceGenerators</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\RemoteDebuggerLauncher.UI\RemoteDebuggerLauncherUI.csproj">
+    <ProjectReference Include="..\RemoteDebuggerLauncherUI\RemoteDebuggerLauncherUI.csproj">
       <Project>{9bb8c19c-9bd2-4f3f-8800-951b4851e794}</Project>
       <Name>RemoteDebuggerLauncherUI</Name>
     </ProjectReference>

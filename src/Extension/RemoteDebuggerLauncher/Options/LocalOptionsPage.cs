@@ -11,6 +11,9 @@ using Microsoft.VisualStudio.Shell;
 
 namespace RemoteDebuggerLauncher
 {
+   /// <summary>
+   /// Implements the Local Options page shown in the VS options tree under "Remote Debugger Launcher"
+   /// </summary>
    internal class LocalOptionsPage : DialogPage
    {
    }

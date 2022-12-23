@@ -13,9 +13,9 @@ namespace RemoteDebuggerLauncher
 {
    /// <summary>
    /// Statusbar Service implementation writing to a the Visual Studio Statusbar.
-   /// Implements the <see cref="RemoteDebuggerLauncher.IStatusbarService" />
+   /// Implements the <see cref="IStatusbarService" />
    /// </summary>
-   /// <seealso cref="RemoteDebuggerLauncher.IStatusbarService" />
+   /// <seealso cref="IStatusbarService" />
    internal class StatusbarService : SStatusbarService, IStatusbarService
    {
       private readonly IVsStatusbar statusbar;
@@ -43,6 +43,7 @@ namespace RemoteDebuggerLauncher
          _ = statusbar.SetText(string.Format(text, arg0));
       }
 
+      /// <inheritdoc />
       public void Clear()
       {
          ThreadHelper.ThrowIfNotOnUIThread();

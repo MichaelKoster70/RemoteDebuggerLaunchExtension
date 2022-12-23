@@ -21,8 +21,10 @@ using Constants = RemoteDebuggerLauncher.Shared.Constants;
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// Impplementation of the <see cref="ISecureShellRemoteOperationsService"/> interface.
+   /// Service for the high level operations performed on the remote device.
+   /// Implements the <see cref="ISecureShellRemoteOperationsService"/> interface.
    /// </summary>
+   /// <seealso cref="ISecureShellRemoteOperationsService" />
    internal class SecureShellRemoteOperationsService : ISecureShellRemoteOperationsService
    {
       private readonly ConfigurationAggregator configurationAggregator;
