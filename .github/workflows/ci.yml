@@ -16,3 +16,15 @@ jobs:
     
     - name: Build Solution
       uses: "./eng/actions/steps/build-solution"
+      with:
+        configuration: 'Release'
+        solution-path: 'RemoteDebuggerLauncherExtension.sln'
+  test:
+    name: Test
+    runs-on: windows-2022
+    needs: build
+
+    steps:
+    - name: Echo
+      run: echo Hello
+      

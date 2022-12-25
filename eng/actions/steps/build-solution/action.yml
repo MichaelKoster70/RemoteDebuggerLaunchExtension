@@ -15,10 +15,12 @@ runs:
   using: "composite"
 
   steps:
-  - id: nuget-restore
+  - name: 'Build Solution: NuGet restore'
+    id: nuget-restore
     run: msbuild ${{ inputs.solution }} /t:Restore /p:Configuration=${{ inputs.configuration }}
     shell: pwsh
 
-  - id: build
+  - name: 'Build Solution: Rebuild'
+    id: build
     run: msbuild ${{ inputs.solution }} /t:Rebuild /p:Configuration=${{ inputs.configuration }}
     shell: pwsh
