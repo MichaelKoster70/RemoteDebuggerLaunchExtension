@@ -13,6 +13,11 @@ on:
         type: string
         required: false
         default: 'RemoteDebuggerLauncherExtension.sln'
+      store-artifacts:
+        description: 'Flag if artifacts sould be stored'
+        type: boolean
+        required: true
+        default: false
 
 jobs:
   shared_build:
@@ -39,10 +44,13 @@ jobs:
     # Build Solution: determine and apply the version for the assemblies and VSIX package
     - name: 'Build Solution: Determine Version'
       id: git-version
-      uses: ./eng/actions/steps/git-version
+      uses: ./eng/actions/git-version
 
     - name: 'Build Solution: Apply version'
-      run:  ${{ env.ScriptPath }}\AssemblyInfoFileSetVersion.ps1 -SourceFilePath  ${{ env.AssemblyInfoFile }} -VersionPrefix ${{ steps.git-version.outputs.versionPrefix }}
+      run:  ${{ env.ScriptPath }}\AssemblyInfoFileSetVersion.ps1 -SourceFilePath  ${{ env.AssemblyInfoFile }}
+        -VersionPrefix ${{ steps.git-version.outputs.versionPrefix }}
+        -VersionSuffix ${{ steps.git-version.outputs.versionSuffix }}
+        -VersionBuild ${{ steps.git-version.outputs.versionBuild }}
       shell: pwsh
 
     # Build Solution: restore NuGet Packages
