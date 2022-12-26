@@ -1,8 +1,8 @@
-name: CI
+name: Release
 on: [push]
 
 jobs:
   build:
-    name: CI Build
+    name: Release Build
     uses: ./.github/workflows/shared-build.yml
     

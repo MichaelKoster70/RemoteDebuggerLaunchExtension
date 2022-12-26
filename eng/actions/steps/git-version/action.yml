@@ -1,0 +1,27 @@
+name: Determine Version
+description: Determines the version using GitVersion
+
+outputs:
+  versionPrefix:
+    description: The version prefix in major.minor.patch notation
+    value: ${{ steps.gitversion-execute.outputs.majorMinorPatch }}
+  versionSuffix:
+    description: The version suffix (pre release label)
+    value: ${{ steps.gitversion-execute.outputs.preReleaseLabel }}
+  versionBuild:
+    description: The version build holding the Git commit ID
+    value: ${{ steps.gitversion-execute.outputs.versionSourceSha }}
+
+runs:
+  using: "composite"
+
+  steps:
+  - id: gitversion-install
+    uses: gittools/actions/gitversion/setup@v0.9.15
+    with:
+      versionSpec: '5.x'
+
+  - id: gitversion-execute
+    uses: gittools/actions/gitversion/execute@v0.9.15
+    with:
+      useConfigFile: true
