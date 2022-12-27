@@ -171,6 +171,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VSSDK.Vsixsigntool">
+      <Version>16.2.29116.78</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="SSH.NET" Version="2020.0.2" />
   </ItemGroup>

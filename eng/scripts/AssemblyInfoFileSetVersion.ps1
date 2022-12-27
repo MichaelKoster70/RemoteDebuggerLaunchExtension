@@ -111,6 +111,12 @@ function Update-VersionInAssemblyInfoFile
     } | Set-Content $filePath
 }
 
+if (-not (Test-Path $sourceFilePath))
+{
+    Write-Error "'$sourceFilePath' does not exist"
+    exit 1
+}
+
 # Build the versions to set
 $assemblyVersion = "$VersionPrefix.$VersionRevision"
 $assemblyFileVersion = "$VersionPrefix.$VersionRevision"

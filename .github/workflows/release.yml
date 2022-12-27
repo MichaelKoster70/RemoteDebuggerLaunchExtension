@@ -1,8 +1,15 @@
 name: Release
-on: [push]
+# shall trigger on the main branch when a tag named 'v*' gets created
+on: 
+  push:
+    branches:
+    - main
+    tags:
+    -  v*
 
 jobs:
   build:
     name: Release Build
     uses: ./.github/workflows/shared-build.yml
-    
+    with:
+      store-artifacts: true
