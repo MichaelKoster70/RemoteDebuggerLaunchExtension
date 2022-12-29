@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -244,6 +245,16 @@ namespace RemoteDebuggerLauncher
          // No args configured
          return string.Empty;
       }
+
+      /// <summary>
+      /// Queries the environment variables to be passed to the starting executable.
+      /// </summary>
+      /// <returns>A <see cref="IImmutableDictionary"/> holding the variables.</returns>
+      /// <remarks>
+      /// The following configuration provides are queried, first match wins
+      /// - selected launch profile
+      /// </remarks>
+      public IImmutableDictionary<string, string> QueryEnvironmentVariables() => launchProfile.EnvironmentVariables;
 
       /// <summary>
       /// Queries the flag whether to install the VS code debugger on deploy.

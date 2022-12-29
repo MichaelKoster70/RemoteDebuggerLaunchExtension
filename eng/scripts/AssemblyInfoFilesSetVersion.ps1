@@ -44,25 +44,25 @@
   
 .EXAMPLE
     Example 1: ./AssemblyInfoFilesSetVersion.ps1 C:\demo 1.0.0
-    Produces the following attribute values:
+    Produces the following attribute values
     [assembly: AssemblyVersion("1.0.0.0")]
     [assembly: AssemblyFileVersion("1.0.0.0")]
     [assembly: AssemblyInformationalVersion("1.0.0")]
 
     Example 2: ./AssemblyInfoFilesSetVersion.ps1 C:\demo 1.0.0 42
-    Produces the following attribute values:
+    Produces the following attribute values
     [assembly: AssemblyVersion("1.0.0.42")]
     [assembly: AssemblyFileVersion("1.0.0.42")]
     [assembly: AssemblyInformationalVersion("1.0.0")]
 
     Example 3: ./AssemblyInfoFilesSetVersion.ps1 C:\demo 1.0.0 42 -VersionSuffix dev
-    Produces the following attribute values:
+    Produces the following attribute values
     [assembly: AssemblyVersion("1.0.0.42")]
     [assembly: AssemblyFileVersion("1.0.0.42")]
     [assembly: AssemblyInformationalVersion("1.0.0.dev")]
 
     Example 3: ./AssemblyInfoFilesSetVersion.ps1 C:\demo 1.0.0 42 -VersionSuffix dev -VersionBuild ef02d2
-    Produces the following attribute values:
+    Produces the following attribute values
     [assembly: AssemblyVersion("1.0.0.42")]
     [assembly: AssemblyFileVersion("1.0.0.42")]
     [assembly: AssemblyInformationalVersion("1.0.0.dev+ef02d2")]
@@ -86,6 +86,5 @@ if (-not (Test-Path $SourceDirectory))
 Write-Host "Source Directory: $SourceDirectory"
 
 (Get-ChildItem -Path $SourceDirectory -Recurse -File -Include "AssemblyInfo.cs") | ForEach-Object {
-    Start-Job -FilePath "$PSScriptRoot\AssemblyInfoFileSetVersion.ps1" -ArgumentList $_, $VersionPrefix, $VersionRevision, $VersionSuffix, $VersionBuild | 
-    Wait-Job | Receive-Job
+    . $PSScriptRoot\AssemblyInfoFileSetVersion.ps1 $_ $VersionPrefix  $VersionRevision  $VersionSuffix  $VersionBuild
 }

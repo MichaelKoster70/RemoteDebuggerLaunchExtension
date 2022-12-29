@@ -15,21 +15,18 @@
 
       <!-- KnownImageIds.Execute -->
       <sys:Int32 x:Key="ImageMonikerId">1173</sys:Int32>
+
    </Rule.Metadata>
 
    <Rule.DataSource>
       <DataSource Persistence="LaunchProfile" HasConfigurationCondition="False" ItemType="LaunchProfile"/>
    </Rule.DataSource>
 
-   <StringProperty Name="commandLineArgs"
+   <StringProperty Name="CommandLineArguments"
                    DisplayName="Command line arguments"
                    Description="Command line arguments to pass to the executable."
-                   Subcategory="Remote Devices">
-      <StringProperty.ValueEditors>
-         <ValueEditor EditorType="MultiLineString" />
-      </StringProperty.ValueEditors>
-   </StringProperty>
-   
+                   Subcategory="Remote Devices"/>
+
    <StringProperty Name="hostName"
                    DisplayName="Host name"
                    Description="The DNS name or IP address of the target device."
@@ -47,7 +44,7 @@
                    Subcategory="Remote Devices">
    </StringProperty>
 
-   <StringProperty Name="environmentVariables"
+   <StringProperty Name="EnvironmentVariables"
                    DisplayName="Environment variables"
                    Description="The environment variables to set prior to running the process.">
       <StringProperty.ValueEditors>

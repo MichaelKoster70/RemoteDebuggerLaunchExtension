@@ -9,7 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
 using Microsoft.VisualStudio.Shell;
@@ -28,6 +30,17 @@ namespace RemoteDebuggerLauncher
    /// </remarks>
    internal static class AdapterLaunchConfiguration
    {
+      /// <summary>Holds a environment variable name value pair.</summary>
+      internal class EnvironmentEntry
+      {
+         [JsonProperty("name")]
+         public string Name { get; set; }
+
+         [JsonProperty("value")]
+         public string Value { get; set; }
+      }
+
+      /// <summary>Holds a environment variable name value pair.</summary>
       internal class LaunchConfiguration
       {
          [JsonProperty("version")]
@@ -59,6 +72,10 @@ namespace RemoteDebuggerLauncher
 
          [JsonProperty("cwd")]
          public string CurrentWorkingDirectory { get; set; }
+
+         /// <summary>The environment variable to pass to the program.</summary>
+         [JsonProperty("environment")]
+         public IList<EnvironmentEntry> Environment { get; } = new List<EnvironmentEntry>();
 
          /// <summary>The VS Code console option.</summary>
          /// <remarks>Have no effect in a remote debugger scenario.</remarks>
@@ -127,6 +144,7 @@ namespace RemoteDebuggerLauncher
          config.Args.Add($"{assemblyFileDirectory}/{assemblyFileName}");
          config.CurrentWorkingDirectory = workingDirectory;
          config.AppendCommandLineArguments(configurationAggregator);
+         config.AppendEnvironmentVariables(configurationAggregator);
 
          var launchConfigurationJson = JsonConvert.SerializeObject(config);
          logger.WriteLine($"Options: {launchConfigurationJson}");
@@ -148,6 +166,7 @@ namespace RemoteDebuggerLauncher
          config.Args.Add($"./{assemblyFileName}");
          config.CurrentWorkingDirectory = appFolderPath;
          config.AppendCommandLineArguments(configurationAggregator);
+         config.AppendEnvironmentVariables(configurationAggregator);
 
          return JsonConvert.SerializeObject(config);
       }
@@ -184,6 +203,15 @@ namespace RemoteDebuggerLauncher
          {
             var args = commandLineArgs.Split(' ');
             Array.ForEach(args, (arg) => config.Args.Add(arg));
+         }
+      }
+
+      private static void AppendEnvironmentVariables(this LaunchConfiguration config, ConfigurationAggregator configurationAggregator)
+      {
+         var environment = configurationAggregator.QueryEnvironmentVariables();
+         foreach(var ev in environment)
+         {
+            config.Environment.Add(new EnvironmentEntry { Name = ev.Key, Value = ev.Value });
          }
       }
    }

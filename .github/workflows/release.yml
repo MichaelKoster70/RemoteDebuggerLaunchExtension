@@ -13,3 +13,21 @@ jobs:
     uses: ./.github/workflows/shared-build.yml
     with:
       store-artifacts: true
+
+  github-release:
+    name: GitHub Release
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Dummy
+      run: echo TODO
+
+  marketplace-release:
+    name: VS Marketplace Release
+    runs-on: windows-2022
+    needs: build
+
+    steps:
+    - name: Dummy
+      run: echo TODO

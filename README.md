@@ -1,5 +1,5 @@
 # Remote Debugger Launch Extension
-Visual Studio 2022 Extension package providing a full F5 experience for debugging .NET code on Linux based targets
+Visual Studio 2022 Extension package providing a full F5 experience for debugging .NET based applications on Linux based targets.
 
 ## Usage
 
