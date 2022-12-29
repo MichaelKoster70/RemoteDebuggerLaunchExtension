@@ -52,10 +52,20 @@ jobs:
       id: git-version
       uses: ./eng/actions/git-version
 
-    - name: 'Build Solution: Apply assembly version'
+      # apply dev versions on pushes to any other branches
+    - name: 'Build Solution: Apply assembly version DEV'
+      if: ${{ github.ref_type == 'branch' && github.ref != 'refs/heads/main' }}
       run:  ${{ env.ScriptPath }}\AssemblyInfoFileSetVersion.ps1 -SourceFilePath  ${{ env.ExtensionAssemblyInfoFile }}
         -VersionPrefix ${{ steps.git-version.outputs.versionPrefix }}
         -VersionSuffix ${{ steps.git-version.outputs.versionSuffix }}
+        -VersionBuild ${{ steps.git-version.outputs.versionBuild }}
+      shell: pwsh
+
+      # apply prod versions on pushes to the main branch or a tag gets created
+    - name: 'Build Solution: Apply assembly version PROD'
+      if: ${{ (github.ref_type == 'branch' && github.ref == 'refs/heads/main') || github.ref_type == 'tag' }}
+      run:  ${{ env.ScriptPath }}\AssemblyInfoFileSetVersion.ps1 -SourceFilePath  ${{ env.ExtensionAssemblyInfoFile }}
+        -VersionPrefix ${{ steps.git-version.outputs.versionPrefix }}
         -VersionBuild ${{ steps.git-version.outputs.versionBuild }}
       shell: pwsh
 
