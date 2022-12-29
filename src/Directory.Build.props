@@ -1,0 +1,31 @@
+<Project>
+  <PropertyGroup>
+    <Authors>Michael Koster</Authors>
+    <Copyright>Michael Koster</Copyright>
+    <Company>Michael Koster</Company>
+    <Product>Remote Debugger Launcher VS Extension</Product>
+    <SourceRevisionId Condition="'$(SourceRevisionId)' == ''">$(BUILD_SOURCEVERSIONSHORT)</SourceRevisionId>
+  </PropertyGroup>
+
+  <!--<Choose>
+    <When Condition=" '$(BUILD_VERSIONPREFIX)' != '' ">
+      <PropertyGroup>
+        --><!-- on the build server, use the provided values --><!--
+        <VersionPrefix>$(BUILD_VERSIONPREFIX)</VersionPrefix>
+        <VersionSuffix>$(BUILD_VERSIONSUFFIX)</VersionSuffix>
+        <FileVersion>$(VersionPrefix).$(BUILDVERSION_REVISION)</FileVersion>
+        <AssemblyVersion>$(VersionPrefix).$(BUILDVERSION_REVISION)</AssemblyVersion>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        --><!-- for local builds, use the fixed number 0.0.1.0 --><!--
+        <VersionPrefix>0.0.1</VersionPrefix>
+        <VersionSuffix>dev</VersionSuffix>
+        <FileVersion>$(VersionPrefix).0</FileVersion>
+        <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>-->
+  
+</Project>

@@ -1,0 +1,33 @@
+name: Release
+# shall trigger on the main branch when a tag named 'v*' gets created
+on: 
+  push:
+    branches:
+    - main
+    tags:
+    -  v*
+
+jobs:
+  build:
+    name: Release Build
+    uses: ./.github/workflows/shared-build.yml
+    with:
+      store-artifacts: true
+
+  github-release:
+    name: GitHub Release
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Dummy
+      run: echo TODO
+
+  marketplace-release:
+    name: VS Marketplace Release
+    runs-on: windows-2022
+    needs: build
+
+    steps:
+    - name: Dummy
+      run: echo TODO

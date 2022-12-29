@@ -1,0 +1,13 @@
+# Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+name: setup MSBUILD
+description: Add MSBUILD and Visual Studio 2022 to the PATH
+
+runs:
+  using: "composite"
+
+  steps:
+  - name: Add msbuild to PATH
+    uses: microsoft/setup-msbuild@v1.1
+    with:
+      vs-version: '[17.2,17.5)'
+      msbuild-architecture: x64

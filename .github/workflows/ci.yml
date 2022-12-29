@@ -1,0 +1,13 @@
+name: CI
+on: 
+  push:
+    branches:
+      - main
+      - 'feature/**'
+
+jobs:
+  build:
+    name: CI Build
+    uses: ./.github/workflows/shared-build.yml
+    with:
+      store-artifacts: true

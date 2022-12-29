@@ -1,0 +1,26 @@
+# Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+name: Build Solution
+description: Builds the Visual Studio Solution
+inputs:
+  configuration:
+    description: 'The Visual Studio Configuration to build'
+    required: true
+    default: 'Release'
+  solution-path:
+    description: 'The path to the VS solution to build'
+    required: true
+    default: 'RemoteDebuggerLauncherExtension.sln'
+
+runs:
+  using: "composite"
+
+  steps:
+  - name: 'Build Solution: NuGet restore'
+    id: nuget-restore
+    run: msbuild ${{ inputs.solution }} /t:Restore /p:Configuration=${{ inputs.configuration }}
+    shell: pwsh
+
+  - name: 'Build Solution: Rebuild'
+    id: build
+    run: msbuild ${{ inputs.solution }} /t:Rebuild /p:Configuration=${{ inputs.configuration }}
+    shell: pwsh

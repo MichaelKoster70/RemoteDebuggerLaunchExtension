@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Rule Name="SecureShellRemoteLaunchProfile"
+      Description="Properties associated with launching and debugging a custom debug target."
+      DisplayName="SSH Remote Debug Target"
+      PageTemplate="commandNameBasedDebugger"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+   <Rule.Metadata>
+      <sys:String x:Key="CommandName">SecureShellRemoteLaunch</sys:String>
+
+      <!-- KnownImageIds.ImageCatalogGuid -->
+      <sys:Guid x:Key="ImageMonikerGuid">AE27A6B0-E345-4288-96DF-5EAF394EE369</sys:Guid>
+
+      <!-- KnownImageIds.Execute -->
+      <sys:Int32 x:Key="ImageMonikerId">1173</sys:Int32>
+
+   </Rule.Metadata>
+
+   <Rule.DataSource>
+      <DataSource Persistence="LaunchProfile" HasConfigurationCondition="False" ItemType="LaunchProfile"/>
+   </Rule.DataSource>
+
+   <StringProperty Name="CommandLineArguments"
+                   DisplayName="Command line arguments"
+                   Description="Command line arguments to pass to the executable."
+                   Subcategory="Remote Devices"/>
+
+   <StringProperty Name="hostName"
+                   DisplayName="Host name"
+                   Description="The DNS name or IP address of the target device."
+                   Subcategory="Remote Devices"/>
+   
+   <StringProperty Name="userName" 
+                   DisplayName="User name"
+                   Description="The user name to be used for connecting to the target device."
+                   Subcategory="Remote Devices"/>
+
+   <StringProperty Name="privateKey"
+                   DisplayName="Private key"
+                   Description="The private key to be used for connecting to the target device."
+                   Subtype="file"
+                   Subcategory="Remote Devices">
+   </StringProperty>
+
+   <StringProperty Name="EnvironmentVariables"
+                   DisplayName="Environment variables"
+                   Description="The environment variables to set prior to running the process.">
+      <StringProperty.ValueEditors>
+         <ValueEditor EditorType="NameValueList" />
+      </StringProperty.ValueEditors>
+   </StringProperty>
+
+   <StringProperty Name="dotNetInstallFolderPath"
+                   DisplayName=".NET install folder path"
+                   Description="The folder path where the .NET runtime is installed on the target device."
+                   Subcategory="Remote Devices"/>
+
+   <StringProperty Name="debuggerInstallFolderPath"
+                   DisplayName="install folder path"
+                   Description="The folder path where the VS Code debugger is installed on the target device."
+                   Subcategory="Remote Devices"/>
+
+   <StringProperty Name="appFolderPath"
+                   DisplayName="App folder path"
+                   Description="The path on the target device where the application binaries will get deployed to.."
+                   Subcategory="Remote Devices"/>
+
+   <BoolProperty Name="installDebuggerOnDeploy"
+                  DisplayName="Install debugger"
+                  Description="Installs the latest VS Code debugger on the target before launching the target application."
+                  Subcategory="Deployment Options" />
+</Rule>

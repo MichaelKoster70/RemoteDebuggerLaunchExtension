@@ -1,0 +1,344 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CommonCancelButtonLabel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="CommonDialogModeLabel" xml:space="preserve">
+    <value>Install Mode</value>
+  </data>
+  <data name="CommonOkButtonLabel" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="CommonStartSessionMarker" xml:space="preserve">
+    <value>--------------------------------------------------</value>
+  </data>
+  <data name="ExceptionMessageSecureShellSessionNoUserName" xml:space="preserve">
+    <value>no username provided.</value>
+  </data>
+  <data name="InstallationModeDescription" xml:space="preserve">
+    <value>Online: Target device has internet access, can download and install in it's own
+Offline: Target device no internet access, PC will download and trigger install</value>
+  </data>
+  <data name="InstallationModeOfflineDisplayName" xml:space="preserve">
+    <value>Offline</value>
+  </data>
+  <data name="InstallationModeOnlineDisplayName" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="InstallDebuggerDialogHeaderText" xml:space="preserve">
+    <value>Select the version and installation type, then click OK to install.</value>
+  </data>
+  <data name="InstallDebuggerDialogTitle" xml:space="preserve">
+    <value>Install VS Code Debugger on target host</value>
+  </data>
+  <data name="InstallDebuggerVersionDescription" xml:space="preserve">
+    <value>Latest: The latest version of the Debugger</value>
+  </data>
+  <data name="InstallDebuggerVersionLatestDisplayName" xml:space="preserve">
+    <value>Latest</value>
+  </data>
+  <data name="InstallDebuggerVersionVs2022DisplayName" xml:space="preserve">
+    <value>Visual Studio 2022</value>
+  </data>
+  <data name="InstallDotnetDialogHeaderText" xml:space="preserve">
+    <value>Select the version of .NET and installation type, then click OK to install.</value>
+  </data>
+  <data name="InstallDotnetDialogTitle" xml:space="preserve">
+    <value>Install .NET on target host</value>
+  </data>
+  <data name="InstallDotnetDialogTypeLabel" xml:space="preserve">
+    <value>Install Type</value>
+  </data>
+  <data name="InstallDotnetDialogVersionLabel" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="InstallDotnetInstallationTypeDescription" xml:space="preserve">
+    <value>SDK: Install the full .NET SDK
+Runtime dotnet: Install only the .NET runtime
+Runtime aspnet: Install the ASP.NET runtime</value>
+  </data>
+  <data name="InstallDotnetInstallationTypeRuntimeAspnetDisplayName" xml:space="preserve">
+    <value>Runtime: aspnet</value>
+  </data>
+  <data name="InstallDotnetInstallationTypeRuntimeNetDisplayName" xml:space="preserve">
+    <value>Runtime: dotnet</value>
+  </data>
+  <data name="InstallDotnetInstallationTypeSdkDisplayName" xml:space="preserve">
+    <value>SDK</value>
+  </data>
+  <data name="InstallDotnetVersion60DisplayName" xml:space="preserve">
+    <value>6.0</value>
+  </data>
+  <data name="InstallDotnetVersion70DisplayName" xml:space="preserve">
+    <value>7.0</value>
+  </data>
+  <data name="InstallDotnetVersionDescription" xml:space="preserve">
+    <value>Latest STS:  The most recent Standard Term Support release of .NET
+Latest LTS:  The most recent Long Term Support release of .NET</value>
+  </data>
+  <data name="InstallDotnetVersionLatestLtsDisplayName" xml:space="preserve">
+    <value>Latest LTS</value>
+  </data>
+  <data name="InstallDotnetVersionLatestStsDisplayName" xml:space="preserve">
+    <value>Latest STS</value>
+  </data>
+  <data name="RemoteCommandCheckConnectionOutputPaneConnectingTo" xml:space="preserve">
+    <value>Connecting to {0}@{1} ... </value>
+    <comment>Remote command Check Connection: Connecting to text</comment>
+  </data>
+  <data name="RemoteCommandCheckConnectionStatusbarCompletedSuccess" xml:space="preserve">
+    <value>Checking connection to {0} OK</value>
+  </data>
+  <data name="RemoteCommandCheckConnectionStatusbarProgress" xml:space="preserve">
+    <value>Checking connection to {0}</value>
+  </data>
+  <data name="RemoteCommandCleanRemoteFolderCaption" xml:space="preserve">
+    <value>Cleaning - target: {0}</value>
+  </data>
+  <data name="RemoteCommandCleanRemoteFolderCompletedFailed" xml:space="preserve">
+    <value>Cleaning FAILED: {0}</value>
+  </data>
+  <data name="RemoteCommandCleanRemoteFolderCompletedSuccess" xml:space="preserve">
+    <value>Cleaning OK</value>
+  </data>
+  <data name="RemoteCommandCleanRemoteFolderStatusbarProgress" xml:space="preserve">
+    <value>Cleaning ...</value>
+  </data>
+  <data name="RemoteCommandCommonFailed" xml:space="preserve">
+    <value>FAILED: {0}</value>
+    <comment>Remote command Common: failure completion text</comment>
+  </data>
+  <data name="RemoteCommandCommonProfile" xml:space="preserve">
+    <value>Processing profile {0}</value>
+  </data>
+  <data name="RemoteCommandCommonSshTarget" xml:space="preserve">
+    <value>[SSH {0}@{1}] </value>
+    <comment>Remote command Common: SSH target message prefix</comment>
+  </data>
+  <data name="RemoteCommandCommonSuccess" xml:space="preserve">
+    <value>OK</value>
+    <comment>Remote command Common: success completion text</comment>
+  </data>
+  <data name="RemoteCommandDeployRemoveFolderCompletedSuccess" xml:space="preserve">
+    <value>Deploying application OK</value>
+  </data>
+  <data name="RemoteCommandDeployRemoveFolderOutputPaneProgress" xml:space="preserve">
+    <value>Deploying application - Source: {0}, Target: {1}</value>
+  </data>
+  <data name="RemoteCommandDeployRemoveFolderStatusbarProgress" xml:space="preserve">
+    <value>Deploying application ...</value>
+  </data>
+  <data name="RemoteCommandInstallDebuggerCommandCaption" xml:space="preserve">
+    <value>Installing VS Code Debugger</value>
+  </data>
+  <data name="RemoteCommandInstallDebuggerCommandStatusbarProgress" xml:space="preserve">
+    <value>Installing VS Code Debugger on targets ...</value>
+  </data>
+  <data name="RemoteCommandInstallDebuggerOfflineCommonProgress" xml:space="preserve">
+    <value>Installing VS Code Debugger from host</value>
+  </data>
+  <data name="RemoteCommandInstallDebuggerOfflineCompletedFailed" xml:space="preserve">
+    <value>Installing VS Code Debugger from host FAILED: {0}</value>
+  </data>
+  <data name="RemoteCommandInstallDebuggerOfflineCompletedSuccess" xml:space="preserve">
+    <value>Installing VS Code Debugger from host OK</value>
+  </data>
+  <data name="RemoteCommandInstallDebuggerOfflineOutputPaneProgressDownloading" xml:space="preserve">
+    <value>Downloading - URL: {0}, Version: {1}, RuntimeID: {2} </value>
+  </data>
+  <data name="RemoteCommandInstallDebuggerOfflineOutputPaneProgressInstalling" xml:space="preserve">
+    <value>Installing </value>
+  </data>
+  <data name="RemoteCommandInstallDebuggerOnlineCommonProgress" xml:space="preserve">
+    <value>Installing VS Code Debugger direct from internet</value>
+  </data>
+  <data name="RemoteCommandInstallDebuggerOnlineCompletedFailed" xml:space="preserve">
+    <value>Installing VS Code Debugger direct from internet FAILED: {0}</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetCommandCaption" xml:space="preserve">
+    <value>Installing .NET</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetCommandStatusbarText" xml:space="preserve">
+    <value>Installing .NET on targets ...</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetOfflineOutputPaneDownloadingPayload" xml:space="preserve">
+    <value>Downloading binaries - URL: {0} </value>
+  </data>
+  <data name="RemoteCommandInstallDotnetOfflineOutputPaneDownloadingScript" xml:space="preserve">
+    <value>Downloading script - URL: {0}, RuntimeID: {1} </value>
+  </data>
+  <data name="RemoteCommandInstallDotnetOfflineOutputPaneDownloadingSkipped" xml:space="preserve">
+    <value>Skipped downloading, use cache - file: {0}</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetOfflineOutputPaneInstalling" xml:space="preserve">
+    <value>Installing, this may take a while - file: {0} </value>
+  </data>
+  <data name="RemoteCommandInstallDotnetOfflineOutputPaneUploadingPayload" xml:space="preserve">
+    <value>Uploading binaries - target: {0} </value>
+  </data>
+  <data name="RemoteCommandInstallDotnetRuntimeOfflineCompletedFailed" xml:space="preserve">
+    <value>Installing .NET runtime from host FAILED: {0}</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetRuntimeOfflineCompletedSuccess" xml:space="preserve">
+    <value>Installing .NET runtime from host OK</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetRuntimeOfflineOutputPaneProgress" xml:space="preserve">
+    <value>Installing .NET runtime from host</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetRuntimeOnlineCompletedFailed" xml:space="preserve">
+    <value>Installing .NET runtime direct from internet FAILED: {0}</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetRuntimeOnlineCompletedSuccess" xml:space="preserve">
+    <value>Installing .NET runtime direct from internet OK</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetRuntimeOnlineOutputPaneProgress" xml:space="preserve">
+    <value>Installing .NET runtime direct from internet</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetScriptExecutionFailed" xml:space="preserve">
+    <value>Downloading .NET - Powershell script execution failed with '{0}'</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetSdkOfflineCompletedFailed" xml:space="preserve">
+    <value>Installing .NET SDK from host FAILED: {0}</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetSdkOfflineCompletedSuccess" xml:space="preserve">
+    <value>Installing .NET SDK from host OK</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetSdkOfflineOutputPaneProgress" xml:space="preserve">
+    <value>Installing .NET SDK from host</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetSdkOnlineCompletedFailed" xml:space="preserve">
+    <value>Installing .NET SDK direct from internet FAILED: {0}</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetSdkOnlineCompletedSuccess" xml:space="preserve">
+    <value>Installing .NET SDK direct from internet OK</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetSdkOnlineOutputPaneProgress" xml:space="preserve">
+    <value>Installing .NET SDK direct from internet</value>
+  </data>
+  <data name="RemoteCommandLanchingDebugger" xml:space="preserve">
+    <value>Launching debugger ...</value>
+  </data>
+  <data name="RemoteCommandUploadOutputPaneDone" xml:space="preserve">
+    <value> ok</value>
+  </data>
+  <data name="RemoteCommandUploadOutputPaneProgress" xml:space="preserve">
+    <value>.</value>
+  </data>
+</root>

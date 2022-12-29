@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>17.0</MinimumVisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\..\SigningKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\VSPackage.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <CodeAnalysisRuleSet>RemoteDebuggerLauncher.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <CodeAnalysisRuleSet>RemoteDebuggerLauncher.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{E95FF607-9D76-4ED8-BE5F-F5254CAC4963}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RemoteDebuggerLauncher</RootNamespace>
+    <AssemblyName>RemoteDebuggerLauncher</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <GeneratePkgDefFile>true</GeneratePkgDefFile>
+    <UseCodebase>true</UseCodebase>
+    <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
+    <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
+    <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
+    <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
+    <CopyOutputSymbolsToOutputDirectory>true</CopyOutputSymbolsToOutputDirectory>
+    <!--<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>-->
+    <!--<CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\Generated</CompilerGeneratedFilesOutputPath>-->
+    <StartAction>Program</StartAction>
+    <StartProgram Condition="'$(DevEnvDir)' != ''">$(DevEnvDir)devenv.exe</StartProgram>
+    <StartArguments>/rootsuffix Exp</StartArguments>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\Extension.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\Extension.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Commands\LaunchProfileAccess.cs" />
+    <Compile Include="Commands\CleanOutputCommand.cs" />
+    <Compile Include="ProjectSystem\LaunchProfile\SecureShellRemoteLaunchEnvironmentVariableEncoding.cs" />
+    <Compile Include="Services\Implementation\IVsOutputWindowPaneExtensions.cs" />
+    <Compile Include="Extensions\VsInteropExtensions.cs" />
+    <Compile Include="Extensions\AsyncServiceProviderExtensions.cs" />
+    <Compile Include="Infrastructure\ProtectedDataHelper.cs" />
+    <Compile Include="ProjectSystem\LaunchProfile\AdapterLaunchConfiguration.cs" />
+    <Compile Include="Services\Interface\ConfigurationAggregator.cs" />
+    <Compile Include="Services\Interface\ISecureShellSessionService.cs" />
+    <Compile Include="Services\Interface\SecureShellRemoteOperations.cs" />
+    <Compile Include="Services\Interface\SecureShellSession.cs" />
+    <Compile Include="Services\Interface\ISecureShellRemoteOperationsService.cs" />
+    <Compile Include="Services\PowerShellHost\CaptureOutputPSHostUserInterface.cs" />
+    <Compile Include="Services\PowerShellHost\ConsoleRawUserInterface.cs" />
+    <Compile Include="Services\PowerShellHost\CaptureOutputPSHost.cs" />
+    <Compile Include="Services\Interface\IStatusbarService.cs" />
+    <Compile Include="Services\Interface\ServiceExtensions.cs" />
+    <Compile Include="Services\Implementation\StatusbarService.cs" />
+    <Compile Include="Commands\InstallDebuggerCommand.cs" />
+    <Compile Include="Commands\InstallDotnetCommand.cs" />
+    <Compile Include="Services\Implementation\SecureShellSessionCommandingService.cs" />
+    <Compile Include="Services\Interface\ILoggerService.cs" />
+    <Compile Include="Services\Interface\IOptionsPageAccessor.cs" />
+    <Compile Include="Services\Interface\ISecureShellSessionCommandingService.cs" />
+    <Compile Include="Services\Implementation\LoggerService.cs" />
+    <Compile Include="Services\Implementation\OptionsPageAccessorService.cs" />
+    <Compile Include="Infrastructure\RemoteDebuggerLauncherException.cs" />
+    <Compile Include="Services\Implementation\SecureShellRemoteOperationsService.cs" />
+    <Compile Include="Services\Interface\SecureShellSessionException.cs" />
+    <Compile Include="Infrastructure\UnixPath.cs" />
+    <Compile Include="ProjectSystem\Extensions\ProjectSystemConfiguredProjectExtensions.cs" />
+    <Compile Include="Options\LocalOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Options\DeviceOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Services\Interface\SecureShellSessionSettings.cs" />
+    <Compile Include="Services\Implementation\SecureShellSessionService.cs" />
+    <Compile Include="Infrastructure\ThrowIf.cs" />
+    <Compile Include="PackageConstants.cs" />
+    <Compile Include="ProjectSystem\LaunchProfile\SecureShellRemoteLaunchRuleExporter.cs" />
+    <Compile Include="ProjectSystem\LaunchProfile\SecureShellRemoteLaunchTargetsProvider.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemoteDebuggerLauncherPackage.cs" />
+    <Compile Include="Utilities\ShellUtilities.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <CompilerVisibleProperty Include="RootNamespace" />
+    <None Include="..\..\SigningKey.snk">
+      <Link>SigningKey.snk</Link>
+    </None>
+    <None Include="Commands\readme.md" />
+    <None Include="Extensions\readme.md" />
+    <None Include="Infrastructure\readme.md" />
+    <None Include="Options\readme.md" />
+    <None Include="ProjectSystem\Extensions\readme.md" />
+    <None Include="ProjectSystem\LaunchProfile\readme.md" />
+    <None Include="ProjectSystem\readme.md" />
+    <None Include="readme.md" />
+    <None Include="Resources\readme.md" />
+    <None Include="Services\Implementation\readme.md" />
+    <None Include="Services\Interface\readme.md" />
+    <None Include="Services\readme.md" />
+    <None Include="source.extension.vsixmanifest">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Utilities\readme.md" />
+    <XamlPropertyRule Include="ProjectSystem\LaunchProfile\SecureShellRemoteLaunchProfile.xaml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <Generator>MSBuild:GenerateRuleSourceFromXaml</Generator>
+      <SubType>Designer</SubType>
+      <DataAccess>None</DataAccess>
+      <RuleInjection>None</RuleInjection>
+    </XamlPropertyRule>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.1.0-2.21558.8" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
+      <Version>3.3.3</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.PowerShell.5.1.ReferenceAssemblies" Version="1.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Managed" Version="17.2.0-beta1-20407-01" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Managed.VS" Version="17.2.0-beta1-20407-01" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK" Version="17.2.404-pre" />
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK.Tools" Version="17.2.404-pre" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.1.32210.191" ExcludeAssets="runtime">
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.2.32" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.1.1035-preview2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VSSDK.Vsixsigntool">
+      <Version>16.2.29116.78</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="SSH.NET" Version="2020.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Tools\SourceGenerators\SourceGenerators.csproj" OutputItemType="Analyzer" PrivateAssets="all" ReferenceOutputAssembly="false">
+      <Project>{0F40D13C-CF48-4F35-B998-39931C2371F0}</Project>
+      <Name>SourceGenerators</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\RemoteDebuggerLauncherUI\RemoteDebuggerLauncherUI.csproj">
+      <Project>{9bb8c19c-9bd2-4f3f-8800-951b4851e794}</Project>
+      <Name>RemoteDebuggerLauncherUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RemoteDebuggerLauncherShared\RemoteDebuggerLauncherShared.csproj">
+      <Project>{93e8395b-2fcf-46ec-ad25-c7b4083be047}</Project>
+      <Name>RemoteDebuggerLauncherShared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="license.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <VSCTCompile Include="RemoteDebuggerLauncherPackage.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+    </VSCTCompile>
+    <Content Include="Resources\Commands.png" />
+    <Content Include="Resources\VSPackage.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RemoteDebuggerLauncherPackage.resx">
+      <MergeWithCTO>true</MergeWithCTO>
+      <ManifestResourceName>VSPackage</ManifestResourceName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
