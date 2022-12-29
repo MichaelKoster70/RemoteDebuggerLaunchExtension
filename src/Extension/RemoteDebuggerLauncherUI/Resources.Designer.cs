@@ -299,6 +299,15 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Publishing ....
+        /// </summary>
+        public static string PublishStart {
+            get {
+                return ResourceManager.GetString("PublishStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connecting to {0}@{1} ... .
         /// </summary>
         public static string RemoteCommandCheckConnectionOutputPaneConnectingTo {

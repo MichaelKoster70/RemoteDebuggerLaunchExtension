@@ -5,7 +5,6 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-
 namespace RemoteDebuggerLauncher
 {
    /// <summary>

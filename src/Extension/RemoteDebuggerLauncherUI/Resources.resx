@@ -199,6 +199,9 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
   <data name="InstallDotnetVersionLatestStsDisplayName" xml:space="preserve">
     <value>Latest STS</value>
   </data>
+  <data name="PublishStart" xml:space="preserve">
+    <value>Publishing ...</value>
+  </data>
   <data name="RemoteCommandCheckConnectionOutputPaneConnectingTo" xml:space="preserve">
     <value>Connecting to {0}@{1} ... </value>
     <comment>Remote command Check Connection: Connecting to text</comment>

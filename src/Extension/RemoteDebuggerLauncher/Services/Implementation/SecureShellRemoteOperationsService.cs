@@ -38,6 +38,7 @@ namespace RemoteDebuggerLauncher
       /// <param name="configurationAggregator">The configuration aggregator.</param>
       /// <param name="session">The session to use.</param>
       /// <param name="logger">The logger service instance to use.</param>
+      /// <param name="statusbar">Optional statusbar service to report progress.</param>
       internal SecureShellRemoteOperationsService(ConfigurationAggregator configurationAggregator, ISecureShellSessionService session, ILoggerService logger, IStatusbarService statusbar)
       {
          this.configurationAggregator = configurationAggregator;

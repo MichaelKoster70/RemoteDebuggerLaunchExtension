@@ -45,8 +45,6 @@ jobs:
         vs-version: '[17.2,17.5)'
         msbuild-architecture: x64
 
-    - run: echo ${{ steps.msbuild.outputs.msbuildPath }}
-
     # Build Solution: determine and apply the version for the assemblies and VSIX package
     - name: 'Build Solution: Determine Version'
       id: git-version

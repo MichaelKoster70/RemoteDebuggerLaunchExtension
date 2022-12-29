@@ -56,6 +56,7 @@ namespace RemoteDebuggerLauncher
 
          var configurationAggregator = ConfigurationAggregator.Create(resolveddProfile, optionsPageAccessor);
          var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService, statusbarService);
+         var publishService = Publish.Create(configuredProject, loggerService, statusbarService);
 
          await threadingService.JoinableTaskFactory.SwitchToMainThreadAsync();
 
@@ -74,8 +75,11 @@ namespace RemoteDebuggerLauncher
             }
          }
 
-         // Step 3: Deploy application to target folder
-         var outputPath = await configuredProject.GetOutputDirectoryPathAsync();
+         // Step 3: run the publishing if requested to do so
+         await publishService.StartAsync().ConfigureAwait(true);
+
+         // Step 4: Deploy application to target folder
+         var outputPath = await publishService.GetOutputDirectoryPathAsync();
          await remoteOperations.DeployRemoteFolderAsync(outputPath, true);
 
          statusbarService.SetText(Resources.RemoteCommandLanchingDebugger);
