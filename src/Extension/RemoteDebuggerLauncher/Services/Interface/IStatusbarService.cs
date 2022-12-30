@@ -5,9 +5,23 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-
 namespace RemoteDebuggerLauncher
 {
+   /// <summary>
+   /// Defines the supported animations.
+   /// </summary>
+   internal enum StatusbarAnimation : short
+   {
+      /// <summary>Standard animation icon. </summary>
+      General = 0,
+
+      /// <summary>The deploy animation icon. </summary>
+      Deploy = 3,
+
+      /// <summary>The build animation icon. </summary>
+      Build = 5
+   }
+
    /// <summary>
    /// Interface defining a service writing to the VS status bar.
    /// </summary>
@@ -27,7 +41,18 @@ namespace RemoteDebuggerLauncher
       void SetText(string text, object arg0);
 
       /// <summary>
-      /// Clears the status bar text.
+      /// Starts a predefined animation.
+      /// </summary>
+      /// <param name="animation">The animation to start.</param>
+      void StartAnimation(StatusbarAnimation animation);
+
+      /// <summary>
+      /// Stops the animation.
+      /// </summary>
+      void StopAnimation();
+
+      /// <summary>
+      /// Clears the status bar text and stops a running animation.
       /// </summary>
       void Clear();
    }

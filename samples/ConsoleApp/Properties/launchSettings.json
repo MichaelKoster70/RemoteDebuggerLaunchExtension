@@ -1,0 +1,23 @@
+{
+  "profiles": {
+    "ConsoleApp": {
+      "commandName": "Project",
+      "commandLineArgs": "foo\r\nbar",
+      "environmentVariables": {
+        "Foo": "bar",
+        "Fooz": "aa"
+      }
+    },
+    "SSH Remote": {
+      "commandName": "SecureShellRemoteLaunch",
+      "commandLineArgs": "foo",
+      "environmentVariables": {
+        "foo": "42"
+      },
+      "hostName": "192.168.1.106",
+      "userName": "pi",
+      "privateKey": "%userprofile%\\.ssh\\id_rsa",
+      "publishOnDeploy": true
+    }
+  }
+}

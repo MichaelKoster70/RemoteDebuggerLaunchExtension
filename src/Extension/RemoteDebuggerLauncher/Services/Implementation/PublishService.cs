@@ -6,14 +6,10 @@
 // ----------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.Threading;
-using static Microsoft.VisualStudio.ProjectSystem.ExportContractNames;
 
 namespace RemoteDebuggerLauncher
 {
@@ -51,11 +47,14 @@ namespace RemoteDebuggerLauncher
          var outputPath = await configuredProject.GetOutputDirectoryPathAsync().ConfigureAwait(true);
          var projectPath = configuredProject.UnconfiguredProject.FullPath;
          var publishPath = PathHelper.Combine(outputPath, PackageConstants.Publish.OutDir);
+         var configuration = configuredProject.ProjectConfiguration.Dimensions["Configuration"];
 
          statusbar?.SetText(Resources.PublishStart);
+         statusbar?.StartAnimation(StatusbarAnimation.Build);
+
          logger.WriteLine(Resources.PublishStart);
 
-         var startInfo = new ProcessStartInfo("dotnet.exe", $"publish {projectPath} --output {publishPath} -c Debug --no-build --no-self-contained")
+         var startInfo = new ProcessStartInfo("dotnet.exe", $"publish {projectPath} --output {publishPath} -c {configuration} --no-build --no-self-contained")
          {
             CreateNoWindow = true,
             UseShellExecute = false,

@@ -61,7 +61,7 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <inheritdoc/>
-      public Task UploadFolderRecursiveAsync (string localSourcePath,  string remoteTargetPath, ILoggerService progressLogger = null)
+      public Task UploadFolderRecursiveAsync(string localSourcePath, string remoteTargetPath, ILoggerService progressLogger = null)
       {
          ThrowIf.ArgumentNullOrEmpty(localSourcePath, nameof(localSourcePath));
          ThrowIf.ArgumentNullOrEmpty(remoteTargetPath, nameof(remoteTargetPath));
@@ -156,7 +156,7 @@ namespace RemoteDebuggerLauncher
 
                   // for the moment, we assume that the path names does not have any character that have special meaning for a Linux host
                   client.RemotePathTransformation = RemotePathTransformation.None;
-                  
+
                   if (progressLogger != null)
                   {
                      // attach progress loggger if available

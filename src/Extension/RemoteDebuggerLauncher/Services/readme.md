@@ -1,4 +1,4 @@
-﻿# 'Services' Directory
+﻿# `Services` Directory
 This folder is holding all service implementation hosted in this package like:
 - PowerShell Host
 - Ouput Pane Logger
@@ -7,11 +7,11 @@ This folder is holding all service implementation hosted in this package like:
 - Secure Shell Session
 
 ## Directory Structure
-### 'Implementation'
+### `Implementation`
 - This directory is holding the implementations for services as part of this package.
 
-### 'Interface'
+### `Interface`
 - This directory is holding the interfaces for services implemented as part of this package.
 
-### 'PowerShellHost'
+### `PowerShellHost`
 - Holds a Powershell 5 host capable of capturing the script output.

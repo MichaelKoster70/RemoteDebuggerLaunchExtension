@@ -53,7 +53,7 @@ namespace RemoteDebuggerLauncher
       /// <returns>A task representing the async work of package initialization, or an already completed task if there is none. Do not return null from this method.</returns>
       protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
       {
-         await base.InitializeAsync(cancellationToken, progress);
+         await base.InitializeAsync(cancellationToken, progress).ConfigureAwait(false);
 
          // Add services implemented in this package
          AddService(typeof(SOptionsPageAccessor), CreateServiceAsync, true);
@@ -64,9 +64,9 @@ namespace RemoteDebuggerLauncher
          // Do any initialization that requires the UI thread after switching to the UI thread.
          await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
-         await InstallDebuggerCommand.InitializeAsync(this);
-         await InstallDotnetCommand.InitializeAsync(this);
-         await CleanOutputCommand.InitializeAsync(this);
+         await InstallDebuggerCommand.InitializeAsync(this).ConfigureAwait(true);
+         await InstallDotnetCommand.InitializeAsync(this).ConfigureAwait(true);
+         await CleanOutputCommand.InitializeAsync(this).ConfigureAwait(true);
       }
       #endregion
 

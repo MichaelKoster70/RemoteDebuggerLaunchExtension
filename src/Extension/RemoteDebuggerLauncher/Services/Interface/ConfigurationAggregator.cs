@@ -301,12 +301,9 @@ namespace RemoteDebuggerLauncher
             }
          }
 
+         // use the default in options 
          var optionsPublishOnDeploy = optionsPageAccessor.QueryPublishOnDeploy();
-
-
-
-         //rely on built-in default
-         return false;
+         return optionsPublishOnDeploy;
       }
    }
 }

@@ -7,13 +7,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.ProjectSystem;
-using Microsoft.VisualStudio.ProjectSystem.Debug;
 using Microsoft.VisualStudio.Shell;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -102,7 +97,7 @@ namespace RemoteDebuggerLauncher
 
          var program = UnixPath.Combine(configurationAggregator.QueryDotNetInstallFolderPath(), PackageConstants.Dotnet.BinaryName);
          var appFolderPath = configurationAggregator.QueryAppFolderPath();
-         var assemblyFileName = await configuredProject.GetAssemblyFileNameAsync();
+         var assemblyFileName = await configuredProject.GetAssemblyFileNameAsync().ConfigureAwait(true);
          var assemblyFileDirectory = ".";
          var workingDirectory = appFolderPath;
 
@@ -111,7 +106,7 @@ namespace RemoteDebuggerLauncher
          var shouldNormalizeAppFolderPath = UnixPath.ShouldBeNormalized(appFolderPath);
          if (shouldNormalizeProgram || shouldNormalizeAppFolderPath)
          {
-            var homeDirectory = await remoteOperations.QueryUserHomeDirectoryAsync();
+            var homeDirectory = await remoteOperations.QueryUserHomeDirectoryAsync().ConfigureAwait(true);
             if (!string.IsNullOrEmpty(homeDirectory))
             {
                // we have a home directory
@@ -147,6 +142,8 @@ namespace RemoteDebuggerLauncher
          config.AppendEnvironmentVariables(configurationAggregator);
 
          var launchConfigurationJson = JsonConvert.SerializeObject(config);
+
+         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
          logger.WriteLine($"Options: {launchConfigurationJson}");
          return launchConfigurationJson;
       }
@@ -158,7 +155,7 @@ namespace RemoteDebuggerLauncher
 
          var program = UnixPath.Combine(configurationAggregator.QueryDotNetInstallFolderPath(), PackageConstants.Dotnet.BinaryName);
          var appFolderPath = configurationAggregator.QueryAppFolderPath();
-         var assemblyFileName = await configuredProject.GetAssemblyFileNameAsync();
+         var assemblyFileName = await configuredProject.GetAssemblyFileNameAsync().ConfigureAwait(true);
 
          var config = CreateAndSetAdapter(configurationAggregator);
          config.Name = ".NET Core Launch - Self contained";

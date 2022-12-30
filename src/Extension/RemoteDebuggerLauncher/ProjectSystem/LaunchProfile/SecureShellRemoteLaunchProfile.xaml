@@ -69,7 +69,7 @@
 
    <BoolProperty Name="publishOnDeploy"
                   DisplayName="Publish on deploy"
-                  Description="Installs the latest VS Code debugger on the target before launching the target application."
+                  Description="Publishes application before deployment. This is useful for application types that require additional files to be deployed like ASP.NET/Blazer."
                   Subcategory="Deployment Options" />
 
    <BoolProperty Name="installDebuggerOnDeploy"
