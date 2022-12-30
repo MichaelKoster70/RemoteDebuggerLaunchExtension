@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Local": {
+      "commandName": "Project"
+    },
+    "SSH Remote": {
+      "commandName": "SecureShellRemoteLaunch",
+      "environmentVariables": {
+        "DISPLAY": ":0.0"
+      },
+      "hostName": "192.168.1.106",
+      "userName": "pi",
+      "privateKey": "%userprofile%\\.ssh\\id_rsa"
+    }
+  }
+}

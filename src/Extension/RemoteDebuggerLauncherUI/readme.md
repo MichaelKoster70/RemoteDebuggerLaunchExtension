@@ -1,4 +1,4 @@
-﻿# RemoteDebuggerLauncherUI
+﻿# `RemoteDebuggerLauncherUI` Directory
 This projects holds all UI components for the commands.
 
 The WPF based UI elements must be placed in a separate assembly because of a problem related to Roslyn source generators.

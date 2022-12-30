@@ -1,27 +1,28 @@
-# RemoteDebuggerLauncher
+# `RemoteDebuggerLauncher` Directory
+The main assembly providing the visual studio extension package.
 
 ## Directory Structure
 
-### 'Commands'
+### `Commands`
 - VS Command implementations
 
-### 'Extensions'
+### `Extensions`
 - Extension methods for VS provided classes
 
-### 'Infrastructure'
+### `Infrastructure`
 - Infrastructure type code
 
-### 'Options'
+### `Options`
 - VS Options page implementations
 
-### 'ProjectSystem'
+### `ProjectSystem`
 - Types providing extensions to the VS project system (CPS)
 
-### 'Resources'
+### `Resources`
 - Graphics resources needed by this package
 
-### 'Services'
+### `Services`
 - All service implementation hosted in this package
 
-### 'Utilities'
+### `Utilities`
 - Utility classes

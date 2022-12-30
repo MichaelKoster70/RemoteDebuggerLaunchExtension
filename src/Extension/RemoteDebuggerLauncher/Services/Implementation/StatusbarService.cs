@@ -5,7 +5,9 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -19,6 +21,7 @@ namespace RemoteDebuggerLauncher
    internal class StatusbarService : SStatusbarService, IStatusbarService
    {
       private readonly IVsStatusbar statusbar;
+      private bool animationRunning;
 
       /// <summary>
       /// Initializes a new instance of the <see cref="StatusbarService"/> class.
@@ -26,6 +29,7 @@ namespace RemoteDebuggerLauncher
       public StatusbarService()
       {
          ThreadHelper.ThrowIfNotOnUIThread();
+
          statusbar = Package.GetGlobalService(typeof(SVsStatusbar)) as IVsStatusbar;
       }
 
@@ -33,6 +37,7 @@ namespace RemoteDebuggerLauncher
       public void SetText(string text)
       {
          ThreadHelper.ThrowIfNotOnUIThread();
+
          _ = statusbar.SetText(text);
       }
 
@@ -40,6 +45,7 @@ namespace RemoteDebuggerLauncher
       public void SetText(string text, object arg0)
       {
          ThreadHelper.ThrowIfNotOnUIThread();
+
          _ = statusbar.SetText(string.Format(text, arg0));
       }
 
@@ -47,7 +53,31 @@ namespace RemoteDebuggerLauncher
       public void Clear()
       {
          ThreadHelper.ThrowIfNotOnUIThread();
+
          _ = statusbar.Clear();
+         StopAnimation();
+      }
+
+      /// <inheritdoc />
+      public void StartAnimation(StatusbarAnimation animation)
+      {
+         ThreadHelper.ThrowIfNotOnUIThread();
+
+         animationRunning = true;
+         object comVariant = (short)animation;
+         statusbar.Animation(1, ref comVariant);
+      }
+
+      /// <inheritdoc />
+      public void StopAnimation()
+      {
+         ThreadHelper.ThrowIfNotOnUIThread();
+
+         if (animationRunning)
+         {
+            object comVariant = (short)0;
+            statusbar.Animation(0, ref comVariant);
+         }
       }
    }
 
