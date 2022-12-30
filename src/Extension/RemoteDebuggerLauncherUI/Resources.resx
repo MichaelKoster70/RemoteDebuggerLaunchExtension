@@ -199,8 +199,14 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
   <data name="InstallDotnetVersionLatestStsDisplayName" xml:space="preserve">
     <value>Latest STS</value>
   </data>
+  <data name="PublishFailed" xml:space="preserve">
+    <value>Publishing application FAILED with exit code {0}</value>
+  </data>
   <data name="PublishStart" xml:space="preserve">
-    <value>Publishing ...</value>
+    <value>Publishing application ...</value>
+  </data>
+  <data name="PublishSuccess" xml:space="preserve">
+    <value>Publishing application OK</value>
   </data>
   <data name="RemoteCommandCheckConnectionOutputPaneConnectingTo" xml:space="preserve">
     <value>Connecting to {0}@{1} ... </value>

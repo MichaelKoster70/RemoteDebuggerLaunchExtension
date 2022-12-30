@@ -7,7 +7,6 @@
 
 using System.Collections.Generic;
 using System.Composition;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
@@ -39,12 +38,21 @@ namespace RemoteDebuggerLauncher
          this.tokenReplacer = tokenReplacer;
       }
 
+      /// <summary>
+      /// Called right after launch to allow the provider to do additional work.
+      /// </summary>
       public Task OnAfterLaunchAsync(DebugLaunchOptions launchOptions, ILaunchProfile profile)
       {
          // no actions needed
          return Task.CompletedTask;
       }
 
+      /// <summary>
+      /// Called just prior to launch to allow the provider to do additional work.
+      /// </summary>
+      /// <remarks>
+      /// Performs additional steps like installing the debugger, publish the app, or deploy data to the target device.
+      /// </remarks>
       public async Task OnBeforeLaunchAsync(DebugLaunchOptions launchOptions, ILaunchProfile profile)
       {
          var optionsPageAccessor = await AsyncServiceProvider.GlobalProvider.GetOptionsPageServiceAsync();
@@ -76,7 +84,10 @@ namespace RemoteDebuggerLauncher
          }
 
          // Step 3: run the publishing if requested to do so
-         await publishService.StartAsync().ConfigureAwait(true);
+         if (configurationAggregator.QueryPublishOnDeploy())
+         {
+            await publishService.StartAsync().ConfigureAwait(true);
+         }
 
          // Step 4: Deploy application to target folder
          var outputPath = await publishService.GetOutputDirectoryPathAsync();
@@ -86,7 +97,7 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <summary>
-      /// Called in response to an F5/Ctrl+F5 operation to get the debug launch settings to pass to the debugger for the active profile
+      /// Called in response to an F5/Ctrl+F5 operation to get the debug launch settings to pass to the debugger for the active profile.
       /// </summary>
       /// <param name="launchOptions"></param>
       /// <param name="profile"></param>
@@ -122,6 +133,10 @@ namespace RemoteDebuggerLauncher
          return new List<IDebugLaunchSettings>() { launchSettings };
       }
 
+      /// <summary>
+      /// Return true if the provider supports the suplied profile type.
+      /// </summary>
+      /// <param name="profile">The profile to validate.</param>
       public bool SupportsProfile(ILaunchProfile profile)
       {
          return profile.CommandName.Equals(PackageConstants.LaunchProfile.CommandName);

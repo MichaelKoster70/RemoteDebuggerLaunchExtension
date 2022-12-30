@@ -67,6 +67,11 @@
                    Description="The path on the target device where the application binaries will get deployed to.."
                    Subcategory="Remote Devices"/>
 
+   <BoolProperty Name="publishOnDeploy"
+                  DisplayName="Publish on deploy"
+                  Description="Installs the latest VS Code debugger on the target before launching the target application."
+                  Subcategory="Deployment Options" />
+
    <BoolProperty Name="installDebuggerOnDeploy"
                   DisplayName="Install debugger"
                   Description="Installs the latest VS Code debugger on the target before launching the target application."
