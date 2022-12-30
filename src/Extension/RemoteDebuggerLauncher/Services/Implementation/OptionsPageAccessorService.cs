@@ -60,6 +60,12 @@ namespace RemoteDebuggerLauncher
          return GetDevicePage().AppFolderPath;
       }
 
+      /// <inheritdoc />
+      public bool QueryPublishOnDeploy()
+      {
+         return GetLocalPage().PublishOnDeploy;
+      }
+
       private DeviceOptionsPage GetDevicePage()
       {
          if (devicePage == null)

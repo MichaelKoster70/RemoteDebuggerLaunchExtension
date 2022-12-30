@@ -117,5 +117,11 @@ namespace RemoteDebuggerLauncher
          /// <summary>Command menu group (command set GUID).</summary>
          public static readonly Guid CommandSet = new Guid("67dde3fd-abea-469b-939f-02a3178c91e7");
       }
+
+      public static class Publish
+      {
+         /// <summary>Publish output relative to project output dir.</summary>
+         public const string OutDir = "publish";
+      }
    }
 }

@@ -259,7 +259,7 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// Queries the flag whether to install the VS code debugger on deploy.
       /// </summary>
-      /// <returns>A <see langword="bool"/> holding the arguments.</returns>
+      /// <returns>A <see langword="bool"/><c>true</c> if debugger should be installed; else <c>false</c>.</returns>
       /// <remarks>
       /// The following configuration provides are queried, first match wins
       /// - selected launch profile
@@ -275,6 +275,35 @@ namespace RemoteDebuggerLauncher
                return installDebuggerOnDeploy;
             }
          }
+
+         //rely on built-in default
+         return false;
+      }
+
+      /// <summary>
+      /// Queries the flag whether to publish the application on deploy.
+      /// </summary>
+      /// <returns>A <see langword="bool"/><c>true</c> to deploy published output;<c>false</c> to deploy build output.</returns>
+      /// <remarks>
+      /// The following configuration provides are queried, first match wins
+      /// - selected launch profile
+      /// - Tools/Options settings
+      /// - built-in default (false)
+      /// </remarks>
+      public bool QueryPublishOnDeploy()
+      {
+         if (launchProfile.OtherSettings.TryGetValue(SecureShellRemoteLaunchProfile.publishOnDeployProperty, out var settingsValue))
+         {
+            if (settingsValue is bool publishOnDeploy)
+            {
+               // Launch profile value => use if
+               return publishOnDeploy;
+            }
+         }
+
+         var optionsPublishOnDeploy = optionsPageAccessor.QueryPublishOnDeploy();
+
+
 
          //rely on built-in default
          return false;

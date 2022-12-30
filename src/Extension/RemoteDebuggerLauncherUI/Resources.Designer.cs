@@ -299,6 +299,33 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Publishing application FAILED with exit code {0}.
+        /// </summary>
+        public static string PublishFailed {
+            get {
+                return ResourceManager.GetString("PublishFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Publishing application ....
+        /// </summary>
+        public static string PublishStart {
+            get {
+                return ResourceManager.GetString("PublishStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Publishing application OK.
+        /// </summary>
+        public static string PublishSuccess {
+            get {
+                return ResourceManager.GetString("PublishSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connecting to {0}@{1} ... .
         /// </summary>
         public static string RemoteCommandCheckConnectionOutputPaneConnectingTo {

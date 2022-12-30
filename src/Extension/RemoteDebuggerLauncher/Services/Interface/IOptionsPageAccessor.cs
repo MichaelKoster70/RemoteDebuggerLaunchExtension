@@ -43,5 +43,11 @@ namespace RemoteDebuggerLauncher
       /// </summary>
       /// <returns>A <see langword="string"/> holding the path, <c>string.Empty</c> if not configured.</returns>
       string QueryAppFolderPath();
+
+      /// <summary>
+      /// Queries the flag whether to publish the application on deploy.
+      /// </summary>
+      /// <returns>A <see langword="bool"/><c>true</c> to deploy published output;<c>false</c> to deploy build output.</returns>
+      bool QueryPublishOnDeploy();
    }
 }
