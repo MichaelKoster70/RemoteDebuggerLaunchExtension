@@ -4,9 +4,13 @@ on:
     branches:
       - 'feature/**'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     name: CI Build
     uses: ./.github/workflows/shared-build.yml
     with:
-      store-artifacts: true
+      store-artifacts: false
