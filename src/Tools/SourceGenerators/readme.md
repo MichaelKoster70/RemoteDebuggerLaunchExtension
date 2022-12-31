@@ -1,4 +1,4 @@
-# SourceGenerators
+# `SourceGenerators` Directory
 Implements a simple Roslyn [Source Generator](https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview) to generate version information used in the VS extension package registration.
 
 ## Rroject References
