@@ -1,4 +1,4 @@
-name: Build
+name: Shared Build
 
 on:
   workflow_call:

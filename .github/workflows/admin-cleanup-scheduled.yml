@@ -1,4 +1,4 @@
-name: Delete old workflow runs
+name: 'Admin: Delete old workflow runs'
 on:
   workflow_dispatch:
     inputs:
@@ -42,6 +42,7 @@ on:
 
 jobs:
   del_runs:
+    name: Delete Runs
     runs-on: ubuntu-latest
     steps:
       - name: Delete workflow runs

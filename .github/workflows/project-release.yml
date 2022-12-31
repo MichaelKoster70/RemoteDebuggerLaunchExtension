@@ -1,4 +1,4 @@
-name: Release
+name: 'Project: Release'
 # shall trigger on the main branch when a tag named 'v*' gets created
 on: 
   push:
@@ -6,6 +6,10 @@ on:
     - main
     tags:
     -  v*
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
