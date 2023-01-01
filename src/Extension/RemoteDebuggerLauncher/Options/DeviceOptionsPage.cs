@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.Shell;
 
 namespace RemoteDebuggerLauncher
 {
+#pragma warning disable CA1812 // By design, Visual Studio will instanciate the class for us
    /// <summary>
    /// Implements the Device Options page shown in the VS options tree under "Remote Debugger Launcher"
    /// </summary>
@@ -45,4 +46,6 @@ namespace RemoteDebuggerLauncher
       [DefaultValue(PackageConstants.Options.DefaultValueAppFolderPath)]
       public string AppFolderPath { get; set; } = PackageConstants.Options.DefaultValueAppFolderPath;
    }
+#pragma warning restore CA1812
+
 }

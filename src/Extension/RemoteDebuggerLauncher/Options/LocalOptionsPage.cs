@@ -11,6 +11,7 @@ using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher
 {
+#pragma warning disable CA1812 // By design, Visual Studio will instanciate the class for us
    /// <summary>
    /// Implements the Local Options page shown in the VS options tree under "Remote Debugger Launcher"
    /// </summary>
@@ -26,4 +27,6 @@ namespace RemoteDebuggerLauncher
       [Description("The type of application the publish step should produce, either self contained (includes the runtime) or framework dependant (requires .NET to be installed on the device.")]
       public PublishMode PublishMode { get; set; } = PublishMode.FrameworkDependant;
    }
+#pragma warning restore CA1812
+
 }

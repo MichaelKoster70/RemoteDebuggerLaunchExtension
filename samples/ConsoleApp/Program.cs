@@ -2,6 +2,7 @@
 
 using System.Collections;
 
+#pragma warning disable CA1303 // Do not pass literals as localized parameters
 Console.WriteLine("Hello from .NET\n");
 
 var os = Environment.OSVersion;
@@ -19,3 +20,4 @@ foreach (DictionaryEntry v in variable)
 {
     Console.WriteLine("{0} = {1}", v.Key, v.Value);
 }
+#pragma warning restore CA1303

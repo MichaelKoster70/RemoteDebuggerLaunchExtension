@@ -5,6 +5,7 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -70,7 +71,7 @@ namespace RemoteDebuggerLauncher
             if (launchSettingsProvider != null)
             {
                var activeProfile = launchSettingsProvider.ActiveProfile;
-               if (activeProfile.CommandName.Equals(PackageConstants.LaunchProfile.CommandName))
+               if (activeProfile.CommandName.Equals(PackageConstants.LaunchProfile.CommandName, StringComparison.Ordinal))
                {
                   activeLaunchProfiles.Add(launchSettingsProvider.ActiveProfile);
                }

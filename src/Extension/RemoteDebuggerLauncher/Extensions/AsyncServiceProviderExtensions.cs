@@ -36,7 +36,7 @@ namespace RemoteDebuggerLauncher
       /// <returns>The <see cref="IProjectService"/> service interface.</returns>
       public static async Task<IProjectService> GetProjectServiceAsync(this IAsyncServiceProvider serviceProvider)
       {
-         IComponentModel componentModel = await serviceProvider.GetServiceAsync<SComponentModel, IComponentModel>();
+         IComponentModel componentModel = await serviceProvider.GetServiceAsync<SComponentModel, IComponentModel>().ConfigureAwait(false);
          if (componentModel == null)
          {
             // MEF Component model is not available, should actually never happen

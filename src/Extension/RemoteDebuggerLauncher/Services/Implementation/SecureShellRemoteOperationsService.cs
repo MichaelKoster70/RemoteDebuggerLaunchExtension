@@ -137,7 +137,7 @@ namespace RemoteDebuggerLauncher
             // Download the PS1 script to install the debugger
             using (var httpClient = new HttpClient())
             {
-               var response = await httpClient.GetAsync(PackageConstants.Debugger.GetVsDbgPs1Url).ConfigureAwait(true);
+               var response = await httpClient.GetAsync(new Uri(PackageConstants.Debugger.GetVsDbgPs1Url)).ConfigureAwait(true);
                response.EnsureSuccessStatusCode();
                var installScript = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
 
@@ -438,7 +438,8 @@ namespace RemoteDebuggerLauncher
          // Download the PS1 script to install .NET
          using (var httpClient = new HttpClient())
          {
-            using (var response = await httpClient.GetAsync(PackageConstants.Dotnet.GetInstallDotnetPs1Url).ConfigureAwait(true))
+
+            using (var response = await httpClient.GetAsync(new Uri(PackageConstants.Dotnet.GetInstallDotnetPs1Url)).ConfigureAwait(true))
             {
                response.EnsureSuccessStatusCode();
                installScript = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
@@ -447,7 +448,7 @@ namespace RemoteDebuggerLauncher
 
             // Create the runspace so that you can access the pipeline.
             var host = new CaptureOutputPSHost();
-
+             
             using (var runSpace = RunspaceFactory.CreateRunspace(host))
             {
                runSpace.Open();
@@ -488,7 +489,7 @@ namespace RemoteDebuggerLauncher
                logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
                logger.Write(Resources.RemoteCommandInstallDotnetOfflineOutputPaneDownloadingPayload, dotnetDownloadUrl);
 
-               using (var response = await httpClient.GetAsync(dotnetDownloadUrl).ConfigureAwait(true))
+               using (var response = await httpClient.GetAsync(new Uri(dotnetDownloadUrl)).ConfigureAwait(true))
                {
                   response.EnsureSuccessStatusCode();
 

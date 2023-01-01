@@ -5,6 +5,7 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Composition;
 using System.Threading.Tasks;
@@ -145,7 +146,7 @@ namespace RemoteDebuggerLauncher
       /// <param name="profile">The profile to validate.</param>
       public bool SupportsProfile(ILaunchProfile profile)
       {
-         return profile.CommandName.Equals(PackageConstants.LaunchProfile.CommandName);
+         return profile.CommandName.Equals(PackageConstants.LaunchProfile.CommandName, StringComparison.Ordinal);
       }
    }
 }
