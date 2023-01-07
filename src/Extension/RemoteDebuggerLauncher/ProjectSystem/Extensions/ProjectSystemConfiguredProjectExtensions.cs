@@ -46,5 +46,10 @@ namespace RemoteDebuggerLauncher
 
          return $"{assemblyName}.dll";
       }
+
+      public static string GetName(this ConfiguredProject configuredProject)
+      {
+         return Path.GetFileName(configuredProject.UnconfiguredProject.FullPath);
+      }
    }
 }

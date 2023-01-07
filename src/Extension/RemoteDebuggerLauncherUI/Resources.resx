@@ -244,7 +244,10 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
     <comment>Remote command Common: failure completion text</comment>
   </data>
   <data name="RemoteCommandCommonProfile" xml:space="preserve">
-    <value>Processing profile {0}</value>
+    <value>Processing profile '{0}'</value>
+  </data>
+  <data name="RemoteCommandCommonProjectAndProfile" xml:space="preserve">
+    <value>Processing {0} profile '{1}'</value>
   </data>
   <data name="RemoteCommandCommonSshTarget" xml:space="preserve">
     <value>[SSH {0}@{1}] </value>

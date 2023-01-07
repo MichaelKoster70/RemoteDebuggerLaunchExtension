@@ -36,9 +36,16 @@ namespace RemoteDebuggerLauncher
       /// <param name="asyncServieProvier">The service provider to query.</param>
       /// <returns>The <see cref="IWaitDialogFactoryService"/> service interface. Never null.</returns>
       /// <exception cref="ServiceUnavailableException">The service could not be acquired.<exception>
-      public static Task<IWaitDialogFactoryService> GetWaitDialogFactoryAsync(this IAsyncServiceProvider asyncServieProvier)
+      public static Task<IWaitDialogFactoryService> GetWaitDialogFactoryAsync(this IAsyncServiceProvider asyncServieProvier, bool useStub = false)
       {
-         return asyncServieProvier.GetServiceAsync<SWaitDialogFactoryService, IWaitDialogFactoryService>();
+         if (useStub)
+         {
+            return asyncServieProvier.GetServiceAsync<SWaitDialogFactoryStubService, IWaitDialogFactoryService>();
+         }
+         else
+         {
+            return asyncServieProvier.GetServiceAsync<SWaitDialogFactoryService, IWaitDialogFactoryService>();
+         }
       }
 
       /// <summary>

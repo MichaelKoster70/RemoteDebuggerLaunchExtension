@@ -22,19 +22,10 @@ namespace RemoteDebuggerLauncher
    /// </summary>
    internal sealed class OpenToolWindowCommand
    {
-      /// <summary>
-      /// Command ID.
-      /// </summary>
-      public const int CommandId = 4129;
+      /// <summary>Command ID.</summary>
+      public const int CommandId = 0x0200;
 
-      /// <summary>
-      /// Command menu group (command set GUID).
-      /// </summary>
-      public static readonly Guid CommandSet = new Guid("67dde3fd-abea-469b-939f-02a3178c91e7");
-
-      /// <summary>
-      /// VS Package that provides this command, not null.
-      /// </summary>
+      /// <summary>VS Package that provides this command, not null.</summary>
       private readonly AsyncPackage package;
 
       /// <summary>
@@ -48,7 +39,7 @@ namespace RemoteDebuggerLauncher
          this.package = package ?? throw new ArgumentNullException(nameof(package));
          commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
-         var menuCommandID = new CommandID(CommandSet, CommandId);
+         var menuCommandID = new CommandID(PackageConstants.Commands.CommandSet, CommandId);
          var menuItem = new MenuCommand(Execute, menuCommandID);
          commandService.AddCommand(menuItem);
       }

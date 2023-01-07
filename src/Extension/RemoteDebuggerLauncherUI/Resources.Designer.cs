@@ -425,11 +425,20 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Processing profile {0}.
+        ///   Looks up a localized string similar to Processing profile &apos;{0}&apos;.
         /// </summary>
         public static string RemoteCommandCommonProfile {
             get {
                 return ResourceManager.GetString("RemoteCommandCommonProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processing {0} profile &apos;{1}&apos;.
+        /// </summary>
+        public static string RemoteCommandCommonProjectAndProfile {
+            get {
+                return ResourceManager.GetString("RemoteCommandCommonProjectAndProfile", resourceCulture);
             }
         }
         

@@ -32,13 +32,14 @@ namespace RemoteDebuggerLauncher
       /// </summary>
       /// <param name="configuredProject">The configuration aggregator.</param>
       /// <param name="logger">The logger service instance to use.</param>
+      /// <param name="waitDialogFactory">The Wait Dialog Factory service.</param>
       internal PublishService(ConfiguredProject configuredProject, ILoggerService logger, IWaitDialogFactoryService waitDialogFactory)
       {
          ThreadHelper.ThrowIfNotOnUIThread();
 
          this.configuredProject = configuredProject ?? throw new ArgumentNullException(nameof(configuredProject));
          this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-         this.waitDialogFactory = waitDialogFactory;
+         this.waitDialogFactory = waitDialogFactory ?? throw new ArgumentNullException(nameof(waitDialogFactory));
       }
 
       /// <inheritdoc />

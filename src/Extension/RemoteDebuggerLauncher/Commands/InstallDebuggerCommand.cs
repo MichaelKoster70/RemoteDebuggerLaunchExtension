@@ -22,7 +22,7 @@ namespace RemoteDebuggerLauncher
    internal sealed class InstallDebuggerCommand
    {
       /// <summary>Command ID.</summary>
-      public const int CommandId = 0x0100;
+      public const int CommandId = 0x0102;
 
       /// <summary>Package that provides this command, not null.</summary>
       private readonly AsyncPackage package;

@@ -19,7 +19,7 @@ namespace RemoteDebuggerLauncher
    internal sealed class InstallDotnetCommand
    {
       /// <summary>Command ID.</summary>
-      public const int CommandId = 0x0101;
+      public const int CommandId = 0x0103;
 
       /// <summary>VS Package that provides this command, not null.</summary>
       private readonly AsyncPackage package;

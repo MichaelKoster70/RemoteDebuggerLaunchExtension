@@ -19,7 +19,7 @@ namespace RemoteDebuggerLauncher
    internal sealed class SetupSshCommand
    {
       /// <summary>Command ID.</summary>
-      public const int CommandId = 4130;
+      public const int CommandId = 0x0104;
 
       /// <summary>VS Package that provides this command, not null.</summary>
       private readonly AsyncPackage package;

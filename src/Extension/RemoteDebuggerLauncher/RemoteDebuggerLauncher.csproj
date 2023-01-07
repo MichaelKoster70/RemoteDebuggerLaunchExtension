@@ -66,15 +66,18 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Commands\DeployOutputCommand.cs" />
     <Compile Include="Commands\LaunchProfileAccess.cs" />
     <Compile Include="Commands\CleanOutputCommand.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="ProjectSystem\Extensions\ProjectSystemUnconfiguredProjectExtensions.cs" />
     <Compile Include="Services\Implementation\PublishService.cs" />
     <Compile Include="Services\Implementation\IVsOutputWindowPaneExtensions.cs" />
     <Compile Include="Extensions\VsInteropExtensions.cs" />
     <Compile Include="Extensions\AsyncServiceProviderExtensions.cs" />
     <Compile Include="Infrastructure\ProtectedDataHelper.cs" />
     <Compile Include="ProjectSystem\LaunchProfile\AdapterLaunchConfiguration.cs" />
+    <Compile Include="Services\Implementation\WaitDialogFactoryStubService.cs" />
     <Compile Include="Services\Implementation\WaitDialogService.cs" />
     <Compile Include="Services\Implementation\WaitDialogFactoryService.cs" />
     <Compile Include="Services\Interface\IWaitDialogService.cs" />
