@@ -21,8 +21,8 @@ namespace RemoteDebuggerLauncher
           context: PropertyPageContexts.Project)]
       [AppliesTo(PackageConstants.LaunchProfile.AppliesTo)]
       [Order(orderPrecedence: 0)]
-#pragma warning disable CS0649 // unused, required for the attribute
+#pragma warning disable CS0649, CA2211 // unused, required for the attribute
       public static int MyLaunchProfileRule;
-#pragma warning restore CS0649
+#pragma warning restore CS0649, CA2211
    }
 }

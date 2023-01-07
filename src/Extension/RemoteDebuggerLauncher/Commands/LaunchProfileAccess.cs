@@ -58,7 +58,7 @@ namespace RemoteDebuggerLauncher
          }
 
          // Get the collection of startup projects
-         var unconfiguredProjects = projectService.LoadedUnconfiguredProjects.Where(u => startupProjects.Where(s => u.FullPath.EndsWith(s)).Count() > 0).ToList();
+         var unconfiguredProjects = projectService.LoadedUnconfiguredProjects.Where(u => startupProjects.Any(s => u.FullPath.EndsWith(s))).ToList();
          if (unconfiguredProjects.Count == 0)
          {
             return activeLaunchProfiles;

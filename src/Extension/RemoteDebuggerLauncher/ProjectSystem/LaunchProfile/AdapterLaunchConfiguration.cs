@@ -196,7 +196,7 @@ namespace RemoteDebuggerLauncher
       {
          var commandLineArgs = configurationAggregator.QueryCommandLineArguments();
 
-         if (!String.IsNullOrEmpty(commandLineArgs))
+         if (!string.IsNullOrEmpty(commandLineArgs))
          {
             var args = commandLineArgs.Split(' ');
             Array.ForEach(args, (arg) => config.Args.Add(arg));

@@ -9,13 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.Composition;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
 using Microsoft.VisualStudio.ProjectSystem.VS.Debug;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Threading;
 
 namespace RemoteDebuggerLauncher
 {
@@ -58,49 +56,47 @@ namespace RemoteDebuggerLauncher
       /// </remarks>
       public async Task OnBeforeLaunchAsync(DebugLaunchOptions launchOptions, ILaunchProfile profile)
       {
-         await threadingService.JoinableTaskFactory.RunAsync(async () =>
+         var optionsPageAccessor = await AsyncServiceProvider.GlobalProvider.GetOptionsPageServiceAsync();
+         var loggerService = await AsyncServiceProvider.GlobalProvider.GetLoggerServiceAsync();
+         var statusbarService = await AsyncServiceProvider.GlobalProvider.GetStatusbarServiceAsync();
+         var waitDialogFactory = await AsyncServiceProvider.GlobalProvider.GetWaitDialogFactoryAsync();
+
+         // get environment variables and msbuild properties resolved
+         var resolveddProfile = await tokenReplacer.ReplaceTokensInProfileAsync(profile);
+
+         var configurationAggregator = ConfigurationAggregator.Create(resolveddProfile, optionsPageAccessor);
+         var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService, statusbarService);
+         var publishService = Publish.Create(configuredProject, loggerService, waitDialogFactory);
+
+         // the rest must be executed on the UI thread
+         await threadingService.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+         // Step 1: try to connect to the device
+         await remoteOperations.CheckConnectionThrowAsync();
+
+         // Step 2: try to install the latest debugger version
+         bool installDebugger = configurationAggregator.QueryInstallDebuggerOnDeploy();
+         if (installDebugger)
          {
-            var optionsPageAccessor = await AsyncServiceProvider.GlobalProvider.GetOptionsPageServiceAsync();
-            var loggerService = await AsyncServiceProvider.GlobalProvider.GetLoggerServiceAsync();
-            var statusbarService = await AsyncServiceProvider.GlobalProvider.GetStatusbarServiceAsync();
-            var waitDialogFactory = await AsyncServiceProvider.GlobalProvider.GetWaitDialogFactoryAsync();
-
-            // get environment variables and msbuild properties resolved
-            var resolveddProfile = await tokenReplacer.ReplaceTokensInProfileAsync(profile);
-
-            var configurationAggregator = ConfigurationAggregator.Create(resolveddProfile, optionsPageAccessor);
-            var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService, statusbarService);
-            var publishService = Publish.Create(configuredProject, loggerService, waitDialogFactory);
-
-            //await threadingService.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            // Step 1: try to connect to the device
-            await remoteOperations.CheckConnectionThrowAsync();
-
-            // Step 2: try to install the latest debugger version
-            bool installDebugger = configurationAggregator.QueryInstallDebuggerOnDeploy();
-            if (installDebugger)
+            // only install the debugger if configured in launch profile
+            var succeeded = await remoteOperations.TryInstallVsDbgOnlineAsync();
+            if (!succeeded)
             {
-               // only install the debugger if configured in launch profile
-               var succeeded = await remoteOperations.TryInstallVsDbgOnlineAsync();
-               if (!succeeded)
-               {
-                  await remoteOperations.TryInstallVsDbgOfflineAsync();
-               }
+               await remoteOperations.TryInstallVsDbgOfflineAsync();
             }
+         }
 
-            // Step 3: run the publishing if requested to do so
-            if (configurationAggregator.QueryPublishOnDeploy())
-            {
-               await publishService.StartAsync();
-            }
+         // Step 3: run the publishing if requested
+         if (configurationAggregator.QueryPublishOnDeploy())
+         {
+            await publishService.StartAsync();
+         }
 
-            // Step 4: Deploy application to target folder
-            var outputPath = await publishService.GetOutputDirectoryPathAsync();
-            await remoteOperations.DeployRemoteFolderAsync(outputPath, true);
+         // Step 4: Deploy application to target folder
+         var outputPath = await publishService.GetOutputDirectoryPathAsync();
+         await remoteOperations.DeployRemoteFolderAsync(outputPath, true);
 
-            statusbarService.SetText(Resources.RemoteCommandLanchingDebugger);
-         });
+         statusbarService.SetText(Resources.RemoteCommandLanchingDebugger);
       }
 
       /// <summary>
@@ -111,34 +107,30 @@ namespace RemoteDebuggerLauncher
       /// <returns></returns>
       public async Task<IReadOnlyList<IDebugLaunchSettings>> QueryDebugTargetsAsync(DebugLaunchOptions launchOptions, ILaunchProfile profile)
       {
-         DebugLaunchSettings launchSettings = null;
-         await threadingService.JoinableTaskFactory.RunAsync(async () =>
+         var optionsPageAccessor = await AsyncServiceProvider.GlobalProvider.GetOptionsPageServiceAsync();
+         var loggerService = await AsyncServiceProvider.GlobalProvider.GetLoggerServiceAsync();
+         var statusbarService = await AsyncServiceProvider.GlobalProvider.GetStatusbarServiceAsync();
+
+         // get environment variables and msbuild properties resolved
+         var resolveddProfile = await tokenReplacer.ReplaceTokensInProfileAsync(profile);
+
+         var configurationAggregator = ConfigurationAggregator.Create(resolveddProfile, optionsPageAccessor);
+         var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService, statusbarService);
+
+         // the rest must be executed on the UI thread
+         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+         // validate that target is reachable
+         await remoteOperations.CheckConnectionThrowAsync();
+
+         var launchSettings = new DebugLaunchSettings(launchOptions)
          {
-            var optionsPageAccessor = await AsyncServiceProvider.GlobalProvider.GetOptionsPageServiceAsync();
-            var loggerService = await AsyncServiceProvider.GlobalProvider.GetLoggerServiceAsync();
-            var statusbarService = await AsyncServiceProvider.GlobalProvider.GetStatusbarServiceAsync();
-
-            // get environment variables and msbuild properties resolved
-            var resolveddProfile = await tokenReplacer.ReplaceTokensInProfileAsync(profile);
-
-            var configurationAggregator = ConfigurationAggregator.Create(resolveddProfile, optionsPageAccessor);
-            var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService, statusbarService);
-
-            // the rest must be executed on the UI thread
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            // validate that target is reachable
-            await remoteOperations.CheckConnectionThrowAsync();
-
-            launchSettings = new DebugLaunchSettings(launchOptions)
-            {
-               LaunchOperation = DebugLaunchOperation.CreateProcess,
-               Executable = "dotnet",
-               Options = await AdapterLaunchConfiguration.CreateFrameworkDependantAsync(configurationAggregator, configuredProject, loggerService, remoteOperations),
-               LaunchDebugEngineGuid = PackageConstants.DebugLaunchSettings.EngineGuid,
-               Project = configuredProject.UnconfiguredProject.Services.HostObject as IVsHierarchy
-            };
-         });
+            LaunchOperation = DebugLaunchOperation.CreateProcess,
+            Executable = "dotnet",
+            Options = await AdapterLaunchConfiguration.CreateFrameworkDependantAsync(configurationAggregator, configuredProject, loggerService, remoteOperations),
+            LaunchDebugEngineGuid = PackageConstants.DebugLaunchSettings.EngineGuid,
+            Project = configuredProject.UnconfiguredProject.Services.HostObject as IVsHierarchy
+         };
 
          return new List<IDebugLaunchSettings>() { launchSettings };
       }

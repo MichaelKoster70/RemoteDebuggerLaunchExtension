@@ -23,7 +23,7 @@ namespace RemoteDebuggerLauncher
       /// <param name="message">The message to be displayed.</param>
       public static void ShowErrorMessageBox(IServiceProvider serviceProvider, string message)
       {
-         VsShellUtilities.ShowMessageBox(serviceProvider, message, Resources.RemoteCommandInstallDebuggerCommandCaption, OLEMSGICON.OLEMSGICON_CRITICAL, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+         _= VsShellUtilities.ShowMessageBox(serviceProvider, message, Resources.RemoteCommandInstallDebuggerCommandCaption, OLEMSGICON.OLEMSGICON_CRITICAL, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
       }
    }
 }
