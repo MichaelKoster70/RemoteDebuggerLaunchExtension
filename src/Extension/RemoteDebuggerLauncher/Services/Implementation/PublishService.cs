@@ -9,6 +9,7 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Threading;
 
 namespace RemoteDebuggerLauncher
@@ -22,7 +23,7 @@ namespace RemoteDebuggerLauncher
    {
       private readonly ConfiguredProject configuredProject;
       private readonly ILoggerService logger;
-      private readonly IStatusbarService statusbar;
+      private readonly IWaitDialogFactoryService waitDialogFactory;
 
       private bool published;
 
@@ -30,13 +31,14 @@ namespace RemoteDebuggerLauncher
       /// Initializes a new instance of the <see cref="PublishService" /> class.
       /// </summary>
       /// <param name="configuredProject">The configuration aggregator.</param>
-      /// <param name="session">The session to use.</param>
       /// <param name="logger">The logger service instance to use.</param>
-      internal PublishService(ConfiguredProject configuredProject, ILoggerService logger, IStatusbarService statusbar)
+      internal PublishService(ConfiguredProject configuredProject, ILoggerService logger, IWaitDialogFactoryService waitDialogFactory)
       {
+         ThreadHelper.ThrowIfNotOnUIThread();
+
          this.configuredProject = configuredProject ?? throw new ArgumentNullException(nameof(configuredProject));
          this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-         this.statusbar = statusbar;
+         this.waitDialogFactory = waitDialogFactory;
       }
 
       /// <inheritdoc />
@@ -44,49 +46,69 @@ namespace RemoteDebuggerLauncher
       {
          published = false;
 
-         var outputPath = await configuredProject.GetOutputDirectoryPathAsync().ConfigureAwait(true);
+         var outputPath = await configuredProject.GetOutputDirectoryPathAsync();
          var projectPath = configuredProject.UnconfiguredProject.FullPath;
          var publishPath = PathHelper.Combine(outputPath, PackageConstants.Publish.OutDir);
          var configuration = configuredProject.ProjectConfiguration.Dimensions["Configuration"];
 
-         statusbar?.SetText(Resources.PublishStart);
-         statusbar?.StartAnimation(StatusbarAnimation.Build);
+         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-         logger.WriteLine(Resources.PublishStart);
-
-         var startInfo = new ProcessStartInfo("dotnet.exe", $"publish {projectPath} --output {publishPath} -c {configuration} --no-build --no-self-contained")
+         using (var waitDialog = waitDialogFactory.Create(Resources.PublishWaitDialogCaption, Resources.PublishWaitDialogMessageStart, "", 1, Resources.PublishStart, StatusbarAnimation.Build))
          {
-            CreateNoWindow = true,
-            UseShellExecute = false,
-            RedirectStandardOutput= true,
-            RedirectStandardError = true,
-         };
-         using (var process = Process.Start(startInfo))
-         {
-            var stdOutput = await process.StandardOutput.ReadToEndAsync().ConfigureAwait(true);
-            var stdError = await process.StandardError.ReadToEndAsync().ConfigureAwait(true);
-            logger.WriteLine(stdOutput);
-            var exitCode = await process.WaitForExitAsync().ConfigureAwait(true);
+            logger.WriteLine(Resources.PublishStart);
 
-            if (exitCode > 0)
+            var startInfo = new ProcessStartInfo("dotnet.exe", $"publish {projectPath} --output {publishPath} -c {configuration} --no-build --no-self-contained")
             {
-               logger.WriteLine(stdError);
-               logger.WriteLine(Resources.PublishFailed, exitCode);
+               CreateNoWindow = true,
+               UseShellExecute = false,
+               RedirectStandardOutput = true,
+               RedirectStandardError = true,
+            };
 
-               throw new RemoteDebuggerLauncherException("publishing failed");
+            using (var process = Process.Start(startInfo))
+            {
+               async void OnDataReceived(object _, DataReceivedEventArgs e)
+               {
+                  var message = e.Data;
+
+                  await ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                  {
+                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                     if (!string.IsNullOrWhiteSpace(message))
+                     {
+                        waitDialog.Update(Resources.PublishWaitDialogMessageUpdate, message, null);
+                     }
+                     logger.WriteLine(message);
+                  });
+               }
+
+               process.OutputDataReceived += OnDataReceived;
+               process.BeginOutputReadLine();
+
+               var stdError = await process.StandardError.ReadToEndAsync();
+               var exitCode = await process.WaitForExitAsync();
+
+               process.OutputDataReceived -= OnDataReceived;
+
+               if (exitCode > 0)
+               {
+                  logger.WriteLine(stdError);
+                  logger.WriteLine(Resources.PublishFailed, exitCode);
+
+                  throw new RemoteDebuggerLauncherException("publishing failed");
+               }
+
+               published = true;
             }
-
-            published = true;
          }
 
-         statusbar?.Clear();
          logger.WriteLine(Resources.PublishSuccess);
       }
 
       /// <inheritdoc />
       public async Task<string> GetOutputDirectoryPathAsync()
       {
-         var outputPath = await configuredProject.GetOutputDirectoryPathAsync().ConfigureAwait(true);
+         var outputPath = await configuredProject.GetOutputDirectoryPathAsync();
 
          if (published)
          {

@@ -88,6 +88,20 @@
           <ButtonText>Clean remote target path</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidRemoteDebuggerLauncherPackageCmdSet" id="cmdidSetupSshCommand" priority="0x0103" type="Button">
+        <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidCommands" />
+        <Icon guid="guidImages" id="bmpSetupSsh" />
+        <Strings>
+          <ButtonText>Setup SSH</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidRemoteDebuggerLauncherPackageCmdSet" id="cmdidToolWindowCommand" priority="0x0100" type="Button">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
+        <Icon guid="guidImages" id="bmpToolWindow" />
+        <Strings>
+          <ButtonText>Remote Debugger</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
   
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -96,7 +110,7 @@
             the declaration starts with a guid for the bitmap strip, then there is the resource id of the
             bitmap strip containing the bitmaps and then there are the numeric ids of the elements used
             inside a button definition. An important aspect of this declaration is that the element id must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
-      <Bitmap guid="guidImages" href="Resources\Commands.png" usedList="bmpInstallDebugger, bmpInstallDotnet, bmpCleanOutput" />
+      <Bitmap guid="guidImages" href="Resources\Commands.png" usedList="bmpInstallDebugger, bmpInstallDotnet, bmpCleanOutput, bmpSetupSsh, bmpToolWindow" />
     </Bitmaps>
   </Commands>
 
@@ -116,12 +130,17 @@
       <IDSymbol name="cmdidInstallDebugger" value="0x0100" />
       <IDSymbol name="cmdidInstallDotnet" value="0x0101" />
       <IDSymbol name="cmdidCleanOutputCommand" value="0x0102" />
+      <IDSymbol name="cmdidSetupSshCommand" value="0x0103" />
+      <IDSymbol name="cmdidToolWindowCommand" value="0x1021" />
+      <IDSymbol value="4130" name="cmdidSetupSshCommand1" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{0b0c1900-6a3f-402f-a9b0-07ed947b34e9}">
       <IDSymbol name="bmpInstallDebugger" value="1" />
       <IDSymbol name="bmpInstallDotnet" value="2" />
       <IDSymbol name="bmpCleanOutput" value="3" />
-	</GuidSymbol>
+      <IDSymbol name="bmpSetupSsh" value="4" />
+      <IDSymbol name="bmpToolWindow" value="5" />
+    </GuidSymbol>
   </Symbols>
 </CommandTable>

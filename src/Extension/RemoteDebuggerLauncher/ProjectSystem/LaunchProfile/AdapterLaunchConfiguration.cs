@@ -97,7 +97,7 @@ namespace RemoteDebuggerLauncher
 
          var program = UnixPath.Combine(configurationAggregator.QueryDotNetInstallFolderPath(), PackageConstants.Dotnet.BinaryName);
          var appFolderPath = configurationAggregator.QueryAppFolderPath();
-         var assemblyFileName = await configuredProject.GetAssemblyFileNameAsync().ConfigureAwait(true);
+         var assemblyFileName = await configuredProject.GetAssemblyFileNameAsync();
          var assemblyFileDirectory = ".";
          var workingDirectory = appFolderPath;
 
@@ -106,7 +106,7 @@ namespace RemoteDebuggerLauncher
          var shouldNormalizeAppFolderPath = UnixPath.ShouldBeNormalized(appFolderPath);
          if (shouldNormalizeProgram || shouldNormalizeAppFolderPath)
          {
-            var homeDirectory = await remoteOperations.QueryUserHomeDirectoryAsync().ConfigureAwait(true);
+            var homeDirectory = await remoteOperations.QueryUserHomeDirectoryAsync();
             if (!string.IsNullOrEmpty(homeDirectory))
             {
                // we have a home directory
@@ -155,7 +155,7 @@ namespace RemoteDebuggerLauncher
 
          var program = UnixPath.Combine(configurationAggregator.QueryDotNetInstallFolderPath(), PackageConstants.Dotnet.BinaryName);
          var appFolderPath = configurationAggregator.QueryAppFolderPath();
-         var assemblyFileName = await configuredProject.GetAssemblyFileNameAsync().ConfigureAwait(true);
+         var assemblyFileName = await configuredProject.GetAssemblyFileNameAsync();
 
          var config = CreateAndSetAdapter(configurationAggregator);
          config.Name = ".NET Core Launch - Self contained";

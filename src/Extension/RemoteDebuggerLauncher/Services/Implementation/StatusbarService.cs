@@ -5,9 +5,7 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -21,7 +19,7 @@ namespace RemoteDebuggerLauncher
    internal class StatusbarService : SStatusbarService, IStatusbarService
    {
       private readonly IVsStatusbar statusbar;
-      private bool animationRunning;
+      private object animationRunning;
 
       /// <summary>
       /// Initializes a new instance of the <see cref="StatusbarService"/> class.
@@ -63,9 +61,8 @@ namespace RemoteDebuggerLauncher
       {
          ThreadHelper.ThrowIfNotOnUIThread();
 
-         animationRunning = true;
-         object comVariant = (short)animation;
-         statusbar.Animation(1, ref comVariant);
+         animationRunning = (short)animation;
+         _ = statusbar.Animation(1, ref animationRunning);
       }
 
       /// <inheritdoc />
@@ -73,11 +70,12 @@ namespace RemoteDebuggerLauncher
       {
          ThreadHelper.ThrowIfNotOnUIThread();
 
-         if (animationRunning)
+         if (animationRunning != null)
          {
-            object comVariant = (short)0;
-            statusbar.Animation(0, ref comVariant);
+            _ = statusbar.Animation(0, ref animationRunning);
          }
+
+         animationRunning = null;
       }
    }
 

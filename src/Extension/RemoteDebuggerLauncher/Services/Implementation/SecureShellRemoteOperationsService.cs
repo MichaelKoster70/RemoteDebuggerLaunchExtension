@@ -58,7 +58,7 @@ namespace RemoteDebuggerLauncher
             logger.Write(Resources.RemoteCommandCheckConnectionOutputPaneConnectingTo, session.Settings.UserName, session.Settings.HostName);
             statusbar?.SetText(Resources.RemoteCommandCheckConnectionStatusbarProgress, session.Settings.HostName);
 
-            await session.ExecuteSingleCommandAsync("hello echo").ConfigureAwait(true);
+            await session.ExecuteSingleCommandAsync("hello echo");
 
             logger.WriteLine(Resources.RemoteCommandCommonSuccess);
             statusbar?.SetText(Resources.RemoteCommandCheckConnectionStatusbarCompletedSuccess, session.Settings.HostName);
@@ -78,7 +78,7 @@ namespace RemoteDebuggerLauncher
          {
             logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
             logger.Write("Query User Home: ");
-            var result = (await session.ExecuteSingleCommandAsync("pwd").ConfigureAwait(true)).Trim('\n');
+            var result = (await session.ExecuteSingleCommandAsync("pwd")).Trim('\n');
             logger.WriteLine(result);
             return result;
          }
@@ -426,7 +426,7 @@ namespace RemoteDebuggerLauncher
       private async Task<string> DownloadDotnetAsync(string channel, string runtime = null)
       {
          // Get the CPU architecture to determine which runtime ID to use, ignoring MacOS and Alpine based Linux when determining the needed runtime ID.
-         string runtimeId = await GetRuntimeIdAsync().ConfigureAwait(true);
+         string runtimeId = await GetRuntimeIdAsync();
 
          var dotnetInstallPath = configurationAggregator.QueryDotNetInstallFolderPath();
          string installScript;
@@ -439,10 +439,10 @@ namespace RemoteDebuggerLauncher
          using (var httpClient = new HttpClient())
          {
 
-            using (var response = await httpClient.GetAsync(new Uri(PackageConstants.Dotnet.GetInstallDotnetPs1Url)).ConfigureAwait(true))
+            using (var response = await httpClient.GetAsync(new Uri(PackageConstants.Dotnet.GetInstallDotnetPs1Url)))
             {
                response.EnsureSuccessStatusCode();
-               installScript = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+               installScript = await response.Content.ReadAsStringAsync();
                logger.WriteLine(Resources.RemoteCommandCommonSuccess);
             }
 
@@ -489,13 +489,13 @@ namespace RemoteDebuggerLauncher
                logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
                logger.Write(Resources.RemoteCommandInstallDotnetOfflineOutputPaneDownloadingPayload, dotnetDownloadUrl);
 
-               using (var response = await httpClient.GetAsync(new Uri(dotnetDownloadUrl)).ConfigureAwait(true))
+               using (var response = await httpClient.GetAsync(new Uri(dotnetDownloadUrl)))
                {
                   response.EnsureSuccessStatusCode();
 
                   using (var stream = File.Create(filePath))
                   {
-                     await response.Content.CopyToAsync(stream).ConfigureAwait(true);
+                     await response.Content.CopyToAsync(stream);
                   }
 
                   logger.WriteLine(Resources.RemoteCommandCommonSuccess);
@@ -519,7 +519,7 @@ namespace RemoteDebuggerLauncher
             var dotnetInstallPath = configurationAggregator.QueryDotNetInstallFolderPath();
             var fileName = Path.GetFileName(filePath);
 
-            var userHome = (await commands.ExecuteCommandAsync("pwd").ConfigureAwait(true)).Trim('\n');
+            var userHome = (await commands.ExecuteCommandAsync("pwd")).Trim('\n');
 
             var targetPath = UnixPath.Combine(userHome, fileName);
             var installPath = UnixPath.Normalize(configurationAggregator.QueryDotNetInstallFolderPath(), userHome);
@@ -528,14 +528,14 @@ namespace RemoteDebuggerLauncher
             logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
             logger.Write(Resources.RemoteCommandInstallDotnetOfflineOutputPaneUploadingPayload, targetPath);
 
-            await session.UploadFileAsync(filePath, targetPath, logger).ConfigureAwait(true);
+            await session.UploadFileAsync(filePath, targetPath, logger);
 
             logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
             logger.Write(Resources.RemoteCommandInstallDotnetOfflineOutputPaneInstalling, fileName);
 
-            var response = await commands.ExecuteCommandAsync($"mkdir -p {installPath}").ConfigureAwait(true);
-            await commands.ExecuteCommandAsync($"tar zxf {targetPath} -C {installPath}").ConfigureAwait(true);
-            await commands.ExecuteCommandAsync($"rm -f {targetPath}").ConfigureAwait(true);
+            var response = await commands.ExecuteCommandAsync($"mkdir -p {installPath}");
+            await commands.ExecuteCommandAsync($"tar zxf {targetPath} -C {installPath}");
+            await commands.ExecuteCommandAsync($"rm -f {targetPath}");
 
             logger.WriteLine(Resources.RemoteCommandCommonSuccess);
          }
