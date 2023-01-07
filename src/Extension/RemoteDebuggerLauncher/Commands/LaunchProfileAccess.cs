@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Threading;
 using EnvDTE80;
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
@@ -21,7 +22,7 @@ namespace RemoteDebuggerLauncher
    internal class LaunchProfileAccess
    {
       private readonly DTE2 dte;
-      readonly IProjectService projectService;
+      private readonly IProjectService projectService;
 
       /// <summary>
       /// Initializes a new instance of the <see cref="LaunchProfileAccess"/> class.
@@ -49,7 +50,7 @@ namespace RemoteDebuggerLauncher
          }
 
          // get the configured startup projects
-         var startupProjects = await dte.GetSolutionStartupProjectsAsync().ConfigureAwait(true);
+         var startupProjects = await dte.GetSolutionStartupProjectsAsync();
          if (startupProjects.Count == 0)
          {
             // no launch profile, if we have no startup projects

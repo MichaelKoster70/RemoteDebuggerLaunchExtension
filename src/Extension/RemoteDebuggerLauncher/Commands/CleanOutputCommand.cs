@@ -9,7 +9,6 @@ using System;
 using System.ComponentModel.Design;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 
 namespace RemoteDebuggerLauncher
 {
@@ -39,7 +38,7 @@ namespace RemoteDebuggerLauncher
          commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
          var menuCommandID = new CommandID(PackageConstants.Commands.CommandSet, CommandId);
-         var menuItem = new MenuCommand(this.Execute, menuCommandID);
+         var menuItem = new MenuCommand(Execute, menuCommandID);
          commandService.AddCommand(menuItem);
       }
 
@@ -55,7 +54,7 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// Gets the service provider from the owner package.
       /// </summary>
-      private IAsyncServiceProvider ServiceProvider => this.package;
+      private IAsyncServiceProvider ServiceProvider => package;
 
       /// <summary>
       /// Initializes the singleton instance of the command.
@@ -66,7 +65,7 @@ namespace RemoteDebuggerLauncher
          // Switch to the main thread - the call to AddCommand in CleanOutputCommand's constructor requires the UI thread.
          await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
-         OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)).ConfigureAwait(true) as OleMenuCommandService;
+         OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
          Instance = new CleanOutputCommand(package, commandService);
       }
 
@@ -85,22 +84,22 @@ namespace RemoteDebuggerLauncher
 #pragma warning disable VSTHRD102 // Implement internal logic asynchronously
          package.JoinableTaskFactory.Run(async () =>
          {
-            var statusbarService = await ServiceProvider.GetStatusbarServiceAsync().ConfigureAwait(false);
+            var statusbarService = await ServiceProvider.GetStatusbarServiceAsync();
 
 #pragma warning disable CA1031 // Do not catch general exception types
             try
             {
                // get all services we need
-               var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync().ConfigureAwait(false);
-               var projectService = await ServiceProvider.GetProjectServiceAsync().ConfigureAwait(false);
-               var optionsPageAccessor = await ServiceProvider.GetOptionsPageServiceAsync().ConfigureAwait(false);
-               var loggerService = await ServiceProvider.GetLoggerServiceAsync().ConfigureAwait(false);
+               var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync();
+               var projectService = await ServiceProvider.GetProjectServiceAsync();
+               var optionsPageAccessor = await ServiceProvider.GetOptionsPageServiceAsync();
+               var loggerService = await ServiceProvider.GetLoggerServiceAsync();
 
                // do the remaining work on the UI thread
                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
                var lauchProfileAccess = new LaunchProfileAccess(dte, projectService);
-               var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync().ConfigureAwait(false);
+               var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync();
 
                loggerService.WriteLine(Resources.CommonStartSessionMarker);
 
@@ -110,7 +109,7 @@ namespace RemoteDebuggerLauncher
                   var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService);
                   remoteOperations.LogHost = true;
                   loggerService.WriteLine(Resources.RemoteCommandCommonProfile, profile.Name);
-                  await remoteOperations.CleanRemoteFolderAsync().ConfigureAwait(false);
+                  await remoteOperations.CleanRemoteFolderAsync();
                }
             }
             catch(Exception exception)

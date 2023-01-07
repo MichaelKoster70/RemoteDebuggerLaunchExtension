@@ -9,7 +9,6 @@ using System;
 using System.ComponentModel.Design;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Threading;
 
 namespace RemoteDebuggerLauncher
@@ -40,7 +39,7 @@ namespace RemoteDebuggerLauncher
          commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
          var menuCommandID = new CommandID(PackageConstants.Commands.CommandSet, CommandId);
-         var menuItem = new MenuCommand(this.Execute, menuCommandID);
+         var menuItem = new MenuCommand(Execute, menuCommandID);
          commandService.AddCommand(menuItem);
       }
 
@@ -67,7 +66,7 @@ namespace RemoteDebuggerLauncher
          // Switch to the main thread - the call to AddCommand in InstallDotnet's constructor requires the UI thread.
          await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
-         OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)).ConfigureAwait(true) as OleMenuCommandService;
+         OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
          Instance = new InstallDotnetCommand(package, commandService);
       }
 
@@ -102,22 +101,22 @@ namespace RemoteDebuggerLauncher
          {
             joinableTask = package.JoinableTaskFactory.RunAsync(async () =>
             {
-               var statusbarService = await ServiceProvider.GetStatusbarServiceAsync().ConfigureAwait(false);
+               var statusbarService = await ServiceProvider.GetStatusbarServiceAsync();
 
 #pragma warning disable CA1031 // Do not catch general exception types
                try
                {
                   // get all services we need
-                  var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync().ConfigureAwait(false);
-                  var projectService = await ServiceProvider.GetProjectServiceAsync().ConfigureAwait(false);
-                  var optionsPageAccessor = await ServiceProvider.GetOptionsPageServiceAsync().ConfigureAwait(false);
-                  var loggerService = await ServiceProvider.GetLoggerServiceAsync().ConfigureAwait(false);
+                  var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync();
+                  var projectService = await ServiceProvider.GetProjectServiceAsync();
+                  var optionsPageAccessor = await ServiceProvider.GetOptionsPageServiceAsync();
+                  var loggerService = await ServiceProvider.GetLoggerServiceAsync();
 
                   // do the remaining work on the UI thread
                   await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
                   var lauchProfileAccess = new LaunchProfileAccess(dte, projectService);
-                  var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync().ConfigureAwait(false);
+                  var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync();
 
                   statusbarService.SetText(Resources.RemoteCommandInstallDotnetCommandStatusbarText);
                   loggerService.WriteLine(Resources.CommonStartSessionMarker);
@@ -134,12 +133,12 @@ namespace RemoteDebuggerLauncher
                      bool success = viewModel.SelectedInstallationModeOnline;
                      if (success)
                      {
-                        success = await remoteOperations.TryInstallDotNetOnlineAsync(viewModel.SelectedInstallationKind, viewModel.SelectedVersion).ConfigureAwait(false);
+                        success = await remoteOperations.TryInstallDotNetOnlineAsync(viewModel.SelectedInstallationKind, viewModel.SelectedVersion);
                      }
 
                      if (!success)
                      {
-                        await remoteOperations.TryInstallDotNetOfflineAsync(viewModel.SelectedInstallationKind, viewModel.SelectedVersion).ConfigureAwait(false);
+                        await remoteOperations.TryInstallDotNetOfflineAsync(viewModel.SelectedInstallationKind, viewModel.SelectedVersion);
                      }
                   }
                }

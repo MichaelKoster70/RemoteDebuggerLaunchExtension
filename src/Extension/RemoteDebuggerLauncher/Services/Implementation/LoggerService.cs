@@ -102,15 +102,15 @@ namespace RemoteDebuggerLauncher
          if (result != VSConstants.S_OK)
          {
             result = outputWindow.CreatePane(ref guid, name, 1, 1);
-            ErrorHandler.ThrowOnFailure(result);
+            _ = ErrorHandler.ThrowOnFailure(result);
 
             result = outputWindow.GetPane(ref guid, out pane);
-            ErrorHandler.ThrowOnFailure(result);
+            _ = ErrorHandler.ThrowOnFailure(result);
          }
 
          if (activate)
          {
-            pane.Activate();
+            _ = pane.Activate();
          }
          return pane;
       }

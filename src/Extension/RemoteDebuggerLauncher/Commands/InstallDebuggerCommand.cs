@@ -42,7 +42,7 @@ namespace RemoteDebuggerLauncher
          commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
          var menuCommandID = new CommandID(PackageConstants.Commands.CommandSet, CommandId);
-         var menuItem = new MenuCommand(this.Execute, menuCommandID);
+         var menuItem = new MenuCommand(Execute, menuCommandID);
          commandService.AddCommand(menuItem);
       }
 
@@ -70,7 +70,7 @@ namespace RemoteDebuggerLauncher
          // the UI thread.
          await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
-         OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)).ConfigureAwait(true) as OleMenuCommandService;
+         OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
          Instance = new InstallDebuggerCommand(package, commandService);
       }
 
@@ -102,22 +102,22 @@ namespace RemoteDebuggerLauncher
          {
             joinableTask = package.JoinableTaskFactory.RunAsync(async () =>
             {
-               var statusbarService = await ServiceProvider.GetStatusbarServiceAsync().ConfigureAwait(false);
+               var statusbarService = await ServiceProvider.GetStatusbarServiceAsync();
 
 #pragma warning disable CA1031 // Do not catch general exception types
                try
                {
                   // get all services we need
-                  var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync().ConfigureAwait(false);
-                  var projectService = await ServiceProvider.GetProjectServiceAsync().ConfigureAwait(false);
-                  var optionsPageAccessor = await ServiceProvider.GetOptionsPageServiceAsync().ConfigureAwait(false);
-                  var loggerService = await ServiceProvider.GetLoggerServiceAsync().ConfigureAwait(false);
+                  var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync();
+                  var projectService = await ServiceProvider.GetProjectServiceAsync();
+                  var optionsPageAccessor = await ServiceProvider.GetOptionsPageServiceAsync();
+                  var loggerService = await ServiceProvider.GetLoggerServiceAsync();
 
                   // do the remaining work on the UI thread
                   await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
                   var lauchProfileAccess = new LaunchProfileAccess(dte, projectService);
-                  var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync().ConfigureAwait(false);
+                  var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync();
 
                   statusbarService.SetText(Resources.RemoteCommandInstallDebuggerCommandStatusbarProgress);
                   loggerService.WriteLine(Resources.CommonStartSessionMarker);
@@ -134,12 +134,12 @@ namespace RemoteDebuggerLauncher
                      var success = viewModel.SelectedInstallationModeOnline;
                      if (success)
                      {
-                        success = await remoteOperations.TryInstallVsDbgOnlineAsync(viewModel.SelectedVersion).ConfigureAwait(false);
+                        success = await remoteOperations.TryInstallVsDbgOnlineAsync(viewModel.SelectedVersion);
                      }
 
                      if (!success)
                      {
-                        await remoteOperations.TryInstallVsDbgOfflineAsync(viewModel.SelectedVersion).ConfigureAwait(false);
+                        await remoteOperations.TryInstallVsDbgOfflineAsync(viewModel.SelectedVersion);
                      }
                   }
                }
