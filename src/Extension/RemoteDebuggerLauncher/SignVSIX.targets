@@ -6,6 +6,7 @@
   </PropertyGroup>
   <Target Name="AfterBuild" DependsOnTargets="CoreCompile" Condition="Exists('$(SIGNING_CERT_FILE)')">
     <Message Text="Signing $(TargetVsixContainer)" Condition="'$(Configuration)' == 'Release'" />
+    <Exec Command="$(VsixSignCommand) $(MSBuildProjectDirectory)\$(TargetVsixContainer)" Condition="'$(Configuration)' == 'Release'" />
   </Target>
 </Project>
 

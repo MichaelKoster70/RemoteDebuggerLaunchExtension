@@ -23,7 +23,16 @@ on:
         type: string
         required: false
         default: 'RemoteDebuggerLauncherExtension.sln'
-
+    secrets:
+      SIGNING_CERT_PFX: 
+        description: The Base64 encoded PFX file
+        required: false
+      SIGNING_CERT_PASSWORD: 
+        description: The password for the PFX file
+        required: false
+      SIGNING_CERT_THUMBPRINT:
+        description: The cert footprint
+        required: false
 
 jobs:
   shared_build:
@@ -35,7 +44,6 @@ jobs:
       ExtensionManifestFile: ${{ github.workspace }}\src\Extension\RemoteDebuggerLauncher\source.extension.vsixmanifest
       ExtensionOutputPath: ${{ github.workspace }}\src\Extension\RemoteDebuggerLauncher\bin\${{ inputs.configuration }}
       ScriptPath: ${{ github.workspace }}\eng\scripts
-      SIGNING_TIMESTAMP_SERVER: 'http://timestamp.sectigo.com'
 
     steps:
     - name: Checkout
@@ -88,7 +96,7 @@ jobs:
       if:  ${{ inputs.store-artifacts && inputs.sign-vsix }}
       run: |
         $encodedBytes = "${{ secrets.SIGNING_CERT_PFX }}"
-        [convert]::FromBase64String($encodedByte) | Set-Content -Path ${{ runner.temp }}\cert.pfx -Encoding Byte
+        [convert]::FromBase64String($encodedBytes) | Set-Content -Path ${{ runner.temp }}\cert.pfx -Encoding Byte
       shell: powershell
 
     # Build Solution: Rebuild, and signs VSIX if cert file is present
@@ -98,6 +106,9 @@ jobs:
       shell: pwsh
       env:
         SIGNING_CERT_FILE: ${{ runner.temp }}\cert.pfx
+        SIGNING_CERT_PASSWORD: ${{ secrets.SIGNING_CERT_PASSWORD }}
+        SIGNING_CERT_THUMBPRINT: ${{ secrets.SIGNING_CERT_THUMBPRINT }}
+        SIGNING_TIMESTAMP_SERVER: 'http://timestamp.sectigo.com'
 
     - name: 'Build Solution: VSIX signing cleanup'
       if:  ${{ inputs.store-artifacts && inputs.sign-vsix }}

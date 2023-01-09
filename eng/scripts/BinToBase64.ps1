@@ -34,4 +34,4 @@ Param(
     [Parameter(Mandatory=$true)][string]$TargetFilePath
 )
 
-[convert]::ToBase64String((Get-Content -Path $SourceFilePath -Encoding byte)) | Set-Content -Path $TargetFilePath
+[convert]::ToBase64String((Get-Content -Path $SourceFilePath -Encoding Byte)) | Set-Content -Path $TargetFilePath
