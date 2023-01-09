@@ -13,7 +13,8 @@ namespace RemoteDebuggerLauncher
    /// <summary>
    /// Exception thrown when an unrecoverable error occured.
    /// </summary>
-   internal class RemoteDebuggerLauncherException : Exception
+   [Serializable]
+   public class RemoteDebuggerLauncherException : Exception
    {
       /// <summary>
       /// Initializes a new instance of the <see cref="RemoteDebuggerLauncherException"/> class.

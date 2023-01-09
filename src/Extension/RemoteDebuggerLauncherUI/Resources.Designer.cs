@@ -326,6 +326,33 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remote Debugger Launcher.
+        /// </summary>
+        public static string PublishWaitDialogCaption {
+            get {
+                return ResourceManager.GetString("PublishWaitDialogCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Publishing application ....
+        /// </summary>
+        public static string PublishWaitDialogMessageStart {
+            get {
+                return ResourceManager.GetString("PublishWaitDialogMessageStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Running dotnet publish ....
+        /// </summary>
+        public static string PublishWaitDialogMessageUpdate {
+            get {
+                return ResourceManager.GetString("PublishWaitDialogMessageUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connecting to {0}@{1} ... .
         /// </summary>
         public static string RemoteCommandCheckConnectionOutputPaneConnectingTo {
@@ -398,11 +425,20 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Processing profile {0}.
+        ///   Looks up a localized string similar to Processing profile &apos;{0}&apos;.
         /// </summary>
         public static string RemoteCommandCommonProfile {
             get {
                 return ResourceManager.GetString("RemoteCommandCommonProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processing {0} profile &apos;{1}&apos;.
+        /// </summary>
+        public static string RemoteCommandCommonProjectAndProfile {
+            get {
+                return ResourceManager.GetString("RemoteCommandCommonProjectAndProfile", resourceCulture);
             }
         }
         
@@ -736,6 +772,15 @@ namespace RemoteDebuggerLauncher {
         public static string RemoteCommandUploadOutputPaneProgress {
             get {
                 return ResourceManager.GetString("RemoteCommandUploadOutputPaneProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remote Debugger Launcher.
+        /// </summary>
+        public static string ToolWindowCaption {
+            get {
+                return ResourceManager.GetString("ToolWindowCaption", resourceCulture);
             }
         }
     }

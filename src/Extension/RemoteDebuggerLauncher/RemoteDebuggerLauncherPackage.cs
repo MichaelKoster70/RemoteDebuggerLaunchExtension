@@ -31,6 +31,8 @@ namespace RemoteDebuggerLauncher
    [ProvideService(typeof(SOptionsPageAccessor), IsAsyncQueryable = true)]
    [ProvideService(typeof(SLoggerService), IsAsyncQueryable = true)]
    [ProvideService(typeof(SStatusbarService), IsAsyncQueryable = true)]
+   [ProvideService(typeof(SWaitDialogFactoryService), IsAsyncQueryable = true)]
+   [ProvideService(typeof(SWaitDialogFactoryStubService), IsAsyncQueryable = true)]
    [InstalledProductRegistration("#110", "#112", Generated.AssemblyVersion.Version, IconResourceID = 400)]
    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
    [ProvideOptionPage(typeof(DeviceOptionsPage), PackageConstants.Options.Category, PackageConstants.Options.PageDevice, 0, 0, true)]
@@ -38,7 +40,8 @@ namespace RemoteDebuggerLauncher
    [ProvideProfile(typeof(DeviceOptionsPage), PackageConstants.Options.Category, PackageConstants.Settings.Name, 106, 107, isToolsOptionPage: true, DescriptionResourceID = 108)]
    [Guid(RemoteDebuggerLauncherPackage.PackageGuidString)]
    [ProvideMenuResource("Menus.ctmenu", 1)]
-   public sealed class RemoteDebuggerLauncherPackage : AsyncPackage //, IOleCommandTarget
+   [ProvideToolWindow(typeof(ToolWindow))]
+   public sealed class RemoteDebuggerLauncherPackage : AsyncPackage 
    {
       /// <summary>RemoteDebuggerLauncherPackage GUID string.</summary>
       public const string PackageGuidString = "624a755d-54e4-4069-84ec-e63cb53582f5";
@@ -53,20 +56,25 @@ namespace RemoteDebuggerLauncher
       /// <returns>A task representing the async work of package initialization, or an already completed task if there is none. Do not return null from this method.</returns>
       protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
       {
-         await base.InitializeAsync(cancellationToken, progress).ConfigureAwait(false);
+         await base.InitializeAsync(cancellationToken, progress);
 
          // Add services implemented in this package
          AddService(typeof(SOptionsPageAccessor), CreateServiceAsync, true);
          AddService(typeof(SLoggerService), CreateServiceAsync, true);
          AddService(typeof(SStatusbarService), CreateServiceAsync, true);
+         AddService(typeof(SWaitDialogFactoryService), CreateServiceAsync, true);
+         AddService(typeof(SWaitDialogFactoryStubService), CreateServiceAsync, true);
 
          // When initialized asynchronously, the current thread may be a background thread at this point.
          // Do any initialization that requires the UI thread after switching to the UI thread.
-         await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+         await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
-         await InstallDebuggerCommand.InitializeAsync(this).ConfigureAwait(true);
-         await InstallDotnetCommand.InitializeAsync(this).ConfigureAwait(true);
-         await CleanOutputCommand.InitializeAsync(this).ConfigureAwait(true);
+         await CleanOutputCommand.InitializeAsync(this);
+         await DeployOutputCommand.InitializeAsync(this);
+         await InstallDebuggerCommand.InitializeAsync(this);
+         await InstallDotnetCommand.InitializeAsync(this);
+         await SetupSshCommand.InitializeAsync(this);
+         await OpenToolWindowCommand.InitializeAsync(this);
       }
       #endregion
 
@@ -90,6 +98,14 @@ namespace RemoteDebuggerLauncher
          else if (typeof(SStatusbarService) == serviceType)
          {
             return Task.FromResult<object>(new StatusbarService());
+         }
+         else if (typeof(SWaitDialogFactoryService) == serviceType)
+         {
+            return Task.FromResult<object>(new WaitDialogFactoryService());
+         }
+         else if (typeof(SWaitDialogFactoryStubService) == serviceType)
+         {
+            return Task.FromResult<object>(new WaitDialogFactoryStubService());
          }
 
          return Task.FromResult<object>(null);

@@ -5,9 +5,11 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Threading;
 using EnvDTE80;
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
@@ -20,7 +22,7 @@ namespace RemoteDebuggerLauncher
    internal class LaunchProfileAccess
    {
       private readonly DTE2 dte;
-      readonly IProjectService projectService;
+      private readonly IProjectService projectService;
 
       /// <summary>
       /// Initializes a new instance of the <see cref="LaunchProfileAccess"/> class.
@@ -48,7 +50,7 @@ namespace RemoteDebuggerLauncher
          }
 
          // get the configured startup projects
-         var startupProjects = await dte.GetSolutionStartupProjectsAsync().ConfigureAwait(true);
+         var startupProjects = await dte.GetSolutionStartupProjectsAsync();
          if (startupProjects.Count == 0)
          {
             // no launch profile, if we have no startup projects
@@ -56,7 +58,7 @@ namespace RemoteDebuggerLauncher
          }
 
          // Get the collection of startup projects
-         var unconfiguredProjects = projectService.LoadedUnconfiguredProjects.Where(u => startupProjects.Where(s => u.FullPath.EndsWith(s)).Count() > 0).ToList();
+         var unconfiguredProjects = projectService.LoadedUnconfiguredProjects.Where(u => startupProjects.Any(s => u.FullPath.EndsWith(s))).ToList();
          if (unconfiguredProjects.Count == 0)
          {
             return activeLaunchProfiles;
@@ -70,9 +72,54 @@ namespace RemoteDebuggerLauncher
             if (launchSettingsProvider != null)
             {
                var activeProfile = launchSettingsProvider.ActiveProfile;
-               if (activeProfile.CommandName.Equals(PackageConstants.LaunchProfile.CommandName))
+               if (activeProfile.CommandName.Equals(PackageConstants.LaunchProfile.CommandName, StringComparison.Ordinal))
                {
                   activeLaunchProfiles.Add(launchSettingsProvider.ActiveProfile);
+               }
+            }
+         }
+
+         return activeLaunchProfiles;
+      }
+
+
+      public async Task<IList<(ILaunchProfile LaunchProfile, ConfiguredProject ConfiguredProject)>> GetActiveLaunchProfilseWithProjectAsync()
+      {
+         var activeLaunchProfiles = new List<(ILaunchProfile LaunchProfile, ConfiguredProject ConfiguredProject)>();
+
+         // the CPS service must be available for this to succeed
+         if (projectService == null)
+         {
+            return activeLaunchProfiles;
+         }
+
+         // get the configured startup projects
+         var startupProjects = await dte.GetSolutionStartupProjectsAsync();
+         if (startupProjects.Count == 0)
+         {
+            // no launch profile, if we have no startup projects
+            return activeLaunchProfiles;
+         }
+
+         // Get the collection of startup projects
+         var unconfiguredProjects = projectService.LoadedUnconfiguredProjects.Where(u => startupProjects.Any(s => u.FullPath.EndsWith(s))).ToList();
+         if (unconfiguredProjects.Count == 0)
+         {
+            return activeLaunchProfiles;
+         }
+
+         // we have at least one startup project
+         foreach (var unconfiguredProject in unconfiguredProjects)
+         {
+            //Get the launch settings provider, if available
+            var launchSettingsProvider = unconfiguredProject.Services.ExportProvider.GetService<ILaunchSettingsProvider>(true);
+            if (launchSettingsProvider != null)
+            {
+               var activeProfile = launchSettingsProvider.ActiveProfile;
+               if (activeProfile.CommandName.Equals(PackageConstants.LaunchProfile.CommandName, StringComparison.Ordinal))
+               {
+                  var confiuredProject = unconfiguredProject.LoadedConfiguredProjects.First();
+                  activeLaunchProfiles.Add((launchSettingsProvider.ActiveProfile, confiuredProject));
                }
             }
          }

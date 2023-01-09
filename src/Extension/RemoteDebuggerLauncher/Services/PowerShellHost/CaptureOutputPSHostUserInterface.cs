@@ -151,7 +151,7 @@ namespace RemoteDebuggerLauncher.PowerShellHost
       /// <param name="value">The characters to be written.</param>
       public override void Write(string value)
       {
-         outputText.Append(value);
+         _ = outputText.Append(value);
       }
 
       /// <summary>
@@ -163,7 +163,7 @@ namespace RemoteDebuggerLauncher.PowerShellHost
       /// <param name="value">The characters to be written.</param>
       public override void Write(ConsoleColor foregroundColor, ConsoleColor backgroundColor, string value)
       {
-         outputText.Append(value);
+         _ = outputText.Append(value);
       }
 
       /// <summary>
@@ -172,7 +172,7 @@ namespace RemoteDebuggerLauncher.PowerShellHost
       /// <param name="message">The debug message that is displayed.</param>
       public override void WriteDebugLine(string message)
       {
-         debugText.AppendLine(message);
+         _ = debugText.AppendLine(message);
       }
 
       /// <summary>
@@ -181,7 +181,7 @@ namespace RemoteDebuggerLauncher.PowerShellHost
       /// <param name="value">The error message that is displayed.</param>
       public override void WriteErrorLine(string value)
       {
-         errorText.AppendLine(value);
+         _ = errorText.AppendLine(value);
       }
 
       /// <summary>
@@ -190,7 +190,7 @@ namespace RemoteDebuggerLauncher.PowerShellHost
       /// <param name="value">The line to be written.</param>
       public override void WriteLine(string value)
       {
-         outputText.AppendLine(value);
+         _ = outputText.AppendLine(value);
       }
 
       /// <summary>
@@ -201,7 +201,7 @@ namespace RemoteDebuggerLauncher.PowerShellHost
       /// <param name="value">The line to be written.</param>
       public override void WriteLine(ConsoleColor foregroundColor, ConsoleColor backgroundColor, string value)
       {
-         outputText.AppendLine(value);
+         _ = outputText.AppendLine(value);
       }
 
       /// <summary>
@@ -220,7 +220,7 @@ namespace RemoteDebuggerLauncher.PowerShellHost
       /// <param name="message">The verbose message that is displayed.</param>
       public override void WriteVerboseLine(string message)
       {
-         verboseText.AppendLine(message);
+         _ = verboseText.AppendLine(message);
       }
 
       /// <summary>
@@ -229,18 +229,18 @@ namespace RemoteDebuggerLauncher.PowerShellHost
       /// <param name="message">The warning message that is displayed.</param>
       public override void WriteWarningLine(string message)
       {
-         warningText.AppendLine(message);
+         _ = warningText.AppendLine(message);
       }
       #endregion
 
       #region OutputCapturePSHostUserInterface Methods
       public void Reset()
       {
-         outputText.Clear();
-         errorText.Clear();
-         warningText.Clear();
-         verboseText.Clear();
-         debugText.Clear();
+         _ = outputText.Clear();
+         _ = errorText.Clear();
+         _ = warningText.Clear();
+         _ = verboseText.Clear();
+         _ = debugText.Clear();
          outputLines = null;
       }
       #endregion

@@ -17,6 +17,11 @@ jobs:
     uses: ./.github/workflows/shared-build.yml
     with:
       store-artifacts: true
+      sign-vsix: true
+    secrets:
+      SIGNING_CERT_PFX: ${{ secrets.SIGNING_CERT_PFX }}
+      SIGNING_CERT_PASSWORD: ${{ secrets.SIGNING_CERT_PASSWORD }}
+      SIGNING_CERT_THUMBPRINT: ${{ secrets.SIGNING_CERT_THUMBPRINT }}
 
   github-release:
     name: GitHub Release

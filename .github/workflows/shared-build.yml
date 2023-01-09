@@ -8,6 +8,11 @@ on:
         type: boolean
         required: true
         default: false
+      sign-vsix:
+        description: 'Flag whether to sign the VSIX file'
+        type: boolean
+        required: false
+        default: false
       configuration:
         description: 'The Visual Studio Configuration to build'
         type: string
@@ -30,6 +35,7 @@ jobs:
       ExtensionManifestFile: ${{ github.workspace }}\src\Extension\RemoteDebuggerLauncher\source.extension.vsixmanifest
       ExtensionOutputPath: ${{ github.workspace }}\src\Extension\RemoteDebuggerLauncher\bin\${{ inputs.configuration }}
       ScriptPath: ${{ github.workspace }}\eng\scripts
+      SIGNING_TIMESTAMP_SERVER: 'http://timestamp.sectigo.com'
 
     steps:
     - name: Checkout
@@ -77,10 +83,26 @@ jobs:
       run: msbuild ${{ inputs.solution-path }} /t:Restore /p:Configuration=${{ inputs.configuration }}
       shell: pwsh
 
-    # Build Solution: Rebuild
+    # Build Solution: creates PFX file from BASe64 secret if signing is enabled
+    - name: 'Build Solution: prepare VSIX signing'
+      if:  ${{ inputs.store-artifacts && inputs.sign-vsix }}
+      run: |
+        $encodedBytes = "${{ secrets.SIGNING_CERT_PFX }}"
+        [convert]::FromBase64String($encodedByte) | Set-Content -Path ${{ runner.temp }}\cert.pfx -Encoding Byte
+      shell: powershell
+
+    # Build Solution: Rebuild, and signs VSIX if cert file is present
     - name: 'Build Solution: Rebuild'
       id: build
       run: msbuild ${{ inputs.solution-path }} /t:Rebuild /p:Configuration=${{ inputs.configuration }}
+      shell: pwsh
+      env:
+        SIGNING_CERT_FILE: ${{ runner.temp }}\cert.pfx
+
+    - name: 'Build Solution: VSIX signing cleanup'
+      if:  ${{ inputs.store-artifacts && inputs.sign-vsix }}
+      run: |
+        Remove-Item -Path ${{ runner.temp }}\cert.pfx -ErrorAction Continue
       shell: pwsh
 
     - name: 'Store Artifacts: VSIX'

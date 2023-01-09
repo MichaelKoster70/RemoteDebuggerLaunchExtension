@@ -58,7 +58,7 @@ namespace RemoteDebuggerLauncher
             logger.Write(Resources.RemoteCommandCheckConnectionOutputPaneConnectingTo, session.Settings.UserName, session.Settings.HostName);
             statusbar?.SetText(Resources.RemoteCommandCheckConnectionStatusbarProgress, session.Settings.HostName);
 
-            await session.ExecuteSingleCommandAsync("hello echo").ConfigureAwait(true);
+            _ = await session.ExecuteSingleCommandAsync("hello echo");
 
             logger.WriteLine(Resources.RemoteCommandCommonSuccess);
             statusbar?.SetText(Resources.RemoteCommandCheckConnectionStatusbarCompletedSuccess, session.Settings.HostName);
@@ -78,7 +78,7 @@ namespace RemoteDebuggerLauncher
          {
             logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
             logger.Write("Query User Home: ");
-            var result = (await session.ExecuteSingleCommandAsync("pwd").ConfigureAwait(true)).Trim('\n');
+            var result = (await session.ExecuteSingleCommandAsync("pwd")).Trim('\n');
             logger.WriteLine(result);
             return result;
          }
@@ -103,7 +103,7 @@ namespace RemoteDebuggerLauncher
 
                var debuggerInstallPath = configurationAggregator.QueryDebuggerInstallFolderPath();
                var command = $"curl -sSL {PackageConstants.Debugger.GetVsDbgShUrl} | sh /dev/stdin -u -v {version} -l {debuggerInstallPath}";
-               var result = await commands.ExecuteCommandAsync(command).ConfigureAwait(true);
+               var result = await commands.ExecuteCommandAsync(command);
                logger.Write(result);
             }
          }
@@ -126,7 +126,7 @@ namespace RemoteDebuggerLauncher
             statusbar?.SetText(Resources.RemoteCommandInstallDebuggerOfflineCommonProgress);
 
             // Get the CPU architecture to determine which runtime ID to use, ignoring MacOS and Alpine based Linux when determining the needed runtime ID.
-            string runtimeId = await GetRuntimeIdAsync().ConfigureAwait(true);
+            string runtimeId = await GetRuntimeIdAsync();
 
             // get the download cache folder
             var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -137,13 +137,13 @@ namespace RemoteDebuggerLauncher
             // Download the PS1 script to install the debugger
             using (var httpClient = new HttpClient())
             {
-               var response = await httpClient.GetAsync(PackageConstants.Debugger.GetVsDbgPs1Url).ConfigureAwait(true);
-               response.EnsureSuccessStatusCode();
-               var installScript = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+               var response = (await httpClient.GetAsync(new Uri(PackageConstants.Debugger.GetVsDbgPs1Url)))
+                  .EnsureSuccessStatusCode();
+               var installScript = await response.Content.ReadAsStringAsync();
 
                using (var psHost = PowerShell.Create())
                {
-                  psHost.AddScript(installScript)
+                  _= psHost.AddScript(installScript)
                      .AddParameter("Version", version)
                      .AddParameter("RuntimeID", runtimeId)
                      .AddParameter("InstallPath", downloadCachePath);
@@ -158,16 +158,16 @@ namespace RemoteDebuggerLauncher
             using (var commandSession = session.CreateCommandSession())
             {
                // remove all files in the target folder, in case the debugger was installed before
-               await commandSession.ExecuteCommandAsync($"[ -d {debuggerInstallPath} ] | rm -rf {debuggerInstallPath}/*").ConfigureAwait(true);
+               _= await commandSession.ExecuteCommandAsync($"[ -d {debuggerInstallPath} ] | rm -rf {debuggerInstallPath}/*");
 
                // create the directory if it does not jet exist
-               await commandSession.ExecuteCommandAsync($"mkdir -p {debuggerInstallPath}").ConfigureAwait(true);
+               _ = await commandSession.ExecuteCommandAsync($"mkdir -p {debuggerInstallPath}");
 
                // upload the files
-               await session.UploadFolderRecursiveAsync(downloadCachePath, debuggerInstallPath).ConfigureAwait(true);
+               await session.UploadFolderRecursiveAsync(downloadCachePath, debuggerInstallPath);
 
                // adjust permissions
-               await commandSession.ExecuteCommandAsync($"chmod +x {debuggerInstallPath}/{PackageConstants.Debugger.BinaryName}").ConfigureAwait(true);
+               _= await commandSession.ExecuteCommandAsync($"chmod +x {debuggerInstallPath}/{PackageConstants.Debugger.BinaryName}");
             }
 
             // installation completed successfully
@@ -198,8 +198,8 @@ namespace RemoteDebuggerLauncher
          {
             using (var commandSession = session.CreateCommandSession())
             {
-               await commandSession.ExecuteCommandAsync($"[ -d {targetPath} ] | rm -rf {targetPath}/*").ConfigureAwait(true);
-               await commandSession.ExecuteCommandAsync($"mkdir -p {targetPath}").ConfigureAwait(true);
+               _ = await commandSession.ExecuteCommandAsync($"[ -d {targetPath} ] | rm -rf {targetPath}/*").ConfigureAwait(true);
+               _ = await commandSession.ExecuteCommandAsync($"mkdir -p {targetPath}").ConfigureAwait(true);
             }
          }
 
@@ -224,8 +224,8 @@ namespace RemoteDebuggerLauncher
 
             using (var commandSession = session.CreateCommandSession())
             {
-               await commandSession.ExecuteCommandAsync($"[ -d {targetPath} ] | rm -rf {targetPath}/*").ConfigureAwait(true);
-               await commandSession.ExecuteCommandAsync($"mkdir -p {targetPath}").ConfigureAwait(true);
+               _ = await commandSession.ExecuteCommandAsync($"[ -d {targetPath} ] | rm -rf {targetPath}/*").ConfigureAwait(true);
+               _ = await commandSession.ExecuteCommandAsync($"mkdir -p {targetPath}").ConfigureAwait(true);
             }
 
             logger.WriteLine(Resources.RemoteCommandCleanRemoteFolderCompletedSuccess);
@@ -417,7 +417,7 @@ namespace RemoteDebuggerLauncher
 
          if (!Directory.Exists(directoryPath))
          {
-            Directory.CreateDirectory(directoryPath);
+            _ = Directory.CreateDirectory(directoryPath);
          }
 
          return targetPath;
@@ -426,7 +426,7 @@ namespace RemoteDebuggerLauncher
       private async Task<string> DownloadDotnetAsync(string channel, string runtime = null)
       {
          // Get the CPU architecture to determine which runtime ID to use, ignoring MacOS and Alpine based Linux when determining the needed runtime ID.
-         string runtimeId = await GetRuntimeIdAsync().ConfigureAwait(true);
+         string runtimeId = await GetRuntimeIdAsync();
 
          var dotnetInstallPath = configurationAggregator.QueryDotNetInstallFolderPath();
          string installScript;
@@ -438,16 +438,17 @@ namespace RemoteDebuggerLauncher
          // Download the PS1 script to install .NET
          using (var httpClient = new HttpClient())
          {
-            using (var response = await httpClient.GetAsync(PackageConstants.Dotnet.GetInstallDotnetPs1Url).ConfigureAwait(true))
+
+            using (var response = await httpClient.GetAsync(new Uri(PackageConstants.Dotnet.GetInstallDotnetPs1Url)))
             {
-               response.EnsureSuccessStatusCode();
-               installScript = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+               _ = response.EnsureSuccessStatusCode();
+               installScript = await response.Content.ReadAsStringAsync();
                logger.WriteLine(Resources.RemoteCommandCommonSuccess);
             }
 
             // Create the runspace so that you can access the pipeline.
             var host = new CaptureOutputPSHost();
-
+             
             using (var runSpace = RunspaceFactory.CreateRunspace(host))
             {
                runSpace.Open();
@@ -457,7 +458,7 @@ namespace RemoteDebuggerLauncher
                {
                   var command = new Command(installScript, true);
                   command.Parameters.Add("-Channel", channel);
-                  if (!String.IsNullOrEmpty(runtime))
+                  if (!string.IsNullOrEmpty(runtime))
                   {
                      command.Parameters.Add("-Runtime", runtime);
                   }
@@ -468,14 +469,14 @@ namespace RemoteDebuggerLauncher
                   pipe.Commands.Add("out-default");
                   pipe.Commands[0].MergeMyResults(PipelineResultTypes.Error, PipelineResultTypes.Output);
 
-                  pipe.Invoke();
+                  _ = pipe.Invoke();
                }
             }
 
             // parse the download URL from the script output
             if (host.HasError)
             {
-               throw new SecureShellSessionException(String.Format(Resources.RemoteCommandInstallDotnetScriptExecutionFailed, host.ErrorText));
+               throw new SecureShellSessionException(string.Format(Resources.RemoteCommandInstallDotnetScriptExecutionFailed, host.ErrorText));
             }
 
             dotnetDownloadUrl = host.OutputLines.FirstOrDefault(l => l.Contains("URL #0")).Split(' ').LastOrDefault()?.Trim();
@@ -488,13 +489,13 @@ namespace RemoteDebuggerLauncher
                logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
                logger.Write(Resources.RemoteCommandInstallDotnetOfflineOutputPaneDownloadingPayload, dotnetDownloadUrl);
 
-               using (var response = await httpClient.GetAsync(dotnetDownloadUrl).ConfigureAwait(true))
+               using (var response = await httpClient.GetAsync(new Uri(dotnetDownloadUrl)))
                {
-                  response.EnsureSuccessStatusCode();
+                  _= response.EnsureSuccessStatusCode();
 
                   using (var stream = File.Create(filePath))
                   {
-                     await response.Content.CopyToAsync(stream).ConfigureAwait(true);
+                     await response.Content.CopyToAsync(stream);
                   }
 
                   logger.WriteLine(Resources.RemoteCommandCommonSuccess);
@@ -518,7 +519,7 @@ namespace RemoteDebuggerLauncher
             var dotnetInstallPath = configurationAggregator.QueryDotNetInstallFolderPath();
             var fileName = Path.GetFileName(filePath);
 
-            var userHome = (await commands.ExecuteCommandAsync("pwd").ConfigureAwait(true)).Trim('\n');
+            var userHome = (await commands.ExecuteCommandAsync("pwd")).Trim('\n');
 
             var targetPath = UnixPath.Combine(userHome, fileName);
             var installPath = UnixPath.Normalize(configurationAggregator.QueryDotNetInstallFolderPath(), userHome);
@@ -527,14 +528,14 @@ namespace RemoteDebuggerLauncher
             logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
             logger.Write(Resources.RemoteCommandInstallDotnetOfflineOutputPaneUploadingPayload, targetPath);
 
-            await session.UploadFileAsync(filePath, targetPath, logger).ConfigureAwait(true);
+            await session.UploadFileAsync(filePath, targetPath, logger);
 
             logger.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
             logger.Write(Resources.RemoteCommandInstallDotnetOfflineOutputPaneInstalling, fileName);
 
-            var response = await commands.ExecuteCommandAsync($"mkdir -p {installPath}").ConfigureAwait(true);
-            await commands.ExecuteCommandAsync($"tar zxf {targetPath} -C {installPath}").ConfigureAwait(true);
-            await commands.ExecuteCommandAsync($"rm -f {targetPath}").ConfigureAwait(true);
+            var response = await commands.ExecuteCommandAsync($"mkdir -p {installPath}");
+            _ = await commands.ExecuteCommandAsync($"tar zxf {targetPath} -C {installPath}");
+            _ = await commands.ExecuteCommandAsync($"rm -f {targetPath}");
 
             logger.WriteLine(Resources.RemoteCommandCommonSuccess);
          }

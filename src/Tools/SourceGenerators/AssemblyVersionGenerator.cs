@@ -23,7 +23,7 @@ namespace Tools.SourceGenerators
       /// <param name="context">The <see cref="GeneratorExecutionContext" /> to add source to.</param>
       public void Execute(GeneratorExecutionContext context)
       {
-         context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.RootNamespace", out var rootNamespace);
+         _ = context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.RootNamespace", out var rootNamespace);
          context.AddSource("AssemblyVersion.g.cs", $@"
 namespace {rootNamespace}.Generated
 {{

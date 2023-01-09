@@ -18,7 +18,7 @@ namespace RemoteDebuggerLauncher.Extensions
    {
       public static void OutputStringNoPump(this IVsOutputWindowPane pane, string pszOutputString)
       {
-         Requires.NotNull(pane, nameof(pane));
+         ThrowIf.ArgumentNull(pane, nameof(pane));
 
          ThreadHelper.ThrowIfNotOnUIThread();
 

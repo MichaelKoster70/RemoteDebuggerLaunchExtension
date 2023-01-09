@@ -8,31 +8,33 @@
 using System;
 using System.ComponentModel.Design;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.ProjectSystem;
+using Microsoft.VisualStudio.ProjectSystem.Debug;
 using Microsoft.VisualStudio.Shell;
 
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// Command Handler to clean the deployed binaries from the remote device.
+   /// Command Handler to deploy the binaries from the remote device.
    /// </summary>
    /// <remarks>
    /// The remote path to clean is read from the launch settings in all startup projects (launchsettings.json)
    /// </remarks>
-   internal sealed class CleanOutputCommand
+   internal sealed class DeployOutputCommand
    {
       /// <summary>Command ID.</summary>
-      public const int CommandId = 0x0101;
+      public const int CommandId = 0x0100;
 
       /// <summary>VS Package that provides this command, not null.</summary>
       private readonly AsyncPackage package;
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="CleanOutputCommand"/> class.
+      /// Initializes a new instance of the <see cref="DeployOutputCommand"/> class.
       /// Adds our command handlers for menu (commands must exist in the command table file)
       /// </summary>
       /// <param name="package">Owner package, not null.</param>
       /// <param name="commandService">Command service to add command to, not null.</param>
-      private CleanOutputCommand(AsyncPackage package, OleMenuCommandService commandService)
+      private DeployOutputCommand(AsyncPackage package, OleMenuCommandService commandService)
       {
          this.package = package ?? throw new ArgumentNullException(nameof(package));
          commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
@@ -45,7 +47,7 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// Gets the instance of the command.
       /// </summary>
-      public static CleanOutputCommand Instance
+      public static DeployOutputCommand Instance
       {
          get;
          private set;
@@ -66,7 +68,7 @@ namespace RemoteDebuggerLauncher
          await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
          OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
-         Instance = new CleanOutputCommand(package, commandService);
+         Instance = new DeployOutputCommand(package, commandService);
       }
 
       /// <summary>
@@ -84,50 +86,49 @@ namespace RemoteDebuggerLauncher
 #pragma warning disable VSTHRD102 // Implement internal logic asynchronously
          package.JoinableTaskFactory.Run(async () =>
          {
+            var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync();
+            var projectService = await ServiceProvider.GetProjectServiceAsync();
+            var optionsPageAccessor = await ServiceProvider.GetOptionsPageServiceAsync();
+            var loggerService = await ServiceProvider.GetLoggerServiceAsync();
             var statusbarService = await ServiceProvider.GetStatusbarServiceAsync();
+            var waitDialogFactory = await ServiceProvider.GetWaitDialogFactoryAsync(true);
 
-#pragma warning disable CA1031 // Do not catch general exception types
-            try
+            // do the remaining work on the UI thread
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            var lauchProfileAccess = new LaunchProfileAccess(dte, projectService);
+            var profiles = await lauchProfileAccess.GetActiveLaunchProfilseWithProjectAsync();
+
+            loggerService.WriteLine(Resources.CommonStartSessionMarker);
+
+            foreach (var profile in profiles)
             {
-               // get all services we need
-               var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync();
-               var projectService = await ServiceProvider.GetProjectServiceAsync();
-               var optionsPageAccessor = await ServiceProvider.GetOptionsPageServiceAsync();
-               var loggerService = await ServiceProvider.GetLoggerServiceAsync();
+               var tokenReplacer = profile.ConfiguredProject.UnconfiguredProject.GetDebugTokenReplacerService();
 
-               // do the remaining work on the UI thread
-               await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+               // get environment variables and msbuild properties resolved
+               var resolvedProfile = await tokenReplacer.ReplaceTokensInProfileAsync(profile.LaunchProfile);
 
-               var lauchProfileAccess = new LaunchProfileAccess(dte, projectService);
-               var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync();
+               var configurationAggregator = ConfigurationAggregator.Create(profile.LaunchProfile, optionsPageAccessor);
+               var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService);
+               var publishService = Publish.Create(profile.ConfiguredProject, loggerService, waitDialogFactory);
 
-               loggerService.WriteLine(Resources.CommonStartSessionMarker);
+               remoteOperations.LogHost = true;
+               loggerService.WriteLine(Resources.RemoteCommandCommonProjectAndProfile, profile.ConfiguredProject.GetName(), profile.LaunchProfile.Name);
 
-               foreach (var profile in profiles)
+               // Step 1: try to connect to the device
+               await remoteOperations.CheckConnectionThrowAsync();
+
+               // Step 2:publish the project if requested
+               if (configurationAggregator.QueryPublishOnDeploy())
                {
-                  var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
-                  var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService);
-                  remoteOperations.LogHost = true;
-                  loggerService.WriteLine(Resources.RemoteCommandCommonProfile, profile.Name);
-
-                  // Step 1: try to connect to the device
-                  await remoteOperations.CheckConnectionThrowAsync();
-
-                  // Step 2: clean the remote folder
-                  await remoteOperations.CleanRemoteFolderAsync();
+                  await publishService.StartAsync();
                }
+
+               //// Step 3: Deploy application to target folder
+               var outputPath = await publishService.GetOutputDirectoryPathAsync();
+               await remoteOperations.DeployRemoteFolderAsync(outputPath, true);
             }
-            catch(Exception exception)
-            {
-               ShellUtilities.ShowErrorMessageBox(package, exception.Message);
-            }
-            finally
-            {
-               statusbarService.Clear();
-            }
-#pragma warning restore CA1031 // Do not catch general exception types
          });
-#pragma warning restore VSTHRD102 // Implement internal logic asynchronously
       }
    }
 }

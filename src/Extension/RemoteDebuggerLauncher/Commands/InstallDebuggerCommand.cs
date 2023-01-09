@@ -22,7 +22,7 @@ namespace RemoteDebuggerLauncher
    internal sealed class InstallDebuggerCommand
    {
       /// <summary>Command ID.</summary>
-      public const int CommandId = 0x0100;
+      public const int CommandId = 0x0102;
 
       /// <summary>Package that provides this command, not null.</summary>
       private readonly AsyncPackage package;
@@ -42,7 +42,7 @@ namespace RemoteDebuggerLauncher
          commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
          var menuCommandID = new CommandID(PackageConstants.Commands.CommandSet, CommandId);
-         var menuItem = new MenuCommand(this.Execute, menuCommandID);
+         var menuItem = new MenuCommand(Execute, menuCommandID);
          commandService.AddCommand(menuItem);
       }
 
@@ -104,11 +104,12 @@ namespace RemoteDebuggerLauncher
             {
                var statusbarService = await ServiceProvider.GetStatusbarServiceAsync();
 
+#pragma warning disable CA1031 // Do not catch general exception types
                try
                {
                   // get all services we need
-                  var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync().ConfigureAwait(false);
-                  var projectService = await ServiceProvider.GetProjectServiceAsync().ConfigureAwait(false);
+                  var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync();
+                  var projectService = await ServiceProvider.GetProjectServiceAsync();
                   var optionsPageAccessor = await ServiceProvider.GetOptionsPageServiceAsync();
                   var loggerService = await ServiceProvider.GetLoggerServiceAsync();
 
@@ -151,6 +152,7 @@ namespace RemoteDebuggerLauncher
                   statusbarService.Clear();
                   joinableTask = null;
                }
+#pragma warning restore CA1031 // Do not catch general exception types
             });
          } 
       }

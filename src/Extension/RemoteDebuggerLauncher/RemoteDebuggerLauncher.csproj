@@ -53,7 +53,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\Extension.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -62,21 +61,27 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\Extension.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Commands\DeployOutputCommand.cs" />
     <Compile Include="Commands\LaunchProfileAccess.cs" />
     <Compile Include="Commands\CleanOutputCommand.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="ProjectSystem\Extensions\ProjectSystemUnconfiguredProjectExtensions.cs" />
     <Compile Include="Services\Implementation\PublishService.cs" />
     <Compile Include="Services\Implementation\IVsOutputWindowPaneExtensions.cs" />
     <Compile Include="Extensions\VsInteropExtensions.cs" />
     <Compile Include="Extensions\AsyncServiceProviderExtensions.cs" />
     <Compile Include="Infrastructure\ProtectedDataHelper.cs" />
     <Compile Include="ProjectSystem\LaunchProfile\AdapterLaunchConfiguration.cs" />
+    <Compile Include="Services\Implementation\WaitDialogFactoryStubService.cs" />
+    <Compile Include="Services\Implementation\WaitDialogService.cs" />
+    <Compile Include="Services\Implementation\WaitDialogFactoryService.cs" />
+    <Compile Include="Services\Interface\IWaitDialogService.cs" />
+    <Compile Include="Services\Interface\IWaitDialogFactoryService.cs" />
     <Compile Include="Services\Interface\Publish.cs" />
     <Compile Include="Services\Interface\ConfigurationAggregator.cs" />
     <Compile Include="Services\Interface\IPublishService.cs" />
@@ -84,6 +89,7 @@
     <Compile Include="Services\Interface\SecureShellRemoteOperations.cs" />
     <Compile Include="Services\Interface\SecureShellSession.cs" />
     <Compile Include="Services\Interface\ISecureShellRemoteOperationsService.cs" />
+    <Compile Include="Services\Interface\StatusbarAnimation.cs" />
     <Compile Include="Services\PowerShellHost\CaptureOutputPSHostUserInterface.cs" />
     <Compile Include="Services\PowerShellHost\ConsoleRawUserInterface.cs" />
     <Compile Include="Services\PowerShellHost\CaptureOutputPSHost.cs" />
@@ -117,6 +123,8 @@
     <Compile Include="ProjectSystem\LaunchProfile\SecureShellRemoteLaunchTargetsProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteDebuggerLauncherPackage.cs" />
+    <Compile Include="Commands\OpenToolWindowCommand.cs" />
+    <Compile Include="Commands\SetupSshCommand.cs" />
     <Compile Include="Utilities\ShellUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +157,7 @@
     </XamlPropertyRule>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -165,6 +174,11 @@
     <PackageReference Include="Microsoft.CodeAnalysis" Version="4.1.0-2.21558.8" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
       <Version>3.3.3</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers">
+      <Version>7.0.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -220,9 +234,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project=".\SignVSIX.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

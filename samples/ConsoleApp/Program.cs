@@ -1,7 +1,13 @@
-﻿// Simple console application printing out some OS information
+﻿// ----------------------------------------------------------------------------
+// <copyright company="Michael Koster">
+//   Copyright (c) Michael Koster. All rights reserved.
+//   Licensed under the MIT License.
+// </copyright>
+// ----------------------------------------------------------------------------
 
 using System.Collections;
 
+#pragma warning disable CA1303 // Do not pass literals as localized parameters
 Console.WriteLine("Hello from .NET\n");
 
 var os = Environment.OSVersion;
@@ -19,3 +25,4 @@ foreach (DictionaryEntry v in variable)
 {
     Console.WriteLine("{0} = {1}", v.Key, v.Value);
 }
+#pragma warning restore CA1303

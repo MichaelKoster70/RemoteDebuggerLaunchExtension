@@ -208,6 +208,15 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
   <data name="PublishSuccess" xml:space="preserve">
     <value>Publishing application OK</value>
   </data>
+  <data name="PublishWaitDialogCaption" xml:space="preserve">
+    <value>Remote Debugger Launcher</value>
+  </data>
+  <data name="PublishWaitDialogMessageStart" xml:space="preserve">
+    <value>Publishing application ...</value>
+  </data>
+  <data name="PublishWaitDialogMessageUpdate" xml:space="preserve">
+    <value>Running dotnet publish ...</value>
+  </data>
   <data name="RemoteCommandCheckConnectionOutputPaneConnectingTo" xml:space="preserve">
     <value>Connecting to {0}@{1} ... </value>
     <comment>Remote command Check Connection: Connecting to text</comment>
@@ -235,7 +244,10 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
     <comment>Remote command Common: failure completion text</comment>
   </data>
   <data name="RemoteCommandCommonProfile" xml:space="preserve">
-    <value>Processing profile {0}</value>
+    <value>Processing profile '{0}'</value>
+  </data>
+  <data name="RemoteCommandCommonProjectAndProfile" xml:space="preserve">
+    <value>Processing {0} profile '{1}'</value>
   </data>
   <data name="RemoteCommandCommonSshTarget" xml:space="preserve">
     <value>[SSH {0}@{1}] </value>
@@ -349,5 +361,8 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
   </data>
   <data name="RemoteCommandUploadOutputPaneProgress" xml:space="preserve">
     <value>.</value>
+  </data>
+  <data name="ToolWindowCaption" xml:space="preserve">
+    <value>Remote Debugger Launcher</value>
   </data>
 </root>

@@ -19,7 +19,7 @@ namespace RemoteDebuggerLauncher
       public static async Task<string> GetOutputDirectoryPathAsync(this ConfiguredProject configuredProject)
       {
          var projectFolder = Path.GetDirectoryName(configuredProject.UnconfiguredProject.FullPath);
-         var outputDir = await configuredProject.GetOutputDirectoryAsync().ConfigureAwait(true);
+         var outputDir = await configuredProject.GetOutputDirectoryAsync();
 
          return Path.Combine(projectFolder, outputDir);
       }
@@ -42,9 +42,14 @@ namespace RemoteDebuggerLauncher
 
       public async static Task<string> GetAssemblyFileNameAsync(this ConfiguredProject configuredProject)
       {
-         var assemblyName = await GetAssemblyNameAsync(configuredProject).ConfigureAwait(true);
+         var assemblyName = await GetAssemblyNameAsync(configuredProject);
 
          return $"{assemblyName}.dll";
+      }
+
+      public static string GetName(this ConfiguredProject configuredProject)
+      {
+         return Path.GetFileName(configuredProject.UnconfiguredProject.FullPath);
       }
    }
 }
