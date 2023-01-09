@@ -70,6 +70,7 @@ jobs:
       run:  ${{ env.ScriptPath }}\AssemblyInfoFileSetVersion.ps1 -SourceFilePath  ${{ env.ExtensionAssemblyInfoFile }}
         -VersionPrefix ${{ steps.git-version.outputs.versionPrefix }}
         -VersionSuffix ${{ steps.git-version.outputs.versionSuffix }}
+        -VersionRevision ${{ steps.git-version.outputs.versionRevision }}
         -VersionBuild ${{ steps.git-version.outputs.versionBuild }}
       shell: pwsh
 
@@ -79,6 +80,7 @@ jobs:
       run:  ${{ env.ScriptPath }}\AssemblyInfoFileSetVersion.ps1 -SourceFilePath  ${{ env.ExtensionAssemblyInfoFile }}
         -VersionPrefix ${{ steps.git-version.outputs.versionPrefix }}
         -VersionBuild ${{ steps.git-version.outputs.versionBuild }}
+        -VersionRevision ${{ steps.git-version.outputs.versionRevision }}
       shell: pwsh
 
     - name: 'Build Solution: Apply VSIX version'

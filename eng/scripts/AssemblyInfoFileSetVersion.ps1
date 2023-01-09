@@ -53,19 +53,19 @@
     Produces the following attribute values
     [assembly: AssemblyVersion("1.0.0.42")]
     [assembly: AssemblyFileVersion("1.0.0.42")]
-    [assembly: AssemblyInformationalVersion("1.0.0")]
+    [assembly: AssemblyInformationalVersion("1.0.0.42")]
 
     Example 3: ./AssemblyInfoFileSetVersion.ps1 AssemblyInfo.cs 1.0.0 42 -VersionSuffix dev
     Produces the following attribute values
     [assembly: AssemblyVersion("1.0.0.42")]
     [assembly: AssemblyFileVersion("1.0.0.42")]
-    [assembly: AssemblyInformationalVersion("1.0.0.dev")]
+    [assembly: AssemblyInformationalVersion("1.0.0-dev.42")]
 
     Example 3: ./AssemblyInfoFileSetVersion.ps1 AssemblyInfo.cs 1.0.0 42 -VersionSuffix dev -VersionBuild ef02d2
     Produces the following attribute values
     [assembly: AssemblyVersion("1.0.0.42")]
     [assembly: AssemblyFileVersion("1.0.0.42")]
-    [assembly: AssemblyInformationalVersion("1.0.0.dev+ef02d2")]
+    [assembly: AssemblyInformationalVersion("1.0.0-dev.42+ef02d2")]
 #>
 
 Param(
@@ -121,7 +121,12 @@ if (-not (Test-Path $sourceFilePath))
 $assemblyVersion = "$VersionPrefix.$VersionRevision"
 $assemblyFileVersion = "$VersionPrefix.$VersionRevision"
 $assemblyInformationalVersion = $VersionPrefix
-if ($VersionSuffix) { $assemblyInformationalVersion += "-$VersionSuffix" }
+if ($VersionSuffix) { 
+    $assemblyInformationalVersion += "-$VersionSuffix"
+    if ($VersionRevision -gt 0) { $assemblyInformationalVersion += ".$VersionRevision" }
+} else {
+    if ($VersionRevision -gt 0) { $assemblyInformationalVersion += ".$VersionRevision" }
+}
 if ($VersionBuild) { $assemblyInformationalVersion += "+$VersionBuild" }
 
 Write-Host "Processing File: $sourceFilePath"

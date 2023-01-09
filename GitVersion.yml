@@ -1,5 +1,12 @@
 mode: ContinuousDelivery
-branches: {}
+branches:
+  main:
+   mode: ContinuousDelivery
+   tag: ''
+   increment: none
+  feature:
+   mode: ContinuousDelivery
+   tag: 'dev'
 ignore:
   sha: []
 merge-message-formats: {}
