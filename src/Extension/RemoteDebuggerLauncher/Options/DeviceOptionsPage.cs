@@ -17,16 +17,22 @@ namespace RemoteDebuggerLauncher
    /// </summary>
    internal class DeviceOptionsPage : DialogPage
    {
-      [Category("Remote Device")]
+      [Category("Credentials")]
       [DisplayName("User name")]
       [Description("The default user name to be used for connecting to a target device.")]
       public string UserName { get; set; } = "user";
 
-      [Category("Remote Device")]
+      [Category("Credentials")]
       [DisplayName("Private key")]
       [Description("The default private key to be used for connecting to the target device.")]
       [DefaultValue(PackageConstants.Options.DefaultValuePrivateKey)]
       public string PrivateKey { get; set; } = PackageConstants.Options.DefaultValuePrivateKey;
+
+      [Category("SSH")]
+      [DisplayName("Port")]
+      [Description("The default SSH port number on the target device.")]
+      [DefaultValue(PackageConstants.Options.DefaultValueSecureShellPort)]
+      public int SecureShellPort { get; set; } = PackageConstants.Options.DefaultValueSecureShellPort;
 
       [Category("Remote Device")]
       [DisplayName(".NET install folder path")]

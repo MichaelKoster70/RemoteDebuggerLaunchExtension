@@ -31,6 +31,9 @@ namespace RemoteDebuggerLauncher
          /// <summary>The default value for the SSH private key file.</summary>
          public const string DefaultValuePrivateKey = @"%userprofile%\.ssh\id_rsa";
 
+         /// <summary>The default value for the SSH port.</summary>
+         public const int DefaultValueSecureShellPort = 22;
+
          /// <summary>The default value for the .NET installation path on the device page.</summary>
          public const string DefaultValueDotNetInstallFolderPath = "~/.dotnet";
 
