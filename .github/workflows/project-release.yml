@@ -44,11 +44,7 @@ jobs:
       with:
         name: vsix
 
-#     - run: echo ${{steps.download.outputs.download-path}}
-#     - name: Display structure of downloaded files
-#       run: ls -R
-
-    - name: Create Release
+    - name: Create GitHub Release
       uses: ncipollo/release-action@v1
       with:
          artifacts: '${{steps.download.outputs.download-path}}/RemoteDebuggerLauncher.vsix'
@@ -65,5 +61,11 @@ jobs:
       MarketplaceOverviewFile: ${{ github.workspace }}/src/ReleaseNotes.md
 
     steps:
-    - name: TODO
+    - name: Download artifacts
+      id: download
+      uses: actions/download-artifact@v3
+      with:
+        name: vsix
+
+    - name: Create VS Marketspace Release
       run: echo TODO
