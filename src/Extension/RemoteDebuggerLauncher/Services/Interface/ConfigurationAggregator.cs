@@ -99,6 +99,31 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <summary>
+      /// Queries the host SSH port number to be used to establish a connection to the remote device.
+      /// </summary>
+      /// <returns>A <see langword="int"/> holding the port; the default port (22) if unconfigured.</returns>
+      /// <remarks>
+      /// The following configuration provides are queried, first match wins
+      /// - selected launch profile
+      /// - Tools/Options settings
+      /// - built-in default
+      /// </remarks>
+      public int QueryHostPort()
+      {
+         if (launchProfile.OtherSettings.TryGetValue(SecureShellRemoteLaunchProfile.hostPortProperty, out var settingsValue))
+         {
+            if (settingsValue is int profileHostPort)
+            {
+               // Launch profile has a host port specified => use it
+               return profileHostPort;
+            }
+         }
+
+         // use options value or default
+         return optionsPageAccessor.QueryHostPort();
+      }
+
+      /// <summary>
       /// Queries the private key to be used to establish a connection to the remote device.
       /// </summary>
       /// <returns>A <see langword="string"/> holding the private key file path; an empty string if no key is configured.</returns>

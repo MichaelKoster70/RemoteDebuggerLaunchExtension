@@ -5,8 +5,6 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
-
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
@@ -14,6 +12,12 @@ namespace RemoteDebuggerLauncher
    /// </summary>
    internal interface IOptionsPageAccessor
    {
+      /// <summary>
+      /// Queries the port to be used to establish a connection to the remote device from the device option page.
+      /// </summary>
+      /// <returns>A <see langword="int"/> holding the port, <c>PackageConstants.Options.DefaultValueSecureShellHostPort</c> if not configured.</returns>
+      int QueryHostPort();
+
       /// <summary>
       /// Queries the user name to be used to establish a connection to the remote device from the device option page.
       /// </summary>

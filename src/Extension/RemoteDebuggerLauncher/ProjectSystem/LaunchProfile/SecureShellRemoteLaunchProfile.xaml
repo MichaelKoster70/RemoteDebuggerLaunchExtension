@@ -31,7 +31,11 @@
                    DisplayName="Host name"
                    Description="The DNS name or IP address of the target device."
                    Subcategory="Remote Devices"/>
-   
+   <IntProperty    Name="hostPort"
+                   DisplayName="Host port"
+                   Description="Port to connect to on the target device."
+                   Subcategory="Remote Devices" />
+
    <StringProperty Name="userName" 
                    DisplayName="User name"
                    Description="The user name to be used for connecting to the target device."

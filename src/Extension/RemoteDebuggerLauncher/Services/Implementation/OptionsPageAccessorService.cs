@@ -31,6 +31,12 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <inheritdoc />
+      public int QueryHostPort()
+      {
+         return GetDevicePage().SecureShellPort;
+      }
+
+      /// <inheritdoc />
       public string QueryUserName()
       {
          return GetDevicePage().UserName;

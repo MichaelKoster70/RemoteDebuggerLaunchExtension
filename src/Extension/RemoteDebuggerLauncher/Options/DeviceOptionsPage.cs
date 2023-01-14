@@ -7,6 +7,8 @@
 
 using System;
 using System.ComponentModel;
+using System.Net;
+using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 
 namespace RemoteDebuggerLauncher
@@ -15,43 +17,78 @@ namespace RemoteDebuggerLauncher
    /// <summary>
    /// Implements the Device Options page shown in the VS options tree under "Remote Debugger Launcher"
    /// </summary>
-   internal class DeviceOptionsPage : DialogPage
+   [ComVisible(true)]
+   [Guid(PackageConstants.Options.PageGuidDevice)]
+   public class DeviceOptionsPage : DialogPage
    {
-      [Category("Credentials")]
+      private int secureShellPort = PackageConstants.Options.DefaultValueSecureShellHostPort;
+
+      [Category(PackageConstants.Options.PageCategoryCredentials)]
       [DisplayName("User name")]
       [Description("The default user name to be used for connecting to a target device.")]
       public string UserName { get; set; } = "user";
 
-      [Category("Credentials")]
+      [Category(PackageConstants.Options.PageCategoryCredentials)]
       [DisplayName("Private key")]
       [Description("The default private key to be used for connecting to the target device.")]
       [DefaultValue(PackageConstants.Options.DefaultValuePrivateKey)]
       public string PrivateKey { get; set; } = PackageConstants.Options.DefaultValuePrivateKey;
 
-      [Category("SSH")]
-      [DisplayName("Port")]
+      [Category(PackageConstants.Options.PageCategorySsh)]
+      [DisplayName("Host port")]
       [Description("The default SSH port number on the target device.")]
-      [DefaultValue(PackageConstants.Options.DefaultValueSecureShellPort)]
-      public int SecureShellPort { get; set; } = PackageConstants.Options.DefaultValueSecureShellPort;
+      [DefaultValue(PackageConstants.Options.DefaultValueSecureShellHostPort)]
+      public int SecureShellPort
+      {
+         get => secureShellPort;
+         set
+         {
+            // make sure the entered port stays withing the correct boundaries
+            if (IPEndPoint.MinPort > value || value > IPEndPoint.MaxPort)
+            {
+               throw new ArgumentOutOfRangeException(nameof(SecureShellPort), string.Format(ExceptionMessages.InvalidSecureShellPortValue, IPEndPoint.MinPort, IPEndPoint.MaxPort));
+            }
+            secureShellPort = value;
+         }
+      }
 
-      [Category("Remote Device")]
+      [Category(PackageConstants.Options.PageCategoryFolders)]
       [DisplayName(".NET install folder path")]
       [Description("The folder path where .NET framework is installed on the target device.")]
       [DefaultValue(PackageConstants.Options.DefaultValueDotNetInstallFolderPath)]
       public string DotNetInstallFolderPath { get; set; } = PackageConstants.Options.DefaultValueDotNetInstallFolderPath;
 
-      [Category("Remote Device")]
+      [Category(PackageConstants.Options.PageCategoryFolders)]
       [DisplayName("VS Code debugger install folder path")]
       [Description("The folder path where the VS code debugger is installed on the target device.")]
       [DefaultValue(PackageConstants.Options.DefaultValueDebuggerInstallFolderPath)]
       public string DebuggerInstallFolderPath { get; set; } = PackageConstants.Options.DefaultValueDebuggerInstallFolderPath;
 
-      [Category("Remote Device")]
+      [Category(PackageConstants.Options.PageCategoryFolders)]
       [DisplayName("App folder path")]
       [Description("The path on the target device where the application binaries will get deployed to.")]
       [DefaultValue(PackageConstants.Options.DefaultValueAppFolderPath)]
       public string AppFolderPath { get; set; } = PackageConstants.Options.DefaultValueAppFolderPath;
+
+      protected override void OnActivate(CancelEventArgs e)
+      {
+         ResetInvalidPortNumberToDefault();
+         base.OnActivate(e);
+      }
+      protected override void OnApply(PageApplyEventArgs e)
+      {
+         ResetInvalidPortNumberToDefault();
+         base.OnApply(e);
+      }
+
+      private void ResetInvalidPortNumberToDefault()
+      {
+         // make sure the entered port stays withing the correct boundaries
+         if (IPEndPoint.MinPort > secureShellPort || secureShellPort > IPEndPoint.MaxPort)
+         {
+            secureShellPort = PackageConstants.Options.DefaultValueSecureShellHostPort;
+         }
+      }
    }
 #pragma warning restore CA1812
-
 }
