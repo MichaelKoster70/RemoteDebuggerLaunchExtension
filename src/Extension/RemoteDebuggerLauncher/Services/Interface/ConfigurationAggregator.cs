@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
@@ -110,18 +111,31 @@ namespace RemoteDebuggerLauncher
       /// </remarks>
       public int QueryHostPort()
       {
+         // number validator function
+         bool IsValidHostPort(int portNumber) =>  IPEndPoint.MinPort < portNumber && portNumber <= IPEndPoint.MaxPort;
+
          if (launchProfile.OtherSettings.TryGetValue(SecureShellRemoteLaunchProfile.hostPortProperty, out var settingsValue))
          {
-            if (settingsValue is int profileHostPort)
+            if (settingsValue is string profileHostPort && !string.IsNullOrEmpty(profileHostPort) 
+               && int.TryParse(profileHostPort, out int profileHostPortAsInteger) && IsValidHostPort(profileHostPortAsInteger))
             {
                // Launch profile has a host port specified => use it
-               return profileHostPort;
+               return profileHostPortAsInteger;
             }
+
+            if (settingsValue is int profileHostPortNumber && IsValidHostPort(profileHostPortNumber))
+            {
+               // Launch profile has a host port specified => use it
+               return profileHostPortNumber;
+            }
+
+            // ignoring the invalid value specified
          }
 
          // use options value or default
          return optionsPageAccessor.QueryHostPort();
       }
+
 
       /// <summary>
       /// Queries the private key to be used to establish a connection to the remote device.
@@ -215,7 +229,7 @@ namespace RemoteDebuggerLauncher
          }
 
          // No path configured, relay on built-in defaults
-         return PackageConstants.Options.DefaultValueDotNetInstallFolderPath;
+         return PackageConstants.Options.DefaultValueDebuggerInstallFolderPath;
       }
 
       /// <summary>
