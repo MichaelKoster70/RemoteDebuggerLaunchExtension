@@ -31,7 +31,22 @@
                    DisplayName="Host name"
                    Description="The DNS name or IP address of the target device."
                    Subcategory="Remote Devices"/>
-   
+
+   <StringProperty Name="hostPort"
+                   DisplayName="Host port"
+                   Description="Port to connect to on the target device."
+                   Subcategory="Remote Devices"
+                   Default="22">
+      <StringProperty.ValueEditors>
+         <ValueEditor EditorType="String">
+            <ValueEditor.Metadata>
+               <NameValuePair Name="EvaluatedValueValidationRegex" Value="^((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0-9]{1,4}))$" />
+               <NameValuePair Name="EvaluatedValueFailedValidationMessage" Value="The port value must be between 1 and 65535." />
+            </ValueEditor.Metadata>
+         </ValueEditor>
+      </StringProperty.ValueEditors>
+   </StringProperty>
+
    <StringProperty Name="userName" 
                    DisplayName="User name"
                    Description="The user name to be used for connecting to the target device."
@@ -41,8 +56,8 @@
                    DisplayName="Private key"
                    Description="The private key to be used for connecting to the target device."
                    Subtype="file"
-                   Subcategory="Remote Devices">
-   </StringProperty>
+                   Subcategory="Remote Devices"
+                   Default="%userprofile%\\.ssh\\id_rsa" />
 
    <StringProperty Name="EnvironmentVariables"
                    DisplayName="Environment variables"
@@ -58,13 +73,13 @@
                    Subcategory="Remote Devices"/>
 
    <StringProperty Name="debuggerInstallFolderPath"
-                   DisplayName="install folder path"
+                   DisplayName="Debugger install folder path"
                    Description="The folder path where the VS Code debugger is installed on the target device."
                    Subcategory="Remote Devices"/>
 
    <StringProperty Name="appFolderPath"
                    DisplayName="App folder path"
-                   Description="The path on the target device where the application binaries will get deployed to.."
+                   Description="The path on the target device where the application binaries will get deployed to."
                    Subcategory="Remote Devices"/>
 
    <BoolProperty Name="publishOnDeploy"

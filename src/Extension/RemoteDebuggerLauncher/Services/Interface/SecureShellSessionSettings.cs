@@ -19,6 +19,7 @@ namespace RemoteDebuggerLauncher
       private SecureShellSessionSettings(ConfigurationAggregator configurationAggregator)
       {
          HostName = configurationAggregator.QueryHostName();
+         HostPort = configurationAggregator.QueryHostPort();
          UserName = configurationAggregator.QueryUserName();
          PrivateKeyFile = configurationAggregator.QueryPrivateKeyFilePath();
       }
@@ -27,6 +28,16 @@ namespace RemoteDebuggerLauncher
       /// Gets the host name of the target device.
       /// </summary>
       public string HostName { get; private set; }
+
+      /// <summary>
+      /// Gets the host port of the target device.
+      /// </summary>
+      public int HostPort { get; private set; }
+
+      /// <summary>
+      /// Gets a value whether <see cref="HostPort"/> ist the default port.
+      /// </summary>
+      public bool IsHostPortDefault => HostPort == PackageConstants.Options.DefaultValueSecureShellHostPort;
 
       /// <summary>
       /// Gets the user name.

@@ -5,7 +5,6 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-using System.Net.Mail;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 

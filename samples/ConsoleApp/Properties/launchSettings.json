@@ -6,18 +6,20 @@
       "environmentVariables": {
         "Foo": "bar",
         "Fooz": "aa"
-      }
+      },
+      "remoteDebugEnabled": false
     },
     "SSH Remote": {
       "commandName": "SecureShellRemoteLaunch",
-      "commandLineArgs": "foo",
+      "commandLineArgs": "foo bar",
       "environmentVariables": {
         "foo": "42"
       },
       "hostName": "192.168.1.106",
       "userName": "pi",
       "privateKey": "%userprofile%\\.ssh\\id_rsa",
-      "publishOnDeploy": true
+      "publishOnDeploy": true,
+      "hostPort": ""
     }
   }
 }

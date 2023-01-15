@@ -46,6 +46,16 @@ namespace RemoteDebuggerLauncher
 
          _ = statusbar.SetText(string.Format(text, arg0));
       }
+      /// <inheritdoc />
+      public void SetText(bool predicate, string text, object arg0)
+      {
+         ThreadHelper.ThrowIfNotOnUIThread();
+
+         if (predicate)
+         {
+            _ = statusbar.SetText(string.Format(text, arg0));
+         }
+      }
 
       /// <inheritdoc />
       public void Clear()

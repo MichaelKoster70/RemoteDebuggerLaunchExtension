@@ -25,9 +25,10 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// Checks whether a connection with the remove device can be established.
       /// </summary>
+      /// <param name="logProgress"><c>true</c>  to log progress, else <c>false</c>.</param>
       /// <returns>A Task representing the asynchronous operation.</returns>
       /// <exception cref="RemoteDebuggerLauncherException">Thrown when connection cannot be established.</exception>
-      Task CheckConnectionThrowAsync();
+      Task CheckConnectionThrowAsync(bool logProgress = true);
 
       /// <summary>
       /// Queries the user home directory on the remote device.

@@ -117,48 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="100" xml:space="preserve">
-    <value>Remote Debugger Launcher</value>
-    <comment>Options Dialog: Category</comment>
-  </data>
-  <data name="101" xml:space="preserve">
-    <value>Device</value>
-    <comment>Options Dialog: Device page name</comment>
-  </data>
-  <data name="102" xml:space="preserve">
-    <value>Local</value>
-    <comment>Options Dialog: Local page name</comment>
-  </data>
-  <data name="110" xml:space="preserve">
-    <value>Remote Debugger Launcher Extension</value>
-    <comment>About Dialog: license information</comment>
-  </data>
-  <data name="112" xml:space="preserve">
-    <value>Provides a full F5 debug experience for .NET based project targeting Linux devices.</value>
-    <comment>About Dialog: Detail information</comment>
-  </data>
-  <data name="200" xml:space="preserve">
-    <value>Remote Debugger Launcher</value>
-    <comment>Settings Import/Export: Category</comment>
-  </data>
-  <data name="201" xml:space="preserve">
-    <value>Remote Debugger Launcher Device Settings</value>
-    <comment>Settings Import/Export: Display name in the tree view</comment>
-  </data>
-  <data name="202" xml:space="preserve">
-    <value>The device settings for the Remote Debugger Launcher</value>
-    <comment>Settings Import/Export: Description text</comment>
-  </data>
-  <data name="203" xml:space="preserve">
-    <value>Remote Debugger Launcher Local Settings</value>
-    <comment>Settings Import/Export: Display name in the tree view</comment>
-  </data>
-  <data name="204" xml:space="preserve">
-    <value>The local settings for the Remote Debugger Launcher</value>
-    <comment>Settings Import/Export: Description text</comment>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="400" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\VSPackage.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="InvalidSecureShellPortValue" xml:space="preserve">
+    <value>The port number must be between {0} and {1}</value>
   </data>
 </root>
