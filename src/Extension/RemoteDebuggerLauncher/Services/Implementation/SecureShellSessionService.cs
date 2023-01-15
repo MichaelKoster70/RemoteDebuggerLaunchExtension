@@ -221,7 +221,7 @@ namespace RemoteDebuggerLauncher
       private ScpClient CreateScpClient()
       {
          var key = new PrivateKeyFile(settings.PrivateKeyFile);
-         return new ScpClient(settings.HostName, settings.UserName, key);
+         return new ScpClient(settings.HostName, settings.HostPort, settings.UserName, key);
       }
    }
 }
