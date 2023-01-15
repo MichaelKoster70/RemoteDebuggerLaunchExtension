@@ -221,6 +221,10 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
     <value>Connecting to {0}@{1} ... </value>
     <comment>Remote command Check Connection: Connecting to text</comment>
   </data>
+  <data name="RemoteCommandCheckConnectionOutputPaneConnectingToWithPort" xml:space="preserve">
+    <value>Connecting to {0}@{1} (Port {2}) ... </value>
+    <comment>Remote command Check Connection: Connecting to remote target with custom port</comment>
+  </data>
   <data name="RemoteCommandCheckConnectionStatusbarCompletedSuccess" xml:space="preserve">
     <value>Checking connection to {0} OK</value>
   </data>

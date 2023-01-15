@@ -172,15 +172,25 @@ namespace RemoteDebuggerLauncher
       {
          // Collect the configurable options
          var hostName = configurationAggregator.QueryHostName();
+         var hostPort = configurationAggregator.QueryHostPort();
          var userName = configurationAggregator.QueryUserName();
          var vsdbgPath = UnixPath.Combine(configurationAggregator.QueryDebuggerInstallFolderPath(), PackageConstants.Debugger.BinaryName);
 
-         // assemble the adapter and adapterArg values
+         // assemble the adapter and adapterArg values - for now, just support windows built-in SSH
          string adapter = PackageConstants.DebugLaunchSettings.Options.AdapterNameWindowsSSH;
          string adapterArgs = string.Empty;
 
+         // Handle private key file
          var privateKey = configurationAggregator.QueryPrivateKeyFilePath();
          adapterArgs += !string.IsNullOrEmpty(privateKey) ? $"-i {privateKey} " : string.Empty;
+
+         // Handle non default port
+         if (hostPort != PackageConstants.Options.DefaultValueSecureShellHostPort)
+         {
+            adapterArgs += $"-p {hostPort}";
+         }
+
+         // handle username, host, amd remaining options
          adapterArgs += $"{userName}@{hostName} {vsdbgPath} --interpreter=vscode";
 
          var config = new LaunchConfiguration()

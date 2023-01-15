@@ -362,6 +362,15 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connecting to {0}@{1} (Port {2}) ... .
+        /// </summary>
+        public static string RemoteCommandCheckConnectionOutputPaneConnectingToWithPort {
+            get {
+                return ResourceManager.GetString("RemoteCommandCheckConnectionOutputPaneConnectingToWithPort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Checking connection to {0} OK.
         /// </summary>
         public static string RemoteCommandCheckConnectionStatusbarCompletedSuccess {

@@ -214,7 +214,8 @@ namespace RemoteDebuggerLauncher
             throw new SecureShellSessionException(Resources.ExceptionMessageSecureShellSessionNoUserName);
          }
          var key = new PrivateKeyFile(settings.PrivateKeyFile);
-         return new SshClient(settings.HostName, settings.UserName, key);
+
+         return new SshClient(settings.HostName, settings.HostPort, settings.UserName, key);
       }
 
       private ScpClient CreateScpClient()

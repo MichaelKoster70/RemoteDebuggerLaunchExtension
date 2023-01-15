@@ -34,6 +34,18 @@ namespace RemoteDebuggerLauncher
          /// <summary>The options page name holding local settings.</summary>
          public const string PageNameLocal = "Local";
 
+         /// <summary>The name for the credentials category attribute.</summary>
+         public const string PageCategoryCredentials = "Credentials";
+
+         /// <summary>The name for the folder category attribute.</summary>
+         public const string PageCategoryFolders = "Folders";
+
+         /// <summary>The name for the SSH category attribute.</summary>
+         public const string PageCategorySsh = "SSH";
+
+         /// <summary>The name for the Publish category attribute.</summary>
+         public const string PageCategoryPublish = "Publish";
+
          /// <summary>The default value for the SSH private key file.</summary>
          public const string DefaultValuePrivateKey = @"%userprofile%\.ssh\id_rsa";
 

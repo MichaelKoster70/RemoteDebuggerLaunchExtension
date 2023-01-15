@@ -51,23 +51,30 @@ namespace RemoteDebuggerLauncher
       public bool LogHost { get; set; }
 
       /// <inheritdoc />
-      public async Task CheckConnectionThrowAsync()
+      public async Task CheckConnectionThrowAsync(bool logProgress = true)
       {
          try
          {
-            logger.Write(Resources.RemoteCommandCheckConnectionOutputPaneConnectingTo, session.Settings.UserName, session.Settings.HostName);
-            statusbar?.SetText(Resources.RemoteCommandCheckConnectionStatusbarProgress, session.Settings.HostName);
+            if (session.Settings.IsHostPortDefault)
+            {
+               logger.Write(logProgress, Resources.RemoteCommandCheckConnectionOutputPaneConnectingTo, session.Settings.UserName, session.Settings.HostName);
+            }
+            else
+            {
+               logger.Write(logProgress, Resources.RemoteCommandCheckConnectionOutputPaneConnectingToWithPort, session.Settings.UserName, session.Settings.HostName, session.Settings.HostPort);
+            }
+            statusbar?.SetText(logProgress, Resources.RemoteCommandCheckConnectionStatusbarProgress, session.Settings.HostName);
 
             _ = await session.ExecuteSingleCommandAsync("hello echo");
 
-            logger.WriteLine(Resources.RemoteCommandCommonSuccess);
-            statusbar?.SetText(Resources.RemoteCommandCheckConnectionStatusbarCompletedSuccess, session.Settings.HostName);
+            logger.WriteLine(logProgress, Resources.RemoteCommandCommonSuccess);
+            statusbar?.SetText(logProgress, Resources.RemoteCommandCheckConnectionStatusbarCompletedSuccess, session.Settings.HostName);
          }
          catch (Exception ex)
          {
             // whatever exception is thrown indicates a problem
-            logger.WriteLine(Resources.RemoteCommandCommonFailed, ex.Message);
-            throw new RemoteDebuggerLauncherException($"Cannot connect to {session.Settings.UserName}@{session.Settings.HostName} : {ex.Message}");
+            logger.WriteLine(logProgress, Resources.RemoteCommandCommonFailed, ex.Message);
+            throw new RemoteDebuggerLauncherException($"Cannot connect to {session.Settings.UserName}@{session.Settings.HostName} : {ex.Message}", ex);
          }
       }
 

@@ -72,7 +72,7 @@ namespace RemoteDebuggerLauncher
          await threadingService.JoinableTaskFactory.SwitchToMainThreadAsync();
 
          // Step 1: try to connect to the device
-         await remoteOperations.CheckConnectionThrowAsync();
+         await remoteOperations.CheckConnectionThrowAsync(false);
 
          // Step 2: try to install the latest debugger version
          bool installDebugger = configurationAggregator.QueryInstallDebuggerOnDeploy();
@@ -120,19 +120,27 @@ namespace RemoteDebuggerLauncher
          // the rest must be executed on the UI thread
          await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-         // validate that target is reachable
-         await remoteOperations.CheckConnectionThrowAsync();
-
-         var launchSettings = new DebugLaunchSettings(launchOptions)
+         try
          {
-            LaunchOperation = DebugLaunchOperation.CreateProcess,
-            Executable = "dotnet",
-            Options = await AdapterLaunchConfiguration.CreateFrameworkDependantAsync(configurationAggregator, configuredProject, loggerService, remoteOperations),
-            LaunchDebugEngineGuid = PackageConstants.DebugLaunchSettings.EngineGuid,
-            Project = configuredProject.UnconfiguredProject.Services.HostObject as IVsHierarchy
-         };
+            // validate that target is reachable
+            await remoteOperations.CheckConnectionThrowAsync();
 
-         return new List<IDebugLaunchSettings>() { launchSettings };
+            var launchSettings = new DebugLaunchSettings(launchOptions)
+            {
+               LaunchOperation = DebugLaunchOperation.CreateProcess,
+               Executable = "dotnet",
+               Options = await AdapterLaunchConfiguration.CreateFrameworkDependantAsync(configurationAggregator, configuredProject, loggerService, remoteOperations),
+               LaunchDebugEngineGuid = PackageConstants.DebugLaunchSettings.EngineGuid,
+               Project = configuredProject.UnconfiguredProject.Services.HostObject as IVsHierarchy
+            };
+
+            return new List<IDebugLaunchSettings>() { launchSettings };
+         }
+         catch
+         {
+            statusbarService.Clear();
+            throw;
+         }
       }
 
       /// <summary>

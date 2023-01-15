@@ -42,17 +42,6 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <inheritdoc />
-      public void Write(bool predicate, string message, object arg0, object arg1, bool activate = true)
-      {
-         ThreadHelper.ThrowIfNotOnUIThread();
-
-         if (predicate)
-         {
-            Write(string.Format(message, arg0, arg1), activate);
-         }
-      }
-
-      /// <inheritdoc />
       public void Write(string message, object arg0, bool activate = true)
       {
          ThreadHelper.ThrowIfNotOnUIThread();
@@ -64,6 +53,35 @@ namespace RemoteDebuggerLauncher
       {
          ThreadHelper.ThrowIfNotOnUIThread();
          Write(string.Format(message, arg0, arg1), activate);
+      }
+
+      /// <inheritdoc />
+      public void Write(string message, object arg0, object arg1, object arg2, bool activate = true)
+      {
+         ThreadHelper.ThrowIfNotOnUIThread();
+         Write(string.Format(message, arg0, arg1, arg2), activate);
+      }
+
+      /// <inheritdoc />
+      public void Write(bool predicate, string message, object arg0, object arg1, bool activate = true)
+      {
+         ThreadHelper.ThrowIfNotOnUIThread();
+
+         if (predicate)
+         {
+            Write(string.Format(message, arg0, arg1), activate);
+         }
+      }
+
+      /// <inheritdoc />
+      public void Write(bool predicate, string message, object arg0, object arg1, object arg2, bool activate = true)
+      {
+         ThreadHelper.ThrowIfNotOnUIThread();
+
+         if (predicate)
+         {
+            Write(string.Format(message, arg0, arg1, arg2), activate);
+         }
       }
 
       /// <inheritdoc />
@@ -87,11 +105,28 @@ namespace RemoteDebuggerLauncher
          WriteLine(string.Format(message, arg0, arg1), activate);
       }
 
-
       public void WriteLine(string message, object arg0, object arg1, object arg2, bool activate = true)
       {
          ThreadHelper.ThrowIfNotOnUIThread();
          WriteLine(string.Format(message, arg0, arg1, arg2), activate);
+      }
+
+      /// <inheritdoc />
+      public void WriteLine(bool predicate, string message, bool activate)
+      {
+         ThreadHelper.ThrowIfNotOnUIThread();
+
+         if (predicate)
+         {
+            WriteLine(message, activate);
+         }
+      }
+
+      /// <inheritdoc />
+      public void WriteLine(bool predicate, string message, object arg0, bool activate)
+      {
+         ThreadHelper.ThrowIfNotOnUIThread();
+         WriteLine(predicate, string.Format(message, arg0), activate);
       }
 
       private IVsOutputWindowPane EnsurePane(Guid guid, string name, bool activate)
@@ -122,6 +157,5 @@ namespace RemoteDebuggerLauncher
    [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "By design, using VS naming standards")]
    internal interface SLoggerService
    {
-
    }
 }
