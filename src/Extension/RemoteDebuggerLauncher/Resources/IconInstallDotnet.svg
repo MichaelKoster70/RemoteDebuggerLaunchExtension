@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+ <defs>
+  <style>.canvas{fill: none; opacity: 0;}.light-defaultgrey-10{fill: #212121; opacity: 0.1;}.light-defaultgrey{fill: #212121; opacity: 1;}.light-purple{fill: #7f00ff; opacity: 1;}.light-blue{fill: #005dba; opacity: 1;}</style>
+ </defs>
+ <title>IconInstallDotnet</title>
+ <g class="layer">
+  <title>Layer 1</title>
+  <g class="canvas" id="canvas">
+   <path class="canvas" d="m16,16l-16,0l0,-16l16,0l0,16z"/>
+  </g>
+  <path class="light-defaultgrey-10" d="m14.52,4.5l0,7l-12,0l-0.02,-4.26l4.74,0.04l0.02,-2.79l4.09,0l3.18,0l-0.01,0.01z"/>
+  <path class="light-defaultgrey" d="m15,4.5l0,7l-0.5,0.5l-5.5,0l0,1l2,0l0,1l-5,0l0,-1l2,0l0,-1l-5.5,0l-0.5,-0.5l0.02,-4.23l0.96,0l0.02,3.73l11,0l0,-6l-6.73,0l0,-1l7.23,0l0.5,0.5z"/>
+  <rect class="light-purple" height="6.5" width="6.5" x="0" y="0"/>
+  <path class="light-blue" d="m8.84,8.9l-0.7,0l-1.95,-1.94l0.71,-0.71l1.09,1.09l0,-7.32l0.91,-0.02l0.09,7.34l1.09,-1.09l0.71,0.71l-1.95,1.95l0,-0.01z"/>
+ </g>
+</svg>

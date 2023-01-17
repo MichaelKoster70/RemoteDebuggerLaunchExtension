@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+ <defs>
+  <style>.canvas{fill: none; opacity: 0;}.light-defaultgrey-10{fill: #212121; opacity: 0.1;}.light-defaultgrey{fill: #212121; opacity: 1;}.light-green{fill: #1f801f; opacity: 1;}.light-blue{fill: #005dba; opacity: 1;}</style>
+ </defs>
+ <title>IconInstallDebugger</title>
+  <g id="canvas" class="canvas">
+    <path class="canvas" d="M16,16H0V0H16Z" />
+  </g>
+  <g id="level-1">
+    <path class="light-defaultgrey-10" d="M14.5,4.5v7H2.5V7.724L8.141,4.5Z" />
+    <path class="light-defaultgrey" d="M15,4.5v7l-.5.5H9v1h2v1H6V13H8V12H2.5L2,11.5V8.009l1-.571V11H14V5H7.266l1.75-1H14.5Z" />
+    <path class="light-green" d="M7,4,0,8V0Z" />
+   <path class="light-blue" d="m8.84,8.9l-0.7,0l-1.95,-1.94l0.71,-0.71l1.09,1.09l0,-7.32l0.91,-0.02l0.09,7.34l1.09,-1.09l0.71,0.71l-1.95,1.95z" />
+ </g>
+</svg>
