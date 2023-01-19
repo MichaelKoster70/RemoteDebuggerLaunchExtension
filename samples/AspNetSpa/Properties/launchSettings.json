@@ -19,7 +19,7 @@
     },
     "SSH Remote": {
       "commandName": "SecureShellRemoteLaunch",
-      "privateKey": "C:\\Users\\mko\\.ssh\\id_rsa",
+      "privateKey": "%userprofile%\\.ssh\\id_rsa",
       "userName": "pi",
       "hostName": "192.168.1.106",
       "hostPort": 22,

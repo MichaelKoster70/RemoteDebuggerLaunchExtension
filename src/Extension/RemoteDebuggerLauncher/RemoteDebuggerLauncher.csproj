@@ -71,7 +71,7 @@
     <Compile Include="Commands\CleanOutputCommand.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ProjectSystem\Extensions\ProjectSystemUnconfiguredProjectExtensions.cs" />
-    <Compile Include="Resources\ImagesMonikers.cs" />
+    <Compile Include="ImagesMonikers.cs" />
     <Compile Include="Services\Implementation\PublishService.cs" />
     <Compile Include="Services\Implementation\IVsOutputWindowPaneExtensions.cs" />
     <Compile Include="Extensions\VsInteropExtensions.cs" />
