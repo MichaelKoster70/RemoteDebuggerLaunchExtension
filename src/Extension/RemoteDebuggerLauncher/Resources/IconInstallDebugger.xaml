@@ -16,9 +16,9 @@
             </DrawingGroup>
             <DrawingGroup x:Name="level_1">
               <GeometryDrawing Brush="{DynamicResource light-defaultgrey-10}" Geometry="F1M14.5,4.5v7H2.5V7.724L8.141,4.5Z" />
-              <GeometryDrawing Brush="{DynamicResource light-defaultgrey}" Geometry="F1M15,4.5v7l-.5.5H9v1h2v1H6V13H8V12H2.5L2,11.5V8.009l1-.571V11H14V5H7.266l1.75-1H14.5Z" />
+              <GeometryDrawing Brush="{DynamicResource light-defaultgrey}" Geometry="F1M15,4.5 v 7 L 14.5,12 H 9 v 1 h 2 v 1 H 6 V 13 H 8 V 12 H 2.5 L 2,11.5 V 8 L 3,7.438 V 11 H 14 V 5 H 7.266 L 9,4 h 5.5 z" />
               <GeometryDrawing Brush="{DynamicResource light-green}" Geometry="F1M7,4,0,8V0Z" />
-              <GeometryDrawing Brush="{DynamicResource light-blue}" Geometry="F1M8.84,8.9l-0.7,0l-1.95,-1.94l0.71,-0.71l1.09,1.09l0,-7.32l0.91,-0.02l0.09,7.34l1.09,-1.09l0.71,0.71l-1.95,1.95z" />
+              <GeometryDrawing Brush="{DynamicResource light-blue}" Geometry="F1M 8.9,8.9 H 8.1 L 6.2,7 6.9,6.25 8,7.356 8,0 H 9 V 7.356 L 10.1,6.25 10.8,7 Z" />
             </DrawingGroup>
           </DrawingGroup>
         </DrawingBrush.Drawing>
