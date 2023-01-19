@@ -204,9 +204,9 @@ dotnet_naming_style.camel_case.capitalization = camel_case
 
 # XAML files
 [*.xaml]
-indent_size = 3
+indent_size = 2
 indent_style = space
-tab_width = 3
+tab_width = 2
 
 [*.{cs,vb}]
 

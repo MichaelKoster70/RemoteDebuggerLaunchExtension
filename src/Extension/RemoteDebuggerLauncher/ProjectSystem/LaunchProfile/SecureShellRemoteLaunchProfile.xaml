@@ -11,10 +11,10 @@
       <sys:String x:Key="CommandName">SecureShellRemoteLaunch</sys:String>
 
       <!-- KnownImageIds.ImageCatalogGuid -->
-      <sys:Guid x:Key="ImageMonikerGuid">AE27A6B0-E345-4288-96DF-5EAF394EE369</sys:Guid>
+      <sys:Guid x:Key="ImageMonikerGuid">C7D7D241-8FD3-4230-8F49-314652792839</sys:Guid>
 
       <!-- KnownImageIds.Execute -->
-      <sys:Int32 x:Key="ImageMonikerId">1173</sys:Int32>
+      <sys:Int32 x:Key="ImageMonikerId">0</sys:Int32>
 
    </Rule.Metadata>
 

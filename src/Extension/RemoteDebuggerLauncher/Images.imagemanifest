@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ImageManifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+               xmlns="http://schemas.microsoft.com/VisualStudio/ImageManifestSchema/2014">
+  <Symbols>
+    <String Name="Resources" Value="/RemoteDebuggerLauncher;Component/" />
+    <Guid Name="ImagesGuid" Value="C7D7D241-8FD3-4230-8F49-314652792839" />
+    <ID Name="LaunchProfileIcon" Value="0" />
+    <ID Name="DeployOutputIcon" Value="1" />
+    <ID Name="CleanOutputIcon" Value="2" />
+    <ID Name="InstallDebuggerIcon" Value="3" />
+    <ID Name="InstallDotnetIcon" Value="4" />
+    <ID Name="SetupSshIcon" Value="5" />
+    <ID Name="ToolWindowtIcon" Value="6" />
+  </Symbols>
+  <Images>
+    <Image Guid="$(ImagesGuid)" ID="$(LaunchProfileIcon)">
+      <Source Uri="$(Resources)/Resources/IconLaunchProfile.xaml" />
+      <Source Uri="$(Resources)/Resources/IcomLaunchProfile.png" >
+        <Size Value="16" />
+      </Source>
+    </Image>
+    <Image Guid="$(ImagesGuid)" ID="$(DeployOutputIcon)">
+      <Source Uri="$(Resources)/Resources/IconDeployOutput.xaml" />
+      <Source Uri="$(Resources)/Resources/IconDeployOutput.png" >
+        <Size Value="16" />
+      </Source>
+    </Image>
+    <Image Guid="$(ImagesGuid)" ID="$(CleanOutputIcon)">
+      <Source Uri="$(Resources)/Resources/IconCleanOutputIcon.xaml" />
+      <Source Uri="$(Resources)/Resources/IconCleanOutputIcon.png" >
+        <Size Value="16" />
+      </Source>
+    </Image>
+    <Image Guid="$(ImagesGuid)" ID="$(InstallDebuggerIcon)">
+      <Source Uri="$(Resources)/Resources/IconInstallDebugger.xaml" />
+      <Source Uri="$(Resources)/Resources/IconInstallDebugger.png" >
+        <Size Value="16" />
+      </Source>
+    </Image>
+    <Image Guid="$(ImagesGuid)" ID="$(InstallDotnetIcon)">
+      <Source Uri="$(Resources)/Resources/IconInstallDotnet.xaml" />
+      <Source Uri="$(Resources)/Resources/IconInstallDotnet.png" >
+        <Size Value="16" />
+      </Source>
+    </Image>
+    <Image Guid="$(ImagesGuid)" ID="$(SetupSshIcon)">
+      <Source Uri="$(Resources)/Resources/IconSetupSsh.xaml" />
+      <Source Uri="$(Resources)/Resources/IconSetupSsh.png" >
+        <Size Value="16" />
+      </Source>
+    </Image>
+    <Image Guid="$(ImagesGuid)" ID="$(ToolWindowIcon)">
+      <Source Uri="$(Resources)/Resources/IconToolWindow.xaml" />
+      <Source Uri="$(Resources)/Resources/IconToolWindow.png" >
+        <Size Value="16" />
+      </Source>
+    </Image>
+  </Images>
+  <ImageLists />
+</ImageManifest>
