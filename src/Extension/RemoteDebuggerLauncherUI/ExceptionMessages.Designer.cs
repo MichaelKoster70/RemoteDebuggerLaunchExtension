@@ -68,5 +68,23 @@ namespace RemoteDebuggerLauncher {
                 return ResourceManager.GetString("InvalidSecureShellPortValue", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No external browser configured as default browser.
+        /// </summary>
+        public static string NoExternalBrowserConfigured {
+            get {
+                return ResourceManager.GetString("NoExternalBrowserConfigured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No external browser selected for the debugging session..
+        /// </summary>
+        public static string NoExternalBrowserSelected {
+            get {
+                return ResourceManager.GetString("NoExternalBrowserSelected", resourceCulture);
+            }
+        }
     }
 }

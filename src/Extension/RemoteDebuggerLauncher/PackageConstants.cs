@@ -15,6 +15,21 @@ namespace RemoteDebuggerLauncher
    internal static class PackageConstants
    {
       /// <summary>
+      /// Common Project System relalated constants
+      /// </summary>
+      public static class CPS
+      {
+         /// <summary>
+         /// Values for the <see cref="AppliesTo"/> attribute.
+         /// </summary>
+         public static class AppliesTo
+         {
+            /// <summary>CPS 'AppliesTo attribute value for the custom Launch Profile.</summary>
+            public const string LaunchProfiles = "LaunchProfiles";
+         }
+      }
+
+      /// <summary>
       /// VS Options related constants.
       /// </summary>
       public static class Options
@@ -87,9 +102,6 @@ namespace RemoteDebuggerLauncher
       {
          /// <summary>The command name for the 'SecureShellRemoteLaunchProfile' Launch Profile.</summary>
          public const string CommandName = "SecureShellRemoteLaunch";
-
-         /// <summary>CPS 'AppliesTo attribute value for the custom Launch Profile.</summary>
-         public const string AppliesTo = "LaunchProfiles";
       }
 
       public static class DebugLaunchSettings
@@ -97,11 +109,8 @@ namespace RemoteDebuggerLauncher
          /// <summary>The Engine GUID for the VS Code managed debugger.</summary>
          public static readonly Guid EngineGuid = new Guid("541B8A8A-6081-4506-9F0A-1CE771DEBC04");
 
-         public static class Options
-         {
-            /// <summary>Name the connection adapter when using Windows SSH.</summary>
-            public const string AdapterNameWindowsSSH = "ssh.exe";
-         }
+         /// <summary>Name the connection adapter when using Windows SSH.</summary>
+         public const string AdapterNameWindowsSSH = "ssh.exe";
       }
 
       public static class OutputWindow
@@ -132,8 +141,8 @@ namespace RemoteDebuggerLauncher
 
       public static class Publish
       {
-         /// <summary>Publish output relative to project output dir.</summary>
-         public const string OutDir = "publish";
+         /// <summary>Publish output relative to project base output dir.</summary>
+         public const string OutDir = "Deploy";
       }
    }
 }

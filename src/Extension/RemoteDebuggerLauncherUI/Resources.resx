@@ -129,6 +129,9 @@
   <data name="CommonStartSessionMarker" xml:space="preserve">
     <value>--------------------------------------------------</value>
   </data>
+  <data name="ExceptionMessageSecureShellSessionNoPrivateKey" xml:space="preserve">
+    <value>no private key file provided.</value>
+  </data>
   <data name="ExceptionMessageSecureShellSessionNoUserName" xml:space="preserve">
     <value>no username provided.</value>
   </data>
@@ -199,6 +202,9 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
   <data name="InstallDotnetVersionLatestStsDisplayName" xml:space="preserve">
     <value>Latest STS</value>
   </data>
+  <data name="PublishCommandLine" xml:space="preserve">
+    <value>Launching 'dotnet {0}'</value>
+  </data>
   <data name="PublishFailed" xml:space="preserve">
     <value>Publishing application FAILED with exit code {0}</value>
   </data>
@@ -240,6 +246,10 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
   <data name="RemoteCommandCleanRemoteFolderCompletedSuccess" xml:space="preserve">
     <value>Cleaning OK</value>
   </data>
+  <data name="RemoteCommandCleanRemoteFolderNoProjects" xml:space="preserve">
+    <value>Cleaning - no supported projects found.
+Make sure you selected a 'SSH Remote' launch profile.</value>
+  </data>
   <data name="RemoteCommandCleanRemoteFolderStatusbarProgress" xml:space="preserve">
     <value>Cleaning ...</value>
   </data>
@@ -261,13 +271,17 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
     <value>OK</value>
     <comment>Remote command Common: success completion text</comment>
   </data>
-  <data name="RemoteCommandDeployRemoveFolderCompletedSuccess" xml:space="preserve">
+  <data name="RemoteCommandDeployRemoteFolderCompletedSuccess" xml:space="preserve">
     <value>Deploying application OK</value>
   </data>
-  <data name="RemoteCommandDeployRemoveFolderOutputPaneProgress" xml:space="preserve">
+  <data name="RemoteCommandDeployRemoteFolderNoProjects" xml:space="preserve">
+    <value>Deploying application - no supported projects found.
+Make sure you selected a 'SSH Remote' launch profile.</value>
+  </data>
+  <data name="RemoteCommandDeployRemoteFolderOutputPaneProgress" xml:space="preserve">
     <value>Deploying application - Source: {0}, Target: {1}</value>
   </data>
-  <data name="RemoteCommandDeployRemoveFolderStatusbarProgress" xml:space="preserve">
+  <data name="RemoteCommandDeployRemoteFolderStatusbarProgress" xml:space="preserve">
     <value>Deploying application ...</value>
   </data>
   <data name="RemoteCommandInstallDebuggerCommandCaption" xml:space="preserve">
@@ -275,6 +289,10 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
   </data>
   <data name="RemoteCommandInstallDebuggerCommandStatusbarProgress" xml:space="preserve">
     <value>Installing VS Code Debugger on targets ...</value>
+  </data>
+  <data name="RemoteCommandInstallDebuggerNoProjects" xml:space="preserve">
+    <value>Installing VS Code Debugger - no supported projects found.
+Make sure you selected a 'SSH Remote' launch profile.</value>
   </data>
   <data name="RemoteCommandInstallDebuggerOfflineCommonProgress" xml:space="preserve">
     <value>Installing VS Code Debugger from host</value>
@@ -302,6 +320,10 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
   </data>
   <data name="RemoteCommandInstallDotnetCommandStatusbarText" xml:space="preserve">
     <value>Installing .NET on targets ...</value>
+  </data>
+  <data name="RemoteCommandInstallDotnetNoProjects" xml:space="preserve">
+    <value>Installing .NET - no supported projects found.
+Make sure you selected a 'SSH Remote' launch profile.</value>
   </data>
   <data name="RemoteCommandInstallDotnetOfflineOutputPaneDownloadingPayload" xml:space="preserve">
     <value>Downloading binaries - URL: {0} </value>
@@ -337,7 +359,7 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
     <value>Installing .NET runtime direct from internet</value>
   </data>
   <data name="RemoteCommandInstallDotnetScriptExecutionFailed" xml:space="preserve">
-    <value>Downloading .NET - Powershell script execution failed with '{0}'</value>
+    <value>Downloading .NET - PowerShell script execution failed with '{0}'</value>
   </data>
   <data name="RemoteCommandInstallDotnetSdkOfflineCompletedFailed" xml:space="preserve">
     <value>Installing .NET SDK from host FAILED: {0}</value>
@@ -357,7 +379,7 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
   <data name="RemoteCommandInstallDotnetSdkOnlineOutputPaneProgress" xml:space="preserve">
     <value>Installing .NET SDK direct from internet</value>
   </data>
-  <data name="RemoteCommandLanchingDebugger" xml:space="preserve">
+  <data name="RemoteCommandLaunchingDebugger" xml:space="preserve">
     <value>Launching debugger ...</value>
   </data>
   <data name="RemoteCommandUploadOutputPaneDone" xml:space="preserve">
@@ -365,6 +387,12 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
   </data>
   <data name="RemoteCommandUploadOutputPaneProgress" xml:space="preserve">
     <value>.</value>
+  </data>
+  <data name="SelectBrowserDialogHeaderText" xml:space="preserve">
+    <value>Please select the browser you want to use to start debugging.</value>
+  </data>
+  <data name="SelectBrowserDialogTitle" xml:space="preserve">
+    <value>Select Browser</value>
   </data>
   <data name="ToolWindowCaption" xml:space="preserve">
     <value>Remote Debugger Launcher</value>

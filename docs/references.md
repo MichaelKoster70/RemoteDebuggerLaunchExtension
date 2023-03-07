@@ -9,6 +9,6 @@
 [Source: dotnet/project-system](https://github.com/dotnet/project-system)
 
 
-## Analyiers
+## Analyzers
 
 [Microsoft.CodeAnalysis.Analyzers](https://github.com/dotnet/roslyn-analyzers/blob/main/src/Microsoft.CodeAnalysis.Analyzers/Microsoft.CodeAnalysis.Analyzers.md)

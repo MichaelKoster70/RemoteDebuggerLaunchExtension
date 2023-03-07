@@ -5,20 +5,15 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.PlatformUI;
 
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
    /// Modal Dialog providing the UI options for the Install Debugger Command.
-   /// Implements the <see cref="Microsoft.VisualStudio.PlatformUI.DialogWindow" />
+   /// Implements the <see cref=".DialogWindow" />
    /// </summary>
-   /// <seealso cref="Microsoft.VisualStudio.PlatformUI.DialogWindow" />
+   /// <seealso cref="DialogWindow" />
    public partial class InstallDebuggerDialogWindow : DialogWindow
    {
       /// <summary>

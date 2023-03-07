@@ -15,107 +15,106 @@
                    MinWidth="400"
                    d:DesignHeight="187" d:DesignWidth="400"
                    d:DataContext="{d:DesignInstance Type=local:InstallDotnetViewModel}" SizeToContent="Height">
-   <Grid Margin="4">
-      <Grid.ColumnDefinitions>
-         <ColumnDefinition Width="Auto" />
-         <ColumnDefinition Width="*" />
-      </Grid.ColumnDefinitions>
-      <Grid.RowDefinitions>
-         <RowDefinition Height="Auto" />
-         <RowDefinition Height="Auto" />
-         <RowDefinition Height="Auto" />
-         <RowDefinition Height="Auto" />
-         <RowDefinition Height="Auto" />
-      </Grid.RowDefinitions>
+  <Grid Margin="4">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
 
-      <!-- Dialog header -->
-      <TextBlock Grid.Row="0"
-                 Grid.ColumnSpan="2" 
-                 Margin="8"
-                 TextWrapping="Wrap" 
-                 Text="{x:Static local:Resources.InstallDotnetDialogHeaderText}" />
+    <!-- Dialog header -->
+    <TextBlock Grid.Row="0"
+               Grid.ColumnSpan="2" 
+               Margin="8"
+               TextWrapping="Wrap" 
+               Text="{x:Static local:Resources.InstallDotnetDialogHeaderText}" />
 
-      <!-- Installation Mode (Online/Offline) -->
-      <Label Grid.Row="1"
-             Grid.Column="0"
-             Margin="4"
-             Content="{x:Static local:Resources.CommonDialogModeLabel}" />
+    <!-- Installation Mode (Online/Offline) -->
+    <Label Grid.Row="1"
+           Grid.Column="0"
+           Margin="4"
+           Content="{x:Static local:Resources.CommonDialogModeLabel}" />
 
-      <ComboBox Grid.Row="1"
-                Grid.Column="1"
-                Margin="4"
-                IsReadOnly="True"
-                ToolTip="{x:Static local:Resources.InstallationModeDescription}"
-                ItemsSource="{Binding InstallationModes}" 
-                SelectedItem="{Binding SelectedInstallationMode}">
-         <ComboBox.ItemTemplate>
-            <DataTemplate>
-               <TextBlock Text="{Binding DisplayName}"/>
-            </DataTemplate>
-         </ComboBox.ItemTemplate>
+    <ComboBox Grid.Row="1"
+              Grid.Column="1"
+              Margin="4"
+              IsReadOnly="True"
+              ToolTip="{x:Static local:Resources.InstallationModeDescription}"
+              ItemsSource="{Binding InstallationModes}" 
+              SelectedItem="{Binding SelectedInstallationMode}">
+      <ComboBox.ItemTemplate>
+        <DataTemplate>
+          <TextBlock Text="{Binding DisplayName}"/>
+        </DataTemplate>
+      </ComboBox.ItemTemplate>
+    </ComboBox>
 
-      </ComboBox>
+    <!-- Installation type (SDK / runtime) -->
+    <Label Grid.Row="2"
+           Grid.Column="0"
+           Margin="4"
+           Content="{x:Static local:Resources.InstallDotnetDialogTypeLabel}" />
 
-         <!-- Installation type (SDK / runtime) -->
-      <Label Grid.Row="2"
-             Grid.Column="0"
-             Margin="4"
-             Content="{x:Static local:Resources.InstallDotnetDialogTypeLabel}" />
+    <ComboBox Grid.Row="2"
+              Grid.Column="1"
+              Margin="4"
+              IsReadOnly="True"
+              ToolTip="{x:Static local:Resources.InstallDotnetInstallationTypeDescription}"
+              ItemsSource="{Binding InstallationTypes}"
+              SelectedItem="{Binding SelectedInstallationType}">
+      <ComboBox.ItemTemplate>
+        <DataTemplate>
+          <TextBlock Text="{Binding DisplayName}"/>
+        </DataTemplate>
+      </ComboBox.ItemTemplate>
+    </ComboBox>
 
-      <ComboBox Grid.Row="2"
-                Grid.Column="1"
-                Margin="4"
-                IsReadOnly="True"
-                ToolTip="{x:Static local:Resources.InstallDotnetInstallationTypeDescription}"
-                ItemsSource="{Binding InstallationTypes}"
-                SelectedItem="{Binding SelectedInstallationType}">
-         <ComboBox.ItemTemplate>
-            <DataTemplate>
-               <TextBlock Text="{Binding DisplayName}"/>
-            </DataTemplate>
-         </ComboBox.ItemTemplate>
-      </ComboBox>
+    <!-- version  -->
+    <Label Grid.Row="3"
+           Grid.Column="0"
+           Margin="4"
+           Content="Version" />
 
-      <!-- version  -->
-      <Label Grid.Row="3"
-             Grid.Column="0"
-             Margin="4"
-             Content="Version" />
-
-      <ComboBox Grid.Row="3"
-                Grid.Column="1"
-                Margin="4"
-                IsEditable="True"
-                IsReadOnly="False"
-                ToolTip="{x:Static local:Resources.InstallDotnetVersionDescription}"
-                ItemsSource="{Binding Versions}"
+    <ComboBox Grid.Row="3"
+              Grid.Column="1"
+              Margin="4"
+              IsEditable="True"
+              IsReadOnly="False"
+              ToolTip="{x:Static local:Resources.InstallDotnetVersionDescription}"
+              ItemsSource="{Binding Versions}"
                 SelectedItem="{Binding SelectedItem}"
                 Text="{Binding SelectedText}"
                 SelectedValuePath="Name"
                 DisplayMemberPath="DisplayName">
-      </ComboBox>
+    </ComboBox>
 
-      <!-- OK/Cancel buttons -->
-      <StackPanel Grid.Row="4" 
-                  Grid.ColumnSpan="2"
-                  Margin="4 0"
-                  Orientation="Horizontal"
-                  HorizontalAlignment="Right">
-         
-         <Button Margin="4" 
-                 Height="23" 
-                 MinWidth="75" 
-                 IsDefault="True" 
-                 Command="{Binding OkCommand, Mode=OneWay}"
-                 CommandParameter="{Binding ElementName=InstallDotnetDialog}"
-                 Content="{x:Static local:Resources.CommonOkButtonLabel}" />
-         
-         <Button Height="23"
-                    MinWidth="75"
-                    IsCancel="True"
-                    Command="{Binding CancelCommand}"
-                    CommandParameter="{Binding ElementName=InstallDotnetDialog}"
-                    Content="{x:Static local:Resources.CommonCancelButtonLabel}" />
-      </StackPanel>
-   </Grid>
+    <!-- OK/Cancel buttons -->
+    <StackPanel Grid.Row="4" 
+                Grid.ColumnSpan="2"
+                Margin="4 0"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right">
+
+      <Button Margin="4" 
+              Height="23" 
+              MinWidth="75" 
+              IsDefault="True" 
+              Command="{Binding OkCommand, Mode=OneWay}"
+              CommandParameter="{Binding ElementName=InstallDotnetDialog}"
+              Content="{x:Static local:Resources.CommonOkButtonLabel}" />
+
+      <Button Height="23"
+              MinWidth="75"
+              IsCancel="True"
+              Command="{Binding CancelCommand}"
+              CommandParameter="{Binding ElementName=InstallDotnetDialog}"
+              Content="{x:Static local:Resources.CommonCancelButtonLabel}" />
+    </StackPanel>
+  </Grid>
 </vsui:DialogWindow>

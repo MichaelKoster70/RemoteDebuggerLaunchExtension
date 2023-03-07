@@ -11,7 +11,7 @@ using System.Runtime.Serialization;
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// Exception thrown when an unrecoverable error occured.
+   /// Exception thrown when an unrecoverable error occurred.
    /// </summary>
    [Serializable]
    public class RemoteDebuggerLauncherException : Exception

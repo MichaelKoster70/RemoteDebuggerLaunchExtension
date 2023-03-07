@@ -2,8 +2,11 @@
 This folder is holding types providing extensions to the visual studio project system (CPS).
 
 ## Directory Structure
-### `Extensions`
-- Extension methods for types provided by CPS
+### `Build`
+- Types supporting build and deployment workflows
 
-### `LaunchProfile`
-- Holds all types needed to implement a custom CPS launch profile
+### `Debugger`
+- Holds all types needed to implement a custom launch profile
+
+## References
+[Project System: Launch Profiles](https://github.com/dotnet/project-system/blob/main/docs/launch-profiles.md)

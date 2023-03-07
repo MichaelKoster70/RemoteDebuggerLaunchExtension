@@ -350,5 +350,5 @@ MigrationBackup/
 .ionide/
 
 # Assitional folders to exclude
-/samples/AspNetSpa/ClientApp/.angular/
-/samples/AspNetSpa/.config
+/samples/WebAspSpa/ClientApp/.angular/
+/samples/WebAspSpa/.config

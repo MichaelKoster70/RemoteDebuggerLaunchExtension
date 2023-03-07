@@ -84,37 +84,42 @@ namespace RemoteDebuggerLauncher
 #pragma warning disable VSTHRD102 // Implement internal logic asynchronously
          package.JoinableTaskFactory.Run(async () =>
          {
-            var statusbarService = await ServiceProvider.GetStatusbarServiceAsync();
+            var vsFacade = await ServiceProvider.GeVsFacadeFactoryAsync();
+            var statusbar = vsFacade.GetVsShell().GetStatusbar();
 
 #pragma warning disable CA1031 // Do not catch general exception types
             try
             {
                // get all services we need
-               var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync();
-               var projectService = await ServiceProvider.GetProjectServiceAsync();
-               var optionsPageAccessor = await ServiceProvider.GetOptionsPageServiceAsync();
-               var loggerService = await ServiceProvider.GetLoggerServiceAsync();
+               var outputPaneWriter = vsFacade.GetVsShell().GetOutputPaneWriter();
 
                // do the remaining work on the UI thread
                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-               var lauchProfileAccess = new LaunchProfileAccess(dte, projectService);
-               var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync();
+               var projects = await vsFacade.GetVsSolution().GetActiveConfiguredProjectsAsync();
 
-               loggerService.WriteLine(Resources.CommonStartSessionMarker);
+               outputPaneWriter.WriteLine(Resources.CommonStartSessionMarker);
 
-               foreach (var profile in profiles)
+               if (projects.Count > 0)
                {
-                  var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
-                  var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService);
-                  remoteOperations.LogHost = true;
-                  loggerService.WriteLine(Resources.RemoteCommandCommonProfile, profile.Name);
+                  // we have project to process
+                  foreach (var project in projects)
+                  {
+                     var remoteOperations = await project.GetSecureShellRemoteOperationsAsync();
+                     remoteOperations.LogHost = true;
+                     outputPaneWriter.WriteLine(Resources.RemoteCommandCommonProfile, project.ActiveLaunchProfileName);
 
-                  // Step 1: try to connect to the device
-                  await remoteOperations.CheckConnectionThrowAsync();
+                     // Step 1: try to connect to the device
+                     await remoteOperations.CheckConnectionThrowAsync();
 
-                  // Step 2: clean the remote folder
-                  await remoteOperations.CleanRemoteFolderAsync();
+                     // Step 2: clean the remote folder
+                     await remoteOperations.CleanRemoteFolderAsync();
+                  }
+               }
+               else
+               {
+                  // let the user know to select the correct launch profile
+                  outputPaneWriter.WriteLine(Resources.RemoteCommandCleanRemoteFolderNoProjects);
                }
             }
             catch(Exception exception)
@@ -123,7 +128,7 @@ namespace RemoteDebuggerLauncher
             }
             finally
             {
-               statusbarService.Clear();
+               statusbar.Clear();
             }
 #pragma warning restore CA1031 // Do not catch general exception types
          });

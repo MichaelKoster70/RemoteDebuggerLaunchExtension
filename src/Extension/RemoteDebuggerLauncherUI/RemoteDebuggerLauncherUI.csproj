@@ -68,6 +68,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ExceptionMessages.resx</DependentUpon>
     </Compile>
+    <Compile Include="WebTools\ViewModels\BrowserViewModel.cs" />
+    <Compile Include="WebTools\Model\IDisplayNameProvider.cs" />
+    <Compile Include="WebTools\ViewModels\SelectBrowserViewModel.cs" />
+    <Compile Include="WebTools\Views\SelectBrowserDialogWindow.xaml.cs">
+      <DependentUpon>SelectBrowserDialogWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Views\ToolWindow.cs" />
     <Compile Include="Windows\Views\ToolWindowControl.xaml.cs">
       <DependentUpon>ToolWindowControl.xaml</DependentUpon>
@@ -88,6 +94,10 @@
     <Compile Include="Commands\Views\InstallDotnetDialogWindow.xaml.cs">
       <DependentUpon>InstallDotnetDialogWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="WebTools\Views\SelectBrowserDialogWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Windows\Views\ToolWindowControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -109,6 +119,7 @@
     <EmbeddedResource Include="Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

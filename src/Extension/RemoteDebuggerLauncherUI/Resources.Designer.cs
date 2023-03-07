@@ -97,6 +97,15 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to no private key file provided..
+        /// </summary>
+        public static string ExceptionMessageSecureShellSessionNoPrivateKey {
+            get {
+                return ResourceManager.GetString("ExceptionMessageSecureShellSessionNoPrivateKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to no username provided..
         /// </summary>
         public static string ExceptionMessageSecureShellSessionNoUserName {
@@ -299,6 +308,15 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Launching &apos;dotnet {0}&apos;.
+        /// </summary>
+        public static string PublishCommandLine {
+            get {
+                return ResourceManager.GetString("PublishCommandLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Publishing application FAILED with exit code {0}.
         /// </summary>
         public static string PublishFailed {
@@ -416,6 +434,16 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cleaning - no supported projects found.
+        ///Make sure you selected a &apos;SSH Remote&apos; launch profile..
+        /// </summary>
+        public static string RemoteCommandCleanRemoteFolderNoProjects {
+            get {
+                return ResourceManager.GetString("RemoteCommandCleanRemoteFolderNoProjects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cleaning ....
         /// </summary>
         public static string RemoteCommandCleanRemoteFolderStatusbarProgress {
@@ -472,27 +500,37 @@ namespace RemoteDebuggerLauncher {
         /// <summary>
         ///   Looks up a localized string similar to Deploying application OK.
         /// </summary>
-        public static string RemoteCommandDeployRemoveFolderCompletedSuccess {
+        public static string RemoteCommandDeployRemoteFolderCompletedSuccess {
             get {
-                return ResourceManager.GetString("RemoteCommandDeployRemoveFolderCompletedSuccess", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderCompletedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deploying application - no supported projects found.
+        ///Make sure you selected a &apos;SSH Remote&apos; launch profile..
+        /// </summary>
+        public static string RemoteCommandDeployRemoteFolderNoProjects {
+            get {
+                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderNoProjects", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Deploying application - Source: {0}, Target: {1}.
         /// </summary>
-        public static string RemoteCommandDeployRemoveFolderOutputPaneProgress {
+        public static string RemoteCommandDeployRemoteFolderOutputPaneProgress {
             get {
-                return ResourceManager.GetString("RemoteCommandDeployRemoveFolderOutputPaneProgress", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderOutputPaneProgress", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Deploying application ....
         /// </summary>
-        public static string RemoteCommandDeployRemoveFolderStatusbarProgress {
+        public static string RemoteCommandDeployRemoteFolderStatusbarProgress {
             get {
-                return ResourceManager.GetString("RemoteCommandDeployRemoveFolderStatusbarProgress", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderStatusbarProgress", resourceCulture);
             }
         }
         
@@ -511,6 +549,16 @@ namespace RemoteDebuggerLauncher {
         public static string RemoteCommandInstallDebuggerCommandStatusbarProgress {
             get {
                 return ResourceManager.GetString("RemoteCommandInstallDebuggerCommandStatusbarProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing VS Code Debugger - no supported projects found.
+        ///Make sure you selected a &apos;SSH Remote&apos; launch profile..
+        /// </summary>
+        public static string RemoteCommandInstallDebuggerNoProjects {
+            get {
+                return ResourceManager.GetString("RemoteCommandInstallDebuggerNoProjects", resourceCulture);
             }
         }
         
@@ -592,6 +640,16 @@ namespace RemoteDebuggerLauncher {
         public static string RemoteCommandInstallDotnetCommandStatusbarText {
             get {
                 return ResourceManager.GetString("RemoteCommandInstallDotnetCommandStatusbarText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing .NET - no supported projects found.
+        ///Make sure you selected a &apos;SSH Remote&apos; launch profile..
+        /// </summary>
+        public static string RemoteCommandInstallDotnetNoProjects {
+            get {
+                return ResourceManager.GetString("RemoteCommandInstallDotnetNoProjects", resourceCulture);
             }
         }
         
@@ -695,7 +753,7 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Downloading .NET - Powershell script execution failed with &apos;{0}&apos;.
+        ///   Looks up a localized string similar to Downloading .NET - PowerShell script execution failed with &apos;{0}&apos;.
         /// </summary>
         public static string RemoteCommandInstallDotnetScriptExecutionFailed {
             get {
@@ -760,9 +818,9 @@ namespace RemoteDebuggerLauncher {
         /// <summary>
         ///   Looks up a localized string similar to Launching debugger ....
         /// </summary>
-        public static string RemoteCommandLanchingDebugger {
+        public static string RemoteCommandLaunchingDebugger {
             get {
-                return ResourceManager.GetString("RemoteCommandLanchingDebugger", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandLaunchingDebugger", resourceCulture);
             }
         }
         
@@ -781,6 +839,24 @@ namespace RemoteDebuggerLauncher {
         public static string RemoteCommandUploadOutputPaneProgress {
             get {
                 return ResourceManager.GetString("RemoteCommandUploadOutputPaneProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select the browser you want to use to start debugging..
+        /// </summary>
+        public static string SelectBrowserDialogHeaderText {
+            get {
+                return ResourceManager.GetString("SelectBrowserDialogHeaderText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Browser.
+        /// </summary>
+        public static string SelectBrowserDialogTitle {
+            get {
+                return ResourceManager.GetString("SelectBrowserDialogTitle", resourceCulture);
             }
         }
         

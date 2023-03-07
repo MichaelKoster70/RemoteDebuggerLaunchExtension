@@ -8,8 +8,6 @@
 using System;
 using System.ComponentModel.Design;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.ProjectSystem;
-using Microsoft.VisualStudio.ProjectSystem.Debug;
 using Microsoft.VisualStudio.Shell;
 
 namespace RemoteDebuggerLauncher
@@ -86,47 +84,34 @@ namespace RemoteDebuggerLauncher
 #pragma warning disable VSTHRD102 // Implement internal logic asynchronously
          package.JoinableTaskFactory.Run(async () =>
          {
-            var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync();
-            var projectService = await ServiceProvider.GetProjectServiceAsync();
-            var optionsPageAccessor = await ServiceProvider.GetOptionsPageServiceAsync();
-            var loggerService = await ServiceProvider.GetLoggerServiceAsync();
-            var statusbarService = await ServiceProvider.GetStatusbarServiceAsync();
-            var waitDialogFactory = await ServiceProvider.GetWaitDialogFactoryAsync(true);
+            var vsFacade = await ServiceProvider.GeVsFacadeFactoryAsync();
+            var outputPaneWriter = vsFacade.GetVsShell().GetOutputPaneWriter();
 
             // do the remaining work on the UI thread
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            var lauchProfileAccess = new LaunchProfileAccess(dte, projectService);
-            var profiles = await lauchProfileAccess.GetActiveLaunchProfilseWithProjectAsync();
+            var projects = await vsFacade.GetVsSolution().GetActiveConfiguredProjectsAsync();
 
-            loggerService.WriteLine(Resources.CommonStartSessionMarker);
+            outputPaneWriter.WriteLine(Resources.CommonStartSessionMarker);
 
-            foreach (var profile in profiles)
+            if (projects.Count > 0)
             {
-               var tokenReplacer = profile.ConfiguredProject.UnconfiguredProject.GetDebugTokenReplacerService();
-
-               // get environment variables and msbuild properties resolved
-               var resolvedProfile = await tokenReplacer.ReplaceTokensInProfileAsync(profile.LaunchProfile);
-
-               var configurationAggregator = ConfigurationAggregator.Create(profile.LaunchProfile, optionsPageAccessor);
-               var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService);
-               var publishService = Publish.Create(profile.ConfiguredProject, loggerService, waitDialogFactory);
-
-               remoteOperations.LogHost = true;
-               loggerService.WriteLine(Resources.RemoteCommandCommonProjectAndProfile, profile.ConfiguredProject.GetName(), profile.LaunchProfile.Name);
-
-               // Step 1: try to connect to the device
-               await remoteOperations.CheckConnectionThrowAsync();
-
-               // Step 2:publish the project if requested
-               if (configurationAggregator.QueryPublishOnDeploy())
+               // we have project to process
+               foreach (var project in projects)
                {
-                  await publishService.StartAsync();
-               }
+                  var deploy = await project.GetDeployServiceAsync(true);
 
-               //// Step 3: Deploy application to target folder
-               var outputPath = await publishService.GetOutputDirectoryPathAsync();
-               await remoteOperations.DeployRemoteFolderAsync(outputPath, true);
+                  // Report progress
+                  outputPaneWriter.WriteLine(Resources.RemoteCommandCommonProjectAndProfile, project.GetProjectName(), project.ActiveLaunchProfileName);
+
+                  // Publish and Deploy
+                  await deploy.DeployAsync(checkConnection: true, logHost: true);
+               }
+            }
+            else
+            {
+               // let the user know to select the correct launch profile
+               outputPaneWriter.WriteLine(Resources.RemoteCommandDeployRemoteFolderNoProjects);
             }
          });
       }

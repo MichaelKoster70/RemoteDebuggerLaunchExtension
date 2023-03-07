@@ -29,10 +29,6 @@ namespace RemoteDebuggerLauncher
    /// </remarks>
    [ProvideBindingPath]
    [ProvideService(typeof(SOptionsPageAccessor), IsAsyncQueryable = true)]
-   [ProvideService(typeof(SLoggerService), IsAsyncQueryable = true)]
-   [ProvideService(typeof(SStatusbarService), IsAsyncQueryable = true)]
-   [ProvideService(typeof(SWaitDialogFactoryService), IsAsyncQueryable = true)]
-   [ProvideService(typeof(SWaitDialogFactoryStubService), IsAsyncQueryable = true)]
    [InstalledProductRegistration("#110", "#112", Generated.AssemblyVersion.Version, IconResourceID = 400)]
    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
    [ProvideOptionPage(typeof(DeviceOptionsPage), PackageConstants.Options.Category, PackageConstants.Options.PageNameDevice, 100, 101, true)]
@@ -61,10 +57,6 @@ namespace RemoteDebuggerLauncher
 
          // Add services implemented in this package
          AddService(typeof(SOptionsPageAccessor), CreateServiceAsync, true);
-         AddService(typeof(SLoggerService), CreateServiceAsync, true);
-         AddService(typeof(SStatusbarService), CreateServiceAsync, true);
-         AddService(typeof(SWaitDialogFactoryService), CreateServiceAsync, true);
-         AddService(typeof(SWaitDialogFactoryStubService), CreateServiceAsync, true);
 
          // When initialized asynchronously, the current thread may be a background thread at this point.
          // Do any initialization that requires the UI thread after switching to the UI thread.
@@ -91,22 +83,6 @@ namespace RemoteDebuggerLauncher
          if (typeof(SOptionsPageAccessor) == serviceType)
          {
             return Task.FromResult<object>(new OptionsPageAccessorService(this));
-         }
-         else if(typeof(SLoggerService) == serviceType)
-         {
-            return Task.FromResult<object>(new LoggerService());
-         }
-         else if (typeof(SStatusbarService) == serviceType)
-         {
-            return Task.FromResult<object>(new StatusbarService());
-         }
-         else if (typeof(SWaitDialogFactoryService) == serviceType)
-         {
-            return Task.FromResult<object>(new WaitDialogFactoryService());
-         }
-         else if (typeof(SWaitDialogFactoryStubService) == serviceType)
-         {
-            return Task.FromResult<object>(new WaitDialogFactoryStubService());
          }
 
          return Task.FromResult<object>(null);

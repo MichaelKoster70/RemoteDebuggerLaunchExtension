@@ -120,4 +120,10 @@
   <data name="InvalidSecureShellPortValue" xml:space="preserve">
     <value>The port number must be between {0} and {1}</value>
   </data>
+  <data name="NoExternalBrowserConfigured" xml:space="preserve">
+    <value>No external browser configured as default browser</value>
+  </data>
+  <data name="NoExternalBrowserSelected" xml:space="preserve">
+    <value>No external browser selected for the debugging session.</value>
+  </data>
 </root>

@@ -101,45 +101,50 @@ namespace RemoteDebuggerLauncher
          {
             joinableTask = package.JoinableTaskFactory.RunAsync(async () =>
             {
-               var statusbarService = await ServiceProvider.GetStatusbarServiceAsync();
+               var vsFacade = await ServiceProvider.GeVsFacadeFactoryAsync();
+               var statusbar = vsFacade.GetVsShell().GetStatusbar();
 
 #pragma warning disable CA1031 // Do not catch general exception types
                try
                {
+ 
                   // get all services we need
-                  var dte = await ServiceProvider.GetAutomationModelTopLevelObjectServiceAsync();
-                  var projectService = await ServiceProvider.GetProjectServiceAsync();
-                  var optionsPageAccessor = await ServiceProvider.GetOptionsPageServiceAsync();
-                  var loggerService = await ServiceProvider.GetLoggerServiceAsync();
+                  var outputPaneWriter = vsFacade.GetVsShell().GetOutputPaneWriter();
 
                   // do the remaining work on the UI thread
                   await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-                  var lauchProfileAccess = new LaunchProfileAccess(dte, projectService);
-                  var profiles = await lauchProfileAccess.GetActiveLaunchProfilesAsync();
+                  var projects = await vsFacade.GetVsSolution().GetActiveConfiguredProjectsAsync();
 
-                  statusbarService.SetText(Resources.RemoteCommandInstallDotnetCommandStatusbarText);
-                  loggerService.WriteLine(Resources.CommonStartSessionMarker);
+                  statusbar.SetText(Resources.RemoteCommandInstallDotnetCommandStatusbarText);
+                  outputPaneWriter.WriteLine(Resources.CommonStartSessionMarker);
 
-                  foreach (var profile in profiles)
+                  if (projects.Count > 0)
                   {
-                     var configurationAggregator = ConfigurationAggregator.Create(profile, optionsPageAccessor);
-                     var remoteOperations = SecureShellRemoteOperations.Create(configurationAggregator, loggerService);
-
-                     remoteOperations.LogHost = true;
-
-                     loggerService.WriteLine(Resources.RemoteCommandCommonProfile, profile.Name);
-
-                     bool success = viewModel.SelectedInstallationModeOnline;
-                     if (success)
+                     // we have project to process
+                     foreach (var project in projects)
                      {
-                        success = await remoteOperations.TryInstallDotNetOnlineAsync(viewModel.SelectedInstallationKind, viewModel.SelectedVersion);
-                     }
+                        var remoteOperations = await project.GetSecureShellRemoteOperationsAsync();
+                        remoteOperations.LogHost = true;
 
-                     if (!success)
-                     {
-                        await remoteOperations.TryInstallDotNetOfflineAsync(viewModel.SelectedInstallationKind, viewModel.SelectedVersion);
+                        outputPaneWriter.WriteLine(Resources.RemoteCommandCommonProjectAndProfile, project.GetProjectName(), project.ActiveLaunchProfileName);
+
+                        bool success = viewModel.SelectedInstallationModeOnline;
+                        if (success)
+                        {
+                           success = await remoteOperations.TryInstallDotNetOnlineAsync(viewModel.SelectedInstallationKind, viewModel.SelectedVersion);
+                        }
+
+                        if (!success)
+                        {
+                           await remoteOperations.TryInstallDotNetOfflineAsync(viewModel.SelectedInstallationKind, viewModel.SelectedVersion);
+                        }
                      }
+                  }
+                  else
+                  {
+                     // let the user know to select the correct launch profile
+                     outputPaneWriter.WriteLine(Resources.RemoteCommandInstallDotnetNoProjects);
                   }
                }
                catch (Exception exception)
@@ -148,7 +153,7 @@ namespace RemoteDebuggerLauncher
                }
                finally
                {
-                  statusbarService.Clear();
+                  statusbar.Clear();
                   joinableTask = null;
                }
 #pragma warning restore CA1031 // Do not catch general exception types

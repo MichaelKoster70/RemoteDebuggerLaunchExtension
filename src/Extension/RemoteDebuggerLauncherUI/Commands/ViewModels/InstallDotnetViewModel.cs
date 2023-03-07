@@ -6,8 +6,6 @@
 // ----------------------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Threading;
 using RemoteDebuggerLauncher.Shared;
@@ -99,18 +97,6 @@ namespace RemoteDebuggerLauncher
             return SelectedItem?.Name ?? SelectedText;
          }
       }
-
-      //public InstallationTypeViewModel SelectedInstallationType
-      //{
-      //   get => selectedInstallationType;
-      //   set
-      //   {
-      //      if (SetProperty(ref selectedInstallationType, value))
-      //      {
-      //         OkCommand.RaiseCanExecuteChanged();
-      //      }
-      //   }
-      //}
 
       public DelegateCommand<DialogWindow> OkCommand { get; }
 
