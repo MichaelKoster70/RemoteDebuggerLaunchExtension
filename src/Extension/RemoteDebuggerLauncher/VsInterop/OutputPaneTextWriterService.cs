@@ -7,6 +7,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 
 namespace RemoteDebuggerLauncher
 {
@@ -17,6 +18,7 @@ namespace RemoteDebuggerLauncher
    /// <seealso cref="IOutputPaneWriterService" />
    internal class OutputPaneTextWriterService : IOutputPaneWriterService
    {
+      private readonly StringBuilder lineBuffer = new StringBuilder();
       private readonly TextWriter outputPaneWriter;
 
       /// <summary>
@@ -30,7 +32,8 @@ namespace RemoteDebuggerLauncher
       /// <inheritdoc />
       public void Write(string message, bool activate = true)
       {
-         outputPaneWriter.Write(message);
+         _= lineBuffer.Append(message);
+         //outputPaneWriter.Write(message);
       }
 
       /// <inheritdoc />
@@ -72,7 +75,9 @@ namespace RemoteDebuggerLauncher
       /// <inheritdoc />
       public void WriteLine(string message, bool activate = true)
       {
-         outputPaneWriter.WriteLine(message);
+         _= lineBuffer.Append(message);
+         outputPaneWriter.WriteLine(lineBuffer.ToString());
+         _= lineBuffer.Clear();
       }
 
       /// <inheritdoc />

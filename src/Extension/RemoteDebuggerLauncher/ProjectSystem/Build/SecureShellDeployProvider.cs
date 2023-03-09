@@ -15,6 +15,11 @@ using Microsoft.VisualStudio.ProjectSystem.Debug;
 
 namespace RemoteDebuggerLauncher
 {
+   /// <summary>
+   /// Provides the implementation for the deploy phase of build.
+   /// Implements <see cref="IDeployProvider"/>
+   /// </summary>
+   /// <seealso cref=IDeployProvider""/>
    [Export(typeof(IDeployProvider))]
    [Shared(ExportContractNames.Scopes.ConfiguredProject)]
    [AppliesTo(".NET")]
@@ -58,9 +63,13 @@ namespace RemoteDebuggerLauncher
             // configure the services
             await packageServiceFactory.ConfigureAsync(outputPaneWriter);
 
-            // Step 1: 
-            await outputPaneWriter.WriteLineAsync("Hello from SecureShellDeployProvider");
+            var statusbar = await packageServiceFactory.GetStatusbarServiceAsync();
+            var deployService = await packageServiceFactory.GetDeployServiceAsync(false);
 
+            // Step 1: Deploy (with publish if configured)
+            await deployService.DeployAsync(true, true);
+
+            statusbar.Clear();
          }
          catch (RemoteDebuggerLauncherException ex) 
          {

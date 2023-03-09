@@ -279,7 +279,7 @@ namespace RemoteDebuggerLauncher
       public IImmutableDictionary<string, string> QueryEnvironmentVariables() => launchProfile.EnvironmentVariables;
 
       /// <summary>
-      /// Queries the flag whether to install the VS code debugger on deploy.
+      /// Queries the flag whether to install the VS code debugger when start debugging.
       /// </summary>
       /// <returns>A <see langword="bool"/><c>true</c> if debugger should be installed; else <c>false</c>.</returns>
       /// <remarks>
@@ -287,9 +287,23 @@ namespace RemoteDebuggerLauncher
       /// - selected launch profile
       /// - built-in default (false)
       /// </remarks>
-      public bool QueryInstallDebuggerOnDeploy()
+      public bool QueryInstallDebuggerOnStartDebugging()
       {
-         return GetOtherSetting(SecureShellRemoteLaunchProfile.installDebuggerOnDeployProperty, false);
+         return GetOtherSetting(SecureShellRemoteLaunchProfile.installDebuggerOnStartDebuggingProperty, false);
+      }
+
+      /// <summary>
+      /// Queries the flag whether to deploy before start debugging.
+      /// </summary>
+      /// <returns>A <see langword="bool"/><c>true</c> if the app should be deployed; else <c>false</c>.</returns>
+      /// <remarks>
+      /// The following configuration provides are queried, first match wins
+      /// - selected launch profile
+      /// - built-in default (false)
+      /// </remarks>
+      public bool QueryDeployOnStartDebugging()
+      {
+         return GetOtherSetting(SecureShellRemoteLaunchProfile.deployOnStartDebuggingProperty, false);
       }
 
       /// <summary>

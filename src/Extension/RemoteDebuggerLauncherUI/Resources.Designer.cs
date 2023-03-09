@@ -308,6 +308,15 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to LaunchBrowser: launchUrl has no valid value, skip launching..
+        /// </summary>
+        public static string LaunchTargetsProviderNoLaunchUrl {
+            get {
+                return ResourceManager.GetString("LaunchTargetsProviderNoLaunchUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Launching &apos;dotnet {0}&apos;.
         /// </summary>
         public static string PublishCommandLine {
@@ -371,7 +380,7 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Connecting to {0}@{1} ... .
+        ///   Looks up a localized string similar to Connecting to {0}@{1}... .
         /// </summary>
         public static string RemoteCommandCheckConnectionOutputPaneConnectingTo {
             get {
@@ -380,7 +389,7 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Connecting to {0}@{1} (Port {2}) ... .
+        ///   Looks up a localized string similar to Connecting to {0}@{1} (Port {2})... .
         /// </summary>
         public static string RemoteCommandCheckConnectionOutputPaneConnectingToWithPort {
             get {
@@ -526,7 +535,7 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Deploying application ....
+        ///   Looks up a localized string similar to Deploying application....
         /// </summary>
         public static string RemoteCommandDeployRemoteFolderStatusbarProgress {
             get {
@@ -544,7 +553,7 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Installing VS Code Debugger on targets ....
+        ///   Looks up a localized string similar to Installing VS Code Debugger on targets....
         /// </summary>
         public static string RemoteCommandInstallDebuggerCommandStatusbarProgress {
             get {
@@ -635,7 +644,7 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Installing .NET on targets ....
+        ///   Looks up a localized string similar to Installing .NET on targets....
         /// </summary>
         public static string RemoteCommandInstallDotnetCommandStatusbarText {
             get {
@@ -816,11 +825,20 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Launching debugger ....
+        ///   Looks up a localized string similar to Launching debugger....
         /// </summary>
         public static string RemoteCommandLaunchingDebugger {
             get {
                 return ResourceManager.GetString("RemoteCommandLaunchingDebugger", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ---- Launching debugger: Project: {0}, Configuration: {1} ----.
+        /// </summary>
+        public static string RemoteCommandLaunchingDebuggerOutputPaneStart {
+            get {
+                return ResourceManager.GetString("RemoteCommandLaunchingDebuggerOutputPaneStart", resourceCulture);
             }
         }
         
@@ -839,6 +857,15 @@ namespace RemoteDebuggerLauncher {
         public static string RemoteCommandUploadOutputPaneProgress {
             get {
                 return ResourceManager.GetString("RemoteCommandUploadOutputPaneProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uploading {0}..
+        /// </summary>
+        public static string RemoteCommandUploadOutputPaneStart {
+            get {
+                return ResourceManager.GetString("RemoteCommandUploadOutputPaneStart", resourceCulture);
             }
         }
         

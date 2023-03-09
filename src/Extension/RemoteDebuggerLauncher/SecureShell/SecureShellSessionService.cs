@@ -110,7 +110,7 @@ namespace RemoteDebuggerLauncher
                            filenameBefore = e.Filename;
                            progressBefore = 0;
                            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                           progressOutputPaneWriter.Write($"Uploading {e.Filename} .");
+                           progressOutputPaneWriter.Write(Resources.RemoteCommandUploadOutputPaneStart, e.Filename);
 
                            if (e.Uploaded == e.Size)
                            {

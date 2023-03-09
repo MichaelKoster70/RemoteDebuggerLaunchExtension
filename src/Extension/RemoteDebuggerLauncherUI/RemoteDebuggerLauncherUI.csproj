@@ -74,10 +74,6 @@
     <Compile Include="WebTools\Views\SelectBrowserDialogWindow.xaml.cs">
       <DependentUpon>SelectBrowserDialogWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Views\ToolWindow.cs" />
-    <Compile Include="Windows\Views\ToolWindowControl.xaml.cs">
-      <DependentUpon>ToolWindowControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Utilities\ViewModelBase.cs" />
     <Page Include="Commands\Views\InstallDebuggerDialogWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -95,10 +91,6 @@
       <DependentUpon>InstallDotnetDialogWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="WebTools\Views\SelectBrowserDialogWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Windows\Views\ToolWindowControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

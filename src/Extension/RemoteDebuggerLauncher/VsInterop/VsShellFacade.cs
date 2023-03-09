@@ -53,7 +53,7 @@ namespace RemoteDebuggerLauncher.VsInterop
          }
          else
          {
-            return waitDialogFactoryStub = waitDialogFactoryStub ?? new WaitDialogFactoryStubService();
+            return waitDialogFactoryStub = waitDialogFactoryStub ?? new WaitDialogFactoryStubService(GetStatusbar());
          }
       }
 

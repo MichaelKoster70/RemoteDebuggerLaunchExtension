@@ -26,6 +26,9 @@ namespace RemoteDebuggerLauncher
          {
             /// <summary>CPS 'AppliesTo attribute value for the custom Launch Profile.</summary>
             public const string LaunchProfiles = "LaunchProfiles";
+
+            /// <summary>CPS 'AppliesTo' attribute value for the custom Launch Profile.</summary>
+            public const string LaunchProfilesAndCps = "LaunchProfiles + CPS";
          }
       }
 

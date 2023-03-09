@@ -102,7 +102,7 @@ jobs:
       shell: powershell
 
     # Build Solution: Rebuild, and signs VSIX if cert file is present
-    - name: 'Build Solution: Rebuild'
+    - name: 'Build Solution: Rebuild and sign'
       id: build
       run: msbuild ${{ inputs.solution-path }} /t:Rebuild /p:Configuration=${{ inputs.configuration }}
       shell: pwsh

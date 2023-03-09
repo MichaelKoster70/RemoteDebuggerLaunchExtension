@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Rule Name="SecureShellRemoteLaunchProfile"
       Description="Properties associated with launching and debugging a custom debug target."
-      DisplayName="SSH Remote Debug Target"
+      DisplayName="SSH Remote Launch"
       PageTemplate="commandNameBasedDebugger"
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -92,8 +92,13 @@
                   Description="Publishes application before deployment. This is useful for application types that require additional files to be deployed like ASP.NET/Blazer."
                   Subcategory="Deployment Options" />
 
-   <BoolProperty Name="installDebuggerOnDeploy"
-                  DisplayName="Install debugger"
+  <BoolProperty Name="deployOnStartDebugging"
+                  DisplayName="Deploy on start debugging"
+                  Description="Deploys the application to the target before launching."
+                  Subcategory="Deployment Options" />
+  
+  <BoolProperty Name="installDebuggerOnStartDebugging"
+                  DisplayName="Install debugger on start debugging"
                   Description="Installs the latest VS Code debugger on the target before launching the target application."
                   Subcategory="Deployment Options" />
 </Rule>

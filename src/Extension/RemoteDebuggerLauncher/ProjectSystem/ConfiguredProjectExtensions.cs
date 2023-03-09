@@ -114,11 +114,17 @@ namespace RemoteDebuggerLauncher
       public static string GetProjectName(this ConfiguredProject configuredProject) => Path.GetFileNameWithoutExtension(configuredProject.UnconfiguredProject.FullPath);
 
       /// <summary>
+      /// Gets the the project configuration (Debug/Release).
+      /// </summary>
+      /// <param name="configuredProject">The CPS configured project to read from.</param>
+      /// <returns>The <see langword="string"/> holding the confighuration.</returns>
+      public static string GetConfiguration(this ConfiguredProject configuredProject) => configuredProject.ProjectConfiguration.Dimensions["Configuration"];
+
+      /// <summary>
       /// Gets the the project folder.
       /// </summary>
       /// <param name="configuredProject">The CPS configured project to read from.</param>
       /// <returns>The <see langword="string"/> holding the folder.</returns>
       public static string GetProjectFolder(this ConfiguredProject configuredProject) => Path.GetDirectoryName(configuredProject.UnconfiguredProject.FullPath);
-
    }
 }

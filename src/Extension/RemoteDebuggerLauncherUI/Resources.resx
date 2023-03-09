@@ -202,6 +202,9 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
   <data name="InstallDotnetVersionLatestStsDisplayName" xml:space="preserve">
     <value>Latest STS</value>
   </data>
+  <data name="LaunchTargetsProviderNoLaunchUrl" xml:space="preserve">
+    <value>LaunchBrowser: launchUrl has no valid value, skip launching.</value>
+  </data>
   <data name="PublishCommandLine" xml:space="preserve">
     <value>Launching 'dotnet {0}'</value>
   </data>
@@ -224,11 +227,11 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
     <value>Running dotnet publish ...</value>
   </data>
   <data name="RemoteCommandCheckConnectionOutputPaneConnectingTo" xml:space="preserve">
-    <value>Connecting to {0}@{1} ... </value>
+    <value>Connecting to {0}@{1}... </value>
     <comment>Remote command Check Connection: Connecting to text</comment>
   </data>
   <data name="RemoteCommandCheckConnectionOutputPaneConnectingToWithPort" xml:space="preserve">
-    <value>Connecting to {0}@{1} (Port {2}) ... </value>
+    <value>Connecting to {0}@{1} (Port {2})... </value>
     <comment>Remote command Check Connection: Connecting to remote target with custom port</comment>
   </data>
   <data name="RemoteCommandCheckConnectionStatusbarCompletedSuccess" xml:space="preserve">
@@ -282,13 +285,13 @@ Make sure you selected a 'SSH Remote' launch profile.</value>
     <value>Deploying application - Source: {0}, Target: {1}</value>
   </data>
   <data name="RemoteCommandDeployRemoteFolderStatusbarProgress" xml:space="preserve">
-    <value>Deploying application ...</value>
+    <value>Deploying application...</value>
   </data>
   <data name="RemoteCommandInstallDebuggerCommandCaption" xml:space="preserve">
     <value>Installing VS Code Debugger</value>
   </data>
   <data name="RemoteCommandInstallDebuggerCommandStatusbarProgress" xml:space="preserve">
-    <value>Installing VS Code Debugger on targets ...</value>
+    <value>Installing VS Code Debugger on targets...</value>
   </data>
   <data name="RemoteCommandInstallDebuggerNoProjects" xml:space="preserve">
     <value>Installing VS Code Debugger - no supported projects found.
@@ -319,7 +322,7 @@ Make sure you selected a 'SSH Remote' launch profile.</value>
     <value>Installing .NET</value>
   </data>
   <data name="RemoteCommandInstallDotnetCommandStatusbarText" xml:space="preserve">
-    <value>Installing .NET on targets ...</value>
+    <value>Installing .NET on targets...</value>
   </data>
   <data name="RemoteCommandInstallDotnetNoProjects" xml:space="preserve">
     <value>Installing .NET - no supported projects found.
@@ -380,13 +383,19 @@ Make sure you selected a 'SSH Remote' launch profile.</value>
     <value>Installing .NET SDK direct from internet</value>
   </data>
   <data name="RemoteCommandLaunchingDebugger" xml:space="preserve">
-    <value>Launching debugger ...</value>
+    <value>Launching debugger...</value>
+  </data>
+  <data name="RemoteCommandLaunchingDebuggerOutputPaneStart" xml:space="preserve">
+    <value>---- Launching debugger: Project: {0}, Configuration: {1} ----</value>
   </data>
   <data name="RemoteCommandUploadOutputPaneDone" xml:space="preserve">
     <value> ok</value>
   </data>
   <data name="RemoteCommandUploadOutputPaneProgress" xml:space="preserve">
     <value>.</value>
+  </data>
+  <data name="RemoteCommandUploadOutputPaneStart" xml:space="preserve">
+    <value>Uploading {0}.</value>
   </data>
   <data name="SelectBrowserDialogHeaderText" xml:space="preserve">
     <value>Please select the browser you want to use to start debugging.</value>

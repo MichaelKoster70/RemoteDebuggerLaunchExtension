@@ -22,7 +22,7 @@ namespace RemoteDebuggerLauncher
    /// <seealso cref="IDebugProfileLaunchTargetsProvider" />
    [Export(typeof(IDebugProfileLaunchTargetsProvider))]
    [Shared(ExportContractNames.Scopes.ConfiguredProject)]
-   [AppliesTo(PackageConstants.CPS.AppliesTo.LaunchProfiles + " + CPS")]
+   [AppliesTo(PackageConstants.CPS.AppliesTo.LaunchProfilesAndCps)]
    [Order(50)]
    internal class SecureShellRemoteLaunchTargetsProvider : IDebugProfileLaunchTargetsProvider
    {
@@ -71,7 +71,7 @@ namespace RemoteDebuggerLauncher
          await remoteOperations.CheckConnectionThrowAsync(false);
 
          // Step 2: try to install the latest debugger version
-         bool installDebugger = packageServiceFactory.Configuration.QueryInstallDebuggerOnDeploy();
+         bool installDebugger = packageServiceFactory.Configuration.QueryInstallDebuggerOnStartDebugging();
          if (installDebugger)
          {
             // only install the debugger if configured in launch profile
@@ -83,7 +83,11 @@ namespace RemoteDebuggerLauncher
          }
 
          // Step 3: deploy with publish
-         await deployService.DeployAsync();
+         bool deploy = packageServiceFactory.Configuration.QueryDeployOnStartDebugging();
+         if (deploy)
+         {
+            await deployService.DeployAsync(false);
+         }
 
          statusbarService.SetText(Resources.RemoteCommandLaunchingDebugger);
       }
@@ -107,6 +111,8 @@ namespace RemoteDebuggerLauncher
 
          try
          {
+            packageServiceFactory.OutputPane.WriteLine(Resources.RemoteCommandLaunchingDebuggerOutputPaneStart, configuredProject.GetProjectName(), configuredProject.GetConfiguration());
+
             // validate that target is reachable
             await remoteOperations.CheckConnectionThrowAsync();
 
@@ -160,7 +166,7 @@ namespace RemoteDebuggerLauncher
             var browserUri = factory.Configuration.QueryBrowserLaunchUri();
             if (browserUri == null)
             {
-               factory.OutputPane.WriteLine("LaunchBrowser: launchUrl has no valid value, skip launching.");
+               factory.OutputPane.WriteLine(Resources.LaunchTargetsProviderNoLaunchUrl);
                return;
             }
 

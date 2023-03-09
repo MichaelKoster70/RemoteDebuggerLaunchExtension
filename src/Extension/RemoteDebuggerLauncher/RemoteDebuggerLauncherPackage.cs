@@ -37,7 +37,6 @@ namespace RemoteDebuggerLauncher
    [ProvideProfile(typeof(LocalOptionsPage), PackageConstants.Options.Category, PackageConstants.Options.PageNameLocal, 200, 203, true, DescriptionResourceID = 204)]
    [Guid(RemoteDebuggerLauncherPackage.PackageGuidString)]
    [ProvideMenuResource("Menus.ctmenu", 1)]
-   [ProvideToolWindow(typeof(ToolWindow))]
    public sealed class RemoteDebuggerLauncherPackage : AsyncPackage 
    {
       /// <summary>RemoteDebuggerLauncherPackage GUID string.</summary>
@@ -67,7 +66,6 @@ namespace RemoteDebuggerLauncher
          await InstallDebuggerCommand.InitializeAsync(this);
          await InstallDotnetCommand.InitializeAsync(this);
          await SetupSshCommand.InitializeAsync(this);
-         await OpenToolWindowCommand.InitializeAsync(this);
       }
       #endregion
 
