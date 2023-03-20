@@ -211,12 +211,12 @@ namespace RemoteDebuggerLauncher
       {
          if (string.IsNullOrWhiteSpace(settings.UserName))
          {
-            throw new SecureShellSessionException(Resources.ExceptionMessageSecureShellSessionNoUserName);
+            throw new SecureShellSessionException(ExceptionMessages.SecureShellSessionNoUserName);
          }
 
          if (!File.Exists(settings.PrivateKeyFile))
          {
-            throw new SecureShellSessionException(Resources.ExceptionMessageSecureShellSessionNoPrivateKey);
+            throw new SecureShellSessionException(ExceptionMessages.SecureShellSessionNoPrivateKey);
          }
 
          var key = new PrivateKeyFile(settings.PrivateKeyFile);

@@ -7,9 +7,9 @@
 
 using System;
 using System.ComponentModel.Design;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using Task = System.Threading.Tasks.Task;
+using RemoteDebuggerLauncher.SecureShell;
 
 namespace RemoteDebuggerLauncher
 {
@@ -79,13 +79,44 @@ namespace RemoteDebuggerLauncher
       private void Execute(object sender, EventArgs e)
       {
          ThreadHelper.ThrowIfNotOnUIThread();
-         _ = VsShellUtilities.ShowMessageBox(
-             package,
-            "not yet implemented",
-             "Remote Debugger Launcher",
-             OLEMSGICON.OLEMSGICON_INFO,
-             OLEMSGBUTTON.OLEMSGBUTTON_OK,
-             OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+
+         // bring up config dialog
+         var viewModel = new SetupSshViewModel(ThreadHelper.JoinableTaskFactory, new SecureShellKeyPairCreatorService());
+         var dialog = new SetupSshDialogWindow()
+         {
+            DataContext = viewModel
+         };
+
+         var result = dialog.ShowDialog();
+
+         // process 
+         if (result.HasValue && result.Value)
+         {
+            var setting = new SecureShellKeySetupSettings(viewModel);
+#pragma warning disable VSTHRD102 // Implement internal logic asynchronously
+            package.JoinableTaskFactory.Run(async () =>
+            {
+               var keySetup = await ServiceProvider.GetSecureShellKeySetupServiceAsync();
+
+#pragma warning disable CA1031 // Do not catch general exception types
+               try
+               {
+                  // do the remaining work on the UI thread
+                  await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                  await keySetup.AuthorizeKeyAsync(setting);
+               }
+               catch (Exception exception)
+               {
+                  ShellUtilities.ShowErrorMessageBox(package, exception.Message);
+               }
+               finally
+               {
+                  keySetup.Statusbar.Clear();
+               }
+            });
+#pragma warning restore VSTHRD102 // Implement internal logic asynchronously
+         }
       }
    }
 }

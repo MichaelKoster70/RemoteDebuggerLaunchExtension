@@ -13,8 +13,9 @@
                    Height="Auto"
                    Width="400"
                    MinWidth="400"
+                   SizeToContent="Height"
                    d:DesignHeight="155" d:DesignWidth="400"
-                   d:DataContext="{d:DesignInstance Type=local:InstallDebuggerViewModel}" SizeToContent="Height">
+                   d:DataContext="{d:DesignInstance Type=local:InstallDebuggerViewModel}">
   <Grid Margin="4">
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="Auto" />
@@ -58,7 +59,7 @@
     <Label Grid.Row="2"
            Grid.Column="0"
            Margin="4"
-           Content="Version" />
+           Content="{x:Static local:Resources.CommonDialogVersionLabel}" />
 
     <ComboBox Grid.Row="2"
               Grid.Column="1"

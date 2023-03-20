@@ -86,5 +86,23 @@ namespace RemoteDebuggerLauncher {
                 return ResourceManager.GetString("NoExternalBrowserSelected", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to no private key file provided..
+        /// </summary>
+        public static string SecureShellSessionNoPrivateKey {
+            get {
+                return ResourceManager.GetString("SecureShellSessionNoPrivateKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to no username provided..
+        /// </summary>
+        public static string SecureShellSessionNoUserName {
+            get {
+                return ResourceManager.GetString("SecureShellSessionNoUserName", resourceCulture);
+            }
+        }
     }
 }

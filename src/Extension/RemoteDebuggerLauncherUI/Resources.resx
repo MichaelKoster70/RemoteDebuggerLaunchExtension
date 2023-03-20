@@ -123,17 +123,20 @@
   <data name="CommonDialogModeLabel" xml:space="preserve">
     <value>Install Mode</value>
   </data>
+  <data name="CommonDialogVersionLabel" xml:space="preserve">
+    <value>Version</value>
+  </data>
   <data name="CommonOkButtonLabel" xml:space="preserve">
     <value>OK</value>
   </data>
   <data name="CommonStartSessionMarker" xml:space="preserve">
     <value>--------------------------------------------------</value>
   </data>
-  <data name="ExceptionMessageSecureShellSessionNoPrivateKey" xml:space="preserve">
-    <value>no private key file provided.</value>
+  <data name="FileExistsValidationRuleNotPresent" xml:space="preserve">
+    <value>Validation error: file must exist</value>
   </data>
-  <data name="ExceptionMessageSecureShellSessionNoUserName" xml:space="preserve">
-    <value>no username provided.</value>
+  <data name="HostNameValidationRuleNoValidNameOrIp" xml:space="preserve">
+    <value>Validation error: specify a valid IP address or DNS name</value>
   </data>
   <data name="InstallationModeDescription" xml:space="preserve">
     <value>Online: Target device has internet access, can download and install in it's own
@@ -212,7 +215,7 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
     <value>Publishing application FAILED with exit code {0}</value>
   </data>
   <data name="PublishStart" xml:space="preserve">
-    <value>Publishing application ...</value>
+    <value>Publishing application...</value>
   </data>
   <data name="PublishSuccess" xml:space="preserve">
     <value>Publishing application OK</value>
@@ -225,6 +228,9 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
   </data>
   <data name="PublishWaitDialogMessageUpdate" xml:space="preserve">
     <value>Running dotnet publish ...</value>
+  </data>
+  <data name="RegexValidationRuleNoValidUsername" xml:space="preserve">
+    <value>Validation error: must supply a non empty string consisting of letters, numbers, underscores, and/or hyphens</value>
   </data>
   <data name="RemoteCommandCheckConnectionOutputPaneConnectingTo" xml:space="preserve">
     <value>Connecting to {0}@{1}... </value>
@@ -388,6 +394,45 @@ Make sure you selected a 'SSH Remote' launch profile.</value>
   <data name="RemoteCommandLaunchingDebuggerOutputPaneStart" xml:space="preserve">
     <value>---- Launching debugger: Project: {0}, Configuration: {1} ----</value>
   </data>
+  <data name="RemoteCommandSetupSshCommandStatusbarProgress" xml:space="preserve">
+    <value>Authorize SSH key on target...</value>
+  </data>
+  <data name="RemoteCommandSetupSshPhase1TryAuthenticatePrivateKeyFailed" xml:space="preserve">
+    <value>connection FAILED with '{0}' - continue setup</value>
+  </data>
+  <data name="RemoteCommandSetupSshPhase1TryAuthenticatePrivateKeyProgress" xml:space="preserve">
+    <value>[{0}@{1}:{2}] Try to create a SSH connection using the provided private key...</value>
+  </data>
+  <data name="RemoteCommandSetupSshPhase1TryAuthenticatePrivateKeySuccess" xml:space="preserve">
+    <value>connection established successfully - no need to add public key.</value>
+  </data>
+  <data name="RemoteCommandSetupSshPhase2TryAuthenticatePasswordFailed" xml:space="preserve">
+    <value>connection FAILED with '{0}' - aborting....</value>
+  </data>
+  <data name="RemoteCommandSetupSshPhase2TryAuthenticatePasswordProgress" xml:space="preserve">
+    <value>[{0}@{1}:{2}] Try to create a SSH connection using the provided password...</value>
+  </data>
+  <data name="RemoteCommandSetupSshPhase2TryAuthenticatePasswordSuccess" xml:space="preserve">
+    <value>connection established successfully - continue setup</value>
+  </data>
+  <data name="RemoteCommandSetupSshPhase3AddKeyFailed" xml:space="preserve">
+    <value>FAILED with '{0}'</value>
+  </data>
+  <data name="RemoteCommandSetupSshPhase3AddKeyProgress" xml:space="preserve">
+    <value>[{0}@{1}:{2}] Adding key to authorized_keys...</value>
+  </data>
+  <data name="RemoteCommandSetupSshPhase3AddKeySuccess" xml:space="preserve">
+    <value>added public key successfully.</value>
+  </data>
+  <data name="RemoteCommandSetupSshPhase4TryAuthenticatePrivateKeyFailed" xml:space="preserve">
+    <value>connection AILED with '{0}'</value>
+  </data>
+  <data name="RemoteCommandSetupSshPhase4TryAuthenticatePrivateKeyProgress" xml:space="preserve">
+    <value>[{0}@{1}:{2}] validate public key has been successfully added...</value>
+  </data>
+  <data name="RemoteCommandSetupSshPhase4TryAuthenticatePrivateKeySuccess" xml:space="preserve">
+    <value>connection established successfully.</value>
+  </data>
   <data name="RemoteCommandUploadOutputPaneDone" xml:space="preserve">
     <value> ok</value>
   </data>
@@ -403,7 +448,58 @@ Make sure you selected a 'SSH Remote' launch profile.</value>
   <data name="SelectBrowserDialogTitle" xml:space="preserve">
     <value>Select Browser</value>
   </data>
-  <data name="ToolWindowCaption" xml:space="preserve">
-    <value>Remote Debugger Launcher</value>
+  <data name="SetupSshDialogFileBrowseContent" xml:space="preserve">
+    <value>...</value>
+  </data>
+  <data name="SetupSshDialogHeaderText" xml:space="preserve">
+    <value>Select host connection info and key file, then press OK to setup.</value>
+  </data>
+  <data name="SetupSshDialogHostLabel" xml:space="preserve">
+    <value>Host</value>
+  </data>
+  <data name="SetupSshDialogHostNameDescription" xml:space="preserve">
+    <value>The DNS name or IP address of the target device.</value>
+  </data>
+  <data name="SetupSshDialogHostPortDescription" xml:space="preserve">
+    <value>The port to connect to on the target device.</value>
+  </data>
+  <data name="SetupSshDialogKeyPairCreateContent" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="SetupSshDialogKeyPairCreateDescription" xml:space="preserve">
+    <value>Creates a RSA public key pair with the default name (id_rsa) and key length of 2048 bits.</value>
+  </data>
+  <data name="SetupSshDialogPasswordDescription" xml:space="preserve">
+    <value>The password to be used for connecting to the target device.</value>
+  </data>
+  <data name="SetupSshDialogPasswordLabel" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="SetupSshDialogPrivateKeyFileBrowseDescription" xml:space="preserve">
+    <value>Browse for private key files.</value>
+  </data>
+  <data name="SetupSshDialogPrivateKeyFileDescription" xml:space="preserve">
+    <value>The SSH private key file to test successful configuration.</value>
+  </data>
+  <data name="SetupSshDialogPrivateKeyFileLabel" xml:space="preserve">
+    <value>Private key file</value>
+  </data>
+  <data name="SetupSshDialogPublicKeyFileBrowseDescription" xml:space="preserve">
+    <value>Browse for public key files.</value>
+  </data>
+  <data name="SetupSshDialogPublicKeyFileDescription" xml:space="preserve">
+    <value>The SSH public key file that should be added to the authorized keys on the target device.</value>
+  </data>
+  <data name="SetupSshDialogPublicKeyFileLabel" xml:space="preserve">
+    <value>Public key file</value>
+  </data>
+  <data name="SetupSshDialogTitle" xml:space="preserve">
+    <value>Setup SSH private key authentication</value>
+  </data>
+  <data name="SetupSshDialogUsernameDescription" xml:space="preserve">
+    <value>The user name to be used for connecting to the target device.</value>
+  </data>
+  <data name="SetupSshDialogUsernameLabel" xml:space="preserve">
+    <value>User name</value>
   </data>
 </root>

@@ -147,5 +147,23 @@ namespace RemoteDebuggerLauncher
          /// <summary>Publish output relative to project base output dir.</summary>
          public const string OutDir = "Deploy";
       }
+
+      public static class SecureShell
+      {
+         /// <summary>Filename of the default SSH private key.</summary>
+         public const string DefaultPrivateKeyFileName = "id_rsa";
+
+         /// <summary>Filename of the default SSH public key.</summary>
+         public const string DefaultPublicKeyFileName = "id_rsa.pub";
+
+         /// <summary>Folder relative to user home where the SSH key are stored.</summary>
+         public const string DefaultKeyPairFolder = ".ssh";
+
+         /// <summary>SSH key generator executable.</summary>
+         public const string KeyGenExecutable = "ssh-keygen.exe";
+
+         /// <summary>SSH key generator arguments.</summary>
+         public const string KeyGenArguments = "-b 2048 -t rsa -f {0} -q -N \"\" -m pem";
+      }
    }
 }

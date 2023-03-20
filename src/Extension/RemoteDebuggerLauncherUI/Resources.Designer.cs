@@ -79,6 +79,15 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        public static string CommonDialogVersionLabel {
+            get {
+                return ResourceManager.GetString("CommonDialogVersionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OK.
         /// </summary>
         public static string CommonOkButtonLabel {
@@ -97,20 +106,20 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to no private key file provided..
+        ///   Looks up a localized string similar to Validation error: file must exist.
         /// </summary>
-        public static string ExceptionMessageSecureShellSessionNoPrivateKey {
+        public static string FileExistsValidationRuleNotPresent {
             get {
-                return ResourceManager.GetString("ExceptionMessageSecureShellSessionNoPrivateKey", resourceCulture);
+                return ResourceManager.GetString("FileExistsValidationRuleNotPresent", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to no username provided..
+        ///   Looks up a localized string similar to Validation error: specify a valid IP address or DNS name.
         /// </summary>
-        public static string ExceptionMessageSecureShellSessionNoUserName {
+        public static string HostNameValidationRuleNoValidNameOrIp {
             get {
-                return ResourceManager.GetString("ExceptionMessageSecureShellSessionNoUserName", resourceCulture);
+                return ResourceManager.GetString("HostNameValidationRuleNoValidNameOrIp", resourceCulture);
             }
         }
         
@@ -335,7 +344,7 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Publishing application ....
+        ///   Looks up a localized string similar to Publishing application....
         /// </summary>
         public static string PublishStart {
             get {
@@ -376,6 +385,15 @@ namespace RemoteDebuggerLauncher {
         public static string PublishWaitDialogMessageUpdate {
             get {
                 return ResourceManager.GetString("PublishWaitDialogMessageUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Validation error: must supply a non empty string consisting of letters, numbers, underscores, and/or hyphens.
+        /// </summary>
+        public static string RegexValidationRuleNoValidUsername {
+            get {
+                return ResourceManager.GetString("RegexValidationRuleNoValidUsername", resourceCulture);
             }
         }
         
@@ -843,6 +861,123 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Authorize SSH key on target....
+        /// </summary>
+        public static string RemoteCommandSetupSshCommandStatusbarProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshCommandStatusbarProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to connection FAILED with &apos;{0}&apos; - continue setup.
+        /// </summary>
+        public static string RemoteCommandSetupSshPhase1TryAuthenticatePrivateKeyFailed {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshPhase1TryAuthenticatePrivateKeyFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [{0}@{1}:{2}] Try to create a SSH connection using the provided private key....
+        /// </summary>
+        public static string RemoteCommandSetupSshPhase1TryAuthenticatePrivateKeyProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshPhase1TryAuthenticatePrivateKeyProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to connection established successfully - no need to add public key..
+        /// </summary>
+        public static string RemoteCommandSetupSshPhase1TryAuthenticatePrivateKeySuccess {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshPhase1TryAuthenticatePrivateKeySuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to connection FAILED with &apos;{0}&apos; - aborting.....
+        /// </summary>
+        public static string RemoteCommandSetupSshPhase2TryAuthenticatePasswordFailed {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshPhase2TryAuthenticatePasswordFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [{0}@{1}:{2}] Try to create a SSH connection using the provided password....
+        /// </summary>
+        public static string RemoteCommandSetupSshPhase2TryAuthenticatePasswordProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshPhase2TryAuthenticatePasswordProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to connection established successfully - continue setup.
+        /// </summary>
+        public static string RemoteCommandSetupSshPhase2TryAuthenticatePasswordSuccess {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshPhase2TryAuthenticatePasswordSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FAILED with &apos;{0}&apos;.
+        /// </summary>
+        public static string RemoteCommandSetupSshPhase3AddKeyFailed {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshPhase3AddKeyFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [{0}@{1}:{2}] Adding key to authorized_keys....
+        /// </summary>
+        public static string RemoteCommandSetupSshPhase3AddKeyProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshPhase3AddKeyProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to added public key successfully..
+        /// </summary>
+        public static string RemoteCommandSetupSshPhase3AddKeySuccess {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshPhase3AddKeySuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to connection AILED with &apos;{0}&apos;.
+        /// </summary>
+        public static string RemoteCommandSetupSshPhase4TryAuthenticatePrivateKeyFailed {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshPhase4TryAuthenticatePrivateKeyFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [{0}@{1}:{2}] validate public key has been successfully added....
+        /// </summary>
+        public static string RemoteCommandSetupSshPhase4TryAuthenticatePrivateKeyProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshPhase4TryAuthenticatePrivateKeyProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to connection established successfully..
+        /// </summary>
+        public static string RemoteCommandSetupSshPhase4TryAuthenticatePrivateKeySuccess {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshPhase4TryAuthenticatePrivateKeySuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to  ok.
         /// </summary>
         public static string RemoteCommandUploadOutputPaneDone {
@@ -888,11 +1023,164 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remote Debugger Launcher.
+        ///   Looks up a localized string similar to ....
         /// </summary>
-        public static string ToolWindowCaption {
+        public static string SetupSshDialogFileBrowseContent {
             get {
-                return ResourceManager.GetString("ToolWindowCaption", resourceCulture);
+                return ResourceManager.GetString("SetupSshDialogFileBrowseContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select host connection info and key file, then press OK to setup..
+        /// </summary>
+        public static string SetupSshDialogHeaderText {
+            get {
+                return ResourceManager.GetString("SetupSshDialogHeaderText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Host.
+        /// </summary>
+        public static string SetupSshDialogHostLabel {
+            get {
+                return ResourceManager.GetString("SetupSshDialogHostLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The DNS name or IP address of the target device..
+        /// </summary>
+        public static string SetupSshDialogHostNameDescription {
+            get {
+                return ResourceManager.GetString("SetupSshDialogHostNameDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The port to connect to on the target device..
+        /// </summary>
+        public static string SetupSshDialogHostPortDescription {
+            get {
+                return ResourceManager.GetString("SetupSshDialogHostPortDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create.
+        /// </summary>
+        public static string SetupSshDialogKeyPairCreateContent {
+            get {
+                return ResourceManager.GetString("SetupSshDialogKeyPairCreateContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Creates a RSA public key pair with the default name (id_rsa) and key length of 2048 bits..
+        /// </summary>
+        public static string SetupSshDialogKeyPairCreateDescription {
+            get {
+                return ResourceManager.GetString("SetupSshDialogKeyPairCreateDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The password to be used for connecting to the target device..
+        /// </summary>
+        public static string SetupSshDialogPasswordDescription {
+            get {
+                return ResourceManager.GetString("SetupSshDialogPasswordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        public static string SetupSshDialogPasswordLabel {
+            get {
+                return ResourceManager.GetString("SetupSshDialogPasswordLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Browse for private key files..
+        /// </summary>
+        public static string SetupSshDialogPrivateKeyFileBrowseDescription {
+            get {
+                return ResourceManager.GetString("SetupSshDialogPrivateKeyFileBrowseDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The SSH private key file to test successful configuration..
+        /// </summary>
+        public static string SetupSshDialogPrivateKeyFileDescription {
+            get {
+                return ResourceManager.GetString("SetupSshDialogPrivateKeyFileDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Private key file.
+        /// </summary>
+        public static string SetupSshDialogPrivateKeyFileLabel {
+            get {
+                return ResourceManager.GetString("SetupSshDialogPrivateKeyFileLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Browse for public key files..
+        /// </summary>
+        public static string SetupSshDialogPublicKeyFileBrowseDescription {
+            get {
+                return ResourceManager.GetString("SetupSshDialogPublicKeyFileBrowseDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The SSH public key file that should be added to the authorized keys on the target device..
+        /// </summary>
+        public static string SetupSshDialogPublicKeyFileDescription {
+            get {
+                return ResourceManager.GetString("SetupSshDialogPublicKeyFileDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Public key file.
+        /// </summary>
+        public static string SetupSshDialogPublicKeyFileLabel {
+            get {
+                return ResourceManager.GetString("SetupSshDialogPublicKeyFileLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setup SSH private key authentication.
+        /// </summary>
+        public static string SetupSshDialogTitle {
+            get {
+                return ResourceManager.GetString("SetupSshDialogTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The user name to be used for connecting to the target device..
+        /// </summary>
+        public static string SetupSshDialogUsernameDescription {
+            get {
+                return ResourceManager.GetString("SetupSshDialogUsernameDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User name.
+        /// </summary>
+        public static string SetupSshDialogUsernameLabel {
+            get {
+                return ResourceManager.GetString("SetupSshDialogUsernameLabel", resourceCulture);
             }
         }
     }

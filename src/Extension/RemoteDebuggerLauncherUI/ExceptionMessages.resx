@@ -126,4 +126,10 @@
   <data name="NoExternalBrowserSelected" xml:space="preserve">
     <value>No external browser selected for the debugging session.</value>
   </data>
+  <data name="SecureShellSessionNoPrivateKey" xml:space="preserve">
+    <value>no private key file provided.</value>
+  </data>
+  <data name="SecureShellSessionNoUserName" xml:space="preserve">
+    <value>no username provided.</value>
+  </data>
 </root>

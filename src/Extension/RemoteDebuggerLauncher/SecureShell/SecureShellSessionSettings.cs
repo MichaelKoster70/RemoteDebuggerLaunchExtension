@@ -27,12 +27,12 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// Gets the host name of the target device.
       /// </summary>
-      public string HostName { get; private set; }
+      public string HostName { get; }
 
       /// <summary>
       /// Gets the host port of the target device.
       /// </summary>
-      public int HostPort { get; private set; }
+      public int HostPort { get; }
 
       /// <summary>
       /// Gets a value whether <see cref="HostPort"/> ist the default port.
@@ -42,12 +42,12 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// Gets the user name.
       /// </summary>
-      public string UserName { get; private set; }
+      public string UserName { get; }
 
       /// <summary>
       /// Gets the private key file.
       /// </summary>
-      public string PrivateKeyFile { get; private set; }
+      public string PrivateKeyFile { get; }
 
       /// <summary>
       /// Create a new instance of the <see cref="SecureShellSessionSettings"/> class initialized from the supplied config aggreegator.

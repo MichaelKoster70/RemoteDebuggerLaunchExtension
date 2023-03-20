@@ -56,12 +56,21 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ViewModels\IPasswordProvider.cs" />
+    <Compile Include="Commands\ViewModels\SetupSshViewModel.cs" />
     <Compile Include="Commands\ViewModels\InstallDebuggerViewModel.cs" />
     <Compile Include="Commands\ViewModels\VersionViewModel.cs" />
     <Compile Include="Commands\ViewModels\InstallationModeViewModel.cs" />
     <Compile Include="Commands\ViewModels\InstallationTypeViewModel.cs" />
+    <Compile Include="Commands\Views\FileExistsValidationRule.cs" />
+    <Compile Include="Commands\Views\RegexValidationRule.cs" />
+    <Compile Include="Commands\Views\HostPortValidationRule.cs" />
+    <Compile Include="Commands\Views\HostNameValidationRule.cs" />
     <Compile Include="Commands\Views\InstallDebuggerDialogWindow.xaml.cs">
       <DependentUpon>InstallDebuggerDialogWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Commands\Views\SetupSshDialogWindow.xaml.cs">
+      <DependentUpon>SetupSshDialogWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ExceptionMessages.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -76,6 +85,10 @@
     </Compile>
     <Compile Include="Utilities\ViewModelBase.cs" />
     <Page Include="Commands\Views\InstallDebuggerDialogWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Commands\Views\SetupSshDialogWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -129,7 +142,6 @@
     <None Include="Commands\readme.md" />
     <None Include="readme.md" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\RemoteDebuggerLauncherShared\RemoteDebuggerLauncherShared.csproj">
       <Project>{93e8395b-2fcf-46ec-ad25-c7b4083be047}</Project>
