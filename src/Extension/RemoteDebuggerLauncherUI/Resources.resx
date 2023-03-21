@@ -198,6 +198,9 @@ Runtime aspnet: Install the ASP.NET runtime</value>
   <data name="InstallDotnetVersion70DisplayName" xml:space="preserve">
     <value>7.0</value>
   </data>
+  <data name="InstallDotnetVersion80DisplayName" xml:space="preserve">
+    <value>8.0</value>
+  </data>
   <data name="InstallDotnetVersionDescription" xml:space="preserve">
     <value>Latest STS:  The most recent Standard Term Support release of .NET
 Latest LTS:  The most recent Long Term Support release of .NET</value>

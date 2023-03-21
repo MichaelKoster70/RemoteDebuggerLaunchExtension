@@ -23,6 +23,9 @@ namespace RemoteDebuggerLauncher.Shared
          /// <summary>Name of the STS channel expected by the .NET install scripts.</summary>
          public const string ChannelSTS = "STS";
 
+         /// <summary>Name of the 8.0 channel expected by the .NET install scripts.</summary>
+         public const string Channel80 = "8.0";
+
          /// <summary>Name of the 7.0 channel expected by the .NET install scripts.</summary>
          public const string Channel70 = "7.0";
 
@@ -41,6 +44,7 @@ namespace RemoteDebuggerLauncher.Shared
          public const string LinuxUsernameAlternate = "^[a-z][-a-z0-9_]*$?$";
          public const string LinuxUsername = "^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}$)$";
 
+         /// <summary>Regex to validate a linux password.</summary>
          public const string LinuxPassword = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8,20}$";
       }
    }

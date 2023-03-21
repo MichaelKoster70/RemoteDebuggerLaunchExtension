@@ -298,6 +298,15 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 8.0.
+        /// </summary>
+        public static string InstallDotnetVersion80DisplayName {
+            get {
+                return ResourceManager.GetString("InstallDotnetVersion80DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Latest STS:  The most recent Standard Term Support release of .NET
         ///Latest LTS:  The most recent Long Term Support release of .NET.
         /// </summary>
