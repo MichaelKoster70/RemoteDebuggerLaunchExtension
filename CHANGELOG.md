@@ -1,2 +1,4 @@
-# 1.0.0
-Initial release
+# Release Notes
+
+## 1.0.0
+- Initial release

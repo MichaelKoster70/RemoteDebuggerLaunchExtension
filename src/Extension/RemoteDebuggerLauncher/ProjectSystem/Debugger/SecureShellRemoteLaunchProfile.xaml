@@ -7,8 +7,8 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns="http://schemas.microsoft.com/build/2009/properties">
 
-   <Rule.Metadata>
-      <sys:String x:Key="CommandName">SecureShellRemoteLaunch</sys:String>
+  <Rule.Metadata>
+     <sys:String x:Key="CommandName">SshRemoteLaunch</sys:String>
 
       <!-- KnownImageIds.ImageCatalogGuid -->
       <sys:Guid x:Key="ImageMonikerGuid">C7D7D241-8FD3-4230-8F49-314652792839</sys:Guid>
@@ -23,14 +23,14 @@
    </Rule.DataSource>
 
   <StringProperty Name="CommandLineArguments"
-                   DisplayName="Command line arguments"
-                   Description="Command line arguments to pass to the executable."
-                   Subcategory="Remote Devices"/>
+                  DisplayName="Command line arguments"
+                  Description="Command line arguments to pass to the executable."
+                  Subcategory="Remote Devices"/>
 
   <StringProperty Name="hostName"
-                   DisplayName="Host name"
-                   Description="The DNS name or IP address of the target device."
-                   Subcategory="Remote Device"/>
+                  DisplayName="Host name"
+                  Description="The DNS name or IP address of the target device."
+                  Subcategory="Remote Device"/>
 
    <StringProperty Name="hostPort"
                    DisplayName="Host port"
@@ -69,13 +69,13 @@
   </StringProperty>
 
   <BoolProperty Name="launchBrowser"
-                 DisplayName="LaunchBrowser"
-                 Description="indicates that the web browser should automatically launch when debugging this project." />
-  
+                DisplayName="LaunchBrowser"
+                Description="indicates that the web browser should automatically launch when debugging this project." />
+
   <StringProperty Name="dotNetInstallFolderPath"
-                   DisplayName=".NET install folder path"
-                   Description="The folder path where the .NET runtime is installed on the target device."
-                   Subcategory="Folders"/>
+                  DisplayName=".NET install folder path"
+                  Description="The folder path where the .NET runtime is installed on the target device."
+                  Subcategory="Folders"/>
 
    <StringProperty Name="debuggerInstallFolderPath"
                    DisplayName="Debugger install folder path"
@@ -88,17 +88,17 @@
                    Subcategory="Folders"/>
 
    <BoolProperty Name="publishOnDeploy"
-                  DisplayName="Publish on deploy"
-                  Description="Publishes application before deployment. This is useful for application types that require additional files to be deployed like ASP.NET/Blazer."
-                  Subcategory="Deployment Options" />
+                 DisplayName="Publish on deploy"
+                 Description="Publishes application before deployment. This is useful for application types that require additional files to be deployed like ASP.NET/Blazer."
+                 Subcategory="Deployment Options" />
 
   <BoolProperty Name="deployOnStartDebugging"
-                  DisplayName="Deploy on start debugging"
-                  Description="Deploys the application to the target before launching."
-                  Subcategory="Deployment Options" />
+                DisplayName="Deploy on start debugging"
+                Description="Deploys the application to the target before launching."
+                Subcategory="Deployment Options" />
   
   <BoolProperty Name="installDebuggerOnStartDebugging"
-                  DisplayName="Install debugger on start debugging"
-                  Description="Installs the latest VS Code debugger on the target before launching the target application."
-                  Subcategory="Deployment Options" />
+                DisplayName="Install debugger on start debugging"
+                Description="Installs the latest VS Code debugger on the target before launching the target application."
+                Subcategory="Deployment Options" />
 </Rule>

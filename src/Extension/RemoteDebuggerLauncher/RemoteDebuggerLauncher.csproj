@@ -273,6 +273,14 @@
     <Resource Include="Resources\IconInstallDebugger.png" />
     <Resource Include="Resources\IconSetupSsh.png" />
     <Resource Include="Resources\IconToolWindow.png" />
+    <Content Include="Resources\Logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\Preview.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\VSPackage.ico" />
   </ItemGroup>
   <ItemGroup>

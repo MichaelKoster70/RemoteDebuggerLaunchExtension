@@ -9,8 +9,8 @@
       "remoteDebugEnabled": false
     },
     "SSH Remote": {
-      "commandName": "SecureShellRemoteLaunch",
-      "commandLineArgs": "arg0 arg1",
+      "commandName": "SshRemoteLaunch",
+      "commandLineArgs": "arg0 arg1 arg 3",
       "environmentVariables": {
         "answer": "42"
       },
@@ -18,7 +18,16 @@
       "hostPort": "22",
       "userName": "pi",
       "privateKey": "%userprofile%\\.ssh\\id_rsa",
-      "publishOnDeploy": true
+      "launchBrowser": true,
+      "dotNetInstallFolderPath": "~\\.dotnet",
+      "debuggerInstallFolderPath": "~\\.vsdbg",
+      "appFolderPath": "~\\AppFolder",
+      "publishOnDeploy": false,
+      "deployOnStartDebugging": false,
+      "installDebuggerOnStartDebugging": false
+    },
+    "Profile 1": {
+      "commandName": "SshlRemoteLaunch"
     }
   }
 }

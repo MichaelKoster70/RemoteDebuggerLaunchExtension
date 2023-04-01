@@ -17,7 +17,7 @@
       }
     },
     "SSH Remote": {
-      "commandName": "SecureShellRemoteLaunch",
+      "commandName": "SshRemoteLaunch",
       "launchBrowser": true,
       "launchUrl": "https://192.168.1.106:7172",
       "environmentVariables": {

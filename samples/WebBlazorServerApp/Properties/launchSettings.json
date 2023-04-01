@@ -17,7 +17,7 @@
       }
     },
     "Profile 1": {
-      "commandName": "SecureShellRemoteLaunch",
+      "commandName": "SshRemoteLaunch",
       "launchUrl": "https://192.168.1.106:7172",
       "environmentVariables": {
         "ASPNETCORE_URLS": "https://192.168.1.106:7172;http://192.168.1.106:5132"

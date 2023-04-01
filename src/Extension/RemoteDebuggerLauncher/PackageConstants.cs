@@ -104,7 +104,7 @@ namespace RemoteDebuggerLauncher
       public static class LaunchProfile
       {
          /// <summary>The command name for the 'SecureShellRemoteLaunchProfile' Launch Profile.</summary>
-         public const string CommandName = "SecureShellRemoteLaunch";
+         public const string CommandName = "SshRemoteLaunch";
       }
 
       public static class DebugLaunchSettings

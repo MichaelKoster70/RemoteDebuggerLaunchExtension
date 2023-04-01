@@ -4,7 +4,7 @@
       "commandName": "Project"
     },
     "SSH Remote": {
-      "commandName": "SecureShellRemoteLaunch",
+      "commandName": "SshRemoteLaunch",
       "environmentVariables": {
         "DISPLAY": ":0.0"
       },

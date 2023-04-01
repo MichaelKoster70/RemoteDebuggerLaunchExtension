@@ -1,7 +1,7 @@
 # Initial Release
 
 ## Features
-- Initial working version
+- Initial version
 
 ## Bug Fixes
 - none
