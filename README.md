@@ -1,4 +1,4 @@
-# Remote Debugger Launch Extension
+# Remote Debugger Launcher Extension
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Works with Visual Studio 2022](https://img.shields.io/static/v1.svg?label=VS&message=2022&color=A853C7)](README.md)
 [![Project: Release](https://github.com/MichaelKoster70/RemoteDebuggerLaunchExtension/actions/workflows/project-release.yml/badge.svg?branch=main)](https://github.com/MichaelKoster70/RemoteDebuggerLaunchExtension/actions/workflows/project-release.yml)
