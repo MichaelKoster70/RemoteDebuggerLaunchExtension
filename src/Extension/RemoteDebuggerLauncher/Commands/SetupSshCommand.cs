@@ -108,7 +108,7 @@ namespace RemoteDebuggerLauncher
                }
                catch (Exception exception)
                {
-                  ShellUtilities.ShowErrorMessageBox(package, exception.Message);
+                  ShellUtilities.ShowErrorMessageBox(package, Resources.RemoteCommandSetupSshCommandCaption, exception.Message);
                }
                finally
                {

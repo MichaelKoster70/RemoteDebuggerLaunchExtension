@@ -443,6 +443,15 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clean remote target path.
+        /// </summary>
+        public static string RemoteCommandCleanRemoteFolderCommandCaption {
+            get {
+                return ResourceManager.GetString("RemoteCommandCleanRemoteFolderCommandCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cleaning FAILED: {0}.
         /// </summary>
         public static string RemoteCommandCleanRemoteFolderCompletedFailed {
@@ -861,11 +870,29 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Setup SSH.
+        /// </summary>
+        public static string RemoteCommandSetupSshCommandCaption {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshCommandCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Authorize SSH key on target....
         /// </summary>
         public static string RemoteCommandSetupSshCommandStatusbarProgress {
             get {
                 return ResourceManager.GetString("RemoteCommandSetupSshCommandStatusbarProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to connection FAILED with &apos;{0}&apos; - make sure the SSH server is running and accessable..
+        /// </summary>
+        public static string RemoteCommandSetupSshConnectionFailed {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshConnectionFailed", resourceCulture);
             }
         }
         

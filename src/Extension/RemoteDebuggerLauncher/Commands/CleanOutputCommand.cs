@@ -124,7 +124,7 @@ namespace RemoteDebuggerLauncher
             }
             catch(Exception exception)
             {
-               ShellUtilities.ShowErrorMessageBox(package, exception.Message);
+               ShellUtilities.ShowErrorMessageBox(package, Resources.RemoteCommandCleanRemoteFolderCommandCaption, exception.Message);
             }
             finally
             {
