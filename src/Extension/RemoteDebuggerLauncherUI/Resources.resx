@@ -249,6 +249,9 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
   <data name="RemoteCommandCleanRemoteFolderCaption" xml:space="preserve">
     <value>Cleaning - target: {0}</value>
   </data>
+  <data name="RemoteCommandCleanRemoteFolderCommandCaption" xml:space="preserve">
+    <value>Clean remote target path</value>
+  </data>
   <data name="RemoteCommandCleanRemoteFolderCompletedFailed" xml:space="preserve">
     <value>Cleaning FAILED: {0}</value>
   </data>
@@ -265,6 +268,9 @@ Make sure you selected a 'SSH Remote' launch profile.</value>
   <data name="RemoteCommandCommonFailed" xml:space="preserve">
     <value>FAILED: {0}</value>
     <comment>Remote command Common: failure completion text</comment>
+  </data>
+  <data name="RemoteCommandCommonFailedCurlNotInstalled" xml:space="preserve">
+    <value>FAILED: cURL is not installed. please install to use the command</value>
   </data>
   <data name="RemoteCommandCommonProfile" xml:space="preserve">
     <value>Processing profile '{0}'</value>
@@ -394,8 +400,14 @@ Make sure you selected a 'SSH Remote' launch profile.</value>
   <data name="RemoteCommandLaunchingDebuggerOutputPaneStart" xml:space="preserve">
     <value>---- Launching debugger: Project: {0}, Configuration: {1} ----</value>
   </data>
+  <data name="RemoteCommandSetupSshCommandCaption" xml:space="preserve">
+    <value>Setup SSH</value>
+  </data>
   <data name="RemoteCommandSetupSshCommandStatusbarProgress" xml:space="preserve">
     <value>Authorize SSH key on target...</value>
+  </data>
+  <data name="RemoteCommandSetupSshConnectionFailed" xml:space="preserve">
+    <value>connection FAILED with '{0}' - make sure the SSH server is running and accessable.</value>
   </data>
   <data name="RemoteCommandSetupSshPhase1TryAuthenticatePrivateKeyFailed" xml:space="preserve">
     <value>connection FAILED with '{0}' - continue setup</value>

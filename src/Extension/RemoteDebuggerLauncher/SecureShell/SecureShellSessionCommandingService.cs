@@ -63,6 +63,33 @@ namespace RemoteDebuggerLauncher
          });
       }
 
+      /// <inheritdoc/>
+      public Task<(int StatusCode, string Response)> TryExecuteCommandAsync(string commandText)
+      {
+         ThrowIf.ArgumentNullOrEmpty(commandText, nameof(commandText));
+
+         return Task.Run(() =>
+         {
+            try
+            {
+               EnsureConnected();
+
+               using (var command = client.RunCommand(commandText))
+               {
+                  return (command.ExitStatus, command.Result);
+               }
+            }
+            catch (SshException e)
+            {
+               throw new SecureShellSessionException(e.Message, e);
+            }
+            catch (InvalidOperationException e)
+            {
+               throw new SecureShellSessionException(e.Message, e);
+            }
+         });
+      }
+
       private void EnsureConnected()
       {
          if (!client.IsConnected)

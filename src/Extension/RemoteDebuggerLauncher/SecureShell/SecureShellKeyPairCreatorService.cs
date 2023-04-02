@@ -42,7 +42,7 @@ namespace RemoteDebuggerLauncher.SecureShell
       {
          if (!File.Exists(defaultPrivateFile))
          {
-            DirectoryHelper.EnsureExists(defaultKeysFolder);
+            _ = DirectoryHelper.EnsureExists(defaultKeysFolder);
             var arguments = string.Format(CultureInfo.InvariantCulture, PackageConstants.SecureShell.KeyGenArguments, defaultPrivateFile);
             var process = Process.Start(PackageConstants.SecureShell.KeyGenExecutable, arguments);
 

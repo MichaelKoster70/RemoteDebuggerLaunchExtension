@@ -97,6 +97,7 @@ namespace RemoteDebuggerLauncher.SecureShell
          }
          catch (Exception ex)
          {
+            OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshConnectionFailed, ex.Message);
             throw new SecureShellSessionException(ex.Message, ex);
          }
       }

@@ -105,13 +105,6 @@
           <ButtonText>Setup SSH</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidRemoteDebuggerLauncherPackageCmdSet" id="cmdidToolWindowCommand" priority="0x0100" type="Button">
-        <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
-        <Icon guid="guidImages" id="bmpToolWindow" />
-        <Strings>
-          <ButtonText>Remote Debugger</ButtonText>
-        </Strings>
-      </Button>
     </Buttons>
   
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->

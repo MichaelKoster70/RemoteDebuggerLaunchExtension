@@ -14,7 +14,7 @@ namespace RemoteDebuggerLauncher
 {
    internal class HostNameValidationRule : ValidationRule
    {
-      private const string regex = @"^(?!.{256})(?:[a-zA-Z0-9-]{1,63}\.){1,126}[a-zA-Z0-9]{2,}$|^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]$";
+      private const string HostNameRegex = @"^(?!.{256})(?:[a-zA-Z0-9-]{1,63}\.){1,126}[a-zA-Z0-9]{2,}$|^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]$";
 
       public override ValidationResult Validate(object value, CultureInfo cultureInfo)
       {
@@ -32,7 +32,7 @@ namespace RemoteDebuggerLauncher
          
          if (!valid)
          {
-            valid = Regex.IsMatch(text, regex);
+            valid = Regex.IsMatch(text, HostNameRegex);
          }
 
          return valid ? ValidationResult.ValidResult : new ValidationResult(false, Resources.HostNameValidationRuleNoValidNameOrIp);

@@ -107,6 +107,13 @@ namespace RemoteDebuggerLauncher
                statusbar?.SetText(Resources.RemoteCommandInstallDebuggerOnlineCommonProgress);
 
                var debuggerInstallPath = configurationAggregator.QueryDebuggerInstallFolderPath();
+
+               // Fail command if cURL is missing
+               if (await CheckCurlIsMissingAsync(commands))
+               {
+                  return false;
+               }
+
                var command = $"curl -sSL {PackageConstants.Debugger.GetVsDbgShUrl} | sh /dev/stdin -u -v {version} -l {debuggerInstallPath}";
                var result = await commands.ExecuteCommandAsync(command);
                outputPaneWriter.Write(result);
@@ -292,6 +299,12 @@ namespace RemoteDebuggerLauncher
                outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
                outputPaneWriter.WriteLine(Resources.RemoteCommandInstallDotnetSdkOnlineOutputPaneProgress);
 
+               // Fail command if cURL is missing
+               if (await CheckCurlIsMissingAsync(commands))
+               {
+                  return false;
+               }
+
                var dotnetInstallPath = configurationAggregator.QueryDotNetInstallFolderPath();
                var result = await commands.ExecuteCommandAsync($"curl -sSL {PackageConstants.Dotnet.GetInstallDotnetShUrl} | bash /dev/stdin --channel {channel} --install-dir {dotnetInstallPath}");
                outputPaneWriter.Write(result);
@@ -324,6 +337,13 @@ namespace RemoteDebuggerLauncher
                outputPaneWriter.WriteLine(Resources.RemoteCommandInstallDotnetRuntimeOnlineOutputPaneProgress);
 
                var dotnetInstallPath = configurationAggregator.QueryDotNetInstallFolderPath();
+
+               // Fail command if cURL is missing
+               if (await CheckCurlIsMissingAsync(commands))
+               {
+                  return false;
+               }
+
                var result = await commands.ExecuteCommandAsync($"curl -sSL {PackageConstants.Dotnet.GetInstallDotnetShUrl} | bash /dev/stdin --channel {channel} --runtime {runtime} --install-dir {dotnetInstallPath}").ConfigureAwait(true);
                outputPaneWriter.Write(result);
             }
@@ -391,6 +411,18 @@ namespace RemoteDebuggerLauncher
          }
       }
       #endregion
+
+      private async Task<bool> CheckCurlIsMissingAsync(ISecureShellSessionCommandingService commands)
+      {
+         (int exitCode, _) = await commands.TryExecuteCommandAsync("command -v curl");
+         if (exitCode != 0)
+         {
+            outputPaneWriter.WriteLine(Resources.RemoteCommandCommonFailedCurlNotInstalled);
+            return true;
+         }
+
+         return false;
+      }
 
       private async Task<string> GetRuntimeIdAsync()
       {

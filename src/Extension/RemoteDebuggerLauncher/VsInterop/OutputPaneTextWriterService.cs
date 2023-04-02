@@ -33,7 +33,6 @@ namespace RemoteDebuggerLauncher
       public void Write(string message, bool activate = true)
       {
          _= lineBuffer.Append(message);
-         //outputPaneWriter.Write(message);
       }
 
       /// <inheritdoc />

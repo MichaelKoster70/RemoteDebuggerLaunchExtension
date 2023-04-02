@@ -30,7 +30,7 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// The JSON settings for the chrome based debug engines.
       /// </summary>
-      private class ChromeDebugArgJsonSettings
+      private sealed class ChromeDebugArgJsonSettings
       {
          [JsonProperty("browserExe")]
          public string BrowserExe { get; set; }
