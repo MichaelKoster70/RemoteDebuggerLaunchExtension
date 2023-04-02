@@ -10,10 +10,19 @@ Visual Studio supports only 'attach to process via SSH'. This extension allows y
 
 ## Overview
 
-The extension integrates with the Visual Studio .NET project system providing an additional launch profile.
+The extension integrates with the Visual Studio 2022 .NET project system providing an additional launch profile.
 ![Launch Profile](docs/ScreenShort-LaunchProfile.png)
 
 The desktop side SSH support relies on the built-in [OpenSSH for Windows](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_overview) starting Windows 10 1809
+
+The extension supports
+- SSH authentication using private keys.
+- Debugging .NET framework dependant application.
+- Deploying the project output folder via SCP to the target device.
+- Publish (running dotnet publish) before deploying the application.
+- Installing vsdbg automatically (configurable).
+- Installing .NET on the target device.
+- Supporting command to setup SSH authentication.
 
 ## Getting Started
 
