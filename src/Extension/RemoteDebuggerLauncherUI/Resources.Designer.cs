@@ -498,6 +498,15 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FAILED: cURL is not installed. please install to use the command.
+        /// </summary>
+        public static string RemoteCommandCommonFailedCurlNotInstalled {
+            get {
+                return ResourceManager.GetString("RemoteCommandCommonFailedCurlNotInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Processing profile &apos;{0}&apos;.
         /// </summary>
         public static string RemoteCommandCommonProfile {

@@ -269,6 +269,9 @@ Make sure you selected a 'SSH Remote' launch profile.</value>
     <value>FAILED: {0}</value>
     <comment>Remote command Common: failure completion text</comment>
   </data>
+  <data name="RemoteCommandCommonFailedCurlNotInstalled" xml:space="preserve">
+    <value>FAILED: cURL is not installed. please install to use the command</value>
+  </data>
   <data name="RemoteCommandCommonProfile" xml:space="preserve">
     <value>Processing profile '{0}'</value>
   </data>
