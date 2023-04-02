@@ -50,7 +50,6 @@ namespace RemoteDebuggerLauncher
       {
          published = false;
 
-         var outputPath = await configuredProject.GetOutputDirectoryPathAsync();
          var projectPath = configuredProject.UnconfiguredProject.FullPath;
          var publishPath = await GetPublishedOutputDirectoryPathAsync();
          var configuration = configuredProject.ProjectConfiguration.Dimensions["Configuration"];
@@ -152,11 +151,11 @@ namespace RemoteDebuggerLauncher
          var isWasm = configuredProject.Services.Capabilities.AppliesTo("WebAssembly");
          var projectReferences = await configuredProject.Services.ProjectReferences.GetUnresolvedReferencesAsync();
 
-         foreach ( var reference in projectReferences)
+         foreach (var reference in projectReferences)
          {
             var fullName = reference.EvaluatedIncludeAsFullPath;
-            var project = configuredProject.Services.ProjectService.LoadedUnconfiguredProjects.Where(f => f.FullPath.Contains(fullName)).FirstOrDefault();
-            isWasm |= project.Services.Capabilities.AppliesTo("WebAssembly");
+            var project = configuredProject.Services.ProjectService.LoadedUnconfiguredProjects.FirstOrDefault(f => f.FullPath.Contains(fullName));
+            isWasm |= project != null && project.Services.Capabilities.AppliesTo("WebAssembly");
          }
 
          // every other project type is fine with framework dependant
@@ -164,3 +163,4 @@ namespace RemoteDebuggerLauncher
       }
    }
 }
+ 

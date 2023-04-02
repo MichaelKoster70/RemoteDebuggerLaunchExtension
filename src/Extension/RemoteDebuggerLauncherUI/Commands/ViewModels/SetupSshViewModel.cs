@@ -131,7 +131,17 @@ namespace RemoteDebuggerLauncher
       /// <seealso cref="INotifyDataErrorInfo.HasErrors"/>
       public bool HasErrors => validationErrors.Any();
 
-      public IEnumerable GetErrors(string propertyName) => string.IsNullOrEmpty(propertyName) ? validationErrors.SelectMany(e => e.Value) : validationErrors.TryGetValue(propertyName, out var errors) ? errors : new List<object>();
+      public IEnumerable GetErrors(string propertyName)
+      {
+         if (string.IsNullOrEmpty(propertyName))
+         {
+            return validationErrors.SelectMany(e => e.Value);
+         }
+         else
+         {
+            return validationErrors.TryGetValue(propertyName, out var errors) ? errors : new List<object>();
+         }
+      }
 
       public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
