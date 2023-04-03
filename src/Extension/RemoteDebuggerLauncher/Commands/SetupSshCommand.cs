@@ -14,7 +14,7 @@ using RemoteDebuggerLauncher.SecureShell;
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// Command handler
+   /// Command handler for the Setup SSH command.
    /// </summary>
    internal sealed class SetupSshCommand
    {
