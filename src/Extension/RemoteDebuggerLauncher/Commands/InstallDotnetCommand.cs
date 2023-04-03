@@ -139,6 +139,9 @@ namespace RemoteDebuggerLauncher
                         {
                            await remoteOperations.TryInstallDotNetOfflineAsync(viewModel.SelectedInstallationKind, viewModel.SelectedVersion);
                         }
+
+                        string dotnetRoot = project.Configuration.QueryDotNetInstallFolderPath().Replace("~", "$HOME");
+                        outputPaneWriter.WriteLine(Resources.RemoteCommandInstallDotnetExports, dotnetRoot);
                      }
                   }
                   else

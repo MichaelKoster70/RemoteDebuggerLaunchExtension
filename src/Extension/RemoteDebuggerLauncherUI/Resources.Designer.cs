@@ -471,7 +471,7 @@ namespace RemoteDebuggerLauncher {
         
         /// <summary>
         ///   Looks up a localized string similar to Cleaning - no supported projects found.
-        ///Make sure you selected a &apos;SSH Remote&apos; launch profile..
+        ///Make sure you selected a &apos;SshRemoteLaunch&apos; launch profile..
         /// </summary>
         public static string RemoteCommandCleanRemoteFolderNoProjects {
             get {
@@ -553,7 +553,7 @@ namespace RemoteDebuggerLauncher {
         
         /// <summary>
         ///   Looks up a localized string similar to Deploying application - no supported projects found.
-        ///Make sure you selected a &apos;SSH Remote&apos; launch profile..
+        ///Make sure you selected a &apos;SshRemoteLaunch&apos; launch profile..
         /// </summary>
         public static string RemoteCommandDeployRemoteFolderNoProjects {
             get {
@@ -689,8 +689,19 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to To complete the installation, export the following environment variables (add to your .bashrc or .bash_profile):
+        ///export DOTNET_ROOT={0}
+        ///export PATH=$PATH:{0}.
+        /// </summary>
+        public static string RemoteCommandInstallDotnetExports {
+            get {
+                return ResourceManager.GetString("RemoteCommandInstallDotnetExports", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Installing .NET - no supported projects found.
-        ///Make sure you selected a &apos;SSH Remote&apos; launch profile..
+        ///Make sure you selected a &apos;SshRemoteLaunch&apos; launch profile..
         /// </summary>
         public static string RemoteCommandInstallDotnetNoProjects {
             get {
