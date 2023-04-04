@@ -9,7 +9,7 @@ using System;
 using System.Threading.Tasks;
 using RemoteDebuggerLauncher.Shared;
 
-namespace RemoteDebuggerLauncher
+namespace RemoteDebuggerLauncher.SecureShell
 {
    /// <summary>
    /// Interface for the high level operations performed on the remote device.

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Renci.SshNet;
 using Renci.SshNet.Common;
 
-namespace RemoteDebuggerLauncher
+namespace RemoteDebuggerLauncher.SecureShell
 {
    /// <summary>
    /// Secure Shell (SSH) commanding session executing multiple commands in a single SSH session.

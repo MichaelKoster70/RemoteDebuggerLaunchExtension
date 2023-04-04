@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace RemoteDebuggerLauncher
+namespace RemoteDebuggerLauncher.SecureShell
 {
    /// <summary>
    /// Exception thrown when a SSH remote command fails.

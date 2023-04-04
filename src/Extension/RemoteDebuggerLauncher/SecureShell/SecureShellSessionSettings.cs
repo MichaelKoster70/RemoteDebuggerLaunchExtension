@@ -5,7 +5,7 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-namespace RemoteDebuggerLauncher
+namespace RemoteDebuggerLauncher.SecureShell
 {
    /// <summary>
    /// Container for Secure Shell settings.

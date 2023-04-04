@@ -13,7 +13,7 @@ using Microsoft.VisualStudio.Threading;
 using Renci.SshNet;
 using Renci.SshNet.Common;
 
-namespace RemoteDebuggerLauncher
+namespace RemoteDebuggerLauncher.SecureShell
 {
    /// <summary>
    /// Secure Shell (SSH) session service.

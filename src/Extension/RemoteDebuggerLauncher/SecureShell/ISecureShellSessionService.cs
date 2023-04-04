@@ -7,7 +7,7 @@
 
 using System.Threading.Tasks;
 
-namespace RemoteDebuggerLauncher
+namespace RemoteDebuggerLauncher.SecureShell
 {
    /// <summary>
    /// Interface defining the Secure Shell (SSH) session service.
