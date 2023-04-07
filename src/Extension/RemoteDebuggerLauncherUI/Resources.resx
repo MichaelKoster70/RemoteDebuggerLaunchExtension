@@ -260,7 +260,7 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
   </data>
   <data name="RemoteCommandCleanRemoteFolderNoProjects" xml:space="preserve">
     <value>Cleaning - no supported projects found.
-Make sure you selected a 'SSH Remote' launch profile.</value>
+Make sure you selected a 'SshRemoteLaunch' launch profile.</value>
   </data>
   <data name="RemoteCommandCleanRemoteFolderStatusbarProgress" xml:space="preserve">
     <value>Cleaning ...</value>
@@ -291,7 +291,7 @@ Make sure you selected a 'SSH Remote' launch profile.</value>
   </data>
   <data name="RemoteCommandDeployRemoteFolderNoProjects" xml:space="preserve">
     <value>Deploying application - no supported projects found.
-Make sure you selected a 'SSH Remote' launch profile.</value>
+Make sure you selected a 'SshRemoteLaunch' launch profile.</value>
   </data>
   <data name="RemoteCommandDeployRemoteFolderOutputPaneProgress" xml:space="preserve">
     <value>Deploying application - Source: {0}, Target: {1}</value>
@@ -336,9 +336,14 @@ Make sure you selected a 'SSH Remote' launch profile.</value>
   <data name="RemoteCommandInstallDotnetCommandStatusbarText" xml:space="preserve">
     <value>Installing .NET on targets...</value>
   </data>
+  <data name="RemoteCommandInstallDotnetExports" xml:space="preserve">
+    <value>To complete the installation, export the following environment variables (add to your .bashrc or .bash_profile):
+export DOTNET_ROOT={0}
+export PATH=$PATH:{0}</value>
+  </data>
   <data name="RemoteCommandInstallDotnetNoProjects" xml:space="preserve">
     <value>Installing .NET - no supported projects found.
-Make sure you selected a 'SSH Remote' launch profile.</value>
+Make sure you selected a 'SshRemoteLaunch' launch profile.</value>
   </data>
   <data name="RemoteCommandInstallDotnetOfflineOutputPaneDownloadingPayload" xml:space="preserve">
     <value>Downloading binaries - URL: {0} </value>

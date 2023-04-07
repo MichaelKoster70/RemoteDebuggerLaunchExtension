@@ -6,6 +6,7 @@
 // ----------------------------------------------------------------------------
 
 using System.Threading.Tasks;
+using RemoteDebuggerLauncher.SecureShell;
 
 namespace RemoteDebuggerLauncher
 {

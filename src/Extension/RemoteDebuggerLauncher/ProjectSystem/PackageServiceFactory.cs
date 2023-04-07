@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
 using Microsoft.VisualStudio.Shell;
+using RemoteDebuggerLauncher.SecureShell;
 
 namespace RemoteDebuggerLauncher
 {

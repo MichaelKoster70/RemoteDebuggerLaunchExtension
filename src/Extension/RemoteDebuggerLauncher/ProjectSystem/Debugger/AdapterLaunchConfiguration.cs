@@ -12,6 +12,7 @@ using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.Shell;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using RemoteDebuggerLauncher.SecureShell;
 
 namespace RemoteDebuggerLauncher
 {
