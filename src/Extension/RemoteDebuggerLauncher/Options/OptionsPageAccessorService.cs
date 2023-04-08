@@ -6,6 +6,7 @@
 // ----------------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
+using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher
 {
@@ -70,6 +71,12 @@ namespace RemoteDebuggerLauncher
       public bool QueryPublishOnDeploy()
       {
          return GetLocalPage().PublishOnDeploy;
+      }
+
+      /// <inheritdoc />
+      public PublishMode QueryPublishMode()
+      {
+         return GetLocalPage().PublishMode;
       }
 
       private DeviceOptionsPage GetDevicePage()

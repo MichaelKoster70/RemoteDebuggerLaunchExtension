@@ -5,6 +5,8 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
+using RemoteDebuggerLauncher.Shared;
+
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
@@ -51,7 +53,13 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// Queries the flag whether to publish the application on deploy.
       /// </summary>
-      /// <returns>A <see langword="bool"/><c>true</c> to deploy published output;<c>false</c> to deploy build output.</returns>
+      /// <returns><c>true</c> to deploy published output;<c>false</c> to deploy build output.</returns>
       bool QueryPublishOnDeploy();
+
+      /// <summary>
+      /// Queries the publishing mode.
+      /// </summary>
+      /// <returns>One of the <see see="PublishMode"/> values.</returns>
+      PublishMode QueryPublishMode();
    }
 }

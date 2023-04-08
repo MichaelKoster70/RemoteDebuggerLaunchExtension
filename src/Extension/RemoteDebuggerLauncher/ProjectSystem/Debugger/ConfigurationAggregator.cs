@@ -9,6 +9,7 @@ using System;
 using System.Collections.Immutable;
 using System.Net;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
+using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher
 {
@@ -327,6 +328,33 @@ namespace RemoteDebuggerLauncher
          // use the default in options 
          var optionsPublishOnDeploy = optionsPageAccessor.QueryPublishOnDeploy();
          return optionsPublishOnDeploy;
+      }
+
+      /// <summary>
+      /// Queries the publishing mode.
+      /// </summary>
+      /// <returns>One of the <see see="PublishMode"/> values</returns>
+      /// <summary>
+      /// <remarks>
+      /// The following configuration provides are queried, first match wins
+      /// - selected launch profile
+      /// - Tools/Options settings
+      /// - built-in default (false)
+      /// </remarks>
+      public PublishMode QueryPublishMode()
+      {
+         if (GetOtherSetting(SecureShellRemoteLaunchProfile.publishModeProperty, out string publishModeText))
+         {
+            if (Enum.TryParse< PublishMode>(publishModeText, out PublishMode publishMode))
+            {
+               // Launch profile value => use it
+               return publishMode;
+            }
+         }
+
+         // use the default in options 
+         var optionsPublishMode = optionsPageAccessor.QueryPublishMode();
+         return optionsPublishMode;
       }
 
       /// <summary>

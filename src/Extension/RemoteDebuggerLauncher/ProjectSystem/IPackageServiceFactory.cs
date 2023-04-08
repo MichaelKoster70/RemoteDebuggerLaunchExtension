@@ -38,7 +38,7 @@ namespace RemoteDebuggerLauncher
       Task<ISecureShellDeployService> GetDeployServiceAsync(bool useWaitDialog);
 
       /// <summary>
-      /// Gets the .NEt publish service responsible to run dotnet publish if required.
+      /// Gets the .NET publish service responsible to run dotnet publish if required.
       /// </summary>
       /// <param name="useWaitDialog"><c>true</c> to use the VS wait dialog, else <c>false</c>.</param>
       /// <returns>A <see cref="ISecureShellDeployService"/> instance.</returns>

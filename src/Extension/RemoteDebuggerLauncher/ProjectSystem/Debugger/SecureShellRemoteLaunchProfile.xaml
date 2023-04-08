@@ -77,20 +77,28 @@
                   Description="The folder path where the .NET runtime is installed on the target device."
                   Subcategory="Folders"/>
 
-   <StringProperty Name="debuggerInstallFolderPath"
-                   DisplayName="Debugger install folder path"
-                   Description="The folder path where the VS Code debugger is installed on the target device."
-                   Subcategory="Folders"/>
+  <StringProperty Name="debuggerInstallFolderPath"
+                  DisplayName="Debugger install folder path"
+                  Description="The folder path where the VS Code debugger is installed on the target device."
+                  Subcategory="Folders"/>
 
-   <StringProperty Name="appFolderPath"
+  <StringProperty Name="appFolderPath"
                    DisplayName="App folder path"
                    Description="The path on the target device where the application binaries will get deployed to."
                    Subcategory="Folders"/>
 
-   <BoolProperty Name="publishOnDeploy"
-                 DisplayName="Publish on deploy"
-                 Description="Publishes application before deployment. This is useful for application types that require additional files to be deployed like ASP.NET/Blazer."
-                 Subcategory="Deployment Options" />
+  <BoolProperty Name="publishOnDeploy"
+                DisplayName="Publish on deploy"
+                Description="Publishes application before deployment. This is useful for application types that require additional files to be deployed like ASP.NET/Blazer."
+                Subcategory="Deployment Options" />
+
+  <EnumProperty Name="publishMode" 
+                DisplayName="Publishing Mode"
+                Description="Defines the publishing mode 'FrameworkDependant' or 'SelfContained'."
+                Subcategory="Deployment Options" >
+    <EnumValue Name="FrameworkDependant" />
+    <EnumValue Name="SelfContained" />
+  </EnumProperty>
 
   <BoolProperty Name="deployOnStartDebugging"
                 DisplayName="Deploy on start debugging"

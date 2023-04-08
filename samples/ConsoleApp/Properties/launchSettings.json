@@ -17,7 +17,9 @@
       "hostName": "ubuntuvm-1804",
       "hostPort": "22",
       "userName": "user",
-      "privateKey": "%userprofile%\\.ssh\\id_rsa"
+      "privateKey": "%userprofile%\\.ssh\\id_rsa",
+      "publishMode": "FrameworkDependant",
+      "publishOnDeploy": true
     }
   }
 }

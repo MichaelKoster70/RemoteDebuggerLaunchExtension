@@ -90,5 +90,11 @@ namespace RemoteDebuggerLauncher.SecureShell
       /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
       /// <exception cref="NotSupportedException">runtime kind not supported.</exception>
       Task TryInstallDotNetOfflineAsync(DotnetInstallationKind kind, string channel);
+
+      /// <summary>
+      /// Get the CPU architecture to determine which runtime ID to use, ignoring MacOS and Alpine based Linux when determining the needed runtime ID.
+      /// </summary>
+      /// <returns>The <see cref="string"/> hoilding the runtime ID.</returns>
+     Task<string> GetRuntimeIdAsync();
    }
 }

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Threading;
+using RemoteDebuggerLauncher.SecureShell;
 
 namespace RemoteDebuggerLauncher
 {
@@ -22,6 +23,8 @@ namespace RemoteDebuggerLauncher
    /// <seealso cref="IDotnetPublishService"/>
    internal class DotnetPublishService : IDotnetPublishService
    {
+      private readonly ConfigurationAggregator configurationAggregator;
+      private readonly ISecureShellRemoteOperationsService remoteOperations;
       private readonly ConfiguredProject configuredProject;
       private readonly IOutputPaneWriterService outputPaneWriter;
       private readonly IWaitDialogFactoryService waitDialogFactory;
@@ -31,13 +34,16 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// Initializes a new instance of the <see cref="DotnetPublishService" /> class.
       /// </summary>
-      /// <param name="configuredProject">The configuration aggregator.</param>
-      /// <param name="logger">The logger service instance to use.</param>
+      /// <param name="configurationAggregator">The configuration aggregator.</param>
+      /// <param name="configuredProject">The configured project.</param>
+      /// <param name="outputPaneWriter">The logger service instance to use.</param>
       /// <param name="waitDialogFactory">The Wait Dialog Factory service.</param>
-      internal DotnetPublishService(ConfiguredProject configuredProject, IOutputPaneWriterService outputPaneWriter, IWaitDialogFactoryService waitDialogFactory)
+      internal DotnetPublishService(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject, ISecureShellRemoteOperationsService remoteOperations, IOutputPaneWriterService outputPaneWriter, IWaitDialogFactoryService waitDialogFactory)
       {
          ThreadHelper.ThrowIfNotOnUIThread();
 
+         this.configurationAggregator = configurationAggregator ?? throw new ArgumentNullException(nameof(configurationAggregator));
+         this.remoteOperations = remoteOperations ?? throw new ArgumentNullException(nameof(remoteOperations));
          this.configuredProject = configuredProject ?? throw new ArgumentNullException(nameof(configuredProject));
          this.outputPaneWriter = outputPaneWriter ?? throw new ArgumentNullException(nameof(outputPaneWriter));
          this.waitDialogFactory = waitDialogFactory ?? throw new ArgumentNullException(nameof(waitDialogFactory));
@@ -53,6 +59,8 @@ namespace RemoteDebuggerLauncher
          var projectPath = configuredProject.UnconfiguredProject.FullPath;
          var publishPath = await GetPublishedOutputDirectoryPathAsync();
          var configuration = configuredProject.ProjectConfiguration.Dimensions["Configuration"];
+
+         var publishMode = configurationAggregator.QueryPublishMode();
 
          await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 

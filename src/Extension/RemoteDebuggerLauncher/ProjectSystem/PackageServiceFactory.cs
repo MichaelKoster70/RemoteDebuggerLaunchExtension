@@ -51,11 +51,12 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <inheritdoc />
-      public Task<IDotnetPublishService> GetPublishServiceAsync(bool useWaitDialog)
+      public async Task<IDotnetPublishService> GetPublishServiceAsync(bool useWaitDialog)
       {
          var waitDialog = facadeFactory.GetVsShell().GetWaitDialog(useWaitDialog);
+         var remoteOperations = await GetSecureShellRemoteOperationsAsync();
 
-         return Task.FromResult<IDotnetPublishService>(new DotnetPublishService(configuredProject, outputPaneWriter, waitDialog));
+         return new DotnetPublishService(configurationAggregator, configuredProject, remoteOperations, outputPaneWriter, waitDialog);
       }
 
       /// <inheritdoc />

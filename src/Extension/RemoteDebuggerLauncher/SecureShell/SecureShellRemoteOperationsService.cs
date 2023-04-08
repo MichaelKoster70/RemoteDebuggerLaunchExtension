@@ -424,7 +424,8 @@ namespace RemoteDebuggerLauncher.SecureShell
          return false;
       }
 
-      private async Task<string> GetRuntimeIdAsync()
+      /// <inheritdoc />
+      public async Task<string> GetRuntimeIdAsync()
       {
          string runtimeId;
          var cpuArchitecture = (await session.ExecuteSingleCommandAsync("uname -m").ConfigureAwait(true)).Trim('\n');
