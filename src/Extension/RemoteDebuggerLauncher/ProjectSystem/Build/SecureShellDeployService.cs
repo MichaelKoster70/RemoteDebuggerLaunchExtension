@@ -6,6 +6,7 @@
 // ----------------------------------------------------------------------------
 
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.ProjectSystem;
 using RemoteDebuggerLauncher.SecureShell;
 
 namespace RemoteDebuggerLauncher
@@ -17,12 +18,14 @@ namespace RemoteDebuggerLauncher
    internal class SecureShellDeployService : ISecureShellDeployService
    {
       private readonly ConfigurationAggregator configurationAggregator;
+      private readonly ConfiguredProject configuredProject;
       private readonly IDotnetPublishService publishService;
       private readonly ISecureShellRemoteOperationsService remoteOperations;
 
-      public SecureShellDeployService(ConfigurationAggregator configurationAggregator, IDotnetPublishService publishService, ISecureShellRemoteOperationsService remoteOperations)
+      public SecureShellDeployService(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject, IDotnetPublishService publishService, ISecureShellRemoteOperationsService remoteOperations)
       {
          this.configurationAggregator = configurationAggregator;
+         this.configuredProject = configuredProject;
          this.publishService = publishService;
          this.remoteOperations = remoteOperations;
       }
@@ -47,6 +50,16 @@ namespace RemoteDebuggerLauncher
          // Step 3: Deploy application to target folder
          var outputPath = await publishService.GetOutputDirectoryPathAsync();
          await remoteOperations.DeployRemoteFolderAsync(outputPath, true);
+
+         // Step 4: change file permission if self contained
+         if (configurationAggregator.QueryPublishOnDeploy() && configurationAggregator.QueryPublishMode() == Shared.PublishMode.SelfContained)
+         {
+            var binaryName = await configuredProject.GetAssemblyNameAsync();
+            var remotePath = UnixPath.Combine(configurationAggregator.QueryAppFolderPath(), binaryName);
+
+            // change file permission to rwx,r,r
+            await remoteOperations.ChangeRemoteFilePermissionAsync(remotePath, 0711);
+         }
       }
    }
 }

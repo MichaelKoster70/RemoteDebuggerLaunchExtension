@@ -236,8 +236,8 @@ namespace RemoteDebuggerLauncher.SecureShell
 
             using (var commandSession = session.CreateCommandSession())
             {
-               _ = await commandSession.ExecuteCommandAsync($"[ -d {targetPath} ] | rm -rf {targetPath}/*").ConfigureAwait(true);
-               _ = await commandSession.ExecuteCommandAsync($"mkdir -p {targetPath}").ConfigureAwait(true);
+               _ = await commandSession.ExecuteCommandAsync($"[ -d {targetPath} ] | rm -rf {targetPath}/*");
+               _ = await commandSession.ExecuteCommandAsync($"mkdir -p {targetPath}");
             }
 
             outputPaneWriter.WriteLine(Resources.RemoteCommandCleanRemoteFolderCompletedSuccess);
@@ -246,6 +246,26 @@ namespace RemoteDebuggerLauncher.SecureShell
          {
             outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
             outputPaneWriter.WriteLine(Resources.RemoteCommandCleanRemoteFolderCompletedFailed, ex.Message);
+            throw;
+         }
+      }
+
+      /// <inheritdoc />
+      public async Task ChangeRemoteFilePermissionAsync(string remotePath, int permission)
+      {
+         try
+         {
+            var permissionText = $"{permission:o}";
+
+            outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            outputPaneWriter.WriteLine(Resources.RemoteCommandChangeRemoteFilePermissionCaption, remotePath, permissionText);
+
+            _ = await session.ExecuteSingleCommandAsync($"chmod {remotePath} {permissionText}");
+         }
+         catch (SecureShellSessionException ex)
+         {
+            outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            outputPaneWriter.WriteLine(Resources.RemoteCommandChangeRemoteFilePermissionCompletedFailed, ex.Message);
             throw;
          }
       }

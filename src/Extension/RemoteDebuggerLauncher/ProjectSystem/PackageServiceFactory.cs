@@ -47,7 +47,7 @@ namespace RemoteDebuggerLauncher
          var publishService = await GetPublishServiceAsync(useWaitDialog);
          var remoteOperations = await GetSecureShellRemoteOperationsAsync();
 
-         return new SecureShellDeployService(configurationAggregator, publishService, remoteOperations);
+         return new SecureShellDeployService(configurationAggregator, configuredProject, publishService, remoteOperations);
       }
 
       /// <inheritdoc />

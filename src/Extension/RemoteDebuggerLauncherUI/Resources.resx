@@ -232,6 +232,12 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
   <data name="RegexValidationRuleNoValidUsername" xml:space="preserve">
     <value>Validation error: must supply a non empty string consisting of letters, numbers, underscores, and/or hyphens</value>
   </data>
+  <data name="RemoteCommandChangeRemoteFilePermissionCaption" xml:space="preserve">
+    <value>Changing file permission - target: {0}, perm: {1}</value>
+  </data>
+  <data name="RemoteCommandChangeRemoteFilePermissionCompletedFailed" xml:space="preserve">
+    <value>Changing file permission FAILED: {0}</value>
+  </data>
   <data name="RemoteCommandCheckConnectionOutputPaneConnectingTo" xml:space="preserve">
     <value>Connecting to {0}@{1}... </value>
     <comment>Remote command Check Connection: Connecting to text</comment>

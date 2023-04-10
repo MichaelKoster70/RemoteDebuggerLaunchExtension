@@ -398,6 +398,24 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Changing file permission - target: {0}, perm: {1}.
+        /// </summary>
+        public static string RemoteCommandChangeRemoteFilePermissionCaption {
+            get {
+                return ResourceManager.GetString("RemoteCommandChangeRemoteFilePermissionCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changing file permission FAILED: {0}.
+        /// </summary>
+        public static string RemoteCommandChangeRemoteFilePermissionCompletedFailed {
+            get {
+                return ResourceManager.GetString("RemoteCommandChangeRemoteFilePermissionCompletedFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connecting to {0}@{1}... .
         /// </summary>
         public static string RemoteCommandCheckConnectionOutputPaneConnectingTo {

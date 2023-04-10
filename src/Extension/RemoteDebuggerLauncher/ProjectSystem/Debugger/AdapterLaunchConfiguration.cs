@@ -149,14 +149,14 @@ namespace RemoteDebuggerLauncher
          return launchConfigurationJson;
       }
 
-      public static async Task<string> CreateSelfContainedAsync(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject)
+      public static async Task<string> CreateSelfContainedAsync(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject, IOutputPaneWriterService outputPaneWriter)
       {
          ThrowIf.ArgumentNull(configurationAggregator, nameof(configurationAggregator));
          ThrowIf.ArgumentNull(configuredProject, nameof(configuredProject));
 
-         var program = UnixPath.Combine(configurationAggregator.QueryDotNetInstallFolderPath(), PackageConstants.Dotnet.BinaryName);
          var appFolderPath = configurationAggregator.QueryAppFolderPath();
          var assemblyFileName = await configuredProject.GetAssemblyFileNameAsync();
+         var program = UnixPath.Combine(appFolderPath, await configuredProject.GetAssemblyNameAsync());
 
          var config = CreateAndSetAdapter(configurationAggregator);
          config.Name = ".NET Core Launch - Self contained";
@@ -166,7 +166,11 @@ namespace RemoteDebuggerLauncher
          config.AppendCommandLineArguments(configurationAggregator);
          config.AppendEnvironmentVariables(configurationAggregator);
 
-         return JsonConvert.SerializeObject(config);
+         var launchConfigurationJson = JsonConvert.SerializeObject(config);
+
+         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+         outputPaneWriter.WriteLine($"Options: {launchConfigurationJson}");
+         return launchConfigurationJson;
       }
 
       private static LaunchConfiguration CreateAndSetAdapter(ConfigurationAggregator configurationAggregator)

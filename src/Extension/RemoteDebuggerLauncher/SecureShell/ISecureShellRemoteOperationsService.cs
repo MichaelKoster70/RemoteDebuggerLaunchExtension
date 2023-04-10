@@ -74,6 +74,15 @@ namespace RemoteDebuggerLauncher.SecureShell
       Task CleanRemoteFolderAsync();
 
       /// <summary>
+      /// Changes the remote file permission to the given value
+      /// </summary>
+      /// <param name="remotePath">The absolute path of the file to change.</param>
+      /// <param name="permission">The file permission.</param>
+      /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+      /// <exception cref="SecureShellSessionException">thrown when the operation failed.</exception>
+      Task ChangeRemoteFilePermissionAsync(string remotePath, int permission);
+
+      /// <summary>
       /// Tries to install the .NET assuming the target device has a direct internet connection.
       /// </summary>
       /// <param name="channel">The channel source holding the version to install.</param>

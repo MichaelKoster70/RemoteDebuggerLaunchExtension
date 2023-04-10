@@ -5,6 +5,7 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Composition;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
 using Microsoft.VisualStudio.ProjectSystem.VS.Debug;
 using Microsoft.VisualStudio.Shell.Interop;
+using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher
 {
@@ -145,14 +147,37 @@ namespace RemoteDebuggerLauncher
 
          await threadingService.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-         var launchSettings = new DebugLaunchSettings(launchOptions)
+         var publishMode = factory.Configuration.QueryPublishMode();
+
+         DebugLaunchSettings launchSettings;
+
+         switch (publishMode)
          {
-            LaunchOperation = DebugLaunchOperation.CreateProcess,
-            Executable = "dotnet",
-            Options = await AdapterLaunchConfiguration.CreateFrameworkDependantAsync(factory.Configuration, configuredProject, factory.OutputPane, remoteOperations),
-            LaunchDebugEngineGuid = PackageConstants.DebugLaunchSettings.EngineGuid,
-            Project = configuredProject.UnconfiguredProject.Services.HostObject as IVsHierarchy
-         };
+            
+            case PublishMode.FrameworkDependant:
+            default:
+               launchSettings = new DebugLaunchSettings(launchOptions)
+               {
+                  LaunchOperation = DebugLaunchOperation.CreateProcess,
+                  Executable = "dotnet",
+                  Options = await AdapterLaunchConfiguration.CreateFrameworkDependantAsync(factory.Configuration, configuredProject, factory.OutputPane, remoteOperations),
+                  LaunchDebugEngineGuid = PackageConstants.DebugLaunchSettings.EngineGuid,
+                  Project = configuredProject.UnconfiguredProject.Services.HostObject as IVsHierarchy
+               };
+               break;
+
+            case PublishMode.SelfContained:
+               launchSettings = new DebugLaunchSettings(launchOptions)
+               {
+                  LaunchOperation = DebugLaunchOperation.CreateProcess,
+                  Executable = "dotnet",
+                  Options = await AdapterLaunchConfiguration.CreateSelfContainedAsync(factory.Configuration, configuredProject, factory.OutputPane),
+                  LaunchDebugEngineGuid = PackageConstants.DebugLaunchSettings.EngineGuid,
+                  Project = configuredProject.UnconfiguredProject.Services.HostObject as IVsHierarchy
+               };
+               break;
+         }
+
 
          debugLaunchSettings.Add(launchSettings);
       }

@@ -18,7 +18,7 @@
       "hostPort": "22",
       "userName": "pi",
       "privateKey": "%userprofile%\\.ssh\\id_rsa",
-      "publishMode": "FrameworkDependant",
+      "publishMode": "SelfContained",
       "publishOnDeploy": true
     }
   }
