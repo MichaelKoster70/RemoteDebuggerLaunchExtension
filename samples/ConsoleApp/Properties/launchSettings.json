@@ -14,9 +14,9 @@
       "environmentVariables": {
         "answer": "42"
       },
-      "hostName": "ubuntuvm-1804",
+      "hostName": "raspberrypi",
       "hostPort": "22",
-      "userName": "user",
+      "userName": "pi",
       "privateKey": "%userprofile%\\.ssh\\id_rsa",
       "publishMode": "FrameworkDependant",
       "publishOnDeploy": true

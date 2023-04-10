@@ -36,5 +36,28 @@ namespace RemoteDebuggerLauncher
 #pragma warning restore CA1031 // Do not catch general exception types
          return true;
       }
+
+      /// <summary>
+      /// Ensures that the supplied folder is empty
+      /// </summary>
+      /// <param name="folder">The folder path to validate.</param>
+      /// <returns><c>true</c> is successful; else <c>false</c>.</returns>
+      internal static bool EnsureClean(string folder)
+      {
+#pragma warning disable CA1031 // Do not catch general exception types
+         try
+         {
+            if (Directory.Exists(folder))
+            {
+               Directory.Delete(folder, true);
+            }
+         }
+         catch
+         {
+            return false;
+         }
+#pragma warning restore CA1031 // Do not catch general exception types
+         return true;
+      }
    }
 }

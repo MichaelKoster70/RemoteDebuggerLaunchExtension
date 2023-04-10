@@ -169,9 +169,17 @@
               ToolTip="{x:Static local:Resources.SetupSshDialogPrivateKeyFileBrowseDescription}"/>
     </Grid>
 
+    <CheckBox Grid.Row="6" 
+              Grid.Column="0"
+              Margin="4,0,0,0"
+              VerticalAlignment="Center"
+              IsChecked="{Binding ForceIPv4}"
+              Content="{x:Static local:Resources.SetupSshDialogKeyPairForceIPv4Content}" 
+              ToolTip="{x:Static local:Resources.SetupSshDialogKeyPairForceIPv4Description}"/>
+
     <!-- OK/Cancel buttons -->
     <StackPanel Grid.Row="6" 
-                Grid.ColumnSpan="2"
+                Grid.Column="1"
                 Margin="4 0"
                 Orientation="Horizontal"
                 HorizontalAlignment="Right">

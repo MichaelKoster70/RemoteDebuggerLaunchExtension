@@ -17,7 +17,7 @@ The desktop side SSH support relies on the built-in [OpenSSH for Windows](https:
 
 The extension supports
 - SSH authentication using private keys.
-- Debugging .NET framework dependant application.
+- Debugging .NET framework dependant and self contained application.
 - Deploying the project output folder via SCP to the target device.
 - Publish (running dotnet publish) before deploying the application.
 - Installing vsdbg automatically (configurable).
@@ -33,7 +33,7 @@ To use this extension, you need a Windows based PC with:
 - Visual Studio 2022 17.2 or newer with any of the .NET workloads installed like
   - .NET desktop development
   - ASP.NET and web development
-  - .NET Multi-platform appUI development
+  - .NET Multi-platform AppUI development
 
 
 ### Device prerequisites

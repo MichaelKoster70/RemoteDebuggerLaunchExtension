@@ -52,6 +52,12 @@ namespace RemoteDebuggerLauncher
          }
       }
 
+      [Category(PackageConstants.Options.PageCategorySsh)]
+      [DisplayName("Force IPv4")]
+      [Description("To force the plugin to use IPv4.")]
+      [DefaultValue(PackageConstants.Options.DefaultValueForceIPv4)]
+      public bool ForceIPv4 { get; set; } = PackageConstants.Options.DefaultValueForceIPv4;
+
       [Category(PackageConstants.Options.PageCategoryFolders)]
       [DisplayName(".NET install folder path")]
       [Description("The folder path where .NET framework is installed on the target device.")]

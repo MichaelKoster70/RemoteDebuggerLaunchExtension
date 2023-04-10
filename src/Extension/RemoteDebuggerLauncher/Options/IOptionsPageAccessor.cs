@@ -33,6 +33,12 @@ namespace RemoteDebuggerLauncher
       string QueryPrivateKeyFilePath();
 
       /// <summary>
+      /// Queries the value whether to force IPv4 connections from the device option page.
+      /// </summary>
+      /// <returns>A <see langword="bool"/> holding the value, <c>false</c> if not configured.</returns>
+      bool QueryForceIPv4();
+
+      /// <summary>
       /// Queries the folder path where the .NET framework is installed on the remote device from the device option page.
       /// </summary>
       /// <returns>A <see langword="string"/> holding the path, <c>string.Empty</c> if not configured.</returns>

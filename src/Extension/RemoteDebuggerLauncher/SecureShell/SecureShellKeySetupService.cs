@@ -7,8 +7,10 @@
 
 using System;
 using System.Composition;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Threading;
 using Renci.SshNet;
 using Renci.SshNet.Common;
 
@@ -21,6 +23,7 @@ namespace RemoteDebuggerLauncher.SecureShell
    [Export(typeof(ISecureShellKeySetupService))]
    internal class SecureShellKeySetupService : ISecureShellKeySetupService
    {
+
       private readonly IVsFacadeFactory factory;
 
       [ImportingConstructor]
@@ -36,9 +39,48 @@ namespace RemoteDebuggerLauncher.SecureShell
       public IStatusbarService Statusbar => factory.GetVsShell().GetStatusbar();
 
       /// <inheritdoc />
+      public async Task RegisterServerFingerprintAsync(SecureShellKeySetupSettings settings)
+      {
+         Statusbar.SetText(Resources.RemoteCommandSetupSshCommandStatusbarScanProgress);
+         OutputPaneWriter.WriteLine(Resources.CommonStartSessionMarker);
+
+         var defaultKeysFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), PackageConstants.SecureShell.DefaultKeyPairFolder);
+         var knownHostsFilePath = Path.Combine(defaultKeysFolder, PackageConstants.SecureShell.DefaultKnownHostsFileName);
+
+         var arguments = string.Format(PackageConstants.SecureShell.KeyScanArguments, settings.HostName, settings.HostPort);
+         var startInfo = new ProcessStartInfo(PackageConstants.SecureShell.KeyScanExecutable, arguments)
+         {
+            CreateNoWindow = true,
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+         };
+
+         OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintScan, settings.UserName, settings.HostName, settings.HostPort);
+         // get the fingerprint values from the supplied host, append them to the 'known-hosts' file.
+         using (var process = Process.Start(startInfo))
+         {
+            var stdOutput = await process.StandardOutput.ReadToEndAsync();
+            var exitCode = await process.WaitForExitAsync();
+
+            if (exitCode == 0)
+            {
+               if (FileHelper.ContainsText(knownHostsFilePath, settings.HostName))
+               {
+                  OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintAdd, settings.UserName, settings.HostName, settings.HostPort);
+               }
+               else
+               {
+                  OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintAdd, settings.UserName, settings.HostName, settings.HostPort);
+                  File.AppendAllText(knownHostsFilePath, stdOutput);
+               }
+            }
+         }
+      }
+
+      /// <inheritdoc />
       public async Task AuthorizeKeyAsync(SecureShellKeySetupSettings settings)
       {
-         Statusbar.SetText(Resources.RemoteCommandSetupSshCommandStatusbarProgress);
+         Statusbar.SetText(Resources.RemoteCommandSetupSshCommandStatusbarAuthorizeProgress);
          OutputPaneWriter.WriteLine(Resources.CommonStartSessionMarker);
 
          // Step 1: try to authenicate with the supplied public key
@@ -80,7 +122,7 @@ namespace RemoteDebuggerLauncher.SecureShell
          try
          {
             var key = new PrivateKeyFile(settings.PrivateKeyFile);
-            using (var sshClient = new SshClient(settings.HostName, settings.HostPort, settings.UserName, key))
+            using (var sshClient = new SshClient(settings.HostNameIPv4, settings.HostPort, settings.UserName, key))
             {
                sshClient.ConnectionInfo.Timeout = TimeSpan.FromSeconds(5);
                sshClient.Connect();
@@ -109,7 +151,7 @@ namespace RemoteDebuggerLauncher.SecureShell
          SshClient sshClient = null;
          try
          {
-            sshClient = new SshClient(settings.HostName, settings.HostPort, settings.UserName, settings.Password);
+            sshClient = new SshClient(settings.HostNameIPv4, settings.HostPort, settings.UserName, settings.Password);
             sshClient.ConnectionInfo.Timeout = TimeSpan.FromSeconds(5);
             sshClient.Connect();
 
@@ -134,7 +176,7 @@ namespace RemoteDebuggerLauncher.SecureShell
       {
          try
          {
-            OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshPhase3AddKeyProgress, settings.UserName, settings.HostName, settings.HostPort);
+            OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshPhase3AddKeyProgress, settings.UserName, settings.HostNameIPv4, settings.HostPort);
 
             string publicKeyData = File.ReadAllText(settings.PublicKeyFile).Trim();
 

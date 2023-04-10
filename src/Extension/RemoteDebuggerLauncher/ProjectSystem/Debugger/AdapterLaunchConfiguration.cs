@@ -188,7 +188,13 @@ namespace RemoteDebuggerLauncher
          // Handle non default port
          if (hostPort != PackageConstants.Options.DefaultValueSecureShellHostPort)
          {
-            adapterArgs += $"-p {hostPort}";
+            adapterArgs += $"-p {hostPort} ";
+         }
+
+         // Handle force IPv4
+         if (configurationAggregator.QueryForceIPv4())
+         {
+            adapterArgs += "-4 ";
          }
 
          // handle user name, host, amd remaining options

@@ -5,11 +5,8 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net;
 
 namespace RemoteDebuggerLauncher.SecureShell
 {
@@ -18,6 +15,7 @@ namespace RemoteDebuggerLauncher.SecureShell
    /// </summary>
    internal class SecureShellKeySetupSettings
    {
+      private readonly bool forceIPv4;
       public SecureShellKeySetupSettings(SetupSshViewModel viewModel)
       {
          HostName = viewModel.HostName;
@@ -26,12 +24,18 @@ namespace RemoteDebuggerLauncher.SecureShell
          Password = viewModel.Password;
          PublicKeyFile= viewModel.PublicKeyFile;
          PrivateKeyFile = viewModel.PrivateKeyFile;
+         forceIPv4 = viewModel.ForceIPv4;
       }
 
       /// <summary>
       /// Gets the host name of the target device.
       /// </summary>
       public string HostName { get; }
+
+      /// <summary>
+      /// Gets the IPv4 address of the target device.
+      /// </summary>
+      public string HostNameIPv4 => forceIPv4 ? Dns.GetHostEntry(HostName).AddressList.FirstOrDefault(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)?.ToString() ?? HostName : HostName;
 
       /// <summary>
       /// Gets the host port of the target device.

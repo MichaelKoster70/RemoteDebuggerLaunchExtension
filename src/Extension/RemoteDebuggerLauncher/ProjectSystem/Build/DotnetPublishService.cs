@@ -13,6 +13,7 @@ using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Threading;
 using RemoteDebuggerLauncher.SecureShell;
+using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher
 {
@@ -68,14 +69,34 @@ namespace RemoteDebuggerLauncher
          {
             outputPaneWriter.WriteLine(Resources.PublishStart);
 
-            var arguments = $"publish {projectPath} --output {publishPath} -c {configuration} --no-build";
-            if (await SupportsFrameworkDependantAsync())
+            var arguments = $"publish {projectPath} --output {publishPath} -c {configuration}";
+
+            switch (publishMode)
             {
-               arguments += " --no-self-contained";
+               case PublishMode.FrameworkDependant:
+                  arguments += " --no-build";
+
+                  if (await SupportsFrameworkDependantAsync())
+                  {
+                     arguments += " --no-self-contained";
+                  }
+                  break;
+
+               case PublishMode.SelfContained:
+                  var runtimeId = await remoteOperations.GetRuntimeIdAsync();
+                  arguments += $" --self-contained --runtime {runtimeId}";
+                  break;
+
+               default: 
+                  break;
             }
 
             outputPaneWriter.WriteLine(Resources.PublishCommandLine, arguments);
 
+            // Clean the output
+            _ = DirectoryHelper.EnsureClean(publishPath);
+
+            // Start publish
             var startInfo = new ProcessStartInfo("dotnet.exe", arguments)
             {
                CreateNoWindow = true,

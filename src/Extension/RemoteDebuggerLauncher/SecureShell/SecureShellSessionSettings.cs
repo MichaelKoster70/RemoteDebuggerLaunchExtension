@@ -5,6 +5,9 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
+using System.Linq;
+using System.Net;
+
 namespace RemoteDebuggerLauncher.SecureShell
 {
    /// <summary>
@@ -12,6 +15,8 @@ namespace RemoteDebuggerLauncher.SecureShell
    /// </summary>
    internal class SecureShellSessionSettings
    {
+      private readonly bool forceIPv4;
+
       /// <summary>
       /// Initializes a new instance of the <see cref="SecureShellSessionSettings"/> class initialized from the supplied config aggregator.
       /// </summary>
@@ -22,12 +27,31 @@ namespace RemoteDebuggerLauncher.SecureShell
          HostPort = configurationAggregator.QueryHostPort();
          UserName = configurationAggregator.QueryUserName();
          PrivateKeyFile = configurationAggregator.QueryPrivateKeyFilePath(true);
+         forceIPv4 = configurationAggregator.QueryForceIPv4();
       }
 
       /// <summary>
       /// Gets the host name of the target device.
       /// </summary>
       public string HostName { get; }
+
+      /// <summary>
+      /// Gets the IPv4 address of the target device.
+      /// </summary>
+      public string HostNameIPv4
+      {
+         get
+         {
+            if (forceIPv4)
+            {
+               return Dns.GetHostEntry(HostName).AddressList.FirstOrDefault(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).ToString() ?? HostName;
+            }
+            else
+            {
+               return HostName;
+            }
+         }
+      }
 
       /// <summary>
       /// Gets the host port of the target device.

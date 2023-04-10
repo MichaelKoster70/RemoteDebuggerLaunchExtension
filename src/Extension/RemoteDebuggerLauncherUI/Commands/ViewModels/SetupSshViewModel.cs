@@ -115,6 +115,8 @@ namespace RemoteDebuggerLauncher
          }
       }
 
+      public bool ForceIPv4 { get; set; }
+
       public DelegateCommand BrowsePublicKeyFileCommand { get; }
 
       public DelegateCommand BrowsePrivateKeyFileCommand { get; }

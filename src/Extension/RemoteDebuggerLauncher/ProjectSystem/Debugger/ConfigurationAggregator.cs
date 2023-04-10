@@ -132,6 +132,15 @@ namespace RemoteDebuggerLauncher
          return optionsPageAccessor.QueryHostPort();
       }
 
+      /// <summary>
+      /// Queries the value whether to force IPv4 connections from the device option page.
+      /// </summary>
+      /// <returns>A <see langword="bool"/> holding the value, <c>false</c> if not configured.</returns>
+      public bool QueryForceIPv4()
+      {
+         return optionsPageAccessor.QueryForceIPv4();
+      }
+
 
       /// <summary>
       /// Queries the private key to be used to establish a connection to the remote device.

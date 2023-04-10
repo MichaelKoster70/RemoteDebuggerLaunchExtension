@@ -50,6 +50,12 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <inheritdoc />
+      public bool QueryForceIPv4()
+      {
+         return GetDevicePage().ForceIPv4;
+      }
+
+      /// <inheritdoc />
       public string QueryDotNetInstallFolderPath()
       {
          return GetDevicePage().DotNetInstallFolderPath;
