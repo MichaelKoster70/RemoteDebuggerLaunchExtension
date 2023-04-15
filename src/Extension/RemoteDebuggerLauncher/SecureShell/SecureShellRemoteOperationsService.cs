@@ -251,17 +251,17 @@ namespace RemoteDebuggerLauncher.SecureShell
       }
 
       /// <inheritdoc />
-      public async Task ChangeRemoteFilePermissionAsync(string remotePath, int permission)
+      public async Task ChangeRemoteFilePermissionAsync(string remotePath, int permissions)
       {
          try
          {
-            var permissionText = $"{permission:o}";
+            var permissionText = $"{permissions}";
 
             outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
             outputPaneWriter.WriteLine(Resources.RemoteCommandChangeRemoteFilePermissionCaption, remotePath, permissionText);
 
-            _ = await session.ExecuteSingleCommandAsync($"chmod {remotePath} {permissionText}");
-         }
+            _ = await session.ExecuteSingleCommandAsync($"chmod {permissionText} {remotePath} ");
+   }
          catch (SecureShellSessionException ex)
          {
             outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
@@ -269,6 +269,39 @@ namespace RemoteDebuggerLauncher.SecureShell
             throw;
          }
       }
+
+      /// <inheritdoc />
+      public Task ChangeRemoteFilePermissionAsync(string remotePath, string permissions)
+      {
+         return ChangeRemoteFilePermissionAsync(remotePath, ConvertPermissions(permissions));
+      }
+
+      private static int ConvertPermissions(string permissions)
+      {
+         int result = 0;
+         if (permissions.Length != 9)
+         {
+            throw new ArgumentException("Permissions string must be 9 characters long.");
+         }
+
+         int bitShift = 6;
+         for (int block = 0; block < 3; block++)
+         {
+            int blockResult = 0;
+            for(int blockBit = 0; blockBit < 3; blockBit++)
+            {
+               int position = blockBit + block * 3;
+               blockResult += permissions[position] == 'r' ? 4 : 0;
+               blockResult += permissions[position] == 'w' ? 2 : 0;
+               blockResult += permissions[position] == 'x' ? 1 : 0;
+            }
+            result += blockResult << bitShift;
+            bitShift -= 3;
+         }
+
+         return Convert.ToInt32(Convert.ToString(result, 8));
+      }
+
       #endregion
 
       #region .NET install
@@ -302,6 +335,51 @@ namespace RemoteDebuggerLauncher.SecureShell
             default:
                throw new NotSupportedException($"runtime kind '{kind}' not supported");
          }
+      }
+      #endregion
+
+      #region Support APIs
+      /// <inheritdoc />
+      public async Task<string> GetRuntimeIdAsync()
+      {
+         string runtimeId;
+         var cpuArchitecture = (await session.ExecuteSingleCommandAsync("uname -m").ConfigureAwait(true)).Trim('\n');
+         switch (cpuArchitecture)
+         {
+            case "armv7l":
+               runtimeId = "linux-arm";
+               break;
+            case "aarch64":
+               runtimeId = "linux-arm64";
+               break;
+            case "x86_64":
+               runtimeId = "linux-x64";
+               break;
+            default:
+               throw new RemoteDebuggerLauncherException("Unknown CPU architecture");
+         }
+
+         return runtimeId;
+      }
+      #endregion
+
+      #region private methods
+
+      /// <summary>
+      /// Checks if cURL is installed.
+      /// </summary>
+      /// <param name="commands">The SSH session to use</param>
+      /// <returns><c>true</c> if installed; else <c>false</c>.</returns>
+      private async Task<bool> CheckCurlIsMissingAsync(ISecureShellSessionCommandingService commands)
+      {
+         (int exitCode, _) = await commands.TryExecuteCommandAsync("command -v curl");
+         if (exitCode != 0)
+         {
+            outputPaneWriter.WriteLine(Resources.RemoteCommandCommonFailedCurlNotInstalled);
+            return true;
+         }
+
+         return false;
       }
 
       /// <summary>
@@ -429,42 +507,6 @@ namespace RemoteDebuggerLauncher.SecureShell
             outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
             outputPaneWriter.WriteLine(Resources.RemoteCommandInstallDotnetRuntimeOfflineCompletedFailed, ex.Message);
          }
-      }
-      #endregion
-
-      private async Task<bool> CheckCurlIsMissingAsync(ISecureShellSessionCommandingService commands)
-      {
-         (int exitCode, _) = await commands.TryExecuteCommandAsync("command -v curl");
-         if (exitCode != 0)
-         {
-            outputPaneWriter.WriteLine(Resources.RemoteCommandCommonFailedCurlNotInstalled);
-            return true;
-         }
-
-         return false;
-      }
-
-      /// <inheritdoc />
-      public async Task<string> GetRuntimeIdAsync()
-      {
-         string runtimeId;
-         var cpuArchitecture = (await session.ExecuteSingleCommandAsync("uname -m").ConfigureAwait(true)).Trim('\n');
-         switch (cpuArchitecture)
-         {
-            case "armv7l":
-               runtimeId = "linux-arm";
-               break;
-            case "aarch64":
-               runtimeId = "linux-arm64";
-               break;
-            case "x86_64":
-               runtimeId = "linux-x64";
-               break;
-            default:
-               throw new RemoteDebuggerLauncherException("Unknown CPU architecture");
-         }
-
-         return runtimeId;
       }
 
       private static string BuildDownloadCacheFilePath(string relativePath, string filName)
@@ -594,5 +636,6 @@ namespace RemoteDebuggerLauncher.SecureShell
             outputPaneWriter.WriteLine(Resources.RemoteCommandCommonSuccess);
          }
       }
+      #endregion
    }
 }

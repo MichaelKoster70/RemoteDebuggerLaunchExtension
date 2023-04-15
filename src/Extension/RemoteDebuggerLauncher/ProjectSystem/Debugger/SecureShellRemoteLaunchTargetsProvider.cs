@@ -147,37 +147,27 @@ namespace RemoteDebuggerLauncher
 
          await threadingService.JoinableTaskFactory.SwitchToMainThreadAsync();
 
+
+         var publishOnDeploy = factory.Configuration.QueryPublishOnDeploy();
          var publishMode = factory.Configuration.QueryPublishMode();
 
-         DebugLaunchSettings launchSettings;
-
-         switch (publishMode)
+         var launchSettings = new DebugLaunchSettings(launchOptions)
          {
-            
-            case PublishMode.FrameworkDependant:
-            default:
-               launchSettings = new DebugLaunchSettings(launchOptions)
-               {
-                  LaunchOperation = DebugLaunchOperation.CreateProcess,
-                  Executable = "dotnet",
-                  Options = await AdapterLaunchConfiguration.CreateFrameworkDependantAsync(factory.Configuration, configuredProject, factory.OutputPane, remoteOperations),
-                  LaunchDebugEngineGuid = PackageConstants.DebugLaunchSettings.EngineGuid,
-                  Project = configuredProject.UnconfiguredProject.Services.HostObject as IVsHierarchy
-               };
-               break;
-
-            case PublishMode.SelfContained:
-               launchSettings = new DebugLaunchSettings(launchOptions)
-               {
-                  LaunchOperation = DebugLaunchOperation.CreateProcess,
-                  Executable = "dotnet",
-                  Options = await AdapterLaunchConfiguration.CreateSelfContainedAsync(factory.Configuration, configuredProject, factory.OutputPane),
-                  LaunchDebugEngineGuid = PackageConstants.DebugLaunchSettings.EngineGuid,
-                  Project = configuredProject.UnconfiguredProject.Services.HostObject as IVsHierarchy
-               };
-               break;
+            LaunchOperation = DebugLaunchOperation.CreateProcess,
+            Executable = "dotnet",
+            LaunchDebugEngineGuid = PackageConstants.DebugLaunchSettings.EngineGuid,
+            Project = configuredProject.UnconfiguredProject.Services.HostObject as IVsHierarchy
+         };
+         
+         if (publishOnDeploy && publishMode == PublishMode.SelfContained)
+         {
+            launchSettings.Options = await AdapterLaunchConfiguration.CreateSelfContainedAsync(factory.Configuration, configuredProject, factory.OutputPane);
          }
-
+         else
+         {
+            // in all otger cases, debug as framwork dependant
+            launchSettings.Options = await AdapterLaunchConfiguration.CreateFrameworkDependantAsync(factory.Configuration, configuredProject, factory.OutputPane, remoteOperations);
+         }
 
          debugLaunchSettings.Add(launchSettings);
       }

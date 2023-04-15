@@ -58,7 +58,7 @@ namespace RemoteDebuggerLauncher
             var remotePath = UnixPath.Combine(configurationAggregator.QueryAppFolderPath(), binaryName);
 
             // change file permission to rwx,r,r
-            await remoteOperations.ChangeRemoteFilePermissionAsync(remotePath, 0711);
+            await remoteOperations.ChangeRemoteFilePermissionAsync(remotePath, "rwxr--r--");
          }
       }
    }
