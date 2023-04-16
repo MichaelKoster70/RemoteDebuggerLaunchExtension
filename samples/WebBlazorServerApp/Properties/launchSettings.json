@@ -16,8 +16,9 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Profile 1": {
+    "SSH Remote": {
       "commandName": "SshRemoteLaunch",
+      "launchBrowser": true,
       "launchUrl": "https://192.168.1.106:7172",
       "environmentVariables": {
         "ASPNETCORE_URLS": "https://192.168.1.106:7172;http://192.168.1.106:5132"
@@ -25,7 +26,6 @@
       "hostPort": "",
       "hostName": "192.168.1.106",
       "userName": "pi",
-      "launchBrowser": true,
       "publishOnDeploy": true
     }
   },

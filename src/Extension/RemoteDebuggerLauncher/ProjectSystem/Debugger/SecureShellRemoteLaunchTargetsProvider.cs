@@ -5,6 +5,7 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Composition;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
 using Microsoft.VisualStudio.ProjectSystem.VS.Debug;
 using Microsoft.VisualStudio.Shell.Interop;
+using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher
 {
@@ -145,14 +147,27 @@ namespace RemoteDebuggerLauncher
 
          await threadingService.JoinableTaskFactory.SwitchToMainThreadAsync();
 
+
+         var publishOnDeploy = factory.Configuration.QueryPublishOnDeploy();
+         var publishMode = factory.Configuration.QueryPublishMode();
+
          var launchSettings = new DebugLaunchSettings(launchOptions)
          {
             LaunchOperation = DebugLaunchOperation.CreateProcess,
             Executable = "dotnet",
-            Options = await AdapterLaunchConfiguration.CreateFrameworkDependantAsync(factory.Configuration, configuredProject, factory.OutputPane, remoteOperations),
             LaunchDebugEngineGuid = PackageConstants.DebugLaunchSettings.EngineGuid,
             Project = configuredProject.UnconfiguredProject.Services.HostObject as IVsHierarchy
          };
+         
+         if (publishOnDeploy && publishMode == PublishMode.SelfContained)
+         {
+            launchSettings.Options = await AdapterLaunchConfiguration.CreateSelfContainedAsync(factory.Configuration, configuredProject, factory.OutputPane, remoteOperations);
+         }
+         else
+         {
+            // in all otger cases, debug as framwork dependant
+            launchSettings.Options = await AdapterLaunchConfiguration.CreateFrameworkDependantAsync(factory.Configuration, configuredProject, factory.OutputPane, remoteOperations);
+         }
 
          debugLaunchSettings.Add(launchSettings);
       }

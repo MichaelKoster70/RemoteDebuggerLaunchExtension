@@ -74,6 +74,24 @@ namespace RemoteDebuggerLauncher.SecureShell
       Task CleanRemoteFolderAsync();
 
       /// <summary>
+      /// Changes the remote file permission to the given value numeric permission set
+      /// </summary>
+      /// <param name="remotePath">The absolute path of the file to change.</param>
+      /// <param name="permissions">The permissions (user/group/others) in numeric form.</param>
+      /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+      /// <exception cref="SecureShellSessionException">thrown when the operation failed.</exception>
+      Task ChangeRemoteFilePermissionAsync(string remotePath, int permissions);
+
+      /// <summary>
+      /// Changes the remote file permission to the given value string representation (rwx)
+      /// </summary>
+      /// <param name="remotePath">The absolute path of the file to change.</param>
+      /// <param name="permissions">The permission (user/group/others) in string form (rwx).</param>
+      /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+      /// <exception cref="SecureShellSessionException">thrown when the operation failed.</exception>
+      Task ChangeRemoteFilePermissionAsync(string remotePath, string permissions);
+
+      /// <summary>
       /// Tries to install the .NET assuming the target device has a direct internet connection.
       /// </summary>
       /// <param name="channel">The channel source holding the version to install.</param>
@@ -90,5 +108,11 @@ namespace RemoteDebuggerLauncher.SecureShell
       /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
       /// <exception cref="NotSupportedException">runtime kind not supported.</exception>
       Task TryInstallDotNetOfflineAsync(DotnetInstallationKind kind, string channel);
+
+      /// <summary>
+      /// Get the CPU architecture to determine which runtime ID to use, ignoring MacOS and Alpine based Linux when determining the needed runtime ID.
+      /// </summary>
+      /// <returns>The <see cref="string"/> hoilding the runtime ID.</returns>
+     Task<string> GetRuntimeIdAsync();
    }
 }

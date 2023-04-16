@@ -5,6 +5,8 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
+using RemoteDebuggerLauncher.Shared;
+
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
@@ -31,6 +33,12 @@ namespace RemoteDebuggerLauncher
       string QueryPrivateKeyFilePath();
 
       /// <summary>
+      /// Queries the value whether to force IPv4 connections from the device option page.
+      /// </summary>
+      /// <returns>A <see langword="bool"/> holding the value, <c>false</c> if not configured.</returns>
+      bool QueryForceIPv4();
+
+      /// <summary>
       /// Queries the folder path where the .NET framework is installed on the remote device from the device option page.
       /// </summary>
       /// <returns>A <see langword="string"/> holding the path, <c>string.Empty</c> if not configured.</returns>
@@ -51,7 +59,13 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// Queries the flag whether to publish the application on deploy.
       /// </summary>
-      /// <returns>A <see langword="bool"/><c>true</c> to deploy published output;<c>false</c> to deploy build output.</returns>
+      /// <returns><c>true</c> to deploy published output;<c>false</c> to deploy build output.</returns>
       bool QueryPublishOnDeploy();
+
+      /// <summary>
+      /// Queries the publishing mode.
+      /// </summary>
+      /// <returns>One of the <see see="PublishMode"/> values.</returns>
+      PublishMode QueryPublishMode();
    }
 }

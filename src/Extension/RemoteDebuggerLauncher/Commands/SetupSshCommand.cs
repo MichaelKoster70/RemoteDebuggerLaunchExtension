@@ -104,6 +104,7 @@ namespace RemoteDebuggerLauncher
                   // do the remaining work on the UI thread
                   await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
+                  await keySetup.RegisterServerFingerprintAsync(setting);
                   await keySetup.AuthorizeKeyAsync(setting);
                }
                catch (Exception exception)

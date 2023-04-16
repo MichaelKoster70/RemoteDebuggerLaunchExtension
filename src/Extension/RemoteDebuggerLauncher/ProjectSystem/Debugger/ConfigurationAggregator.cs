@@ -9,6 +9,7 @@ using System;
 using System.Collections.Immutable;
 using System.Net;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
+using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher
 {
@@ -129,6 +130,15 @@ namespace RemoteDebuggerLauncher
 
          // use options value or default
          return optionsPageAccessor.QueryHostPort();
+      }
+
+      /// <summary>
+      /// Queries the value whether to force IPv4 connections from the device option page.
+      /// </summary>
+      /// <returns>A <see langword="bool"/> holding the value, <c>false</c> if not configured.</returns>
+      public bool QueryForceIPv4()
+      {
+         return optionsPageAccessor.QueryForceIPv4();
       }
 
 
@@ -327,6 +337,33 @@ namespace RemoteDebuggerLauncher
          // use the default in options 
          var optionsPublishOnDeploy = optionsPageAccessor.QueryPublishOnDeploy();
          return optionsPublishOnDeploy;
+      }
+
+      /// <summary>
+      /// Queries the publishing mode.
+      /// </summary>
+      /// <returns>One of the <see see="PublishMode"/> values</returns>
+      /// <summary>
+      /// <remarks>
+      /// The following configuration provides are queried, first match wins
+      /// - selected launch profile
+      /// - Tools/Options settings
+      /// - built-in default (false)
+      /// </remarks>
+      public PublishMode QueryPublishMode()
+      {
+         if (GetOtherSetting(SecureShellRemoteLaunchProfile.publishModeProperty, out string publishModeText))
+         {
+            if (Enum.TryParse< PublishMode>(publishModeText, out PublishMode publishMode))
+            {
+               // Launch profile value => use it
+               return publishMode;
+            }
+         }
+
+         // use the default in options 
+         var optionsPublishMode = optionsPageAccessor.QueryPublishMode();
+         return optionsPublishMode;
       }
 
       /// <summary>

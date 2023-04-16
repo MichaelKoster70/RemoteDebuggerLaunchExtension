@@ -221,13 +221,13 @@ namespace RemoteDebuggerLauncher.SecureShell
 
          var key = new PrivateKeyFile(settings.PrivateKeyFile);
 
-         return new SshClient(settings.HostName, settings.HostPort, settings.UserName, key);
+         return new SshClient(settings.HostNameIPv4, settings.HostPort, settings.UserName, key);
       }
 
       private ScpClient CreateScpClient()
       {
          var key = new PrivateKeyFile(settings.PrivateKeyFile);
-         return new ScpClient(settings.HostName, settings.HostPort, settings.UserName, key);
+         return new ScpClient(settings.HostNameIPv4, settings.HostPort, settings.UserName, key);
       }
    }
 }

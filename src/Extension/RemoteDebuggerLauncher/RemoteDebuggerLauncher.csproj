@@ -69,6 +69,7 @@
     <Compile Include="Commands\DeployOutputCommand.cs" />
     <Compile Include="Commands\CleanOutputCommand.cs" />
     <Compile Include="Infrastructure\DirectoryHelper.cs" />
+    <Compile Include="Infrastructure\FileHelper.cs" />
     <Compile Include="SecureShell\ShellStreamExtensions.cs" />
     <Compile Include="Infrastructure\StringExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />

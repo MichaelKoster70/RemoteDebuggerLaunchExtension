@@ -66,14 +66,14 @@ namespace RemoteDebuggerLauncher
             var statusbar = await packageServiceFactory.GetStatusbarServiceAsync();
             var deployService = await packageServiceFactory.GetDeployServiceAsync(false);
 
-            // Step 1: Deploy (with publish if configured)
+            // Deploy (with publish if configured)
             await deployService.DeployAsync(true, true);
 
             statusbar.Clear();
          }
          catch (RemoteDebuggerLauncherException ex) 
          {
-            await outputPaneWriter.WriteLineAsync(ex.Message);
+            await outputPaneWriter.WriteLineAsync(string.Format(Resources.SecureShellDeployProviderDeployFailed, ex.Message));
          }
       }
 

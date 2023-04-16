@@ -6,6 +6,7 @@
 // ----------------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
+using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher
 {
@@ -49,6 +50,12 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <inheritdoc />
+      public bool QueryForceIPv4()
+      {
+         return GetDevicePage().ForceIPv4;
+      }
+
+      /// <inheritdoc />
       public string QueryDotNetInstallFolderPath()
       {
          return GetDevicePage().DotNetInstallFolderPath;
@@ -70,6 +77,12 @@ namespace RemoteDebuggerLauncher
       public bool QueryPublishOnDeploy()
       {
          return GetLocalPage().PublishOnDeploy;
+      }
+
+      /// <inheritdoc />
+      public PublishMode QueryPublishMode()
+      {
+         return GetLocalPage().PublishMode;
       }
 
       private DeviceOptionsPage GetDevicePage()

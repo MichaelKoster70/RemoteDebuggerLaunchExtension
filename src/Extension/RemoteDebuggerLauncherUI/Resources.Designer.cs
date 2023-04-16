@@ -398,6 +398,24 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Changing file permission - target: {0}, perm: {1}.
+        /// </summary>
+        public static string RemoteCommandChangeRemoteFilePermissionCaption {
+            get {
+                return ResourceManager.GetString("RemoteCommandChangeRemoteFilePermissionCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changing file permission FAILED: {0}.
+        /// </summary>
+        public static string RemoteCommandChangeRemoteFilePermissionCompletedFailed {
+            get {
+                return ResourceManager.GetString("RemoteCommandChangeRemoteFilePermissionCompletedFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connecting to {0}@{1}... .
         /// </summary>
         public static string RemoteCommandCheckConnectionOutputPaneConnectingTo {
@@ -901,9 +919,18 @@ namespace RemoteDebuggerLauncher {
         /// <summary>
         ///   Looks up a localized string similar to Authorize SSH key on target....
         /// </summary>
-        public static string RemoteCommandSetupSshCommandStatusbarProgress {
+        public static string RemoteCommandSetupSshCommandStatusbarAuthorizeProgress {
             get {
-                return ResourceManager.GetString("RemoteCommandSetupSshCommandStatusbarProgress", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandSetupSshCommandStatusbarAuthorizeProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scan SSH server fingerprints....
+        /// </summary>
+        public static string RemoteCommandSetupSshCommandStatusbarScanProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshCommandStatusbarScanProgress", resourceCulture);
             }
         }
         
@@ -1025,6 +1052,33 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to [{0}@{1}:{2}] adding fingerprints to known_hosts file.....
+        /// </summary>
+        public static string RemoteCommandSetupSshScanProgressFingerprintAdd {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshScanProgressFingerprintAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [{0}@{1}:{2}] Scanning SSH server fingerprints.....
+        /// </summary>
+        public static string RemoteCommandSetupSshScanProgressFingerprintScan {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshScanProgressFingerprintScan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [{0}@{1}:{2}] fingerprints found in known_hosts, skipping.....
+        /// </summary>
+        public static string RemoteCommandSetupSshScanProgressFingerprintSkip {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshScanProgressFingerprintSkip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to  ok.
         /// </summary>
         public static string RemoteCommandUploadOutputPaneDone {
@@ -1048,6 +1102,15 @@ namespace RemoteDebuggerLauncher {
         public static string RemoteCommandUploadOutputPaneStart {
             get {
                 return ResourceManager.GetString("RemoteCommandUploadOutputPaneStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deploy failed with &apos;{0}&apos;.
+        /// </summary>
+        public static string SecureShellDeployProviderDeployFailed {
+            get {
+                return ResourceManager.GetString("SecureShellDeployProviderDeployFailed", resourceCulture);
             }
         }
         
@@ -1129,6 +1192,24 @@ namespace RemoteDebuggerLauncher {
         public static string SetupSshDialogKeyPairCreateDescription {
             get {
                 return ResourceManager.GetString("SetupSshDialogKeyPairCreateDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Force IPv4.
+        /// </summary>
+        public static string SetupSshDialogKeyPairForceIPv4Content {
+            get {
+                return ResourceManager.GetString("SetupSshDialogKeyPairForceIPv4Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If set, forces the command to use IPv4 addresses.
+        /// </summary>
+        public static string SetupSshDialogKeyPairForceIPv4Description {
+            get {
+                return ResourceManager.GetString("SetupSshDialogKeyPairForceIPv4Description", resourceCulture);
             }
         }
         

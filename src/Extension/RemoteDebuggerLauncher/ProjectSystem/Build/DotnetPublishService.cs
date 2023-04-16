@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Threading;
+using RemoteDebuggerLauncher.SecureShell;
+using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher
 {
@@ -22,6 +24,8 @@ namespace RemoteDebuggerLauncher
    /// <seealso cref="IDotnetPublishService"/>
    internal class DotnetPublishService : IDotnetPublishService
    {
+      private readonly ConfigurationAggregator configurationAggregator;
+      private readonly ISecureShellRemoteOperationsService remoteOperations;
       private readonly ConfiguredProject configuredProject;
       private readonly IOutputPaneWriterService outputPaneWriter;
       private readonly IWaitDialogFactoryService waitDialogFactory;
@@ -31,13 +35,16 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// Initializes a new instance of the <see cref="DotnetPublishService" /> class.
       /// </summary>
-      /// <param name="configuredProject">The configuration aggregator.</param>
-      /// <param name="logger">The logger service instance to use.</param>
+      /// <param name="configurationAggregator">The configuration aggregator.</param>
+      /// <param name="configuredProject">The configured project.</param>
+      /// <param name="outputPaneWriter">The logger service instance to use.</param>
       /// <param name="waitDialogFactory">The Wait Dialog Factory service.</param>
-      internal DotnetPublishService(ConfiguredProject configuredProject, IOutputPaneWriterService outputPaneWriter, IWaitDialogFactoryService waitDialogFactory)
+      internal DotnetPublishService(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject, ISecureShellRemoteOperationsService remoteOperations, IOutputPaneWriterService outputPaneWriter, IWaitDialogFactoryService waitDialogFactory)
       {
          ThreadHelper.ThrowIfNotOnUIThread();
 
+         this.configurationAggregator = configurationAggregator ?? throw new ArgumentNullException(nameof(configurationAggregator));
+         this.remoteOperations = remoteOperations ?? throw new ArgumentNullException(nameof(remoteOperations));
          this.configuredProject = configuredProject ?? throw new ArgumentNullException(nameof(configuredProject));
          this.outputPaneWriter = outputPaneWriter ?? throw new ArgumentNullException(nameof(outputPaneWriter));
          this.waitDialogFactory = waitDialogFactory ?? throw new ArgumentNullException(nameof(waitDialogFactory));
@@ -54,20 +61,42 @@ namespace RemoteDebuggerLauncher
          var publishPath = await GetPublishedOutputDirectoryPathAsync();
          var configuration = configuredProject.ProjectConfiguration.Dimensions["Configuration"];
 
+         var publishMode = configurationAggregator.QueryPublishMode();
+
          await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
          using (var waitDialog = waitDialogFactory.Create(Resources.PublishWaitDialogCaption, Resources.PublishWaitDialogMessageStart, "", 1, Resources.PublishStart, StatusbarAnimation.Build))
          {
             outputPaneWriter.WriteLine(Resources.PublishStart);
 
-            var arguments = $"publish {projectPath} --output {publishPath} -c {configuration} --no-build";
-            if (await SupportsFrameworkDependantAsync())
+            var arguments = $"publish {projectPath} --output {publishPath} -c {configuration}";
+
+            switch (publishMode)
             {
-               arguments += " --no-self-contained";
+               case PublishMode.FrameworkDependant:
+                  arguments += " --no-build";
+
+                  if (await SupportsFrameworkDependantAsync())
+                  {
+                     arguments += " --no-self-contained";
+                  }
+                  break;
+
+               case PublishMode.SelfContained:
+                  var runtimeId = await remoteOperations.GetRuntimeIdAsync();
+                  arguments += $" --self-contained --runtime {runtimeId}";
+                  break;
+
+               default: 
+                  break;
             }
 
             outputPaneWriter.WriteLine(Resources.PublishCommandLine, arguments);
 
+            // Clean the output
+            _ = DirectoryHelper.EnsureClean(publishPath);
+
+            // Start publish
             var startInfo = new ProcessStartInfo("dotnet.exe", arguments)
             {
                CreateNoWindow = true,

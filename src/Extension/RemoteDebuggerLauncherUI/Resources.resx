@@ -232,6 +232,12 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
   <data name="RegexValidationRuleNoValidUsername" xml:space="preserve">
     <value>Validation error: must supply a non empty string consisting of letters, numbers, underscores, and/or hyphens</value>
   </data>
+  <data name="RemoteCommandChangeRemoteFilePermissionCaption" xml:space="preserve">
+    <value>Changing file permission - target: {0}, perm: {1}</value>
+  </data>
+  <data name="RemoteCommandChangeRemoteFilePermissionCompletedFailed" xml:space="preserve">
+    <value>Changing file permission FAILED: {0}</value>
+  </data>
   <data name="RemoteCommandCheckConnectionOutputPaneConnectingTo" xml:space="preserve">
     <value>Connecting to {0}@{1}... </value>
     <comment>Remote command Check Connection: Connecting to text</comment>
@@ -408,8 +414,11 @@ Make sure you selected a 'SshRemoteLaunch' launch profile.</value>
   <data name="RemoteCommandSetupSshCommandCaption" xml:space="preserve">
     <value>Setup SSH</value>
   </data>
-  <data name="RemoteCommandSetupSshCommandStatusbarProgress" xml:space="preserve">
+  <data name="RemoteCommandSetupSshCommandStatusbarAuthorizeProgress" xml:space="preserve">
     <value>Authorize SSH key on target...</value>
+  </data>
+  <data name="RemoteCommandSetupSshCommandStatusbarScanProgress" xml:space="preserve">
+    <value>Scan SSH server fingerprints...</value>
   </data>
   <data name="RemoteCommandSetupSshConnectionFailed" xml:space="preserve">
     <value>connection FAILED with '{0}' - make sure the SSH server is running and accessable.</value>
@@ -450,6 +459,15 @@ Make sure you selected a 'SshRemoteLaunch' launch profile.</value>
   <data name="RemoteCommandSetupSshPhase4TryAuthenticatePrivateKeySuccess" xml:space="preserve">
     <value>connection established successfully.</value>
   </data>
+  <data name="RemoteCommandSetupSshScanProgressFingerprintAdd" xml:space="preserve">
+    <value>[{0}@{1}:{2}] adding fingerprints to known_hosts file....</value>
+  </data>
+  <data name="RemoteCommandSetupSshScanProgressFingerprintScan" xml:space="preserve">
+    <value>[{0}@{1}:{2}] Scanning SSH server fingerprints....</value>
+  </data>
+  <data name="RemoteCommandSetupSshScanProgressFingerprintSkip" xml:space="preserve">
+    <value>[{0}@{1}:{2}] fingerprints found in known_hosts, skipping....</value>
+  </data>
   <data name="RemoteCommandUploadOutputPaneDone" xml:space="preserve">
     <value> ok</value>
   </data>
@@ -458,6 +476,9 @@ Make sure you selected a 'SshRemoteLaunch' launch profile.</value>
   </data>
   <data name="RemoteCommandUploadOutputPaneStart" xml:space="preserve">
     <value>Uploading {0}.</value>
+  </data>
+  <data name="SecureShellDeployProviderDeployFailed" xml:space="preserve">
+    <value>Deploy failed with '{0}'</value>
   </data>
   <data name="SelectBrowserDialogHeaderText" xml:space="preserve">
     <value>Please select the browser you want to use to start debugging.</value>
@@ -485,6 +506,12 @@ Make sure you selected a 'SshRemoteLaunch' launch profile.</value>
   </data>
   <data name="SetupSshDialogKeyPairCreateDescription" xml:space="preserve">
     <value>Creates a RSA public key pair with the default name (id_rsa) and key length of 2048 bits.</value>
+  </data>
+  <data name="SetupSshDialogKeyPairForceIPv4Content" xml:space="preserve">
+    <value>Force IPv4</value>
+  </data>
+  <data name="SetupSshDialogKeyPairForceIPv4Description" xml:space="preserve">
+    <value>If set, forces the command to use IPv4 addresses</value>
   </data>
   <data name="SetupSshDialogPasswordDescription" xml:space="preserve">
     <value>The password to be used for connecting to the target device.</value>

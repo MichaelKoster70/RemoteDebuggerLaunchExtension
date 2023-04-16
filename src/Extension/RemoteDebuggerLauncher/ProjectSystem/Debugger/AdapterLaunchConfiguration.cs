@@ -149,24 +149,57 @@ namespace RemoteDebuggerLauncher
          return launchConfigurationJson;
       }
 
-      public static async Task<string> CreateSelfContainedAsync(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject)
+      public static async Task<string> CreateSelfContainedAsync(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject, IOutputPaneWriterService outputPaneWriter, ISecureShellRemoteOperationsService remoteOperations)
       {
          ThrowIf.ArgumentNull(configurationAggregator, nameof(configurationAggregator));
          ThrowIf.ArgumentNull(configuredProject, nameof(configuredProject));
 
-         var program = UnixPath.Combine(configurationAggregator.QueryDotNetInstallFolderPath(), PackageConstants.Dotnet.BinaryName);
          var appFolderPath = configurationAggregator.QueryAppFolderPath();
          var assemblyFileName = await configuredProject.GetAssemblyFileNameAsync();
+         var program = UnixPath.Combine(appFolderPath, await configuredProject.GetAssemblyNameAsync());
+         var workingDirectory = appFolderPath;
+
+         // check whether the path values should be normalized
+         var shouldNormalizeProgram = UnixPath.ShouldBeNormalized(program);
+         if (shouldNormalizeProgram)
+         {
+            var homeDirectory = await remoteOperations.QueryUserHomeDirectoryAsync();
+            if (!string.IsNullOrEmpty(homeDirectory))
+            {
+               // we have a home directory
+               program = UnixPath.Normalize(program, homeDirectory);
+               appFolderPath = UnixPath.Normalize(appFolderPath, homeDirectory);
+               workingDirectory = appFolderPath;
+            }
+            else
+            {
+               // no home directory found
+               // program: keep as configured
+               // appFolderPath: keep as configured
+               // workingDirectory: keep appFolderPath
+            }
+         }
+         else
+         {
+            // we only use absolute paths
+            // program: keep as configured
+            // appFolderPath: keep as configured
+            workingDirectory = appFolderPath;
+         }
 
          var config = CreateAndSetAdapter(configurationAggregator);
          config.Name = ".NET Core Launch - Self contained";
          config.Program = program;
          config.Args.Add($"./{assemblyFileName}");
-         config.CurrentWorkingDirectory = appFolderPath;
+         config.CurrentWorkingDirectory = workingDirectory;
          config.AppendCommandLineArguments(configurationAggregator);
          config.AppendEnvironmentVariables(configurationAggregator);
 
-         return JsonConvert.SerializeObject(config);
+         var launchConfigurationJson = JsonConvert.SerializeObject(config);
+
+         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+         outputPaneWriter.WriteLine($"Options: {launchConfigurationJson}");
+         return launchConfigurationJson;
       }
 
       private static LaunchConfiguration CreateAndSetAdapter(ConfigurationAggregator configurationAggregator)
@@ -188,7 +221,13 @@ namespace RemoteDebuggerLauncher
          // Handle non default port
          if (hostPort != PackageConstants.Options.DefaultValueSecureShellHostPort)
          {
-            adapterArgs += $"-p {hostPort}";
+            adapterArgs += $"-p {hostPort} ";
+         }
+
+         // Handle force IPv4
+         if (configurationAggregator.QueryForceIPv4())
+         {
+            adapterArgs += "-4 ";
          }
 
          // handle user name, host, amd remaining options

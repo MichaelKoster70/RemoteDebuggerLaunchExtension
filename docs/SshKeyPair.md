@@ -17,7 +17,7 @@ ssh-keygen -b 2048 -t rsa -f id_rsa -q -N "" -m pem
 ```
 This will create a 2048bit RSA keypair with no passphrase stored in the file *id_rda*
 
-By default, the generated SSH keys get stored in %USERPROFILE%\.ssh
+By default, the generated SSH keys get stored in %USERPROFILE%\\.ssh
 - id_rsa holds the key pair (public and private)
 - id_rsa.pub holds the public key
 
@@ -26,6 +26,13 @@ Use the following steps if you want to manually add the generated keys to the 'a
 
 ```
 type %USERPROFILE%\.ssh\id_rsa.pub | ssh USER@HOST "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
+```
+
+## Add the SSH server fingerprints to known_hosts
+Use the following command template to add the SSH server fingerprints to the 'known_hosts' file on the local development PC. Open a Window Commmand Prompt and execute the following command:
+
+```
+ssh-keyscan HOST >> %USERPROFILE%\.ssh\known_hosts
 ```
 
 ## References

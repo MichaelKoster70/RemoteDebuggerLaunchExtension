@@ -24,6 +24,18 @@ namespace RemoteDebuggerLauncher.SecureShell
       /// </summary>
       IStatusbarService Statusbar { get; }
 
+      /// <summary>
+      /// Registers the SSH server fingerprints in the local 'known_keys' file
+      /// </summary>
+      /// <param name="settings">The settings to use.</param>
+      /// <returns>The <see cref="Task"/> representing the operation</returns>
+      Task RegisterServerFingerprintAsync(SecureShellKeySetupSettings settings);
+
+      /// <summary>
+      /// Authorizes the supplied key on the target device.
+      /// </summary>
+      /// <param name="settings">The settings to use.</param>
+      /// <returns>The <see cref="Task"/> representing the operation</returns>
       Task AuthorizeKeyAsync(SecureShellKeySetupSettings settings);
    }
 }

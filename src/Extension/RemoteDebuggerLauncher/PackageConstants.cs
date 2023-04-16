@@ -70,6 +70,9 @@ namespace RemoteDebuggerLauncher
          /// <summary>The default value for the SSH port.</summary>
          public const int DefaultValueSecureShellHostPort = 22;
 
+         /// <summary>The default value for the Force IPv4.</summary>
+         public const bool DefaultValueForceIPv4 = false;
+
          /// <summary>The default value for the .NET installation path on the device page.</summary>
          public const string DefaultValueDotNetInstallFolderPath = "~/.dotnet";
 
@@ -164,6 +167,15 @@ namespace RemoteDebuggerLauncher
 
          /// <summary>SSH key generator arguments.</summary>
          public const string KeyGenArguments = "-b 2048 -t rsa -f {0} -q -N \"\" -m pem";
+
+         /// <summary>SSH key scanner executable.</summary>
+         public const string KeyScanExecutable = "ssh-keyscan.exe";
+
+         /// <summary>Filename of the known_hosts file.</summary>
+         public const string DefaultKnownHostsFileName = "known_hosts";
+
+         /// <summary>SSH key scanner arguments.</summary>
+         public const string KeyScanArguments = "-4 -p {1} {0}";
       }
    }
 }
