@@ -161,7 +161,7 @@ namespace RemoteDebuggerLauncher
          
          if (publishOnDeploy && publishMode == PublishMode.SelfContained)
          {
-            launchSettings.Options = await AdapterLaunchConfiguration.CreateSelfContainedAsync(factory.Configuration, configuredProject, factory.OutputPane);
+            launchSettings.Options = await AdapterLaunchConfiguration.CreateSelfContainedAsync(factory.Configuration, configuredProject, factory.OutputPane, remoteOperations);
          }
          else
          {
