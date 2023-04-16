@@ -1,5 +1,5 @@
-# 0.10.0
-Bugfix release increasing stability.
+# Overview
+New features and bugfix release increasing stability.
 
 ## Features
 - check if cURL is installed when installing .NET or vsdbg
@@ -10,4 +10,3 @@ Bugfix release increasing stability.
 
 ## Bug Fixes
 - fixed caption for error messages
-
