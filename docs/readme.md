@@ -8,7 +8,10 @@ Detailed feature descriptions.
 Reference for all LaunchProfile.json settings.
 
 ## [Commands](Commands.md)
-Detailed description of the supporeted commands.
+Detailed description of the supported commands.
+
+## [Options](Options.md)
+Detailed description of the supported options.
 
 ## [SSH Key Pair](SshKeyPair.md)
 Instructions how to create and install SSH keys.

@@ -24,7 +24,7 @@ Publishing as self contained application is not yet supported.
 This feature becomes handy for applications types like ASP.NET, ASP.NET SPA, Blazer that need to deploy additional files outside the output folder.
 
 ## Debugging
-The debugger launcher will be launching the app as framework dependant application only. 
+The debugger launcher will be launching the app as framework dependant or self contained, depending on the publish mode. If publish on build is disabled, the app will always debugger as framework dependant.
 The plugin supports the 'Start Debugging (F5)' and 'Start without Debugging (Ctrl+F5)'.
 
 The following properties are passed to the debugger independant of the application type:
@@ -52,7 +52,3 @@ The plugin not yet supports ASP.NET HTTPS developer certificates from the target
 
 ### Install Debugger
 The plugin can be configured to install vsdbg before launching the application. In interest of deployment time, this feature is off by default.
-
-
-
-
