@@ -27,3 +27,12 @@ New features and bugfix release increasing stability.
 
 ### Bug Fixes
 - fixed caption for error messages
+
+## 0.11.0
+Adds the ability to configure HTTPS dev certificates
+
+### Features
+- Adds the ability to configure HTTPS dev certificates
+
+### Bug Fixes
+- none

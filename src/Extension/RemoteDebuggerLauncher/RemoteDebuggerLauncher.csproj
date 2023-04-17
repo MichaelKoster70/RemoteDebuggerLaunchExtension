@@ -156,6 +156,8 @@
     <Compile Include="WebTools\BrowserTargetDetectorFactory.cs" />
     <Compile Include="WebTools\BrowserTargetDetector.cs" />
     <Compile Include="VsInterop\IVsRegistryOptions.cs" />
+    <Compile Include="WebTools\CertificateServices.cs" />
+    <Compile Include="WebTools\ICertificateServices.cs" />
     <Compile Include="WebTools\IStaticWebAssetsCollectorService.cs" />
     <Compile Include="VsInterop\VsRegistryOptions.cs" />
     <Compile Include="WebTools\StaticWebAsset.cs" />
@@ -216,7 +218,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers">
-      <Version>7.0.0</Version>
+      <Version>7.0.1</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
