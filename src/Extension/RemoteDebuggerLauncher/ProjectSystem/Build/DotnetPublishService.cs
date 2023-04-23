@@ -107,6 +107,7 @@ namespace RemoteDebuggerLauncher
 
             using (var process = Process.Start(startInfo))
             {
+#pragma warning disable VSTHRD100 // Avoid async void methods
                async void OnDataReceived(object _, DataReceivedEventArgs e)
                {
                   try
@@ -128,6 +129,7 @@ namespace RemoteDebuggerLauncher
                      // Ignore any exception
                   }
                }
+#pragma warning restore VSTHRD100 // Avoid async void methods
 
                process.OutputDataReceived += OnDataReceived;
                process.BeginOutputReadLine();
