@@ -30,7 +30,7 @@ The extension supports
 To use this extension, you need a Windows based PC with:
 - Window 10 x64 1809 or newer
 - [OpenSSH for Windows](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_overview) client
-- Visual Studio 2022 17.2 or newer with any of the .NET workloads installed like
+- Visual Studio 2022 17.4 or newer with any of the .NET workloads installed like
   - .NET desktop development
   - ASP.NET and web development
   - .NET Multi-platform AppUI development

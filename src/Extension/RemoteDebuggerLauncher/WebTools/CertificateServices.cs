@@ -216,7 +216,9 @@ namespace RemoteDebuggerLauncher.WebTools
             {
                try
                {
+#pragma warning disable CA5380 // This is required in order to trust our own root CA
                   store.Add(publicCertificate);
+#pragma warning restore CA5380
                }
                catch (CryptographicException exception) when (exception.HResult == UserCancelledErrorCode)
                {
