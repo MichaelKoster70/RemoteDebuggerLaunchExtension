@@ -109,17 +109,24 @@ namespace RemoteDebuggerLauncher
             {
                async void OnDataReceived(object _, DataReceivedEventArgs e)
                {
-                  var message = e.Data;
-
-                  await ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                  try
                   {
-                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                     if (!string.IsNullOrWhiteSpace(message))
+                     var message = e.Data;
+
+                     await ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                      {
-                        waitDialog.Update(Resources.PublishWaitDialogMessageUpdate, message, null);
-                     }
-                     outputPaneWriter.WriteLine(message);
-                  });
+                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                        if (!string.IsNullOrWhiteSpace(message))
+                        {
+                           waitDialog.Update(Resources.PublishWaitDialogMessageUpdate, message, null);
+                        }
+                        outputPaneWriter.WriteLine(message);
+                     });
+                  }
+                  catch(Exception)
+                  { 
+                     // Ignore any exception
+                  }
                }
 
                process.OutputDataReceived += OnDataReceived;
