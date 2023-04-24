@@ -6,6 +6,8 @@
 // ----------------------------------------------------------------------------
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.Text.Editor;
+using RemoteDebuggerLauncher;
 using RemoteDebuggerLauncher.WebTools;
 using System;
 using System.Runtime.ConstrainedExecution;
@@ -66,6 +68,17 @@ namespace RemoteDebuggerLauncherUnitTests
       }
 
       [TestMethod]
+      [ExpectedException(typeof(RemoteDebuggerLauncherException))]
+      public void TestEnsureSelfSignedRootPresentCreatesPublicRootThrows()
+      {
+         var service = new CertificateServices();
+
+         RemoveAllPublicRootCerts();
+
+         service.EnsureSelfSignedRootPresentAndTrusted();
+      }
+
+      [TestMethod]
       public void TestIsSelfSignedRootPresentReturnsFalseWhenNoCertsPresent()
       {
          var service = new CertificateServices();
@@ -92,10 +105,22 @@ namespace RemoteDebuggerLauncherUnitTests
       {
          var service = new CertificateServices();
 
-         var cert = service.CreateDevelopmentCertificate("demo");
+         using (var cert = service.CreateDevelopmentCertificate("demo"))
+         {
+            Assert.IsNotNull(cert);
 
-         var certPresent = service.IsSelfSignedRootPresent();
-         Assert.IsTrue(certPresent);
+            Assert.AreEqual(cert.Subject, "CN=demo");
+         }
+      }
+
+      [TestMethod]
+      public void TestCreateDevelopmentCertificateFile()
+      {
+         var service = new CertificateServices();
+
+         var rawData = service.CreateDevelopmentCertificateFile("demo");
+         Assert.IsNotNull(rawData);
+         Assert.IsTrue(rawData.Length > 0);
       }
 
       private void RemoveAllRootCerts()
@@ -123,6 +148,5 @@ namespace RemoteDebuggerLauncherUnitTests
             store.Close();
          }
       }
-
    }
 }

@@ -6,20 +6,23 @@
 // ----------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
+using System.Composition;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.ConstrainedExecution;
-using System.Diagnostics.Metrics;
 
 namespace RemoteDebuggerLauncher.WebTools
 {
+   /// <summary>
+   /// Implements the Windows Cert store based x509 x.509 certificates for development purposes.
+   /// </summary>
+   [Export(typeof(ICertificateServices))]
    internal class CertificateServices : ICertificateServices
    {
+      // RSA key size
       private const int RsaKeySize = 4096;
+
+      // CA Name
       private const string RootCertificateName = "Personal Developer Root";
       private const string RootCertificateCommonName = "CN=" + RootCertificateName;
       private const string RootCertificateFriendlyName = "Personal Root CA for ASP.NET Core developer certificates";
@@ -28,10 +31,12 @@ namespace RemoteDebuggerLauncher.WebTools
       private const string AspNetHttpsOid = "1.3.6.1.4.1.311.84.1.1";
       private const string AspNetHttpsOidFriendlyName = "ASP.NET Core HTTPS development certificate";
 
+      // OID for server auth
       private const string ServerAuthenticationEnhancedKeyUsageOid = "1.3.6.1.5.5.7.3.1";
       private const string ServerAuthenticationEnhancedKeyUsageOidFriendlyName = "Server Authentication";
 
-      private const int UserCancelledErrorCode = 1223;
+      //Hresult when the user cancels trusting a certificate
+      private const int UserCancelledErrorCode = unchecked((int)0x800704C7);
 
       /// <inheritdoc />
       public X509Certificate2 CreateDevelopmentCertificate(string subject)
@@ -45,7 +50,7 @@ namespace RemoteDebuggerLauncher.WebTools
                sanBuilder.AddDnsName(subject);
 
                // create a CSR
-               var subjectName = new X500DistinguishedName(subject);
+               var subjectName = new X500DistinguishedName($"CN={subject}");
                var csr = new CertificateRequest(subjectName, keyPair, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
                csr.CertificateExtensions.Add(new X509BasicConstraintsExtension(false, false, 0, true));
                csr.CertificateExtensions.Add(new X509KeyUsageExtension(X509KeyUsageFlags.KeyEncipherment | X509KeyUsageFlags.DigitalSignature, true));
@@ -68,6 +73,19 @@ namespace RemoteDebuggerLauncher.WebTools
                return cert;
             }
          }
+      }
+
+      /// <inheritdoc />
+      public byte[] CreateDevelopmentCertificateFile(string subject)
+      {
+         byte[] pfxContents = null;
+
+         using (var certificate = CreateDevelopmentCertificate(subject))
+         {
+            pfxContents = certificate?.Export(X509ContentType.Pfx);
+         }
+
+         return pfxContents;
       }
 
       /// <inheritdoc />
@@ -103,6 +121,11 @@ namespace RemoteDebuggerLauncher.WebTools
             certificate = StoreSelfSignedRootCertificate(certificate);
             TrustSelfSignedPublicRootCertificate(certificate);
          }
+         else if (!certificate.Verify())
+         {
+            TrustSelfSignedPublicRootCertificate(certificate);
+         }
+
 
          return certificate;
       }
@@ -116,14 +139,31 @@ namespace RemoteDebuggerLauncher.WebTools
             using (var store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
             {
                store.Open(OpenFlags.ReadOnly);
+
                var certificates = store.Certificates.Find(X509FindType.FindBySubjectDistinguishedName, RootCertificateCommonName, true);
 
                if (certificates.Count > 0)
                {
                   root = certificates[0];
                   certificates.Remove(root);
-                  DisposeCertificates(certificates);
                }
+               else
+               {
+                  certificates = store.Certificates.Find(X509FindType.FindBySubjectDistinguishedName, RootCertificateCommonName, false);
+
+                  var now = DateTime.UtcNow;
+                  foreach (var cert in certificates)
+                  {
+                     if (cert.NotBefore < now && now < cert.NotAfter)
+                     {
+                        root = cert;
+                        certificates.Remove(root);
+                        break;
+                     }
+                  }
+               }
+
+               DisposeCertificates(certificates);
 
                store.Close();
             }
@@ -214,15 +254,16 @@ namespace RemoteDebuggerLauncher.WebTools
 
             using (var publicCertificate = new X509Certificate2(certificate.Export(X509ContentType.Cert)))
             {
+               publicCertificate.FriendlyName= RootCertificateFriendlyName;
                try
                {
 #pragma warning disable CA5380 // This is required in order to trust our own root CA
                   store.Add(publicCertificate);
 #pragma warning restore CA5380
                }
-               catch (CryptographicException exception) when (exception.HResult == UserCancelledErrorCode)
+               catch (CryptographicException e) when (e.HResult == UserCancelledErrorCode)
                {
-                  //throw new UserCancelledTrustException();
+                  throw new RemoteDebuggerLauncherException(Resources.CertificateServicesTrustCancelledByUser, e);
                }
             }
          }

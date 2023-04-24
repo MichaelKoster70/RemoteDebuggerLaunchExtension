@@ -61,6 +61,15 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancelling trusting Root CA.
+        /// </summary>
+        public static string CertificateServicesTrustCancelledByUser {
+            get {
+                return ResourceManager.GetString("CertificateServicesTrustCancelledByUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string CommonCancelButtonLabel {
