@@ -12,7 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Task = System.Threading.Tasks.Task;
+using RemoteDebuggerLauncher.SecureShell;
 
 namespace RemoteDebuggerLauncher
 {
@@ -87,6 +87,21 @@ namespace RemoteDebuggerLauncher
       private void Execute(object sender, EventArgs e)
       {
          ThreadHelper.ThrowIfNotOnUIThread();
+
+         // bring up config dialog
+         var viewModel = new SetupHttpsViewModel(ThreadHelper.JoinableTaskFactory);
+         var dialog = new SetupHttpsDialogWindow()
+         {
+            DataContext = viewModel
+         };
+
+         var result = dialog.ShowDialog();
+
+         // process 
+         if (result.HasValue && result.Value)
+         {
+
+         }
       }
    }
 }

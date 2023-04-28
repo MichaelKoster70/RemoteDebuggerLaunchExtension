@@ -1142,6 +1142,51 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select the HTTPS certificate setup mode, then press OK to start..
+        /// </summary>
+        public static string SetupHttpsDialogHeaderText {
+            get {
+                return ResourceManager.GetString("SetupHttpsDialogHeaderText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setup Mode.
+        /// </summary>
+        public static string SetupHttpsDialogModeLabel {
+            get {
+                return ResourceManager.GetString("SetupHttpsDialogModeLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setup HTTPS certificate.
+        /// </summary>
+        public static string SetupHttpsDialogTitle {
+            get {
+                return ResourceManager.GetString("SetupHttpsDialogTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add and Replace existing.
+        /// </summary>
+        public static string SetupModeReplaceDisplayName {
+            get {
+                return ResourceManager.GetString("SetupModeReplaceDisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add or Update existing .
+        /// </summary>
+        public static string SetupModeUpdateDisplayName {
+            get {
+                return ResourceManager.GetString("SetupModeUpdateDisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ....
         /// </summary>
         public static string SetupSshDialogFileBrowseContent {

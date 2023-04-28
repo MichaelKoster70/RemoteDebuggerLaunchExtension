@@ -5,13 +5,10 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.VisualStudio.Text.Editor;
 using RemoteDebuggerLauncher;
 using RemoteDebuggerLauncher.WebTools;
-using System;
-using System.Runtime.ConstrainedExecution;
-using System.Security.Cryptography.X509Certificates;
 
 namespace RemoteDebuggerLauncherUnitTests
 {

@@ -489,6 +489,21 @@ Make sure you selected a 'SshRemoteLaunch' launch profile.</value>
   <data name="SelectBrowserDialogTitle" xml:space="preserve">
     <value>Select Browser</value>
   </data>
+  <data name="SetupHttpsDialogHeaderText" xml:space="preserve">
+    <value>Select the HTTPS certificate setup mode, then press OK to start.</value>
+  </data>
+  <data name="SetupHttpsDialogModeLabel" xml:space="preserve">
+    <value>Setup Mode</value>
+  </data>
+  <data name="SetupHttpsDialogTitle" xml:space="preserve">
+    <value>Setup HTTPS certificate</value>
+  </data>
+  <data name="SetupModeReplaceDisplayName" xml:space="preserve">
+    <value>Add and Replace existing</value>
+  </data>
+  <data name="SetupModeUpdateDisplayName" xml:space="preserve">
+    <value>Add or Update existing </value>
+  </data>
   <data name="SetupSshDialogFileBrowseContent" xml:space="preserve">
     <value>...</value>
   </data>
