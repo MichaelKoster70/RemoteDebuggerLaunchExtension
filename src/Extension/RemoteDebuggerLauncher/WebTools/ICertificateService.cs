@@ -13,7 +13,7 @@ namespace RemoteDebuggerLauncher.WebTools
    /// Interface defining the service responsible for creating self signed x.509 certificates for development purposes.
    /// The leaf certificates will be signed by the CA named "Personal Developer Root"
    /// </summary>
-   internal interface ICertificateServices
+   internal interface ICertificateService
    {
       /// <summary>
       /// Create a leaf certificate for device signed by our internal root CA.

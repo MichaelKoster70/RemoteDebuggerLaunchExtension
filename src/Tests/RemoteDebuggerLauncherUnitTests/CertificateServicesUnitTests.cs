@@ -20,7 +20,7 @@ namespace RemoteDebuggerLauncherUnitTests
       [TestMethod]
       public void TestEnsureSelfSignedRootPresentCreatesRoot()
       {
-         var service = new CertificateServices();
+         var service = new CertificateService();
          bool certPresent = false;
 
          RemoveAllRootCerts();
@@ -48,7 +48,7 @@ namespace RemoteDebuggerLauncherUnitTests
       [TestMethod]
       public void TestEnsureSelfSignedRootPresentCreatesPublicRoot()
       {
-         var service = new CertificateServices();
+         var service = new CertificateService();
          bool certPresent = false;
 
          RemoveAllRootCerts();
@@ -68,7 +68,7 @@ namespace RemoteDebuggerLauncherUnitTests
       [ExpectedException(typeof(RemoteDebuggerLauncherException))]
       public void TestEnsureSelfSignedRootPresentCreatesPublicRootThrows()
       {
-         var service = new CertificateServices();
+         var service = new CertificateService();
 
          RemoveAllPublicRootCerts();
 
@@ -78,7 +78,7 @@ namespace RemoteDebuggerLauncherUnitTests
       [TestMethod]
       public void TestIsSelfSignedRootPresentReturnsFalseWhenNoCertsPresent()
       {
-         var service = new CertificateServices();
+         var service = new CertificateService();
 
          RemoveAllRootCerts();
 
@@ -89,7 +89,7 @@ namespace RemoteDebuggerLauncherUnitTests
       [TestMethod]
       public void TestIsSelfSignedRootPresentReturnsTrueWhenCertPresent()
       {
-         var service = new CertificateServices();
+         var service = new CertificateService();
          service.EnsureSelfSignedRootPresentAndTrusted();
 
 
@@ -100,7 +100,7 @@ namespace RemoteDebuggerLauncherUnitTests
       [TestMethod]
       public void TestCreateDevelopmentCertificate()
       {
-         var service = new CertificateServices();
+         var service = new CertificateService();
 
          using (var cert = service.CreateDevelopmentCertificate("demo"))
          {
@@ -113,7 +113,7 @@ namespace RemoteDebuggerLauncherUnitTests
       [TestMethod]
       public void TestCreateDevelopmentCertificateFile()
       {
-         var service = new CertificateServices();
+         var service = new CertificateService();
 
          var rawData = service.CreateDevelopmentCertificateFile("demo");
          Assert.IsNotNull(rawData);

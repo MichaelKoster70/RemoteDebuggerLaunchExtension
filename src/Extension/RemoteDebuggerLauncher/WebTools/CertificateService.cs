@@ -16,8 +16,8 @@ namespace RemoteDebuggerLauncher.WebTools
    /// <summary>
    /// Implements the Windows Cert store based x509 x.509 certificates for development purposes.
    /// </summary>
-   [Export(typeof(ICertificateServices))]
-   internal class CertificateServices : ICertificateServices
+   [Export(typeof(ICertificateService))]
+   internal class CertificateService : ICertificateService
    {
       // RSA key size
       private const int RsaKeySize = 4096;

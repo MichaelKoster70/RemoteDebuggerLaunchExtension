@@ -157,8 +157,8 @@
     <Compile Include="WebTools\BrowserTargetDetectorFactory.cs" />
     <Compile Include="WebTools\BrowserTargetDetector.cs" />
     <Compile Include="VsInterop\IVsRegistryOptions.cs" />
-    <Compile Include="WebTools\CertificateServices.cs" />
-    <Compile Include="WebTools\ICertificateServices.cs" />
+    <Compile Include="WebTools\CertificateService.cs" />
+    <Compile Include="WebTools\ICertificateService.cs" />
     <Compile Include="WebTools\IStaticWebAssetsCollectorService.cs" />
     <Compile Include="VsInterop\VsRegistryOptions.cs" />
     <Compile Include="WebTools\StaticWebAsset.cs" />
