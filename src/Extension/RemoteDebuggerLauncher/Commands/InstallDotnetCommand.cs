@@ -107,8 +107,6 @@ namespace RemoteDebuggerLauncher
 #pragma warning disable CA1031 // Do not catch general exception types
                try
                {
- 
-                  // get all services we need
                   var outputPaneWriter = vsFacade.GetVsShell().GetOutputPaneWriter();
 
                   // do the remaining work on the UI thread

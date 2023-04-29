@@ -161,10 +161,12 @@
     <Compile Include="WebTools\ICertificateService.cs" />
     <Compile Include="WebTools\IStaticWebAssetsCollectorService.cs" />
     <Compile Include="VsInterop\VsRegistryOptions.cs" />
+    <Compile Include="WebTools\PasswordGenerator.cs" />
     <Compile Include="WebTools\StaticWebAsset.cs" />
     <Compile Include="WebTools\StaticWebAssetsCollectorService.cs" />
     <Compile Include="WebTools\IWebBrowserSelectionService.cs" />
     <Compile Include="WebTools\FrameworkNameExtensions.cs" />
+    <Compile Include="WebTools\SubjectAlternativeNameBuilderExtensions.cs" />
     <Compile Include="WebTools\WebBrowserInfo.cs" />
     <Compile Include="WebTools\WebBrowserSelectionService.cs" />
     <Compile Include="WebTools\ConfiguredWebProject.cs" />

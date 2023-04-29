@@ -44,6 +44,8 @@ namespace RemoteDebuggerLauncher
          }
       }
 
+      public SetupMode SelectedMode => selectedSetupMode?.Mode ?? SetupMode.Update;
+
       public DelegateCommand<DialogWindow> OkCommand { get; }
 
       public DelegateCommand<DialogWindow> CancelCommand { get; }

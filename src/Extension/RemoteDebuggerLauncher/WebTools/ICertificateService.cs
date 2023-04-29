@@ -18,16 +18,17 @@ namespace RemoteDebuggerLauncher.WebTools
       /// <summary>
       /// Create a leaf certificate for device signed by our internal root CA.
       /// </summary>
-      /// <param name="subject">The certificate subject name.</param>
+      /// <param name="deviceName">The device name.</param>
       /// <returns>The x.509 certificate; <c>null</c> for failure.</returns>
-      X509Certificate2 CreateDevelopmentCertificate(string subject);
+      X509Certificate2 CreateDevelopmentCertificate(string deviceName);
 
       /// <summary>
       /// Create a leaf certificate for device signed by our internal root CA as a PFX file.
       /// </summary>
-      /// <param name="subject">The certificate subject name.</param>
+      /// <param name="deviceName">The device name.</param>
+      /// <param name="password">The optional password to protect the private key.</param>
       /// <returns>The byte array holding the PFX file contents; <c>null</c> for failure.</returns>
-      byte[] CreateDevelopmentCertificateFile(string subject);
+      byte[] CreateDevelopmentCertificateFile(string deviceName, string password = null);
 
       /// <summary>
       /// Ensures that the public root certificate is valid and is stored in the trusted root cert store for the current user.

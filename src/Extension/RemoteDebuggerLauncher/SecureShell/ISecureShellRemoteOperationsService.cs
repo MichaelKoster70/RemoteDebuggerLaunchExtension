@@ -110,9 +110,18 @@ namespace RemoteDebuggerLauncher.SecureShell
       Task TryInstallDotNetOfflineAsync(DotnetInstallationKind kind, string channel);
 
       /// <summary>
+      /// Sets up a new ASP.NET HTTPS Developer Certificate.
+      /// </summary>
+      /// <param name="mode">The desired setup mode.</param>
+      /// <param name="certificate">The x.509 certificate in PFX form.</param>
+      /// <param name="password">The password to unlock the PFX content.</param>
+      /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+      Task SetupAspNetDeveloperCertificateAsync(SetupMode mode, byte[] certificate, string password);
+
+      /// <summary>
       /// Get the CPU architecture to determine which runtime ID to use, ignoring MacOS and Alpine based Linux when determining the needed runtime ID.
       /// </summary>
       /// <returns>The <see cref="string"/> hoilding the runtime ID.</returns>
-     Task<string> GetRuntimeIdAsync();
+      Task<string> GetRuntimeIdAsync();
    }
 }

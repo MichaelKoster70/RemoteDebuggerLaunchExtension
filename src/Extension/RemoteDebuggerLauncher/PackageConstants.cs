@@ -176,6 +176,9 @@ namespace RemoteDebuggerLauncher
 
          /// <summary>SSH key scanner arguments.</summary>
          public const string KeyScanArguments = "-4 -p {1} {0}";
+
+         /// <summary>HTTPS Developer Certificate name.</summary>
+         public const string HttpsCertificateName = "DevCert.pfx";
       }
    }
 }

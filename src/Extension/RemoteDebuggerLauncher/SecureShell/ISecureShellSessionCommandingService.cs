@@ -27,7 +27,7 @@ namespace RemoteDebuggerLauncher.SecureShell
       /// Tries to executes a SSH command asynchronous.
       /// </summary>
       /// <param name="commandText">The command text.</param>
-      /// <returns>A <see cref="Task{(int StatusCode, string Response)}"/> holding the command exit code and response.</returns>
-      Task<(int StatusCode, string Response)> TryExecuteCommandAsync(string commandText);
+      /// <returns>A <see cref="Task{(int StatusCode, string Result, string Error)}"/> holding the command exit code and response and error text.</returns>
+      Task<(int StatusCode, string Result, string Error)> TryExecuteCommandAsync(string commandText);
    }
 }

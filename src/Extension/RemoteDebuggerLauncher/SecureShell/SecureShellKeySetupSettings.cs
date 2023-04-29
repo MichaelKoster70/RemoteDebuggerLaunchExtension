@@ -7,6 +7,7 @@
 
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 
 namespace RemoteDebuggerLauncher.SecureShell
 {
@@ -35,7 +36,7 @@ namespace RemoteDebuggerLauncher.SecureShell
       /// <summary>
       /// Gets the IPv4 address of the target device.
       /// </summary>
-      public string HostNameIPv4 => forceIPv4 ? Dns.GetHostEntry(HostName).AddressList.FirstOrDefault(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)?.ToString() ?? HostName : HostName;
+      public string HostNameIPv4 => forceIPv4 ? Dns.GetHostEntry(HostName).AddressList.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork)?.ToString() ?? HostName : HostName;
 
       /// <summary>
       /// Gets the host port of the target device.

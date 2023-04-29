@@ -7,20 +7,27 @@
 
 using System;
 using System.Composition;
+using System.Net;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 
 namespace RemoteDebuggerLauncher.WebTools
 {
    /// <summary>
-   /// Implements the Windows Cert store based x509 x.509 certificates for development purposes.
+   /// Implements the Windows Cert store based x.509 certificates for development purposes.
    /// </summary>
    [Export(typeof(ICertificateService))]
    internal class CertificateService : ICertificateService
    {
       // RSA key size
       private const int RsaKeySize = 4096;
+
+      // the current cert version used by ASP.NET 'dontet dev-certs
+      private const int CurrentCertificateVersion = 2;
+
+      // Localhost DNS and CN
+      private const string LocalhostDnsName = "localhost";
+      private const string LocalhostDistinguishedName = "CN=" + LocalhostDnsName;
 
       // CA Name
       private const string RootCertificateName = "Personal Developer Root";
@@ -35,40 +42,52 @@ namespace RemoteDebuggerLauncher.WebTools
       private const string ServerAuthenticationEnhancedKeyUsageOid = "1.3.6.1.5.5.7.3.1";
       private const string ServerAuthenticationEnhancedKeyUsageOidFriendlyName = "Server Authentication";
 
-      //Hresult when the user cancels trusting a certificate
+      // Hresult when the user cancels trusting a certificate
       private const int UserCancelledErrorCode = unchecked((int)0x800704C7);
 
+      [ImportingConstructor]
+      public CertificateService()
+      {
+         //EMPTY_BODY
+      }
+
       /// <inheritdoc />
-      public X509Certificate2 CreateDevelopmentCertificate(string subject)
+      public X509Certificate2 CreateDevelopmentCertificate(string deviceName)
       {
          using (var rootCert = LoadOrCreateRootCertificate())
          {
-            using (var keyPair = RSA.Create(RsaKeySize))
+            var cspParameter = new CspParameters();
+            cspParameter = new CspParameters(cspParameter.ProviderType, cspParameter.ProviderName, Guid.NewGuid().ToString());
+
+            using (var keyPair = new RSACryptoServiceProvider(RsaKeySize, cspParameter))
             {
                var sanBuilder = new SubjectAlternativeNameBuilder();
-               sanBuilder.AddDnsName("localhost");
-               sanBuilder.AddDnsName(subject);
+               sanBuilder.AddDnsName(LocalhostDnsName);
+               sanBuilder.AddIpAddress(IPAddress.Loopback);
+               sanBuilder.AddDnsNameAndIpAddress(deviceName);
 
                // create a CSR
-               var subjectName = new X500DistinguishedName($"CN={subject}");
+               var subjectName = new X500DistinguishedName(LocalhostDistinguishedName);
                var csr = new CertificateRequest(subjectName, keyPair, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
                csr.CertificateExtensions.Add(new X509BasicConstraintsExtension(false, false, 0, true));
                csr.CertificateExtensions.Add(new X509KeyUsageExtension(X509KeyUsageFlags.KeyEncipherment | X509KeyUsageFlags.DigitalSignature, true));
                csr.CertificateExtensions.Add(new X509EnhancedKeyUsageExtension(new OidCollection()
                   { new Oid(ServerAuthenticationEnhancedKeyUsageOid, ServerAuthenticationEnhancedKeyUsageOidFriendlyName) }, true));
                csr.CertificateExtensions.Add(sanBuilder.Build(true));
-               csr.CertificateExtensions.Add(new X509Extension(
-                  new AsnEncodedData(new Oid(AspNetHttpsOid, AspNetHttpsOidFriendlyName), Encoding.ASCII.GetBytes(AspNetHttpsOidFriendlyName)), false));
+               csr.CertificateExtensions.Add(new X509Extension(new AsnEncodedData(
+                  new Oid(AspNetHttpsOid, AspNetHttpsOidFriendlyName), new byte[] { CurrentCertificateVersion }), false));
 
                // Create the Cert serial numbert
-               byte[] serialNumber = new byte[8];
+               byte[] serialNumber = new byte[9];
                using (RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create())
                {
                   randomNumberGenerator.GetBytes(serialNumber);
-               }
+               };
 
+               // Create the certificate
                var cert = csr.Create(rootCert, DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddYears(1), serialNumber);
                cert.FriendlyName = AspNetHttpsOidFriendlyName;
+               cert.PrivateKey = keyPair;
 
                return cert;
             }
@@ -76,13 +95,13 @@ namespace RemoteDebuggerLauncher.WebTools
       }
 
       /// <inheritdoc />
-      public byte[] CreateDevelopmentCertificateFile(string subject)
+      public byte[] CreateDevelopmentCertificateFile(string deviceName, string password = null)
       {
          byte[] pfxContents = null;
 
-         using (var certificate = CreateDevelopmentCertificate(subject))
+         using (var certificate = CreateDevelopmentCertificate(deviceName))
          {
-            pfxContents = certificate?.Export(X509ContentType.Pfx);
+            pfxContents = string.IsNullOrEmpty(password) ? certificate?.Export(X509ContentType.Pfx) : certificate?.Export(X509ContentType.Pfx, password);
          }
 
          return pfxContents;

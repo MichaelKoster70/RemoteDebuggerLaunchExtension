@@ -64,7 +64,7 @@ namespace RemoteDebuggerLauncher.SecureShell
       }
 
       /// <inheritdoc/>
-      public Task<(int StatusCode, string Response)> TryExecuteCommandAsync(string commandText)
+      public Task<(int StatusCode, string Result, string Error)> TryExecuteCommandAsync(string commandText)
       {
          ThrowIf.ArgumentNullOrEmpty(commandText, nameof(commandText));
 
@@ -76,7 +76,7 @@ namespace RemoteDebuggerLauncher.SecureShell
 
                using (var command = client.RunCommand(commandText))
                {
-                  return (command.ExitStatus, command.Result);
+                  return (command.ExitStatus, command.Result, command.Error);
                }
             }
             catch (SshException e)

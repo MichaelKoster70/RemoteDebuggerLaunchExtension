@@ -414,6 +414,36 @@ Make sure you selected a 'SshRemoteLaunch' launch profile.</value>
   <data name="RemoteCommandLaunchingDebuggerOutputPaneStart" xml:space="preserve">
     <value>---- Launching debugger: Project: {0}, Configuration: {1} ----</value>
   </data>
+  <data name="RemoteCommandSetupHttpsCheckProgress" xml:space="preserve">
+    <value>Checking certificate....</value>
+  </data>
+  <data name="RemoteCommandSetupHttpsCheckResult" xml:space="preserve">
+    <value>Check certificate: {0}</value>
+  </data>
+  <data name="RemoteCommandSetupHttpsCommandCaption" xml:space="preserve">
+    <value>Setup HTTPS</value>
+  </data>
+  <data name="RemoteCommandSetupHttpsCommandStatusbarText" xml:space="preserve">
+    <value>Setup HTTPS developer certificates...</value>
+  </data>
+  <data name="RemoteCommandSetupHttpsCompleted" xml:space="preserve">
+    <value>Setup completed successfully.</value>
+  </data>
+  <data name="RemoteCommandSetupHttpsFailed" xml:space="preserve">
+    <value>Setup failed.</value>
+  </data>
+  <data name="RemoteCommandSetupHttpsInstallProgress" xml:space="preserve">
+    <value>Install certificate....</value>
+  </data>
+  <data name="RemoteCommandSetupHttpsInstallResult" xml:space="preserve">
+    <value>Install certificate: {0}</value>
+  </data>
+  <data name="RemoteCommandSetupHttpsProjectProfileHostname" xml:space="preserve">
+    <value>Processing {0} profile '{1}' hostname '{2}'</value>
+  </data>
+  <data name="RemoteCommandSetupHttpsUploadProgress" xml:space="preserve">
+    <value>Upload certificate....</value>
+  </data>
   <data name="RemoteCommandSetupSshCommandCaption" xml:space="preserve">
     <value>Setup SSH</value>
   </data>

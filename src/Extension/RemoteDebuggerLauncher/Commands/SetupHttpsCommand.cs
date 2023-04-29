@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using RemoteDebuggerLauncher.SecureShell;
+using RemoteDebuggerLauncher.WebTools;
 
 namespace RemoteDebuggerLauncher
 {
@@ -100,7 +101,54 @@ namespace RemoteDebuggerLauncher
          // process 
          if (result.HasValue && result.Value)
          {
+#pragma warning disable VSTHRD102 // Implement internal logic asynchronously
+            package.JoinableTaskFactory.Run(async () =>
+            {
+               var vsFacade = await ServiceProvider.GeVsFacadeFactoryAsync();
+               var statusbar = vsFacade.GetVsShell().GetStatusbar();
 
+#pragma warning disable CA1031 // Do not catch general exception types
+               try
+               {
+                  var outputPaneWriter = vsFacade.GetVsShell().GetOutputPaneWriter();
+                  var certificateService = await ServiceProvider.GetCertifcateServiceAsync();
+
+                  // do the remaining work on the UI thread
+                  await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                  var projects = await vsFacade.GetVsSolution().GetActiveConfiguredProjectsAsync();
+
+                  statusbar.SetText(Resources.RemoteCommandSetupHttpsCommandStatusbarText);
+                  outputPaneWriter.WriteLine(Resources.CommonStartSessionMarker);
+
+                  if (projects.Count > 0)
+                  {
+                     // we have project to process
+                     foreach (var project in projects)
+                     {
+                        var remoteOperations = await project.GetSecureShellRemoteOperationsAsync();
+                        remoteOperations.LogHost = true;
+
+                        var hostName = project.Configuration.QueryHostName();
+                        var password = PasswordGenerator.Generate(16);
+
+                        outputPaneWriter.WriteLine(Resources.RemoteCommandSetupHttpsProjectProfileHostname, project.GetProjectName(), project.ActiveLaunchProfileName, hostName);
+                        var certificate = certificateService.CreateDevelopmentCertificateFile(hostName, password);
+                        await remoteOperations.SetupAspNetDeveloperCertificateAsync(viewModel.SelectedMode, certificate, password);
+
+                     }
+                  }
+               }
+               catch (Exception exception)
+               {
+                  ShellUtilities.ShowErrorMessageBox(package, Resources.RemoteCommandSetupHttpsCommandCaption, exception.Message);
+               }
+               finally
+               {
+                  statusbar.Clear();
+               }
+            });
+#pragma warning restore VSTHRD102 // Implement internal logic asynchronously
          }
       }
    }

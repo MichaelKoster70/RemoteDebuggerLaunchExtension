@@ -338,12 +338,66 @@ namespace RemoteDebuggerLauncher.SecureShell
       }
       #endregion
 
+      # region HTTPS Setup
+      /// <inheritdoc />
+      public async Task SetupAspNetDeveloperCertificateAsync(SetupMode mode, byte[] certificate, string password)
+      {
+         // Path for the 'donet' executable
+         string dotnetExecutable = UnixPath.Combine(configurationAggregator.QueryDotNetInstallFolderPath(), "dotnet");
+
+         //Check if ASP.NET runtime is installed
+         using (var commands = session.CreateCommandSession())
+         {
+            // Step 1: Check certificate status
+            outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            outputPaneWriter.WriteLine(Resources.RemoteCommandSetupHttpsCheckProgress);
+
+            (int statusCode, string result, string error) = await commands.TryExecuteCommandAsync($"{dotnetExecutable} dev-certs https --check");
+
+            outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            outputPaneWriter.WriteLine(Resources.RemoteCommandSetupHttpsCheckResult, result);
+
+            if (statusCode == 0 && mode == SetupMode.Update)
+            {
+               // Update mode: exit if a valid cert is present
+               outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+               outputPaneWriter.WriteLine(Resources.RemoteCommandSetupHttpsCompleted);
+               return;
+            }
+
+            // Step 2: upload the new certificate
+            outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            outputPaneWriter.WriteLine(Resources.RemoteCommandSetupHttpsUploadProgress);
+
+            var certificateTargetPath = (await commands.ExecuteCommandAsync("pwd")).Trim('\n');
+            certificateTargetPath = UnixPath.Combine(certificateTargetPath, PackageConstants.SecureShell.HttpsCertificateName);
+
+            using (var stream = new MemoryStream(certificate))
+            {
+               await session.UploadFileAsync(stream, certificateTargetPath);
+            }
+
+            // Step 3: import new certificate
+            outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            outputPaneWriter.WriteLine(Resources.RemoteCommandSetupHttpsInstallProgress);
+
+            (statusCode, result, error) = await commands.TryExecuteCommandAsync($"{dotnetExecutable} dev-certs https --clean --import {certificateTargetPath} --password {password}");
+            outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            outputPaneWriter.WriteLine(Resources.RemoteCommandSetupHttpsInstallResult, result.Replace('\n', ' '));
+            outputPaneWriter.WriteLine(!string.IsNullOrEmpty(error), Resources.RemoteCommandSetupHttpsInstallResult, error.Replace('\n', ' '));
+
+            outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            outputPaneWriter.WriteLine(statusCode == 0 ? Resources.RemoteCommandSetupHttpsCompleted  : Resources.RemoteCommandSetupHttpsFailed);
+         }
+      }
+      #endregion
+
       #region Support APIs
       /// <inheritdoc />
       public async Task<string> GetRuntimeIdAsync()
       {
          string runtimeId;
-         var cpuArchitecture = (await session.ExecuteSingleCommandAsync("uname -m").ConfigureAwait(true)).Trim('\n');
+         var cpuArchitecture = (await session.ExecuteSingleCommandAsync("uname -m")).Trim('\n');
          switch (cpuArchitecture)
          {
             case "armv7l":
@@ -372,7 +426,7 @@ namespace RemoteDebuggerLauncher.SecureShell
       /// <returns><c>true</c> if installed; else <c>false</c>.</returns>
       private async Task<bool> CheckCurlIsMissingAsync(ISecureShellSessionCommandingService commands)
       {
-         (int exitCode, _) = await commands.TryExecuteCommandAsync("command -v curl");
+         (int exitCode, _, _) = await commands.TryExecuteCommandAsync("command -v curl");
          if (exitCode != 0)
          {
             outputPaneWriter.WriteLine(Resources.RemoteCommandCommonFailedCurlNotInstalled);

@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.Shell;
 using RemoteDebuggerLauncher.SecureShell;
+using RemoteDebuggerLauncher.WebTools;
 
 namespace RemoteDebuggerLauncher
 {
@@ -65,6 +66,13 @@ namespace RemoteDebuggerLauncher
          IComponentModel componentModel = await serviceProvider.GetComponentModelAsync();
 
          return componentModel.GetService<ISecureShellKeySetupService>();
+      }
+
+      public static async Task<ICertificateService> GetCertifcateServiceAsync(this IAsyncServiceProvider serviceProvider)
+      {
+         IComponentModel componentModel = await serviceProvider.GetComponentModelAsync();
+
+         return componentModel.GetService<ICertificateService>();
       }
 
       private static Task<IComponentModel> GetComponentModelAsync(this IAsyncServiceProvider serviceProvider)
