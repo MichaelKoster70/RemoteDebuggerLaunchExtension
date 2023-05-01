@@ -200,6 +200,36 @@ namespace RemoteDebuggerLauncher.SecureShell
       }
 
       /// <inheritdoc/>
+      public Task UploadFileAsync(Stream localStream, string remoteTargetPath)
+      {
+         ThrowIf.ArgumentNull(localStream, nameof(localStream));
+         ThrowIf.ArgumentNullOrEmpty(remoteTargetPath, nameof(remoteTargetPath));
+
+         return Task.Run(() =>
+         {
+            try
+            {
+               using (var client = CreateScpClient())
+               {
+                  // for the moment, we assume that the path names does not have any character that have special meaning for a Linux host
+                  client.RemotePathTransformation = RemotePathTransformation.None;
+
+                  client.Connect();
+                  client.Upload(localStream, remoteTargetPath);
+               }
+            }
+            catch (SshException e)
+            {
+               throw new SecureShellSessionException(e.Message, e);
+            }
+            catch (InvalidOperationException e)
+            {
+               throw new SecureShellSessionException(e.Message, e);
+            }
+         });
+      }
+
+      /// <inheritdoc/>
       public ISecureShellSessionCommandingService CreateCommandSession()
       {
          var client = CreateSshClient();

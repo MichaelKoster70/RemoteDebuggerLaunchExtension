@@ -18,6 +18,7 @@ The following launch profile properties are independant of the application type:
       "dotNetInstallFolderPath": "~\\.dotnet",
       "debuggerInstallFolderPath": "~\\.vsdbg",
       "appFolderPath": "~\\AppFolder",
+      "publishMode": "SelfContained"
       "publishOnDeploy": false,
       "deployOnStartDebugging": false,
       "installDebuggerOnStartDebugging": false
@@ -36,6 +37,7 @@ The following launch profile properties are independant of the application type:
 | dotNetInstallFolderPath   | no | string | Linux path | The .NET install path |
 | debuggerInstallFolderPath | no | string | Linux path | The vsdbg install path |
 | appFolderPath | no | string | Linux path | The path where the app gets deployed to |
+| publishMode | no | enum | SelfContained/FrameworkDependant | Publish mode |
 | publishOnDeploy | no | boolean | true/false  | Publish the app before deploy |
 | deployOnStartDebugging | no | boolean | true/false | Deploy the app |
 | installDebuggerOnStartDebugging | no | boolean |  true to install debugger | Will automatically install the debugger |

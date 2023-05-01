@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteDebuggerLauncherUI", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteDebuggerLauncherShared", "src\Extension\RemoteDebuggerLauncherShared\RemoteDebuggerLauncherShared.csproj", "{93E8395B-2FCF-46EC-AD25-C7B4083BE047}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C143B7AB-C86B-4E14-92F4-C3D4C8946EB9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteDebuggerLauncherUnitTests", "src\Tests\RemoteDebuggerLauncherUnitTests\RemoteDebuggerLauncherUnitTests.csproj", "{BD579249-3CAE-4551-BAD1-FF4CD0840BFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +41,10 @@ Global
 		{93E8395B-2FCF-46EC-AD25-C7B4083BE047}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93E8395B-2FCF-46EC-AD25-C7B4083BE047}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93E8395B-2FCF-46EC-AD25-C7B4083BE047}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD579249-3CAE-4551-BAD1-FF4CD0840BFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD579249-3CAE-4551-BAD1-FF4CD0840BFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD579249-3CAE-4551-BAD1-FF4CD0840BFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD579249-3CAE-4551-BAD1-FF4CD0840BFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +54,7 @@ Global
 		{E95FF607-9D76-4ED8-BE5F-F5254CAC4963} = {0122F772-056D-4FF0-BAB1-33E0F0C80BA8}
 		{9BB8C19C-9BD2-4F3F-8800-951B4851E794} = {0122F772-056D-4FF0-BAB1-33E0F0C80BA8}
 		{93E8395B-2FCF-46EC-AD25-C7B4083BE047} = {0122F772-056D-4FF0-BAB1-33E0F0C80BA8}
+		{BD579249-3CAE-4551-BAD1-FF4CD0840BFE} = {C143B7AB-C86B-4E14-92F4-C3D4C8946EB9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28E2E12F-EC94-41FB-BF65-3D5B09E077DE}

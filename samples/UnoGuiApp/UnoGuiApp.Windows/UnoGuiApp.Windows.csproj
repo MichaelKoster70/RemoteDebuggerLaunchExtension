@@ -7,10 +7,15 @@
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<Platforms>x86;x64;arm64</Platforms>
 		<RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
-		<PublishProfile>win10-$(Platform).pubxml</PublishProfile>
-		<UseWinUI>true</UseWinUI>
-		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+    <PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
+    <UseWinUI>true</UseWinUI>
+    <EnableMsixTooling>true</EnableMsixTooling>
 	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Remove="Properties\Properties\**" />
+	  <EmbeddedResource Remove="Properties\Properties\**" />
+	  <None Remove="Properties\Properties\**" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Content Include="Images\SplashScreen.scale-200.png" />
@@ -23,9 +28,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.3" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.196" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
 		<PackageReference Include="Uno.Core.Extensions.Logging.Singleton" Version="4.0.1" />
 
 		<Manifest Include="$(ApplicationManifest)" />
@@ -52,9 +57,9 @@
 		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.22000.25" />
 	</ItemGroup>
 	
-	<ItemGroup>
-	  <Folder Include="Properties\Properties\" />
-	</ItemGroup>
-	
 	<Import Project="..\UnoGuiApp.Shared\UnoGuiApp.Shared.projitems" Label="Shared" />
+	
+	<ItemGroup>
+	  <_Globbed_Compile Remove="GlobalSuppressions.cs" />
+	</ItemGroup>
 </Project>

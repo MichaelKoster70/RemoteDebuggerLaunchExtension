@@ -61,6 +61,15 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancelling trusting Root CA.
+        /// </summary>
+        public static string CertificateServicesTrustCancelledByUser {
+            get {
+                return ResourceManager.GetString("CertificateServicesTrustCancelledByUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string CommonCancelButtonLabel {
@@ -908,6 +917,96 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Checking certificate.....
+        /// </summary>
+        public static string RemoteCommandSetupHttpsCheckProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupHttpsCheckProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check certificate: {0}.
+        /// </summary>
+        public static string RemoteCommandSetupHttpsCheckResult {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupHttpsCheckResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setup HTTPS.
+        /// </summary>
+        public static string RemoteCommandSetupHttpsCommandCaption {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupHttpsCommandCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setup HTTPS developer certificates....
+        /// </summary>
+        public static string RemoteCommandSetupHttpsCommandStatusbarText {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupHttpsCommandStatusbarText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setup completed successfully..
+        /// </summary>
+        public static string RemoteCommandSetupHttpsCompleted {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupHttpsCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setup failed..
+        /// </summary>
+        public static string RemoteCommandSetupHttpsFailed {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupHttpsFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install certificate.....
+        /// </summary>
+        public static string RemoteCommandSetupHttpsInstallProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupHttpsInstallProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install certificate: {0}.
+        /// </summary>
+        public static string RemoteCommandSetupHttpsInstallResult {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupHttpsInstallResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processing {0} profile &apos;{1}&apos; hostname &apos;{2}&apos;.
+        /// </summary>
+        public static string RemoteCommandSetupHttpsProjectProfileHostname {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupHttpsProjectProfileHostname", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload certificate.....
+        /// </summary>
+        public static string RemoteCommandSetupHttpsUploadProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupHttpsUploadProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Setup SSH.
         /// </summary>
         public static string RemoteCommandSetupSshCommandCaption {
@@ -1129,6 +1228,51 @@ namespace RemoteDebuggerLauncher {
         public static string SelectBrowserDialogTitle {
             get {
                 return ResourceManager.GetString("SelectBrowserDialogTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the HTTPS certificate setup mode, then press OK to start..
+        /// </summary>
+        public static string SetupHttpsDialogHeaderText {
+            get {
+                return ResourceManager.GetString("SetupHttpsDialogHeaderText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setup Mode.
+        /// </summary>
+        public static string SetupHttpsDialogModeLabel {
+            get {
+                return ResourceManager.GetString("SetupHttpsDialogModeLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setup HTTPS certificate.
+        /// </summary>
+        public static string SetupHttpsDialogTitle {
+            get {
+                return ResourceManager.GetString("SetupHttpsDialogTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add and Replace existing.
+        /// </summary>
+        public static string SetupModeReplaceDisplayName {
+            get {
+                return ResourceManager.GetString("SetupModeReplaceDisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add or Update existing .
+        /// </summary>
+        public static string SetupModeUpdateDisplayName {
+            get {
+                return ResourceManager.GetString("SetupModeUpdateDisplayName", resourceCulture);
             }
         }
         

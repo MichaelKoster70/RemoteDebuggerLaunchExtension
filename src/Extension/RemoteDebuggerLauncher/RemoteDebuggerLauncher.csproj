@@ -90,6 +90,7 @@
     <Compile Include="SecureShell\ISecureShellKeySetupService.cs" />
     <Compile Include="SecureShell\SecureShellKeyPairCreatorService.cs" />
     <Compile Include="SecureShell\SecureShellKeySetupService.cs" />
+    <Compile Include="Commands\SetupHttpsCommand.cs" />
     <Compile Include="VsInterop\OutputPaneTextWriterService.cs" />
     <Compile Include="ProjectSystem\Build\DotnetPublishService.cs" />
     <Compile Include="VsInterop\IVsSolutionFacade.cs" />
@@ -156,12 +157,16 @@
     <Compile Include="WebTools\BrowserTargetDetectorFactory.cs" />
     <Compile Include="WebTools\BrowserTargetDetector.cs" />
     <Compile Include="VsInterop\IVsRegistryOptions.cs" />
+    <Compile Include="WebTools\CertificateService.cs" />
+    <Compile Include="WebTools\ICertificateService.cs" />
     <Compile Include="WebTools\IStaticWebAssetsCollectorService.cs" />
     <Compile Include="VsInterop\VsRegistryOptions.cs" />
+    <Compile Include="WebTools\PasswordGenerator.cs" />
     <Compile Include="WebTools\StaticWebAsset.cs" />
     <Compile Include="WebTools\StaticWebAssetsCollectorService.cs" />
     <Compile Include="WebTools\IWebBrowserSelectionService.cs" />
     <Compile Include="WebTools\FrameworkNameExtensions.cs" />
+    <Compile Include="WebTools\SubjectAlternativeNameBuilderExtensions.cs" />
     <Compile Include="WebTools\WebBrowserInfo.cs" />
     <Compile Include="WebTools\WebBrowserSelectionService.cs" />
     <Compile Include="WebTools\ConfiguredWebProject.cs" />
@@ -199,6 +204,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
@@ -209,34 +215,34 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.1.0-2.21558.8" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
-      <Version>3.3.3</Version>
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers">
-      <Version>7.0.0</Version>
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.PowerShell.5.1.ReferenceAssemblies" Version="1.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Managed" Version="17.2.0-beta1-20407-01" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Managed.VS" Version="17.2.0-beta1-20407-01" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK" Version="17.2.404-pre" />
-    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK.Tools" Version="17.2.404-pre" />
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.1.32210.191" ExcludeAssets="runtime">
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Managed" Version="17.4.314-g26c3aa51e7" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Managed.VS" Version="17.4.314-g26c3aa51e7" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK" Version="17.4.38-pre" />
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK.Tools" Version="17.4.38-pre" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.4.33103.184" ExcludeAssets="runtime">
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.2.32" />
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.1.1035-preview2">
+    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.4.33" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.3.2095">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VSSDK.Vsixsigntool">
-      <Version>16.2.29116.78</Version>
+      <Version>16.3.29220.27</Version>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.4.0" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.VisualStudio.LanguageServices" Version="4.4.0" ExcludeAssets="runtime" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NuGet.VisualStudio" Version="17.4.0" ExcludeAssets="runtime" />
     <PackageReference Include="SSH.NET" Version="2020.0.2" />
   </ItemGroup>
   <ItemGroup>
@@ -273,7 +279,7 @@
     <Resource Include="Resources\IconInstallDotnet.png" />
     <Resource Include="Resources\IconInstallDebugger.png" />
     <Resource Include="Resources\IconSetupSsh.png" />
-    <Resource Include="Resources\IconToolWindow.png" />
+    <Resource Include="Resources\IconSetupHttps.png" />
     <Content Include="Resources\Logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -322,7 +328,7 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\IconToolWindow.xaml">
+    <Resource Include="Resources\IconSetupHttps.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Resource>

@@ -107,20 +107,29 @@ namespace RemoteDebuggerLauncher
 
             using (var process = Process.Start(startInfo))
             {
+#pragma warning disable VSTHRD100 // Avoid async void methods
                async void OnDataReceived(object _, DataReceivedEventArgs e)
                {
-                  var message = e.Data;
-
-                  await ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                  try
                   {
-                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                     if (!string.IsNullOrWhiteSpace(message))
+                     var message = e.Data;
+
+                     await ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                      {
-                        waitDialog.Update(Resources.PublishWaitDialogMessageUpdate, message, null);
-                     }
-                     outputPaneWriter.WriteLine(message);
-                  });
+                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                        if (!string.IsNullOrWhiteSpace(message))
+                        {
+                           waitDialog.Update(Resources.PublishWaitDialogMessageUpdate, message, null);
+                        }
+                        outputPaneWriter.WriteLine(message);
+                     });
+                  }
+                  catch(Exception)
+                  { 
+                     // Ignore any exception
+                  }
                }
+#pragma warning restore VSTHRD100 // Avoid async void methods
 
                process.OutputDataReceived += OnDataReceived;
                process.BeginOutputReadLine();

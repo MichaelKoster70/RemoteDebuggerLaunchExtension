@@ -1,12 +1,9 @@
 # Overview
-New features and bugfix release increasing stability.
+Feature release to support HHTPS certificate setup. 
 
 ## Features
-- check if cURL is installed when installing .NET or vsdbg
-- fix analyzer warnings
-- added message how to add .NET to search path
-- added support to publish app as self contained apps
-- added support for debugging self contained apps
+- upgraded to support Visual Studio 17.4 or newer
+- Added a command to setup HTTPS dev certificates
 
 ## Bug Fixes
-- fixed caption for error messages
+- none

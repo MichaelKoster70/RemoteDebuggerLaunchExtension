@@ -48,3 +48,13 @@ The 'Create' button lets you create a default SSH key pair with the following pr
 - 2048 bit RSA, PEM format, no passphrase with the name 'id_rsa'
 
 If the key pair already exists, 'Create' uses the existing keys.
+
+# Setup HTTPS
+This command creates and installs an x.509 certificate compatible with the certificates created by 'dotnet dev-certs https' CLI command. It uses the active launch profile to determine on which device to setup the HTTPS certificate.<br>
+![CommandSetupHttps](ScreenShort-Command-SetupHttps.png)<br>
+The command has the following configuration options:
+- Setup mode
+  - Add or Update: Updates the existing certificate in case it is no longer valid.
+  - Add or Replace: Replaces the current certificate with a new one.
+
+The command first create a self signed CA certificate named 'Personal Developer Root' and add it as a trusted root. The cerificates intalled on the devices are signed by this CA certificate.

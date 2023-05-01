@@ -7,33 +7,39 @@
 
 using System;
 using System.ComponentModel.Design;
+using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Threading;
+using Microsoft.VisualStudio.Shell.Interop;
+using RemoteDebuggerLauncher.SecureShell;
+using RemoteDebuggerLauncher.WebTools;
 
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// Command handler to install the current .NET runtime or SDK on the target device.
+   /// Command handler for the Setup HTTPS command.
    /// </summary>
-   internal sealed class InstallDotnetCommand
+   internal sealed class SetupHttpsCommand
    {
       /// <summary>Command ID.</summary>
-      public const int CommandId = 0x0103;
+      public const int CommandId = 0x0105;
 
       /// <summary>VS Package that provides this command, not null.</summary>
-      private readonly AsyncPackage package;
-
-      /// <summary>Running task instance to prevent multiple executions.</summary>
-      private JoinableTask joinableTask;
+      public static readonly Guid CommandSet = new Guid("67dde3fd-abea-469b-939f-02a3178c91e7");
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="InstallDotnetCommand"/> class.
+      /// VS Package that provides this command, not null.
+      /// </summary>
+      private readonly AsyncPackage package;
+
+      /// <summary>
+      /// Initializes a new instance of the <see cref="SetupHttpsCommand"/> class.
       /// Adds our command handlers for menu (commands must exist in the command table file)
       /// </summary>
       /// <param name="package">Owner package, not null.</param>
       /// <param name="commandService">Command service to add command to, not null.</param>
-      private InstallDotnetCommand(AsyncPackage package, OleMenuCommandService commandService)
+      private SetupHttpsCommand(AsyncPackage package, OleMenuCommandService commandService)
       {
          this.package = package ?? throw new ArgumentNullException(nameof(package));
          commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
@@ -46,7 +52,7 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// Gets the instance of the command.
       /// </summary>
-      public static InstallDotnetCommand Instance
+      public static SetupHttpsCommand Instance
       {
          get;
          private set;
@@ -63,33 +69,29 @@ namespace RemoteDebuggerLauncher
       /// <param name="package">Owner package, not null.</param>
       public static async Task InitializeAsync(AsyncPackage package)
       {
-         // Switch to the main thread - the call to AddCommand in InstallDotnet's constructor requires the UI thread.
+         // Switch to the main thread - the call to AddCommand in SetupHttps's constructor requires
+         // the UI thread.
          await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
          OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
-         Instance = new InstallDotnetCommand(package, commandService);
+         Instance = new SetupHttpsCommand(package, commandService);
       }
 
       /// <summary>
       /// This function is the callback used to execute the command when the menu item is clicked.
-      /// See the constructor to see how the menu item is associated with this function using
-      /// OleMenuCommandService service and MenuCommand class.
       /// </summary>
       /// <param name="sender">Event sender.</param>
       /// <param name="e">Event args.</param>
+      /// <remarks>
+      /// See the constructor to see how the menu item is associated with this function using OleMenuCommandService service and MenuCommand class.
+      /// </remarks>
       private void Execute(object sender, EventArgs e)
       {
          ThreadHelper.ThrowIfNotOnUIThread();
 
-         // check, if the command is already running
-         if (joinableTask != null)
-         {
-            return;
-         }
-
          // bring up config dialog
-         var viewModel = new InstallDotnetViewModel(ThreadHelper.JoinableTaskFactory);
-         var dialog = new InstallDotnetDialogWindow()
+         var viewModel = new SetupHttpsViewModel(ThreadHelper.JoinableTaskFactory);
+         var dialog = new SetupHttpsDialogWindow()
          {
             DataContext = viewModel
          };
@@ -99,7 +101,8 @@ namespace RemoteDebuggerLauncher
          // process 
          if (result.HasValue && result.Value)
          {
-            joinableTask = package.JoinableTaskFactory.RunAsync(async () =>
+#pragma warning disable VSTHRD102 // Implement internal logic asynchronously
+            package.JoinableTaskFactory.Run(async () =>
             {
                var vsFacade = await ServiceProvider.GeVsFacadeFactoryAsync();
                var statusbar = vsFacade.GetVsShell().GetStatusbar();
@@ -108,13 +111,14 @@ namespace RemoteDebuggerLauncher
                try
                {
                   var outputPaneWriter = vsFacade.GetVsShell().GetOutputPaneWriter();
+                  var certificateService = await ServiceProvider.GetCertifcateServiceAsync();
 
                   // do the remaining work on the UI thread
                   await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
                   var projects = await vsFacade.GetVsSolution().GetActiveConfiguredProjectsAsync();
 
-                  statusbar.SetText(Resources.RemoteCommandInstallDotnetCommandStatusbarText);
+                  statusbar.SetText(Resources.RemoteCommandSetupHttpsCommandStatusbarText);
                   outputPaneWriter.WriteLine(Resources.CommonStartSessionMarker);
 
                   if (projects.Count > 0)
@@ -125,40 +129,26 @@ namespace RemoteDebuggerLauncher
                         var remoteOperations = await project.GetSecureShellRemoteOperationsAsync();
                         remoteOperations.LogHost = true;
 
-                        outputPaneWriter.WriteLine(Resources.RemoteCommandCommonProjectAndProfile, project.GetProjectName(), project.ActiveLaunchProfileName);
+                        var hostName = project.Configuration.QueryHostName();
+                        var password = PasswordGenerator.Generate(16);
 
-                        bool success = viewModel.SelectedInstallationModeOnline;
-                        if (success)
-                        {
-                           success = await remoteOperations.TryInstallDotNetOnlineAsync(viewModel.SelectedInstallationKind, viewModel.SelectedVersion);
-                        }
+                        outputPaneWriter.WriteLine(Resources.RemoteCommandSetupHttpsProjectProfileHostname, project.GetProjectName(), project.ActiveLaunchProfileName, hostName);
+                        var certificate = certificateService.CreateDevelopmentCertificateFile(hostName, password);
+                        await remoteOperations.SetupAspNetDeveloperCertificateAsync(viewModel.SelectedMode, certificate, password);
 
-                        if (!success)
-                        {
-                           await remoteOperations.TryInstallDotNetOfflineAsync(viewModel.SelectedInstallationKind, viewModel.SelectedVersion);
-                        }
-
-                        string dotnetRoot = project.Configuration.QueryDotNetInstallFolderPath().Replace("~", "$HOME");
-                        outputPaneWriter.WriteLine(Resources.RemoteCommandInstallDotnetExports, dotnetRoot);
                      }
-                  }
-                  else
-                  {
-                     // let the user know to select the correct launch profile
-                     outputPaneWriter.WriteLine(Resources.RemoteCommandInstallDotnetNoProjects);
                   }
                }
                catch (Exception exception)
                {
-                  ShellUtilities.ShowErrorMessageBox(package, Resources.RemoteCommandInstallDotnetCommandCaption, exception.Message);
+                  ShellUtilities.ShowErrorMessageBox(package, Resources.RemoteCommandSetupHttpsCommandCaption, exception.Message);
                }
                finally
                {
                   statusbar.Clear();
-                  joinableTask = null;
                }
-#pragma warning restore CA1031 // Do not catch general exception types
             });
+#pragma warning restore VSTHRD102 // Implement internal logic asynchronously
          }
       }
    }
