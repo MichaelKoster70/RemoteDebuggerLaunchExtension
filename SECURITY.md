@@ -6,7 +6,9 @@ The latest published version is supported with security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 0.9.0   | :white_check_mark: |
+| 0.9.0   |                    |
+| 0.10.0  | :white_check_mark: |
+
 ## Reporting a Vulnerability
 
 In case you discover a security issue, please report it by sending an email to michael.koster@gmx.net, instead of opening an issue for it.
