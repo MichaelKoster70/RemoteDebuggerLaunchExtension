@@ -32,7 +32,17 @@ New features and bugfix release increasing stability.
 Adds the ability to configure HTTPS dev certificates
 
 ### Features
-- Adds the ability to configure HTTPS dev certificates
+- upgraded to support Visual Studio 17.4 or newer
+- Added a command to setup HTTPS dev certificates
 
 ### Bug Fixes
 - none
+
+## 0.11.1
+fixes Visual Studio 17.4 prerequisite
+
+### Features
+- none
+
+### Bug Fixes
+- fixed VS prerequisites
