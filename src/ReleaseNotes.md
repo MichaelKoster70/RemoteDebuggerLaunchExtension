@@ -1,9 +1,8 @@
-# Overview
-Feature release to support HHTPS certificate setup. 
+## 0.11.1
+fixes Visual Studio 17.4 prerequisite
 
-## Features
-- upgraded to support Visual Studio 17.4 or newer
-- Added a command to setup HTTPS dev certificates
-
-## Bug Fixes
+### Features
 - none
+
+### Bug Fixes
+- fixed VS prerequisites
