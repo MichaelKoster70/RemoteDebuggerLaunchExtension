@@ -3,6 +3,7 @@ Root folder holding the source code for the extension and the associated build t
 
 ### Notable files
 - [ReleaseNotes.md](ReleaseNotes.md): Release notes for the current release.
+- [PublishManifest.json](PublishManifest.json): Manifest defining Marketplace publish process.
 
 ## Directory Structure
 ### `Extension`
