@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json.schemastore.org/vsix-publish",
+  "categories": [
+    "build",
+    "coding"
+  ],
+  "identity": {
+    "internalName": "RemoteDebuggerLauncher"
+  },
+  "overview": "Marketplace\\overview.md",
+  "priceCategory": "free",
+  "publisher": "Michael Koster",
+  "private": true,
+  "qna": false,
+  "repo": "https://github.com/MichaelKoster70/RemoteDebuggerLaunchExtension",
+  "assetFiles": [
+    {
+      "pathOnDisk": "Extension\\RemoteDebuggerLauncher\\Resources\\Preview.png",
+      "targetPath": "images/logo.png"
+    }
+  ]
+}
