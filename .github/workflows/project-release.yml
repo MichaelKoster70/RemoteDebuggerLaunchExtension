@@ -61,6 +61,9 @@ jobs:
     needs: build
     if: ${{ github.ref_type == 'tag' }}
 
+    env:
+      MarketplaceOverviewFile: ${{ github.workspace }}/src/ReleaseNotes.md
+
     steps:
     - name: TODO
       run: echo TODO
