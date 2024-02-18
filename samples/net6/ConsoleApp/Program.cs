@@ -8,7 +8,7 @@
 using System.Collections;
 
 #pragma warning disable CA1303 // Do not pass literals as localized parameters
-Console.WriteLine("Hello from .NET\n");
+Console.WriteLine("Hello from .NET 6.0\n");
 
 var os = Environment.OSVersion;
 Console.WriteLine("Current OS Information:");
