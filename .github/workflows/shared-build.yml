@@ -54,7 +54,7 @@ jobs:
     # setup MSBUILD and VS
     - name: Add MSBUILD to PATH
       id: msbuild
-      uses: microsoft/setup-msbuild@v1.1
+      uses: microsoft/setup-msbuild@v2
       with:
         vs-version: '[17.2,17.9)'
         msbuild-architecture: x64
