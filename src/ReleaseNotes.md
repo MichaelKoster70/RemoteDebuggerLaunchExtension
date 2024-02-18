@@ -1,8 +1,8 @@
-## 0.11.1
-fixes Visual Studio 17.4 prerequisite
+## 0.12.0
+Add support for .NET 8
 
 ### Features
-- none
+- Added support for .NET 8
 
 ### Bug Fixes
-- fixed VS prerequisites
+- none

@@ -25,8 +25,8 @@ namespace RemoteDebuggerLauncher
          // initialize properties
          SetupModes = new List<SetupModeViewModel>()
          {
-            new SetupModeViewModel (SetupMode.Update, Resources.SetupModeUpdateDisplayName),
-            new SetupModeViewModel (SetupMode.Replace, Resources.SetupModeReplaceDisplayName),
+            new SetupModeViewModel (SetupMode.Update, Resources.SetupHttpsModeUpdateDisplayName),
+            new SetupModeViewModel (SetupMode.Replace, Resources.SetupHttpsModeReplaceDisplayName),
          };
       }
 

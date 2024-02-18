@@ -1,0 +1,10 @@
+{
+	"profiles": {
+		"UnoGuiApp.Windows (Unpackaged)": {
+			"commandName": "Project"
+		},
+		"UnoGuiApp.Windows (Package)": {
+			"commandName": "MsixPackage"
+		}
+	}
+}

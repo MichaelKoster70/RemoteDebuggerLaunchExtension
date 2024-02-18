@@ -1,0 +1,17 @@
+{
+  "profiles": {
+    "local": {
+      "commandName": "Project"
+    },
+    "SSH Remote": {
+      "commandName": "SshRemoteLaunch",
+      "environmentVariables": {
+        "DISPLAY": ":0.0"
+      },
+      "hostName": "raspberrypi",
+      "userName": "pi",
+      "privateKey": "%userprofile%\\\\.ssh\\\\id_rsa",
+      "hostPort": "22"
+    }
+  }
+}

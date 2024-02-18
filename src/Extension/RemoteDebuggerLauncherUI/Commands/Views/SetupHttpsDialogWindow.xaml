@@ -54,7 +54,7 @@
               Grid.Column="1"
               Margin="4"
               IsReadOnly="True"
-              ToolTip="{x:Static local:Resources.InstallationModeDescription}"
+              ToolTip="{x:Static local:Resources.SetupHttpsModeDescription}"
               ItemsSource="{Binding SetupModes}" 
               SelectedItem="{Binding SelectedSetupMode}">
       <ComboBox.ItemTemplate>

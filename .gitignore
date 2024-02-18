@@ -349,6 +349,8 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
-# Assitional folders to exclude
-/samples/WebAspSpa/ClientApp/.angular/
-/samples/WebAspSpa/.config
+# Additional folders to exclude
+/samples/net6/WebAspSpa/ClientApp/.angular/
+/samples/net6/WebAspSpa/.config
+/samples/net8/WebAspSpa/ClientApp/.angular/
+/samples/net8/WebAspSpa/.config

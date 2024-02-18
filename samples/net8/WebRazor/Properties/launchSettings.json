@@ -1,0 +1,40 @@
+{
+  "profiles": {
+    "WebRazorApp": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7026;http://localhost:5092"
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "SSH Remote": {
+      "commandName": "SshRemoteLaunch",
+      "launchBrowser": true,
+      "launchUrl": "https://192.168.1.106:7172",
+      "environmentVariables": {
+        "ASPNETCORE_URLS": "https://192.168.1.106:7172;http://192.168.1.106:5132"
+      },
+      "hostName": "192.168.1.106",
+      "userName": "pi",
+      "privateKey": "%userprofile%\\.ssh\\id_rsa",
+      "publishOnDeploy": true
+    }
+  },
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:48127",
+      "sslPort": 44372
+    }
+  }
+}
