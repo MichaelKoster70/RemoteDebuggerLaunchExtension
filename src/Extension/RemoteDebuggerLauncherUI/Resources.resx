@@ -531,11 +531,15 @@ Make sure you selected a 'SshRemoteLaunch' launch profile.</value>
   <data name="SetupHttpsDialogTitle" xml:space="preserve">
     <value>Setup HTTPS certificate</value>
   </data>
-  <data name="SetupModeReplaceDisplayName" xml:space="preserve">
-    <value>Add and Replace existing</value>
+  <data name="SetupHttpsModeDescription" xml:space="preserve">
+    <value>Update: Update the certificate if invalid or expired
+Replace: Replace the existing certificate with a new one.</value>
   </data>
-  <data name="SetupModeUpdateDisplayName" xml:space="preserve">
-    <value>Add or Update existing </value>
+  <data name="SetupHttpsModeReplaceDisplayName" xml:space="preserve">
+    <value>Replace</value>
+  </data>
+  <data name="SetupHttpsModeUpdateDisplayName" xml:space="preserve">
+    <value>Update</value>
   </data>
   <data name="SetupSshDialogFileBrowseContent" xml:space="preserve">
     <value>...</value>

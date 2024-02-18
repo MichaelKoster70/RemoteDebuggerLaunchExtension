@@ -1268,20 +1268,30 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add and Replace existing.
+        ///   Looks up a localized string similar to Update: Update the certificate if invalid or expired
+        ///Replace: Replace the existing certificate with a new one..
         /// </summary>
-        public static string SetupModeReplaceDisplayName {
+        public static string SetupHttpsModeDescription {
             get {
-                return ResourceManager.GetString("SetupModeReplaceDisplayName", resourceCulture);
+                return ResourceManager.GetString("SetupHttpsModeDescription", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add or Update existing .
+        ///   Looks up a localized string similar to Replace.
         /// </summary>
-        public static string SetupModeUpdateDisplayName {
+        public static string SetupHttpsModeReplaceDisplayName {
             get {
-                return ResourceManager.GetString("SetupModeUpdateDisplayName", resourceCulture);
+                return ResourceManager.GetString("SetupHttpsModeReplaceDisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update.
+        /// </summary>
+        public static string SetupHttpsModeUpdateDisplayName {
+            get {
+                return ResourceManager.GetString("SetupHttpsModeUpdateDisplayName", resourceCulture);
             }
         }
         
