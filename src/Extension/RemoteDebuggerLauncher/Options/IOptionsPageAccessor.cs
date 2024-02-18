@@ -39,6 +39,12 @@ namespace RemoteDebuggerLauncher
       bool QueryForceIPv4();
 
       /// <summary>
+      /// Queries the value which transport mode to use.
+      /// </summary>
+      /// <returns>A <see cref="TransferMode"/> holding the value, <c>TransferMode.SCP</c> if not configured.</returns>
+      TransferMode QueryTransferMode();
+
+      /// <summary>
       /// Queries the folder path where the .NET framework is installed on the remote device from the device option page.
       /// </summary>
       /// <returns>A <see langword="string"/> holding the path, <c>string.Empty</c> if not configured.</returns>

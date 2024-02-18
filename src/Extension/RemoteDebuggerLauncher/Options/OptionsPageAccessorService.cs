@@ -56,6 +56,12 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <inheritdoc />
+      public TransferMode QueryTransferMode()
+      {
+         return GetDevicePage().TransferMode;
+      }
+
+      /// <inheritdoc />
       public string QueryDotNetInstallFolderPath()
       {
          return GetDevicePage().DotNetInstallFolderPath;

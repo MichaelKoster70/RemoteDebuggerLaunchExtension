@@ -61,6 +61,9 @@ namespace RemoteDebuggerLauncher
          /// <summary>The name for the SSH category attribute.</summary>
          public const string PageCategorySsh = "SSH";
 
+         /// <summary>The name for the Transfer (SCP/rsync) category attribute.</summary>
+         public const string PageCategoryTransfer = "Transfer";
+
          /// <summary>The name for the Publish category attribute.</summary>
          public const string PageCategoryPublish = "Publish";
 
