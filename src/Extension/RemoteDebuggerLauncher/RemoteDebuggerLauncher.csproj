@@ -70,6 +70,7 @@
     <Compile Include="Commands\CleanOutputCommand.cs" />
     <Compile Include="Infrastructure\DirectoryHelper.cs" />
     <Compile Include="Infrastructure\FileHelper.cs" />
+    <Compile Include="Options\TransferMode.cs" />
     <Compile Include="SecureShell\ShellStreamExtensions.cs" />
     <Compile Include="Infrastructure\StringExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -178,9 +179,83 @@
       <Link>SigningKey.snk</Link>
     </None>
     <None Include="Commands\readme.md" />
+    <Content Include="3rdPartyLicense.txt">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="rsync\cygcrypto-50.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>rsync</VSIXSubPath>
+    </Content>
+    <Content Include="rsync\cyggcc_s-seh-1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>rsync</VSIXSubPath>
+    </Content>
+    <Content Include="rsync\cygiconv-2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>rsync</VSIXSubPath>
+    </Content>
+    <Content Include="rsync\cygintl-8.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>rsync</VSIXSubPath>
+    </Content>
+    <Content Include="rsync\cyglz4-1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>rsync</VSIXSubPath>
+    </Content>
+    <Content Include="rsync\cygpopt-0.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>rsync</VSIXSubPath>
+    </Content>
+    <Content Include="rsync\cygwin1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>rsync</VSIXSubPath>
+    </Content>
+    <Content Include="rsync\cygz.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>rsync</VSIXSubPath>
+    </Content>
+    <Content Include="rsync\cygzstd-1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>rsync</VSIXSubPath>
+    </Content>
+    <Content Include="rsync\rsync.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>rsync</VSIXSubPath>
+    </Content>
+    <Content Include="rsync\ssh-add.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>rsync</VSIXSubPath>
+    </Content>
+    <Content Include="rsync\ssh-agent.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>rsync</VSIXSubPath>
+    </Content>
+    <Content Include="rsync\ssh-keygen.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>rsync</VSIXSubPath>
+    </Content>
+    <Content Include="rsync\ssh.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>rsync</VSIXSubPath>
+    </Content>
     <Content Include="Images.imagemanifest">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <None Include="rsync\readme.md" />
     <None Include="Infrastructure\readme.md" />
     <None Include="Options\readme.md" />
     <None Include="ProjectSystem\readme.md" />
