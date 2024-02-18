@@ -1,0 +1,25 @@
+{
+  "profiles": {
+    "ConsoleApp": {
+      "commandName": "Project",
+      "commandLineArgs": "arg0 arg1",
+      "environmentVariables": {
+        "answer": "42"
+      },
+      "remoteDebugEnabled": false
+    },
+    "SSH Remote": {
+      "commandName": "SshRemoteLaunch",
+      "commandLineArgs": "arg0 arg1",
+      "environmentVariables": {
+        "answer": "42"
+      },
+      "hostName": "raspberrypi",
+      "hostPort": "22",
+      "userName": "pi",
+      "privateKey": "%userprofile%\\.ssh\\id_rsa",
+      "publishMode": "SelfContained",
+      "publishOnDeploy": true
+    }
+  }
+}
