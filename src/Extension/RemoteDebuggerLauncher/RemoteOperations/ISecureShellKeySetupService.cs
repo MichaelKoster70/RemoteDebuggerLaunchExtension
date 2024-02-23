@@ -7,7 +7,7 @@
 
 using System.Threading.Tasks;
 
-namespace RemoteDebuggerLauncher.SecureShell
+namespace RemoteDebuggerLauncher.RemoteOperations
 {
    /// <summary>
    /// Interface defining a service responsible for registering a SSH public key on a target device.

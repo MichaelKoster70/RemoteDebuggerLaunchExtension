@@ -7,7 +7,7 @@
 
 using System.Threading.Tasks;
 
-namespace RemoteDebuggerLauncher.SecureShell
+namespace RemoteDebuggerLauncher.RemoteOperations
 {
    /// <summary>
    /// Interface defining a SSH key pair creator service.

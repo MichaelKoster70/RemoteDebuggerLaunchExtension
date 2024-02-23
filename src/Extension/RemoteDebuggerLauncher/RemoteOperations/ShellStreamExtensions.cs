@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Renci.SshNet;
 
-namespace RemoteDebuggerLauncher.SecureShell
+namespace RemoteDebuggerLauncher.RemoteOperations
 {
    internal static class ShellStreamExtensions
    {
