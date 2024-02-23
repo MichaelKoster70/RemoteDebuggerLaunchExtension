@@ -16,7 +16,7 @@ using RemoteDebuggerLauncher.PowerShellHost;
 using RemoteDebuggerLauncher.Shared;
 using Constants = RemoteDebuggerLauncher.Shared.Constants;
 
-namespace RemoteDebuggerLauncher.SecureShell
+namespace RemoteDebuggerLauncher.RemoteOperations
 {
    /// <summary>
    /// Service for the high level operations performed on the remote device.

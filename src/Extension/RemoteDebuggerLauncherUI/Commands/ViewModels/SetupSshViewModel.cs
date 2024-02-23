@@ -16,7 +16,7 @@ using System.Windows.Controls;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.Win32;
-using RemoteDebuggerLauncher.SecureShell;
+using RemoteDebuggerLauncher.RemoteOperations;
 using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher

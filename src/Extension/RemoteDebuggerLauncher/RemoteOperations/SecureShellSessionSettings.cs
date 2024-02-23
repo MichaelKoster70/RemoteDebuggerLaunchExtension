@@ -8,7 +8,7 @@
 using System.Linq;
 using System.Net;
 
-namespace RemoteDebuggerLauncher.SecureShell
+namespace RemoteDebuggerLauncher.RemoteOperations
 {
    /// <summary>
    /// Container for Secure Shell settings.

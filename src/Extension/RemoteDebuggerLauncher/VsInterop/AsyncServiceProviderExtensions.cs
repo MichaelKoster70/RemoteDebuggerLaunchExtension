@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.Shell;
-using RemoteDebuggerLauncher.SecureShell;
+using RemoteDebuggerLauncher.RemoteOperations;
 using RemoteDebuggerLauncher.WebTools;
 
 namespace RemoteDebuggerLauncher

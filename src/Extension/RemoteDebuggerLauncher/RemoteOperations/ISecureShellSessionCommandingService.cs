@@ -8,7 +8,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace RemoteDebuggerLauncher.SecureShell
+namespace RemoteDebuggerLauncher.RemoteOperations
 {
    /// <summary>
    /// Interface for the Secure Shell (SSH) commanding session executing multiple commands in a single SSH session.

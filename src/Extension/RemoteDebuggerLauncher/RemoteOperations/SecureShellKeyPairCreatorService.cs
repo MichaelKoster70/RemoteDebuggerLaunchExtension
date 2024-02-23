@@ -12,7 +12,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Threading;
 
-namespace RemoteDebuggerLauncher.SecureShell
+namespace RemoteDebuggerLauncher.RemoteOperations
 {
    /// <summary>
    /// SSH key pair creator service.

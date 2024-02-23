@@ -71,7 +71,7 @@
     <Compile Include="Infrastructure\DirectoryHelper.cs" />
     <Compile Include="Infrastructure\FileHelper.cs" />
     <Compile Include="Options\TransferMode.cs" />
-    <Compile Include="SecureShell\ShellStreamExtensions.cs" />
+    <Compile Include="RemoteOperations\ShellStreamExtensions.cs" />
     <Compile Include="Infrastructure\StringExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ProjectSystem\Debugger\LaunchProfileExtensions.cs" />
@@ -87,10 +87,10 @@
     <Compile Include="ProjectSystem\Debugger\IBrowserDebugLaunchSettingsProvider.cs" />
     <Compile Include="ProjectSystem\UnconfiguredPackageServiceFactory.cs" />
     <Compile Include="ProjectSystem\Build\SecureShellDeployService.cs" />
-    <Compile Include="SecureShell\SecureShellKeySetupSettings.cs" />
-    <Compile Include="SecureShell\ISecureShellKeySetupService.cs" />
-    <Compile Include="SecureShell\SecureShellKeyPairCreatorService.cs" />
-    <Compile Include="SecureShell\SecureShellKeySetupService.cs" />
+    <Compile Include="RemoteOperations\SecureShellKeySetupSettings.cs" />
+    <Compile Include="RemoteOperations\ISecureShellKeySetupService.cs" />
+    <Compile Include="RemoteOperations\SecureShellKeyPairCreatorService.cs" />
+    <Compile Include="RemoteOperations\SecureShellKeySetupService.cs" />
     <Compile Include="Commands\SetupHttpsCommand.cs" />
     <Compile Include="VsInterop\OutputPaneTextWriterService.cs" />
     <Compile Include="ProjectSystem\Build\DotnetPublishService.cs" />
@@ -109,8 +109,8 @@
     <Compile Include="VsInterop\IWaitDialogFactoryService.cs" />
     <Compile Include="ProjectSystem\Debugger\ConfigurationAggregator.cs" />
     <Compile Include="ProjectSystem\Build\IDotnetPublishService.cs" />
-    <Compile Include="SecureShell\ISecureShellSessionService.cs" />
-    <Compile Include="SecureShell\ISecureShellRemoteOperationsService.cs" />
+    <Compile Include="RemoteOperations\ISecureShellSessionService.cs" />
+    <Compile Include="RemoteOperations\ISecureShellRemoteOperationsService.cs" />
     <Compile Include="VsInterop\StatusbarAnimation.cs" />
     <Compile Include="Infrastructure\PSHostCaptureOutputUserInterface.cs" />
     <Compile Include="Infrastructure\PSHostConsoleRawUserInterface.cs" />
@@ -119,15 +119,15 @@
     <Compile Include="VsInterop\StatusbarService.cs" />
     <Compile Include="Commands\InstallDebuggerCommand.cs" />
     <Compile Include="Commands\InstallDotnetCommand.cs" />
-    <Compile Include="SecureShell\SecureShellSessionCommandingService.cs" />
+    <Compile Include="RemoteOperations\SecureShellSessionCommandingService.cs" />
     <Compile Include="VsInterop\IOutputPaneWriterService.cs" />
     <Compile Include="Options\IOptionsPageAccessor.cs" />
-    <Compile Include="SecureShell\ISecureShellSessionCommandingService.cs" />
+    <Compile Include="RemoteOperations\ISecureShellSessionCommandingService.cs" />
     <Compile Include="VsInterop\OutputPaneWriterService.cs" />
     <Compile Include="Options\OptionsPageAccessorService.cs" />
     <Compile Include="Infrastructure\RemoteDebuggerLauncherException.cs" />
-    <Compile Include="SecureShell\SecureShellRemoteOperationsService.cs" />
-    <Compile Include="SecureShell\SecureShellSessionException.cs" />
+    <Compile Include="RemoteOperations\SecureShellRemoteOperationsService.cs" />
+    <Compile Include="RemoteOperations\SecureShellSessionException.cs" />
     <Compile Include="Infrastructure\UnixPath.cs" />
     <Compile Include="ProjectSystem\ConfiguredProjectExtensions.cs" />
     <Compile Include="Options\LocalOptionsPage.cs">
@@ -136,8 +136,8 @@
     <Compile Include="Options\DeviceOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SecureShell\SecureShellSessionSettings.cs" />
-    <Compile Include="SecureShell\SecureShellSessionService.cs" />
+    <Compile Include="RemoteOperations\SecureShellSessionSettings.cs" />
+    <Compile Include="RemoteOperations\SecureShellSessionService.cs" />
     <Compile Include="Infrastructure\ThrowIf.cs" />
     <Compile Include="PackageConstants.cs" />
     <Compile Include="ProjectSystem\Debugger\SecureShellRemoteLaunchRuleExporter.cs" />
@@ -261,7 +261,7 @@
     <None Include="ProjectSystem\readme.md" />
     <None Include="readme.md" />
     <None Include="Resources\readme.md" />
-    <None Include="SecureShell\readme.md" />
+    <None Include="RemoteOperations\readme.md" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>

@@ -14,7 +14,7 @@ using Microsoft.VisualStudio.Threading;
 using Renci.SshNet;
 using Renci.SshNet.Common;
 
-namespace RemoteDebuggerLauncher.SecureShell
+namespace RemoteDebuggerLauncher.RemoteOperations
 {
    /// <summary>
    /// Implements the service responsible for registering a SSH public key on a target device.
