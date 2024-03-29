@@ -18,9 +18,11 @@ namespace RemoteDebuggerLauncher.RemoteOperations
    /// <summary>
    /// Secure Shell (SSH) session service.
    /// Implements the <see cref="ISecureShellSessionService"/> interface.
+   /// Implements the <see cref="IRemoteBulkCopySessionService"/> interface.
    /// </summary>
    /// <seealso cref="ISecureShellSessionService"/>
-   internal class SecureShellSessionService : ISecureShellSessionService
+   /// <seealso cref="IRemoteBulkCopySessionService"/>"/>
+   internal class SecureShellSessionService : ISecureShellSessionService, IRemoteBulkCopySessionService
    {
       private readonly SecureShellSessionSettings settings;
 

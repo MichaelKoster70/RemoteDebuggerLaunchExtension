@@ -65,7 +65,7 @@ namespace RemoteDebuggerLauncher
          var statusbar = await GetStatusbarServiceAsync();
          var settings = SecureShellSessionSettings.Create(configurationAggregator);
          var session = new SecureShellSessionService(settings);
-         return new SecureShellRemoteOperationsService(configurationAggregator, session, outputPaneWriter, statusbar);
+         return new SecureShellRemoteOperationsService(configurationAggregator, session, session, outputPaneWriter, statusbar);
       }
 
       /// <inheritdoc />

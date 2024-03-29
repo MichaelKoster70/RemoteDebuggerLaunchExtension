@@ -27,6 +27,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
    {
       private readonly ConfigurationAggregator configurationAggregator;
       private readonly ISecureShellSessionService session;
+      private readonly IRemoteBulkCopySessionService bulkCopy;
       private readonly IOutputPaneWriterService outputPaneWriter;
       private readonly IStatusbarService statusbar;
 
@@ -34,13 +35,15 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// Initializes a new instance of the <see cref="SecureShellRemoteOperations" /> class.
       /// </summary>
       /// <param name="configurationAggregator">The configuration aggregator.</param>
-      /// <param name="session">The session to use.</param>
+      /// <param name="session">The SSH session to use.</param>
+      /// param name="bulkCopy">The bulk copy session service to use.</param>
       /// <param name="outputPaneWriter">The output pane writer service instance to use.</param>
       /// <param name="statusbar">Optional statusbar service to report progress.</param>
-      internal SecureShellRemoteOperationsService(ConfigurationAggregator configurationAggregator, ISecureShellSessionService session, IOutputPaneWriterService outputPaneWriter, IStatusbarService statusbar)
+      internal SecureShellRemoteOperationsService(ConfigurationAggregator configurationAggregator, ISecureShellSessionService session, IRemoteBulkCopySessionService bulkCopy, IOutputPaneWriterService outputPaneWriter, IStatusbarService statusbar)
       {
          this.configurationAggregator = configurationAggregator;
          this.session = session;
+         this.bulkCopy = bulkCopy;
          this.outputPaneWriter = outputPaneWriter;
          this.statusbar = statusbar;
       }
@@ -176,7 +179,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
                _ = await commandSession.ExecuteCommandAsync($"mkdir -p {debuggerInstallPath}");
 
                // upload the files
-               await session.UploadFolderRecursiveAsync(downloadCachePath, debuggerInstallPath);
+               await bulkCopy.UploadFolderRecursiveAsync(downloadCachePath, debuggerInstallPath);
 
                // adjust permissions
                _= await commandSession.ExecuteCommandAsync($"chmod +x {debuggerInstallPath}/{PackageConstants.Debugger.BinaryName}");
@@ -215,8 +218,8 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             }
          }
 
-         // copy files using SCP
-         await session.UploadFolderRecursiveAsync(sourcePath, targetPath, outputPaneWriter).ConfigureAwait(true);
+         // copy files using the bulk copy service (SCP or rsync)
+         await bulkCopy.UploadFolderRecursiveAsync(sourcePath, targetPath, outputPaneWriter);
 
          outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
          outputPaneWriter.WriteLine(Resources.RemoteCommandDeployRemoteFolderCompletedSuccess);

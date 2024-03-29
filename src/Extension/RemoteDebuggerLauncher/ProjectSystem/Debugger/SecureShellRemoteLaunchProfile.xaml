@@ -59,6 +59,14 @@
                    Subcategory="Credentials"
                    Default="%userprofile%\\.ssh\\id_rsa" />
 
+  <EnumProperty Name="transferMode"
+                DisplayName="Transfer Mode"
+                Description="Defines the transfer mode 'SCP' or 'Rsync'."
+                Subcategory="Deployment Options" >
+    <EnumValue Name="SCP" />
+    <EnumValue Name="Rsync" />
+  </EnumProperty>
+
   <StringProperty Name="EnvironmentVariables"
                   DisplayName="Environment variables"
                   Description="The environment variables to set prior to running the process."

@@ -71,6 +71,8 @@
     <Compile Include="Infrastructure\DirectoryHelper.cs" />
     <Compile Include="Infrastructure\FileHelper.cs" />
     <Compile Include="Options\TransferMode.cs" />
+    <Compile Include="RemoteOperations\IRemoteBulkCopySessionService.cs" />
+    <Compile Include="RemoteOperations\RsyncRemoteBulkCopySessionService.cs" />
     <Compile Include="RemoteOperations\ShellStreamExtensions.cs" />
     <Compile Include="Infrastructure\StringExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Immutable;
 using System.Net;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
+using Microsoft.VisualStudio.Shell;
 using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher
@@ -141,6 +142,16 @@ namespace RemoteDebuggerLauncher
          return optionsPageAccessor.QueryForceIPv4();
       }
 
+
+      /// <summary>
+      /// Queries the transport mode on how to transfer assets to the remote device.
+      /// </summary>
+      /// <returns></returns>
+      public TransferMode QueryTransferMode()
+      {
+         // use options value or default
+         return optionsPageAccessor.QueryTransferMode();
+      }
 
       /// <summary>
       /// Queries the private key to be used to establish a connection to the remote device.
@@ -394,17 +405,31 @@ namespace RemoteDebuggerLauncher
       /// <returns>The URI if valid; else <c>null</c></returns>
       public string QueryInspectUri() => GetOtherSetting<string>("inspectUri");
 
-      public T GetOtherSetting<T>(string propertyName, T defaultValue = default)
+      /// <summary>
+      ///  Gets the value of the specified property from the launch profile's other settings.
+      /// </summary>
+      /// <typeparam name="T">The parameter type.</typeparam>
+      /// <param name="propertyName">The name of the property to get.</param>
+      /// <param name="defaultValue">The default value to return, if the </param>
+      /// <returns>The property value, default if not found</returns>
+      private T GetOtherSetting<T>(string propertyName, T defaultValue = default)
       {
          return launchProfile.OtherSettings != null && launchProfile.OtherSettings.TryGetValue(propertyName, out object value) && value is T targetValue ? targetValue : defaultValue;
       }
 
-      public bool GetOtherSetting<T>(string propertyName, out T targetValue, Predicate<T> predicate)
+      private bool GetOtherSetting<T>(string propertyName, out T targetValue, Predicate<T> predicate)
       {
          return GetOtherSetting(propertyName, out targetValue) && predicate(targetValue);
       }
 
-      public bool GetOtherSetting<T>(string propertyName, out T targetValue)
+      /// <summary>
+      ///  Gets the value of the specified property from the launch profile's other settings.
+      /// </summary>
+      /// <typeparam name="T">The parameter type.</typeparam>
+      /// <param name="propertyName">The name of the property to get.</param>
+      /// <param name="targetValue">The value of the property.</param>
+      /// <returns><c>true</c> if available in the launch profile, <c>false</c> otherwise.</returns>
+      private bool GetOtherSetting<T>(string propertyName, out T targetValue)
       {
          if (launchProfile.OtherSettings != null && launchProfile.OtherSettings.TryGetValue(propertyName, out object value) && value is T target)
          {
