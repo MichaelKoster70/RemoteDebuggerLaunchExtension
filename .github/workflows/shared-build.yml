@@ -56,7 +56,7 @@ jobs:
       id: msbuild
       uses: microsoft/setup-msbuild@v2
       with:
-        vs-version: '[17.2,17.10)'
+        vs-version: '[17.2,17.11)'
         msbuild-architecture: x64
 
     # Build Solution: determine and apply the version for the assemblies and VSIX package
