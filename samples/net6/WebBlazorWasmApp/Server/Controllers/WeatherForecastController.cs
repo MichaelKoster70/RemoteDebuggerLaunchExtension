@@ -19,11 +19,11 @@ namespace WebBlazorWasmApp.Server.Controllers
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
 
-      private readonly ILogger<WeatherForecastController> _logger;
+      private readonly ILogger<WeatherForecastController> logger;
 
       public WeatherForecastController(ILogger<WeatherForecastController> logger)
       {
-         _logger = logger;
+         this.logger = logger;
       }
 
       [HttpGet]
