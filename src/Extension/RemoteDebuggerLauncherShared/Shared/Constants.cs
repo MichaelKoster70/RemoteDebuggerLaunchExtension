@@ -40,11 +40,11 @@ namespace RemoteDebuggerLauncher.Shared
       }
       public static class RegexExpressions
       {
-         /// <summary>Regex to validate a linux username.</summary>
+         /// <summary>Regex to validate a Linux username.</summary>
          public const string LinuxUsernameAlternate = "^[a-z][-a-z0-9_]*$?$";
          public const string LinuxUsername = "^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}$)$";
 
-         /// <summary>Regex to validate a linux password.</summary>
+         /// <summary>Regex to validate a Linux password.</summary>
          public const string LinuxPassword = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8,20}$";
       }
    }

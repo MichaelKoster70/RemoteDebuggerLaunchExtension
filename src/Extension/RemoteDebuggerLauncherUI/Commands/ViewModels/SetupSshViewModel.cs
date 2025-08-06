@@ -281,7 +281,7 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// Removes all errors of the specified property.Raises the ErrorsChanged event if the Errors collection changes. 
       /// </summary>
-      /// <param name="propertyName">The property name to creal the errors</param>
+      /// <param name="propertyName">The property name to clear the errors</param>
       /// <returns></returns>
       private bool ClearErrors(string propertyName)
       {

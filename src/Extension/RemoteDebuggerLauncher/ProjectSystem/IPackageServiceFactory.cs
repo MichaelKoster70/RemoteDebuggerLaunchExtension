@@ -26,7 +26,7 @@ namespace RemoteDebuggerLauncher
       ConfigurationAggregator Configuration { get; }
 
       /// <summary>
-      /// Gets the configured VS ouput pane writer.
+      /// Gets the configured VS output pane writer.
       /// </summary>
       IOutputPaneWriterService OutputPane { get; }
 
