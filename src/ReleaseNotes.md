@@ -1,8 +1,8 @@
-## 0.12.0
-Add support for .NET 8
+## 0.12.1
+Bugfix release
 
 ### Features
-- Added support for .NET 8
+- None
 
 ### Bug Fixes
-- none
+- Fixed a bug failing to load SSH private keys in some cases.
