@@ -122,7 +122,7 @@ namespace RemoteDebuggerLauncher.WebTools
       /// <inheritdoc />
       public bool IsSelfSignedRootPresent()
       {
-         using (var cert = LoadeSelfSignedRootCertificate())
+         using (var cert = LoadSelfSignedRootCertificate())
          {
             return cert != null;
          }
@@ -131,7 +131,7 @@ namespace RemoteDebuggerLauncher.WebTools
       private static X509Certificate2 LoadOrCreateRootCertificate()
       {
          // try to load an existing cert
-         var certificate = LoadeSelfSignedRootCertificate();
+         var certificate = LoadSelfSignedRootCertificate();
 
          if (certificate == null)
          {
@@ -149,7 +149,7 @@ namespace RemoteDebuggerLauncher.WebTools
          return certificate;
       }
 
-      private static X509Certificate2 LoadeSelfSignedRootCertificate()
+      private static X509Certificate2 LoadSelfSignedRootCertificate()
       {
          X509Certificate2 root = null;
 
