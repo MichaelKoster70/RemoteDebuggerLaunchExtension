@@ -22,7 +22,7 @@ namespace RemoteDebuggerLauncher.WebTools
       // RSA key size
       private const int RsaKeySize = 4096;
 
-      // the current cert version used by ASP.NET 'dontet dev-certs
+      // the current cert version used by ASP.NET 'dotnet dev-certs
       private const int CurrentCertificateVersion = 2;
 
       // Localhost DNS and CN
@@ -43,7 +43,7 @@ namespace RemoteDebuggerLauncher.WebTools
       private const string ServerAuthenticationEnhancedKeyUsageOidFriendlyName = "Server Authentication";
 
       // Hresult when the user cancels trusting a certificate
-      private const int UserCancelledErrorCode = unchecked((int)0x800704C7);
+      private const int UserCanceledErrorCode = unchecked((int)0x800704C7);
 
       [ImportingConstructor]
       public CertificateService()
@@ -77,7 +77,7 @@ namespace RemoteDebuggerLauncher.WebTools
                csr.CertificateExtensions.Add(new X509Extension(new AsnEncodedData(
                   new Oid(AspNetHttpsOid, AspNetHttpsOidFriendlyName), new byte[] { CurrentCertificateVersion }), false));
 
-               // Create the Cert serial numbert
+               // Create the Cert serial number
                byte[] serialNumber = new byte[9];
                using (RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create())
                {
@@ -122,7 +122,7 @@ namespace RemoteDebuggerLauncher.WebTools
       /// <inheritdoc />
       public bool IsSelfSignedRootPresent()
       {
-         using (var cert = LoadeSelfSignedRootCertificate())
+         using (var cert = LoadSelfSignedRootCertificate())
          {
             return cert != null;
          }
@@ -131,7 +131,7 @@ namespace RemoteDebuggerLauncher.WebTools
       private static X509Certificate2 LoadOrCreateRootCertificate()
       {
          // try to load an existing cert
-         var certificate = LoadeSelfSignedRootCertificate();
+         var certificate = LoadSelfSignedRootCertificate();
 
          if (certificate == null)
          {
@@ -149,7 +149,7 @@ namespace RemoteDebuggerLauncher.WebTools
          return certificate;
       }
 
-      private static X509Certificate2 LoadeSelfSignedRootCertificate()
+      private static X509Certificate2 LoadSelfSignedRootCertificate()
       {
          X509Certificate2 root = null;
 
@@ -189,7 +189,7 @@ namespace RemoteDebuggerLauncher.WebTools
          }
          catch(CryptographicException)
          {
-            // trown when the find type is invalid -> treat this as cert not present.
+            // thrown when the find type is invalid -> treat this as cert not present.
             root = null;
          }
 
@@ -198,7 +198,7 @@ namespace RemoteDebuggerLauncher.WebTools
 
       private static X509Certificate2 CreateSelfSignedRootCertificate()
       {
-         // Create a RSA keypair
+         // Create a RSA key pair
          using (var keyPair = RSA.Create(RsaKeySize))
          {
             // create a CSR
@@ -280,7 +280,7 @@ namespace RemoteDebuggerLauncher.WebTools
                   store.Add(publicCertificate);
 #pragma warning restore CA5380
                }
-               catch (CryptographicException e) when (e.HResult == UserCancelledErrorCode)
+               catch (CryptographicException e) when (e.HResult == UserCanceledErrorCode)
                {
                   throw new RemoteDebuggerLauncherException(Resources.CertificateServicesTrustCancelledByUser, e);
                }

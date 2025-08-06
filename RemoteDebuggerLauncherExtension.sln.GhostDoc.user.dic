@@ -8,6 +8,7 @@ github
 https
 joinable
 json
+Koster
 launchjson
 launchsettings
 localappdata
@@ -16,14 +17,19 @@ mkdir
 msedge
 omnisharp
 pkgdef
+plugin
 runspace
 staticwebassets
+Statusbar
 stdin
 uname
 unconfigured
+Username
 userprofile
 vscode
 vsct
 vsdbg
 vsixmanifest
+vsui
+webtools
 wwwroot

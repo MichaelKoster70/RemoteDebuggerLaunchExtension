@@ -1213,24 +1213,7 @@ dotnet_diagnostic.ISB001.severity = error
 dotnet_diagnostic.ISB002.severity = warning
 dotnet_diagnostic.MsgPack001.severity = warning
 dotnet_diagnostic.MsgPack002.severity = warning
-dotnet_style_operator_placement_when_wrapping = beginning_of_line
-tab_width = 3
-indent_size = 3
-end_of_line = crlf
-dotnet_style_coalesce_expression = true:suggestion
-dotnet_style_null_propagation = true:suggestion
-dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
-dotnet_style_prefer_auto_properties = true:silent
-dotnet_style_object_initializer = true:suggestion
-dotnet_style_collection_initializer = true:suggestion
-dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
-dotnet_style_prefer_conditional_expression_over_assignment = true:silent
-dotnet_style_prefer_conditional_expression_over_return = true:silent
-dotnet_style_explicit_tuple_names = true:suggestion
-dotnet_style_prefer_inferred_tuple_names = true:suggestion
-dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
-dotnet_style_prefer_compound_assignment = true:suggestion
-dotnet_style_prefer_simplified_interpolation = true:suggestion
-dotnet_style_namespace_match_folder = true:suggestion
-indent_style = space
 
+# Disable the VS Spell Checker for now until the problem with the exclusion dictionary is fixed
+spelling_checkable_types = none
+spelling_error_severity = none
