@@ -26,7 +26,7 @@ on:
           - disabled_inactivity
           - disabled_manually
       delete_run_by_conclusion_pattern:
-        description: 'Remove workflow by conclusion: action_required, cancelled, failure, skipped, success'
+        description: 'Remove workflow by conclusion: action_required, canceled, failure, skipped, success'
         required: true
         default: "All"
         type: choice
