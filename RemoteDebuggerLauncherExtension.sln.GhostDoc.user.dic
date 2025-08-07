@@ -1,5 +1,6 @@
 aspnetcore
 Blazor
+bugfix
 chmod
 coreclr
 Ctrl
@@ -14,10 +15,14 @@ launchsettings
 localappdata
 Metadata
 mkdir
+msbuild
 msedge
+nuget
 omnisharp
 pkgdef
 plugin
+powershell
+pwsh
 runspace
 staticwebassets
 Statusbar
@@ -29,6 +34,7 @@ userprofile
 vscode
 vsct
 vsdbg
+vsix
 vsixmanifest
 vsui
 webtools

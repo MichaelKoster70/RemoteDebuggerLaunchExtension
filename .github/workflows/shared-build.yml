@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       store-artifacts:
-        description: 'Flag if artifacts sould be stored'
+        description: 'Flag if artifacts should be stored'
         type: boolean
         required: true
         default: false
@@ -47,7 +47,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -56,7 +56,7 @@ jobs:
       id: msbuild
       uses: microsoft/setup-msbuild@v2
       with:
-        vs-version: '[17.2,17.12)'
+        vs-version: '[17.2,17.15)'
         msbuild-architecture: x64
 
     # Build Solution: determine and apply the version for the assemblies and VSIX package
@@ -119,14 +119,14 @@ jobs:
       shell: pwsh
 
     - name: 'Store Artifacts: VSIX'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: ${{ inputs.store-artifacts }}
       with:
         name: vsix
         path: ${{ env.ExtensionOutputPath }}\*.vsix
 
     - name: 'Store Artifacts: Binaries'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: ${{ inputs.store-artifacts }}
       with:
         name: binaries
