@@ -345,7 +345,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// <inheritdoc />
       public async Task SetupAspNetDeveloperCertificateAsync(SetupMode mode, byte[] certificate, string password)
       {
-         // Path for the 'donet' executable
+         // Path for the 'dotnet' executable
          string dotnetExecutable = UnixPath.Combine(configurationAggregator.QueryDotNetInstallFolderPath(), "dotnet");
 
          //Check if ASP.NET runtime is installed

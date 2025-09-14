@@ -25,7 +25,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       string DefaultPublicKeyPath { get; }
 
       /// <summary>
-      /// Create a new RSA key pair, if there is no key pair availble with the default name.
+      /// Create a new RSA key pair, if there is no key pair available with the default name.
       /// </summary>
       /// <returns><c>true</c> if successful or the file exists; else <c>false</c></returns>
       Task<bool> CreateAsync();

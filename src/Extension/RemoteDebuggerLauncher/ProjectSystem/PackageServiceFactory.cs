@@ -86,7 +86,7 @@ namespace RemoteDebuggerLauncher
       /// </summary>
       /// <param name="configurationAggregator">The configuration object.</param>
       /// <param name="outputPaneWriter">The VS output pane writer.</param>
-      /// <param name="configuredProject">The configired project</param>
+      /// <param name="configuredProject">The configured project</param>
       /// <returns></returns>
       protected bool Configure(ConfigurationAggregator configurationAggregator, IOutputPaneWriterService outputPaneWriter, ConfiguredProject configuredProject)
       {

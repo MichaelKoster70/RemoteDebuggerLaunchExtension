@@ -15,7 +15,7 @@ namespace RemoteDebuggerLauncher
    internal static class PackageConstants
    {
       /// <summary>
-      /// Common Project System relalated constants
+      /// Common Project System related constants
       /// </summary>
       public static class CPS
       {

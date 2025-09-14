@@ -76,7 +76,7 @@ namespace RemoteDebuggerLauncher
                case PublishMode.FrameworkDependant:
                   arguments += " --no-build";
 
-                  if (await SupportsFrameworkDependantAsync())
+                  if (await SupportsFrameworkDependentAsync())
                   {
                      arguments += " --no-self-contained";
                   }
@@ -176,14 +176,14 @@ namespace RemoteDebuggerLauncher
          // Append the deploy/publish base 
          var publishPath = PathHelper.Combine(baseOutputPath, PackageConstants.Publish.OutDir);
 
-         // append the $(Configuration)/$(TargetFramework) dirs
+         // append the $(Configuration)/$(TargetFramework) directories
          publishPath = PathHelper.Combine(publishPath, configuration);
          publishPath = PathHelper.Combine(publishPath, targetFramework);
 
          return publishPath;
       }
 
-      private async Task<bool> SupportsFrameworkDependantAsync()
+      private async Task<bool> SupportsFrameworkDependentAsync()
       {
          // Web Assembly Publish operations require self contained 
          var isWasm = configuredProject.Services.Capabilities.AppliesTo("WebAssembly");
@@ -196,7 +196,7 @@ namespace RemoteDebuggerLauncher
             isWasm |= project != null && project.Services.Capabilities.AppliesTo("WebAssembly");
          }
 
-         // every other project type is fine with framework dependant
+         // every other project type is fine with framework dependent
          return !isWasm;
       }
    }

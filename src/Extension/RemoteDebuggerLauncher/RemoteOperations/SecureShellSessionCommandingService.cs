@@ -44,9 +44,9 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
                using (var command = client.RunCommand(commandText))
                {
-                  if (command.ExitStatus != 0)
+                  if (command.ExitStatus.HasValue && command.ExitStatus.Value != 0)
                   {
-                     throw new SecureShellSessionException(command.Error, command.ExitStatus);
+                     throw new SecureShellSessionException(command.Error, command.ExitStatus.Value);
                   }
 
                   return command.Result;
@@ -76,7 +76,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
                using (var command = client.RunCommand(commandText))
                {
-                  return (command.ExitStatus, command.Result, command.Error);
+                  return (command.ExitStatus ?? 0, command.Result, command.Error);
                }
             }
             catch (SshException e)

@@ -165,7 +165,7 @@ namespace RemoteDebuggerLauncher
          }
          else
          {
-            // in all otger cases, debug as framwork dependant
+            // in all other cases, debug as framework dependent
             launchSettings.Options = await AdapterLaunchConfiguration.CreateFrameworkDependantAsync(factory.Configuration, configuredProject, factory.OutputPane, remoteOperations);
          }
 
