@@ -13,8 +13,6 @@ using Microsoft.VisualStudio.Shell;
 
 namespace RemoteDebuggerLauncher
 {
-
-#pragma warning disable CA1812 // By design, Visual Studio will instanciate the class for us
    /// <summary>
    /// Implements the Device Options page shown in the VS options tree under "Remote Debugger Launcher"
    /// </summary>
@@ -62,8 +60,8 @@ namespace RemoteDebuggerLauncher
       [Category(PackageConstants.Options.PageCategoryTransfer)]
       [DisplayName("Transfer Mode")]
       [Description("The means to copy assets to the target device.")]
-      [DefaultValue(TransferMode.SCP)]
-      public TransferMode TransferMode { get; set; } = TransferMode.SCP;
+      [DefaultValue(TransferMode.SecureCopyFull)]
+      public TransferMode TransferMode { get; set; } = TransferMode.SecureCopyFull;
 
       [Category(PackageConstants.Options.PageCategoryFolders)]
       [DisplayName(".NET install folder path")]
@@ -88,6 +86,7 @@ namespace RemoteDebuggerLauncher
          ResetInvalidPortNumberToDefault();
          base.OnActivate(e);
       }
+
       protected override void OnApply(PageApplyEventArgs e)
       {
          ResetInvalidPortNumberToDefault();
@@ -103,5 +102,4 @@ namespace RemoteDebuggerLauncher
          }
       }
    }
-#pragma warning restore CA1812
 }
