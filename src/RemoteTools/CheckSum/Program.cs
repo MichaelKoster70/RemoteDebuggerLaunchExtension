@@ -7,13 +7,22 @@
 
 using System;
 
-namespace CheckSum
+namespace RemoteDebuggerLauncher.CheckSum
 {
    internal static class Program
    {
-      static void Main(string[] args)
+      static int Main(string[] args)
       {
-         Console.WriteLine("Hello, World!");
+         // verify arguments, we expect exactly one argument: the path to scan
+         if (args == null || args.Length == 0)
+         {
+            return 1;
+         }
+
+         var scanner = new FileScannerConsoleOutput();
+         scanner.ScanAndPrintJson(args[0]);
+
+         return 0;
       }
    }
 }
