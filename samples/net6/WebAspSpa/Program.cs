@@ -7,9 +7,9 @@
 
 using WebAspSpa.Infrastructure;
 
-namespace AspNetSpa
+namespace WebAspSpa
 {
-   public static class Program
+   internal static class Program
    {
       public static void Main(string[] args)
       {
@@ -32,7 +32,6 @@ namespace AspNetSpa
             _ = app.UseHsts();
          }
 
-         //app.UseHttpsRedirection();
          _ = app.UseStaticFiles();
          _ = app.UseRouting();
 

@@ -5,7 +5,7 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-namespace WebApplication1.Models
+namespace WebAspMvc.Models
 {
    public class ErrorViewModel
    {

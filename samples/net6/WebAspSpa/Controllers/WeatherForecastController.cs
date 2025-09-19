@@ -7,7 +7,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace AspNetSpa.Controllers
+namespace WebAspSpa.Controllers
 {
    [ApiController]
    [Route("[controller]")]
