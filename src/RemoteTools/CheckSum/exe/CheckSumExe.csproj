@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <AssemblyName>checksum</AssemblyName>
+
+    <!-- Disable AOT as we cannot build on a linux target, use R2R -->
+    <PublishAot>false</PublishAot>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <RuntimeIdentifiers>linux-x64;linux-arm64;linux-arm</RuntimeIdentifiers>
+    <PublishTrimmed>true</PublishTrimmed>
+    <PublishSingleFile>true</PublishSingleFile>
+
+    <!-- Suppress warnings about Newtonsoft.Json -->
+    <NoWarn>IL2026;IL2104</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\DirectoryScanner.cs" Link="DirectoryScanner.cs" />
+    <Compile Include="..\ScanResult.cs" Link="ScanResult.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+</Project>

@@ -10,7 +10,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-#if NET8_0_OR_GREATER
 [assembly: SuppressMessage("Style", "IDE0028:Simplify collection initialization", Justification = "Not suported in .NET4.8/C# 7.3", Scope = "member", Target = "~M:RemoteDebuggerLauncher.CheckSum.ScanResult.#ctor")]
 [assembly: SuppressMessage("Style", "IDE0057:Use range operator", Justification = "Not suported in .NET4.8/C# 7.3", Scope = "member", Target = "~M:RemoteDebuggerLauncher.CheckSum.DirectoryScanner.GetRelativePath(System.String)~System.String")]
 [assembly: SuppressMessage("Style", "IDE0063:Use simple 'using' statement", Justification = "Not suported in .NET4.8/C# 7.3", Scope = "member", Target = "~M:RemoteDebuggerLauncher.CheckSum.DirectoryScanner.ComputeHashForFile(System.String,RemoteDebuggerLauncher.CheckSum.ScanResult)")]
@@ -18,5 +17,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Maintainability", "CA1510:Use ArgumentNullException throw helper", Justification = "Not suported in .NET4.8/C# 7.3", Scope = "member", Target = "~M:RemoteDebuggerLauncher.CheckSum.ScanResult.AddHash(System.String,System.String)")]
 [assembly: SuppressMessage("Maintainability", "CA1515:Consider making public types internal", Justification = "Unused in .NET8", Scope = "type", Target = "~T:RemoteDebuggerLauncher.CheckSum.DirectoryScanner")]
 [assembly: SuppressMessage("Maintainability", "CA1515:Consider making public types internal", Justification = "Unused in .NET8", Scope = "type", Target = "~T:RemoteDebuggerLauncher.CheckSum.ScanResult")]
-#endif
 [assembly: SuppressMessage("Style", "IDE0130:Namespace does not match folder structure", Justification = "Intentionally", Scope = "namespace", Target = "~N:RemoteDebuggerLauncher.CheckSum")]

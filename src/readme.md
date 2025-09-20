@@ -10,3 +10,6 @@ Root folder holding the source code for the extension and the associated build t
 
 ### `Tools`
 - source code for the tools
+
+### `RemoteTools`
+- source code for the remote tools

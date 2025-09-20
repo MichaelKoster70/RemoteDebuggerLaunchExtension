@@ -178,6 +178,21 @@
   </ItemGroup>
   <ItemGroup>
     <CompilerVisibleProperty Include="RootNamespace" />
+    <Content Include="..\..\RemoteTools\bin\linux-arm64\checksum">
+      <Link>RemoteTools\linux-arm64\checksum</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\..\RemoteTools\bin\linux-arm\checksum">
+      <Link>RemoteTools\linux-arm\checksum</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\..\RemoteTools\bin\linux-x64\checksum">
+      <Link>RemoteTools\linux-x64\checksum</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="..\..\SigningKey.snk">
       <Link>SigningKey.snk</Link>
     </None>
@@ -258,6 +273,7 @@
     <Content Include="Images.imagemanifest">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <None Include="RemoteTools\readme.md" />
     <None Include="rsync\readme.md" />
     <None Include="Infrastructure\readme.md" />
     <None Include="Options\readme.md" />
@@ -325,6 +341,10 @@
     <PackageReference Include="SSH.NET" Version="2025.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\RemoteTools\CheckSum\lib\CheckSumLib.csproj">
+      <Project>{d7b5f946-ef19-01bf-94c7-a043862b55cb}</Project>
+      <Name>CheckSumLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Tools\SourceGenerators\SourceGenerators.csproj" OutputItemType="Analyzer" PrivateAssets="all" ReferenceOutputAssembly="false">
       <Project>{0F40D13C-CF48-4F35-B998-39931C2371F0}</Project>
       <Name>SourceGenerators</Name>
