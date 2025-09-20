@@ -19,8 +19,8 @@ namespace RemoteDebuggerLauncher.CheckSum
             return 1;
          }
 
-         var scanner = new FileScannerConsoleOutput();
-         scanner.ScanAndPrintJson(args[0]);
+         var scanner = new DirectoryScannerConsoleOutput(args[0]);
+         scanner.ComputeHashesAndPrintAsJson();
 
          return 0;
       }

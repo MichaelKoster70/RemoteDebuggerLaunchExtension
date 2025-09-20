@@ -14,38 +14,37 @@ using System.Text;
 namespace RemoteDebuggerLauncher.CheckSum
 {
    /// <summary>
-   /// Scans a folder tree and computes SHA256 hashes for each file.
-   /// This class is inheritable to allow customization of hashing or output formatting.
+   /// Scans a directory tree and computes SHA256 hashes for each file.
    /// </summary>
-   internal class FileScanner
+   public class DirectoryScanner
    {
-      private string startFolder;
+      private readonly string rootFolder;
 
-      internal FileScanner()
+      public DirectoryScanner(string rootFolder)
       {
+         if (string.IsNullOrWhiteSpace(rootFolder))
+         {
+            throw new ArgumentException("startFolder must not be null or empty.", nameof(rootFolder));
+         }
+
+         if (!Directory.Exists(rootFolder))
+         {
+            throw new DirectoryNotFoundException($"Start folder does not exist: {rootFolder}");
+         }
+
+         this.rootFolder = rootFolder;
       }
 
       /// <summary>
-      /// Traverse the filesystem starting at the instance's <see cref="startFolder"/> and compute SHA256 for each file.
+      /// Traverse the filesystem starting at the instance's <see cref="rootFolder"/> and compute SHA256 for each file.
       /// The returned <see cref="ScanResult"/> contains a dictionary that maps the full file path to the hex-encoded SHA256 hash
       /// and a list of files that could not be accessed/read during the scan.
       /// Files or folders that cannot be accessed are skipped.
       /// </summary>
       /// <returns>A <see cref="ScanResult"/> with file path -> SHA256 hex string and inaccessible files list.</returns>
-      protected virtual ScanResult Scan(string startFolder)
+      /// <remarks>Assumes the caller guarantees that <paramref name="fullPath"/> begins with <see cref="rootFolder"/>.</remarks>
+      protected ScanResult ComputeHashes()
       {
-         if (string.IsNullOrWhiteSpace(startFolder))
-         {
-            throw new ArgumentException("startFolder must not be null or empty.", nameof(startFolder));
-         }
-
-         if (!Directory.Exists(startFolder))
-         {
-            throw new DirectoryNotFoundException($"Start folder does not exist: {startFolder}");
-         }
-
-         this.startFolder = startFolder;
-
          // Create the ScanResult that will be populated during the scan
          var scanResult = new ScanResult();
 
@@ -54,7 +53,7 @@ namespace RemoteDebuggerLauncher.CheckSum
          // we fall back to a robust manual traversal that records inaccessible entries.
          try
          {
-            foreach (var file in Directory.EnumerateFiles(startFolder, "*", SearchOption.AllDirectories))
+            foreach (var file in Directory.EnumerateFiles(rootFolder, "*", SearchOption.AllDirectories))
             {
                ComputeHashForFile(file, scanResult);
             }
@@ -68,7 +67,7 @@ namespace RemoteDebuggerLauncher.CheckSum
 
          // Robust stack-based traversal
          var dirs = new Stack<string>();
-         dirs.Push(startFolder);
+         dirs.Push(rootFolder);
 
          while (dirs.Count > 0)
          {
@@ -162,10 +161,12 @@ namespace RemoteDebuggerLauncher.CheckSum
       }
 
       /// <summary>
-      /// Returns path of file relative to the provided startFolder. Assumes the caller guarantees
-      /// that `fullPath` begins with `startFolder`.
+      /// Returns path of file relative to the provided <paramref name="rootFolder"/>. 
       /// </summary>
-      public string GetRelativePath(string fullPath)
+      /// <param name="fullPath">The full path to convert.</param>
+      /// <returns>The relative path.</returns>
+      /// <remarks>Assumes the caller guarantees that <paramref name="fullPath"/> begins with <see cref="rootFolder"/>.</remarks>
+      protected string GetRelativePath(string fullPath)
       {
          if (fullPath == null)
          {
@@ -175,14 +176,22 @@ namespace RemoteDebuggerLauncher.CheckSum
          var comparison = Path.DirectorySeparatorChar == '\\' ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
          // Caller guarantees prefix; do a fast substring and trim any leading separators.
-         if (fullPath.StartsWith(startFolder, comparison))
+         string relative;
+         if (fullPath.StartsWith(rootFolder, comparison))
          {
-            var rel = fullPath.Substring(startFolder.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-            return rel;
+            relative = fullPath.Substring(rootFolder.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+         }
+         else
+         {
+            // Safety fallback
+            relative = fullPath;
          }
 
-         // Safety fallback
-         return fullPath;
+         // Normalize to Unix-style separators ('/').
+         // Replace both primary and alternate separators with forward slash.
+         relative = relative.Replace(Path.DirectorySeparatorChar, '/').Replace(Path.AltDirectorySeparatorChar, '/');
+
+         return relative;
       }
    }
 }

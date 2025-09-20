@@ -11,22 +11,10 @@ using System.Collections.Generic;
 namespace RemoteDebuggerLauncher.CheckSum
 {
    /// <summary>
-   /// Result of a scan operation.
+   /// Result of a <see cref="DirectoryScanner"/> operation.
    /// </summary>
-   internal sealed class ScanResult
+   public sealed class ScanResult
    {
-      /// <summary>
-      /// Mapping from full file path to SHA256 hex string.
-      /// </summary>
-      // Make settable and add a public parameterless constructor so JSON serializers
-      // (System.Text.Json, Newtonsoft.Json) can create and populate this type.
-      public IDictionary<string, string> Hashes { get; set; }
-
-      /// <summary>
-      /// List of file paths that could not be accessed/read during the scan.
-      /// </summary>
-      public IList<string> InaccessibleFiles { get; set; }
-
       /// <summary>
       /// Parameterless constructor required by some JSON serializers.
       /// Initializes properties with empty collections to preserve original invariants.
@@ -37,11 +25,15 @@ namespace RemoteDebuggerLauncher.CheckSum
          InaccessibleFiles = new List<string>();
       }
 
-      internal ScanResult(IDictionary<string, string> hashes, IList<string> inaccessibleFiles)
-      {
-         Hashes = hashes ?? throw new ArgumentNullException(nameof(hashes));
-         InaccessibleFiles = inaccessibleFiles ?? throw new ArgumentNullException(nameof(inaccessibleFiles));
-      }
+      /// <summary>
+      /// Mapping from full file path to SHA256 hex string.
+      /// </summary>
+      public IDictionary<string, string> Hashes { get; }
+
+      /// <summary>
+      /// List of file paths that could not be accessed/read during the scan.
+      /// </summary>
+      public IList<string> InaccessibleFiles { get; }
 
       /// <summary>
       /// Adds or updates a hash entry for a file path.
