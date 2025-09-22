@@ -543,6 +543,15 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FAILED: rsync is not installed. Please install to rsync bulk copy.
+        /// </summary>
+        public static string RemoteCommandCommonFailedRsyncNotInstalled {
+            get {
+                return ResourceManager.GetString("RemoteCommandCommonFailedRsyncNotInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Processing profile &apos;{0}&apos;.
         /// </summary>
         public static string RemoteCommandCommonProfile {

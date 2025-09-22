@@ -284,6 +284,9 @@ Make sure you selected a 'SshRemoteLaunch' launch profile.</value>
   <data name="RemoteCommandCommonFailedCurlNotInstalled" xml:space="preserve">
     <value>FAILED: cURL is not installed. please install to use the command</value>
   </data>
+  <data name="RemoteCommandCommonFailedRsyncNotInstalled" xml:space="preserve">
+    <value>FAILED: rsync is not installed. Please install to rsync bulk copy</value>
+  </data>
   <data name="RemoteCommandCommonProfile" xml:space="preserve">
     <value>Processing profile '{0}'</value>
   </data>

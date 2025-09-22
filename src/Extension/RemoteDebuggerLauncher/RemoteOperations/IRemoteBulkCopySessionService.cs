@@ -12,7 +12,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
    /// <summary>
    /// Interface defining the bulk Remote Copy session service responsible to copy files and folders to the remote host.
    /// </summary>
-   internal interface IRemoteBulkCopySessionService
+   internal interface IRemoteBulkCopySessionService : ISecureShellSessionBaseService
    {
       /// <summary>
       /// Uploads the specified folder recursively from the local PC to the remote host.
