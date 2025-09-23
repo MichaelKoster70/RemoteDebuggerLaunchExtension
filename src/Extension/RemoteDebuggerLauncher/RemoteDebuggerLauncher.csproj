@@ -274,7 +274,7 @@
     <Content Include="Images.imagemanifest">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <None Include="RemoteTools\readme.md" />
+    <None Include="ToolsRemote\readme.md" />
     <None Include="ToolsExternal\readme.md" />
     <None Include="Infrastructure\readme.md" />
     <None Include="Options\readme.md" />
