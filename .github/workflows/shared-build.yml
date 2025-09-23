@@ -43,6 +43,8 @@ jobs:
       ExtensionAssemblyInfoFile: ${{ github.workspace }}\src\Extension\GlobalAssemblyInfo.cs
       ExtensionManifestFile: ${{ github.workspace }}\src\Extension\RemoteDebuggerLauncher\source.extension.vsixmanifest
       ExtensionOutputPath: ${{ github.workspace }}\src\Extension\RemoteDebuggerLauncher\bin\${{ inputs.configuration }}
+      CheckSumProjectPath: ${{ github.workspace }}\src\RemoteTools\CheckSum\exe\CheckSumExe.csproj
+      RemoteToolsOutputPath: ${{ github.workspace }}\src\RemoteTools\bin
       ScriptPath: ${{ github.workspace }}\eng\scripts
 
     steps:
@@ -85,6 +87,13 @@ jobs:
 
     - name: 'Build Solution: Apply VSIX version'
       run:  ${{ env.ScriptPath }}\VsixManifestFileSetVersion.ps1 -SourceFilePath  ${{ env.ExtensionManifestFile }} -VersionPrefix ${{ steps.git-version.outputs.versionPrefix }}
+      shell: pwsh
+
+    - name: 'Build Solution: Publish Remote Tools'
+      run: |
+       dotnet publish ${{ env.CheckSumProjectPath }} -c Release --framework net8.0 --runtime linux-x64 -o ${{ env.RemoteToolsOutputPath }}\linux-x64
+       dotnet publish ${{ env.CheckSumProjectPath }} -c Release --framework net8.0 --runtime linux-arm64 -o ${{ env.RemoteToolsOutputPath }}\linux-arm64
+       dotnet publish ${{ env.CheckSumProjectPath }} -c Release --framework net8.0 --runtime linux-arm -o ${{ env.RemoteToolsOutputPath }}\linux-arm
       shell: pwsh
 
     # Build Solution: restore NuGet Packages
