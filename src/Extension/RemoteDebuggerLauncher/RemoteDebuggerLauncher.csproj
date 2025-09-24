@@ -180,19 +180,31 @@
   <ItemGroup>
     <CompilerVisibleProperty Include="RootNamespace" />
     <Content Include="..\..\RemoteTools\bin\linux-arm64\checksum">
-      <Link>RemoteTools\linux-arm64\checksum</Link>
+      <Link>ToolsRemote\linux-arm64\checksum</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="..\..\RemoteTools\bin\linux-arm\checksum">
-      <Link>RemoteTools\linux-arm\checksum</Link>
+      <Link>ToolsRemote\linux-arm\checksum</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="..\..\RemoteTools\bin\linux-x64\checksum">
-      <Link>RemoteTools\linux-x64\checksum</Link>
+      <Link>ToolsRemote\linux-x64\checksum</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsExternal\README.cwrsync.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ToolsExternal\README.rsync.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ToolsExternal\rsync.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ToolsExternal\rsyncd.conf.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="..\..\SigningKey.snk">
       <Link>SigningKey.snk</Link>
@@ -201,78 +213,59 @@
     <Content Include="3rdPartyLicense.txt">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="ToolsExternal\cygcrypto-50.dll">
+    <Content Include="ToolsExternal\bin\cygcrypto-3.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <VSIXSubPath>rsync</VSIXSubPath>
     </Content>
-    <Content Include="ToolsExternal\cyggcc_s-seh-1.dll">
+    <Content Include="ToolsExternal\bin\cyggcc_s-seh-1.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <VSIXSubPath>rsync</VSIXSubPath>
     </Content>
-    <Content Include="ToolsExternal\cygiconv-2.dll">
+    <Content Include="ToolsExternal\bin\cygiconv-2.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <VSIXSubPath>rsync</VSIXSubPath>
     </Content>
-    <Content Include="ToolsExternal\cygintl-8.dll">
+    <Content Include="ToolsExternal\bin\cygintl-8.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <VSIXSubPath>rsync</VSIXSubPath>
     </Content>
-    <Content Include="ToolsExternal\cyglz4-1.dll">
+    <Content Include="ToolsExternal\bin\cyglz4-1.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <VSIXSubPath>rsync</VSIXSubPath>
     </Content>
-    <Content Include="ToolsExternal\cygpopt-0.dll">
+    <Content Include="ToolsExternal\bin\cygpopt-0.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <VSIXSubPath>rsync</VSIXSubPath>
     </Content>
-    <Content Include="ToolsExternal\cygwin1.dll">
+    <Content Include="ToolsExternal\bin\cygwin1.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <VSIXSubPath>rsync</VSIXSubPath>
     </Content>
-    <Content Include="ToolsExternal\cygz.dll">
+    <Content Include="ToolsExternal\bin\cygxxhash-0.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <VSIXSubPath>rsync</VSIXSubPath>
     </Content>
-    <Content Include="ToolsExternal\cygzstd-1.dll">
+    <Content Include="ToolsExternal\bin\cygz.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <VSIXSubPath>rsync</VSIXSubPath>
     </Content>
-    <Content Include="ToolsExternal\rsync.exe">
+    <Content Include="ToolsExternal\bin\cygzstd-1.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <VSIXSubPath>rsync</VSIXSubPath>
     </Content>
-    <Content Include="ToolsExternal\ssh-add.exe">
+    <Content Include="ToolsExternal\bin\rsync.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <VSIXSubPath>rsync</VSIXSubPath>
     </Content>
-    <Content Include="ToolsExternal\ssh-agent.exe">
+    <Content Include="ToolsExternal\bin\ssh-add.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <VSIXSubPath>rsync</VSIXSubPath>
     </Content>
-    <Content Include="ToolsExternal\ssh-keygen.exe">
+    <Content Include="ToolsExternal\bin\ssh-agent.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <VSIXSubPath>rsync</VSIXSubPath>
     </Content>
-    <Content Include="ToolsExternal\ssh.exe">
+    <Content Include="ToolsExternal\bin\ssh-keygen.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <VSIXSubPath>rsync</VSIXSubPath>
+    </Content>
+    <Content Include="ToolsExternal\bin\ssh.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images.imagemanifest">
       <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsExternal\etc\nsswitch.conf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ToolsExternal\etc\ssh_config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="ToolsRemote\readme.md" />
     <None Include="ToolsExternal\readme.md" />
