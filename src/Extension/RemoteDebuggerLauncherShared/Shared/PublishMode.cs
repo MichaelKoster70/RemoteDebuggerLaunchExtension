@@ -12,8 +12,8 @@ namespace RemoteDebuggerLauncher.Shared
    /// </summary>
    public enum PublishMode
    {
-      /// <summary>Publishes as framework dependant application.</summary>
-      FrameworkDependant,
+      /// <summary>Publishes as framework dependent application.</summary>
+      FrameworkDependent,
 
       /// <summary>Publishes as self contained application.</summary>
       SelfContained

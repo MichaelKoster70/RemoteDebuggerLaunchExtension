@@ -26,7 +26,7 @@ namespace RemoteDebuggerLauncher
 
       [Category(PackageConstants.Options.PageCategoryPublish)]
       [DisplayName("Publish mode")]
-      [Description("The type of application the publish step should produce, either self contained (includes the runtime) or framework dependant (requires .NET to be installed on the device.")]
-      public PublishMode PublishMode { get; set; } = PublishMode.FrameworkDependant;
+      [Description("The type of application the publish step should produce, either self contained (includes the runtime) or framework dependent (requires .NET to be installed on the device.")]
+      public PublishMode PublishMode { get; set; } = PublishMode.FrameworkDependent;
    }
 }

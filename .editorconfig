@@ -733,6 +733,9 @@ dotnet_diagnostic.ISB002.severity = warning
 dotnet_diagnostic.MsgPack001.severity = warning
 dotnet_diagnostic.MsgPack002.severity = warning
 
-# Disable the VS Spell Checker for now until the problem with the exclusion dictionary is fixed
-spelling_checkable_types = none
-spelling_error_severity = none
+#### Spell Checker ####
+spelling_languages = en-us
+spelling_checkable_types = strings,identifiers,comments
+spelling_error_severity = information 
+spelling_exclusion_path = exclusion.dic
+spelling_use_default_exclusion_dictionary = true

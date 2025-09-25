@@ -14,7 +14,7 @@ using System.Linq;
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// TypeConverter that shows DisplayAttribute.Name in the PropertyGrid dropdown and label,
+   /// TypeConverter that shows DisplayAttribute.Name in the PropertyGrid drop-down and label,
    /// and maps back to the correct enum values.
    /// </summary>
    internal class TransferModeDisplayNameConverter : EnumConverter

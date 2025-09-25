@@ -36,7 +36,7 @@ namespace RemoteDebuggerLauncher.CheckSum
       }
 
       /// <summary>
-      /// Traverse the filesystem starting at the instance's <see cref="rootFolder"/> and compute SHA256 for each file.
+      /// Traverse the file system starting at the instance's <see cref="rootFolder"/> and compute SHA256 for each file.
       /// The returned <see cref="ScanResult"/> contains a dictionary that maps the full file path to the hex-encoded SHA256 hash
       /// and a list of files that could not be accessed/read during the scan.
       /// Files or folders that cannot be accessed are skipped.
@@ -66,24 +66,24 @@ namespace RemoteDebuggerLauncher.CheckSum
          }
 
          // Robust stack-based traversal
-         var dirs = new Stack<string>();
-         dirs.Push(rootFolder);
+         var directories = new Stack<string>();
+         directories.Push(rootFolder);
 
-         while (dirs.Count > 0)
+         while (directories.Count > 0)
          {
-            var current = dirs.Pop();
+            var current = directories.Pop();
 
-            string[] subdirs;
+            string[] subDirectories;
             try
             {
-               subdirs = Directory.GetDirectories(current);
+               subDirectories = Directory.GetDirectories(current);
 
                // push subdirectories onto stack; if Directory.GetDirectories throws we skip this directory
-               if (subdirs != null)
+               if (subDirectories != null)
                {
-                  foreach (var d in subdirs)
+                  foreach (var d in subDirectories)
                   {
-                     dirs.Push(d);
+                     directories.Push(d);
                   }
                }
             }

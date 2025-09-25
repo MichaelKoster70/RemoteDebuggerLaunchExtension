@@ -74,7 +74,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       public string PrivateKeyFile { get; }
 
       /// <summary>
-      /// Create a new instance of the <see cref="SecureShellSessionSettings"/> class initialized from the supplied config aggreegator.
+      /// Create a new instance of the <see cref="SecureShellSessionSettings"/> class initialized from the supplied config aggregator.
       /// </summary>
       /// <param name="configurationAggregator">The aggregator to read settings from.</param>
       /// <returns>The <see cref="SecureShellSessionSettings"/> instance.</returns>

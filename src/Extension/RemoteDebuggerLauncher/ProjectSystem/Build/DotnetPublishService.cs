@@ -73,7 +73,7 @@ namespace RemoteDebuggerLauncher
 
             switch (publishMode)
             {
-               case PublishMode.FrameworkDependant:
+               case PublishMode.FrameworkDependent:
                   arguments += " --no-build";
 
                   if (await SupportsFrameworkDependentAsync())

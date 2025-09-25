@@ -12,6 +12,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Threading;
 using Renci.SshNet;
 using Renci.SshNet.Common;
+using static Microsoft.VisualStudio.Shell.ThreadedWaitDialogHelper;
 
 namespace RemoteDebuggerLauncher.RemoteOperations
 {
@@ -229,6 +230,20 @@ namespace RemoteDebuggerLauncher.RemoteOperations
                throw new SecureShellSessionException(e.Message, e);
             }
          });
+      }
+
+      /// <inheritdoc/>
+      public async Task CleanFolderAsync(string remoteTargetPath, bool clean)
+      {
+         ThrowIf.ArgumentNullOrEmpty(remoteTargetPath, nameof(remoteTargetPath));
+         if (clean)
+         {
+            using (var commandSession = CreateCommandSession())
+            {
+               _ = await commandSession.ExecuteCommandAsync($"[ -d {remoteTargetPath} ] | rm -rf {remoteTargetPath}/*");
+               _ = await commandSession.ExecuteCommandAsync($"mkdir -p {remoteTargetPath}");
+            }
+         }
       }
 
       /// <inheritdoc/>

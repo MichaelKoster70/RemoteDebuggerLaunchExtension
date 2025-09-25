@@ -111,7 +111,7 @@ namespace RemoteDebuggerLauncher
                try
                {
                   var outputPaneWriter = vsFacade.GetVsShell().GetOutputPaneWriter();
-                  var certificateService = await ServiceProvider.GetCertifcateServiceAsync();
+                  var certificateService = await ServiceProvider.GetCertificateServiceAsync();
 
                   // do the remaining work on the UI thread
                   await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();

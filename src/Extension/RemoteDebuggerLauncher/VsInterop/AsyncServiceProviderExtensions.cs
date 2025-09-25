@@ -68,7 +68,7 @@ namespace RemoteDebuggerLauncher
          return componentModel.GetService<ISecureShellKeySetupService>();
       }
 
-      public static async Task<ICertificateService> GetCertifcateServiceAsync(this IAsyncServiceProvider serviceProvider)
+      public static async Task<ICertificateService> GetCertificateServiceAsync(this IAsyncServiceProvider serviceProvider)
       {
          IComponentModel componentModel = await serviceProvider.GetComponentModelAsync();
 

@@ -543,15 +543,6 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to FAILED: rsync is not installed. Please install to rsync bulk copy.
-        /// </summary>
-        public static string RemoteCommandCommonFailedRsyncNotInstalled {
-            get {
-                return ResourceManager.GetString("RemoteCommandCommonFailedRsyncNotInstalled", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Processing profile &apos;{0}&apos;.
         /// </summary>
         public static string RemoteCommandCommonProfile {
@@ -593,6 +584,33 @@ namespace RemoteDebuggerLauncher {
         public static string RemoteCommandDeployRemoteFolderCompletedSuccess {
             get {
                 return ResourceManager.GetString("RemoteCommandDeployRemoteFolderCompletedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FAILED: rsync terminated with exit code {0}.
+        /// </summary>
+        public static string RemoteCommandDeployRemoteFolderFailedRsyncExitCode {
+            get {
+                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderFailedRsyncExitCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FAILED: rsync requires an absolute path for the local files.
+        /// </summary>
+        public static string RemoteCommandDeployRemoteFolderFailedRsyncNoAbsolutePath {
+            get {
+                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderFailedRsyncNoAbsolutePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FAILED: rsync is not installed. Please install to rsync bulk copy.
+        /// </summary>
+        public static string RemoteCommandDeployRemoteFolderFailedRsyncNotInstalled {
+            get {
+                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderFailedRsyncNotInstalled", resourceCulture);
             }
         }
         

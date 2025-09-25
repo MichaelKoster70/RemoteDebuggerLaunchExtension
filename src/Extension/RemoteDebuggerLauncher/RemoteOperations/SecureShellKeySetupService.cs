@@ -83,7 +83,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          Statusbar.SetText(Resources.RemoteCommandSetupSshCommandStatusbarAuthorizeProgress);
          OutputPaneWriter.WriteLine(Resources.CommonStartSessionMarker);
 
-         // Step 1: try to authenicate with the supplied public key
+         // Step 1: try to authenticate with the supplied public key
          bool success = await TryEstablishConnectionWithKeyAsync(settings,
             Resources.RemoteCommandSetupSshPhase1TryAuthenticatePrivateKeyProgress,
             Resources.RemoteCommandSetupSshPhase1TryAuthenticatePrivateKeySuccess,
@@ -107,7 +107,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
          if (success)
          {
-            // Step 4: try to authenicate with the supplied public key
+            // Step 4: try to authenticate with the supplied public key
             _ = await TryEstablishConnectionWithKeyAsync(settings,
                Resources.RemoteCommandSetupSshPhase4TryAuthenticatePrivateKeyProgress,
                Resources.RemoteCommandSetupSshPhase4TryAuthenticatePrivateKeySuccess,

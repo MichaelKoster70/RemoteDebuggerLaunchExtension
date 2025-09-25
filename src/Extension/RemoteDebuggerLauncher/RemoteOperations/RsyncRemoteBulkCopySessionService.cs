@@ -7,9 +7,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Build.Tasks;
+using Microsoft.IO;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Threading;
 
 namespace RemoteDebuggerLauncher.RemoteOperations
 {
@@ -34,6 +40,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// <inheritdoc/>
       public ISecureShellSessionCommandingService CreateCommandSession() => session.CreateCommandSession();
 
+      /// <inheritdoc/>
       public async Task UploadFolderRecursiveAsync(string localSourcePath, string remoteTargetPath, IOutputPaneWriterService progressOutputPaneWriter = null)
       {
          ThrowIf.ArgumentNullOrEmpty(localSourcePath, nameof(localSourcePath));
@@ -47,11 +54,13 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             // Fail copy if rsync is missing
             await ThrowIfRsyncIsMissingAsync(commands, progressOutputPaneWriter);
 
+            await StartRsyncSessionAsync(localSourcePath, remoteTargetPath, progressOutputPaneWriter);
+
          }
       }
 
       /// <summary>
-      /// Checks if Rsync is installed.
+      /// Checks if rsync is installed.
       /// </summary>
       /// <param name="commands">The SSH session to use</param>
       /// <returns><c>true</c> if installed; else <c>false</c>.</returns>
@@ -60,9 +69,107 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          (int exitCode, _, _) = await commands.TryExecuteCommandAsync("command -v rsync");
          if (exitCode != 0)
          {
-            outputPaneWriter?.WriteLine(Resources.RemoteCommandCommonFailedRsyncNotInstalled);
-            throw new SecureShellSessionException(Resources.RemoteCommandCommonFailedRsyncNotInstalled);
+            outputPaneWriter?.WriteLine(Resources.RemoteCommandDeployRemoteFolderFailedRsyncNotInstalled);
+            throw new SecureShellSessionException(Resources.RemoteCommandDeployRemoteFolderFailedRsyncNotInstalled);
          }
+      }
+
+      /// <summary>
+      /// Starts the rsync session.
+      /// </summary>
+      /// <param name="localSourcePath">The local source path.</param>
+      /// <param name="remoteTargetPath">The remote target path.</param>
+      /// <param name="outputPaneWriter">The output pane writer to use for logging.</param>
+      private async Task StartRsyncSessionAsync(string localSourcePath, string remoteTargetPath, IOutputPaneWriterService progressOutputPaneWriter)
+      {
+         // Step 1: Convert paths to Cygwin style
+         localSourcePath = ConvertToAbsoluteCygwinPath(localSourcePath);
+
+         // Step 2: compile command line and launch parameters
+         var privateKeyFile = session.Settings.PrivateKeyFile;
+         var arguments = $"-rvuz -e 'ssh -i {privateKeyFile}' {localSourcePath} {session.Settings.UserName}@{session.Settings.HostName}:{remoteTargetPath}";
+
+         var rsyncSearchPath = GetRsyncDirectory();
+
+         var startInfo = new ProcessStartInfo ($"{rsyncSearchPath}\\rsync.exe", arguments)
+         {
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+         };
+
+         // Step 3: Set PATH to only the folder where rsync is located
+         startInfo.EnvironmentVariables["PATH"] = rsyncSearchPath;
+
+         // Step 4: Start process
+         using (var process = Process.Start(startInfo))
+         {
+            // Method to handle output data
+#pragma warning disable VSTHRD100 // Avoid async void methods
+            async void OnDataReceived(object _, DataReceivedEventArgs e)
+            {
+               try
+               {
+                  var message = e.Data;
+
+                  await ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                  {
+                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                     progressOutputPaneWriter?.WriteLine(message);
+                  });
+               }
+               catch (Exception)
+               {
+                  // Ignore any exception
+               }
+            }
+#pragma warning restore VSTHRD100 // Avoid async void methods
+
+            process.OutputDataReceived += OnDataReceived;
+            process.BeginOutputReadLine();
+
+            var stdError = await process.StandardError.ReadToEndAsync();
+            var exitCode = await process.WaitForExitAsync();
+
+            process.OutputDataReceived -= OnDataReceived;
+
+            if (exitCode > 0)
+            {
+               progressOutputPaneWriter?.WriteLine(stdError);
+               throw new RemoteDebuggerLauncherException(string.Format(Resources.RemoteCommandDeployRemoteFolderFailedRsyncExitCode, exitCode));
+            }
+         }
+      }
+
+      /// <summary>
+      /// Gets the directory where rsync is located.
+      /// </summary>
+      /// <returns>The directory path of the current assembly.</returns>
+      private static string GetRsyncDirectory()
+      {
+         var assemblyLocation = Assembly.GetExecutingAssembly().Location;
+         return Path.Combine(Path.GetDirectoryName(assemblyLocation), "ToolsExternal\\bin");
+      }
+
+      /// <summary>
+      /// Converts the supplied path to an absolute Cygwin style path.
+      /// </summary>
+      /// <param name="path">The path to convert.</param>
+      /// <returns>The Cygwin-style path.</returns>
+      private static string ConvertToAbsoluteCygwinPath(string absolutePath)
+      {
+         // ensure we get an absolute path
+         var driveLetter = Path.GetPathRoot(absolutePath);
+         if (string.IsNullOrWhiteSpace(driveLetter))
+         {         
+            throw new SecureShellSessionException(Resources.RemoteCommandDeployRemoteFolderFailedRsyncNoAbsolutePath);
+         }
+
+         driveLetter = driveLetter.ToLower();
+         var directory = Path.GetDirectoryName(absolutePath).Replace(Path.DirectorySeparatorChar, '/').Replace(Path.AltDirectorySeparatorChar, '/');
+         return $"/cygdrive/{driveLetter}{directory}";
       }
    }
 }

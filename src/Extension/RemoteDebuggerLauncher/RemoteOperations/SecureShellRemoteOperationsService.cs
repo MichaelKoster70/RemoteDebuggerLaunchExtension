@@ -12,6 +12,7 @@ using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.ProjectSystem.Query.ProjectModelMethods.Actions;
 using RemoteDebuggerLauncher.PowerShellHost;
 using RemoteDebuggerLauncher.Shared;
 using Constants = RemoteDebuggerLauncher.Shared.Constants;
@@ -209,14 +210,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          statusbar?.SetText(Resources.RemoteCommandDeployRemoteFolderStatusbarProgress);
 
          // Clean the remote target if requested
-         if (clean)
-         {
-            using (var commandSession = session.CreateCommandSession())
-            {
-               _ = await commandSession.ExecuteCommandAsync($"[ -d {targetPath} ] | rm -rf {targetPath}/*");
-               _ = await commandSession.ExecuteCommandAsync($"mkdir -p {targetPath}");
-            }
-         }
+         await CleanFolderAsync(targetPath, clean);
 
          // copy files using the bulk copy service (SCP or rsync)
          await bulkCopy.UploadFolderRecursiveAsync(sourcePath, targetPath, outputPaneWriter);
@@ -237,11 +231,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             outputPaneWriter.WriteLine(Resources.RemoteCommandCleanRemoteFolderCaption, targetPath);
             statusbar?.SetText(Resources.RemoteCommandCleanRemoteFolderStatusbarProgress);
 
-            using (var commandSession = session.CreateCommandSession())
-            {
-               _ = await commandSession.ExecuteCommandAsync($"[ -d {targetPath} ] | rm -rf {targetPath}/*");
-               _ = await commandSession.ExecuteCommandAsync($"mkdir -p {targetPath}");
-            }
+            await CleanFolderAsync(targetPath, true);
 
             outputPaneWriter.WriteLine(Resources.RemoteCommandCleanRemoteFolderCompletedSuccess);
          }
@@ -421,6 +411,23 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       #endregion
 
       #region private methods
+      /// <summary>
+      /// Cleans the specified folder leaving it empty.
+      /// </summary>
+      /// <param name="remoteTargetPath">The absolute path to the remote target path to clean.</param>
+      /// <param name="clean">if set to <c>true</c> the folder will be cleaned.</param>
+      private async Task CleanFolderAsync(string remoteTargetPath, bool clean)
+      {
+         ThrowIf.ArgumentNullOrEmpty(remoteTargetPath, nameof(remoteTargetPath));
+         if (clean)
+         {
+            using (var commandSession = session.CreateCommandSession())
+            {
+               _ = await commandSession.ExecuteCommandAsync($"[ -d {remoteTargetPath} ] | rm -rf {remoteTargetPath}/*");
+               _ = await commandSession.ExecuteCommandAsync($"mkdir -p {remoteTargetPath}");
+            }
+         }
+      }
 
       /// <summary>
       /// Checks if cURL is installed.

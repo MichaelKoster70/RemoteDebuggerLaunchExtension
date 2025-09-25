@@ -121,7 +121,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// <summary>
       /// Get the CPU architecture to determine which runtime ID to use, ignoring MacOS and Alpine based Linux when determining the needed runtime ID.
       /// </summary>
-      /// <returns>The <see cref="string"/> hoilding the runtime ID.</returns>
+      /// <returns>The <see cref="string"/> holding the runtime ID.</returns>
       Task<string> GetRuntimeIdAsync();
    }
 }
