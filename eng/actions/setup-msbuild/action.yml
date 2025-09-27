@@ -9,5 +9,5 @@ runs:
   - name: Add msbuild to PATH
     uses: microsoft/setup-msbuild@v1.1
     with:
-      vs-version: '[17.2,17.5)'
+      vs-version: '[17.2,17.15)'
       msbuild-architecture: x64

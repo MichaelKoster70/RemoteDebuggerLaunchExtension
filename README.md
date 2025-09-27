@@ -18,10 +18,10 @@ The desktop side SSH support relies on the built-in [OpenSSH for Windows](https:
 The extension supports
 - SSH authentication using private keys.
 - Debugging .NET framework dependant and self contained application.
-- Deploying the project output folder via SCP to the target device.
+- Deploying the project output folder via SCP or Rsync to the target device.
 - Publish (running dotnet publish) before deploying the application.
 - Installing vsdbg automatically (configurable).
-- Installing .NET on the target device.
+- Installing .NET on the target device (.NET 6 and newer)
 - Supporting command to setup SSH authentication.
 
 ## Getting Started
@@ -43,6 +43,7 @@ The extension depends on the following packages.
 - OpenSSH server
 - unzip
 - cURL
+- [Rsync](https://rsync.samba.org/) (optional, but recommended for faster deploys)
 
 Install the missing tools using your favorite package manager.
 ```
@@ -58,7 +59,7 @@ Open Visual Studio 2022, navigate to Tools -> Options -> Remote Debugger Launche
 Configure the default values for Credentials, Folders and SSH setting. These values will be applied if the Launch Profile does not configure them.
 
 #### 2. Create and configure the Launch Profile
-Load a Visual Studio Solution holding at least one .NET 6 based application.
+Load a Visual Studio Solution holding at least one .NET 6 (or newer) based application.
 Open the project 'Debug Properties' dialog. Click 'new launch profile' and select 'SSH Remote Launch'
 ![LaunchProfileDialog](docs/ScreenShort-LaunchProfileDialog.png)
 
@@ -81,13 +82,13 @@ Open the solution 'Configuration Manager', Select the projects you want to build
 The plugin expects .NET to be installed on the target. You can use the support commands unter Tools -> Remote Debugger Launcher to install .NET and/or the VS Code Debugger (vsdbg).
 ![Commands](docs/ScreenShort-Commands.png)
 
-Alternativly, install
+Alternatively, install
 - .NET as described in [MS Learn: Install .NET on Linux](https://learn.microsoft.com/en-us/dotnet/core/install/linux)
 - vsdbg as described in [Offroad Debugging of .NET Core](https://github.com/Microsoft/MIEngine/wiki/Offroad-Debugging-of-.NET-Core-on-Linux---OSX-from-Visual-Studio)
 
 #### 5. Start Debugging session
 The 'Start Debugging' (F5) will perform the following steps
-1. Deploys the project ouput directory recursivly to the configured folder on the target using secure copy (SCP).
+1. Deploys the project output directory recursively to the configured folder on the target using secure copy (SCP).
 2. If configured, installs vsdbg
 3. Launches the debugging session
 

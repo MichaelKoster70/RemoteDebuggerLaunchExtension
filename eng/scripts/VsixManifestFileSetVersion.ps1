@@ -13,7 +13,7 @@
     Replaces the Version attribute value in the supplied vsixmanifest file.
 
 .PARAMETER SourceFilePath
-    The absolute path to thevsixmanifest file holding the attribute values to change.
+    The absolute path to the vsixmanifest file holding the attribute values to change.
 
 .PARAMETER VersionPrefix
     A mandatory string holding the version prefix consisting of <major>.<minor>.<path>
