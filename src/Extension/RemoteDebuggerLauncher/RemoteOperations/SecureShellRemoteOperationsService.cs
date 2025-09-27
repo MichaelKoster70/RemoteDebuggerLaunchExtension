@@ -12,7 +12,6 @@ using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.ProjectSystem.Query.ProjectModelMethods.Actions;
 using RemoteDebuggerLauncher.PowerShellHost;
 using RemoteDebuggerLauncher.Shared;
 using Constants = RemoteDebuggerLauncher.Shared.Constants;

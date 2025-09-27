@@ -69,6 +69,9 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          ThrowIf.ArgumentNullOrEmpty(localSourcePath, nameof(localSourcePath));
          ThrowIf.ArgumentNullOrEmpty(remoteTargetPath, nameof(remoteTargetPath));
 
+         progressOutputPaneWriter?.Write(Resources.RemoteCommandCommonSshTarget, Settings.UserName, Settings.HostName);
+         progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployRemoteFolderScpFullStart);
+
          return Task.Run(() =>
          {
             try

@@ -643,6 +643,15 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to copying all files with SCP....
+        /// </summary>
+        public static string RemoteCommandDeployRemoteFolderScpFullStart {
+            get {
+                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderScpFullStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Deploying application....
         /// </summary>
         public static string RemoteCommandDeployRemoteFolderStatusbarProgress {
