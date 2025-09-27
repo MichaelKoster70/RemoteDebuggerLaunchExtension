@@ -11,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 
-namespace RemoteDebuggerLauncher
+namespace RemoteDebuggerLauncher.Shared
 {
    /// <summary>
    /// TypeConverter that shows DisplayAttribute.Name in the PropertyGrid drop-down and label,
@@ -122,6 +122,4 @@ namespace RemoteDebuggerLauncher
          return new StandardValuesCollection(values);
       }
    }
-
-
 }

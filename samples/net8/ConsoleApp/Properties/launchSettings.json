@@ -17,7 +17,8 @@
       "hostName": "chzh-vm003",
       "hostPort": "22",
       "userName": "mko",
-      "privateKey": "%userprofile%\\.ssh\\id_rsa"
+      "privateKey": "%userprofile%\\.ssh\\id_rsa",
+      "transferMode": "SecureCopyDelta"
     }
   }
 }

@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
 using Microsoft.VisualStudio.Shell;
 using RemoteDebuggerLauncher.RemoteOperations;
+using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher
 {

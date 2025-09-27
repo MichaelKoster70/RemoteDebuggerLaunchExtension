@@ -8,7 +8,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace RemoteDebuggerLauncher
+namespace RemoteDebuggerLauncher.Shared
 {
    /// <summary>
    /// Mode defining the transfer protocol to be used for file transfer to the target device.

@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Net;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
+using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher
 {

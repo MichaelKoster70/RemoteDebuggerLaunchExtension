@@ -70,8 +70,6 @@
     <Compile Include="Commands\CleanOutputCommand.cs" />
     <Compile Include="Infrastructure\DirectoryHelper.cs" />
     <Compile Include="Infrastructure\FileHelper.cs" />
-    <Compile Include="Options\TransferModeDisplayNameConverter.cs" />
-    <Compile Include="Options\TransferMode.cs" />
     <Compile Include="RemoteOperations\IRemoteBulkCopySessionService.cs" />
     <Compile Include="RemoteOperations\ISecureShellSessionBaseService.cs" />
     <Compile Include="RemoteOperations\RsyncRemoteBulkCopySessionService.cs" />

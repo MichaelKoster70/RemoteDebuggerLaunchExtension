@@ -9,7 +9,6 @@ using System;
 using System.Collections.Immutable;
 using System.Net;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
-using Microsoft.VisualStudio.Shell;
 using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher
@@ -149,6 +148,13 @@ namespace RemoteDebuggerLauncher
       /// <returns></returns>
       public TransferMode QueryTransferMode()
       {
+         if (GetOtherSetting(SecureShellRemoteLaunchProfile.transferModeProperty, out string transferModeText) 
+            && Enum.TryParse<TransferMode>(transferModeText, out TransferMode transferMode))
+         {
+            // Launch profile value => use it
+            return transferMode;
+         }
+
          // use options value or default
          return optionsPageAccessor.QueryTransferMode();
       }
@@ -363,13 +369,11 @@ namespace RemoteDebuggerLauncher
       /// </remarks>
       public PublishMode QueryPublishMode()
       {
-         if (GetOtherSetting(SecureShellRemoteLaunchProfile.publishModeProperty, out string publishModeText))
+         if (GetOtherSetting(SecureShellRemoteLaunchProfile.publishModeProperty, out string publishModeText)
+            && Enum.TryParse<PublishMode>(publishModeText, out PublishMode publishMode))
          {
-            if (Enum.TryParse< PublishMode>(publishModeText, out PublishMode publishMode))
-            {
-               // Launch profile value => use it
-               return publishMode;
-            }
+            // Launch profile value => use it
+            return publishMode;
          }
 
          // use the default in options 

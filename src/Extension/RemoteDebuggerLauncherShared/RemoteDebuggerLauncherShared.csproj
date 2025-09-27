@@ -38,6 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\GlobalAssemblyInfo.cs">
@@ -49,6 +50,8 @@
     <Compile Include="Shared\Constants.cs" />
     <Compile Include="Shared\DotnetInstallationKind.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\TransferMode.cs" />
+    <Compile Include="Shared\TransferModeDisplayNameConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\SigningKey.snk">

@@ -61,9 +61,10 @@
 
   <EnumProperty Name="transferMode"
                 DisplayName="Transfer Mode"
-                Description="Defines the transfer mode 'SCP' or 'Rsync'."
+                Description="Defines the transfer mode 'Secure Copy Full/Delta' or 'Rsync'."
                 Subcategory="Deployment Options" >
-    <EnumValue Name="SCP" />
+    <EnumValue Name="SecureCopyFull" />
+    <EnumValue Name="SecureCopyDelta" />
     <EnumValue Name="Rsync" />
   </EnumProperty>
 
