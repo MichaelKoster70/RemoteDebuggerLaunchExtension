@@ -77,6 +77,12 @@ namespace RemoteDebuggerLauncher
       public string DebuggerInstallFolderPath { get; set; } = PackageConstants.Options.DefaultValueDebuggerInstallFolderPath;
 
       [Category(PackageConstants.Options.PageCategoryFolders)]
+      [DisplayName("Tools install folder path")]
+      [Description("The folder path remote tools will be installed on the target device.")]
+      [DefaultValue(PackageConstants.Options.DefaultValueToolsInstallFolderPath)]
+      public string ToolsInstallFolderPath { get; set; } = PackageConstants.Options.DefaultValueToolsInstallFolderPath;
+
+      [Category(PackageConstants.Options.PageCategoryFolders)]
       [DisplayName("App folder path")]
       [Description("The path on the target device where the application binaries will get deployed to.")]
       [DefaultValue(PackageConstants.Options.DefaultValueAppFolderPath)]

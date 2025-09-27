@@ -618,6 +618,10 @@ Replace: Replace the existing certificate with a new one.</value>
     <comment>Output pane: rsync session starts</comment>
   </data>
   <data name="RemoteCommandDeployRemoteFolderScpFullStart" xml:space="preserve">
+    <value>copying changed files with SCP...</value>
+    <comment>Output pane: SCP session starts</comment>
+  </data>
+  <data name="RemoteCommandDeployRemoteFolderScpDeltaStart" xml:space="preserve">
     <value>copying all files with SCP...</value>
     <comment>Output pane: SCP session starts</comment>
   </data>

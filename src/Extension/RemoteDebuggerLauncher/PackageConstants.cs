@@ -82,6 +82,9 @@ namespace RemoteDebuggerLauncher
          /// <summary>The default value for the VS Code Debugger installation path on the device page.</summary>
          public const string DefaultValueDebuggerInstallFolderPath = "~/.vsdbg";
 
+         /// <summary>The default value for the Tools installation path on the device page.</summary>
+         public const string DefaultValueToolsInstallFolderPath = "~/.rdl";
+
          /// <summary>The default value for the App folder path on the device page.</summary>
          public const string DefaultValueAppFolderPath = "~/project";
       }

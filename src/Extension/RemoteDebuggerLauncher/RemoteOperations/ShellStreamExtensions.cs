@@ -12,8 +12,17 @@ using Renci.SshNet;
 
 namespace RemoteDebuggerLauncher.RemoteOperations
 {
+   /// <summary>
+   /// Extension methods for <see cref="ShellStream"/>.
+   /// </summary>
    internal static class ShellStreamExtensions
    {
+      /// <summary>
+      /// Read available as an asynchronous operation.
+      /// </summary>
+      /// <param name="stream">The SSH shell stream.</param>
+      /// <param name="timeout">The timeout to wait for data.</param>
+      /// <returns>A Task(string) holding the read data.</returns>
       public static async Task<string> ReadAvailableAsync(this ShellStream stream, TimeSpan timeout)
       {
          StringBuilder sb = new StringBuilder();

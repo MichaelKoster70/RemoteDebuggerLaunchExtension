@@ -135,10 +135,9 @@ namespace RemoteDebuggerLauncher
             case TransferMode.SecureCopyFull:
                return session;
             case TransferMode.SecureCopyDelta:
-               // Not yet implemented, fallback to SCP full copy
-               return session;
+               return new SecureShellRemoteBulkCopyDeltaSessionService(session);
             case TransferMode.Rsync:
-               return new RsyncRemoteBulkCopySessionService(session);
+               return new SecureShellRemoteBulkCopyRsyncSessionService(session);
             default:
                return session;
          }

@@ -72,7 +72,8 @@
     <Compile Include="Infrastructure\FileHelper.cs" />
     <Compile Include="RemoteOperations\IRemoteBulkCopySessionService.cs" />
     <Compile Include="RemoteOperations\ISecureShellSessionBaseService.cs" />
-    <Compile Include="RemoteOperations\RsyncRemoteBulkCopySessionService.cs" />
+    <Compile Include="RemoteOperations\SecureShellRemoteBulkCopyDeltaSessionService.cs" />
+    <Compile Include="RemoteOperations\SecureShellRemoteBulkCopyRsyncSessionService.cs" />
     <Compile Include="RemoteOperations\ShellStreamExtensions.cs" />
     <Compile Include="Infrastructure\StringExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />

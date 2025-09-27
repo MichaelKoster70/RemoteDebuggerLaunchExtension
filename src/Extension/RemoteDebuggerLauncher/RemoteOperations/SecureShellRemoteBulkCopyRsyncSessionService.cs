@@ -20,11 +20,11 @@ namespace RemoteDebuggerLauncher.RemoteOperations
    /// https://rsync.samba.org/
    /// Implements the <see cref="IRemoteBulkCopySessionService"/> interface.
    /// </summary>
-   internal class RsyncRemoteBulkCopySessionService : IRemoteBulkCopySessionService
+   internal class SecureShellRemoteBulkCopyRsyncSessionService : IRemoteBulkCopySessionService
    {
       private readonly ISecureShellSessionBaseService session;
 
-      internal RsyncRemoteBulkCopySessionService(ISecureShellSessionBaseService session)
+      internal SecureShellRemoteBulkCopyRsyncSessionService(ISecureShellSessionBaseService session)
       {
          this.session = session ?? throw new ArgumentNullException(nameof(session));
       }

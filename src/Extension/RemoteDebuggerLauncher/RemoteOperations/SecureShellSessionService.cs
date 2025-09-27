@@ -12,7 +12,6 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Threading;
 using Renci.SshNet;
 using Renci.SshNet.Common;
-using static Microsoft.VisualStudio.Shell.ThreadedWaitDialogHelper;
 
 namespace RemoteDebuggerLauncher.RemoteOperations
 {
