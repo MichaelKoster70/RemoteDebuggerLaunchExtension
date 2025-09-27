@@ -64,8 +64,9 @@ namespace RemoteDebuggerLauncher
       {
          var statusbar = await GetStatusbarServiceAsync();
          var settings = SecureShellSessionSettings.Create(configurationAggregator);
-         var session = new SecureShellSessionService(settings);
-         return new SecureShellRemoteOperationsService(configurationAggregator, session, session, outputPaneWriter, statusbar);
+         var sessionService  = new SecureShellSessionService(settings);
+         var bulkCopyService = CreateBulkCopyService(sessionService, configurationAggregator);
+         return new SecureShellRemoteOperationsService(configurationAggregator, sessionService, bulkCopyService, outputPaneWriter, statusbar);
       }
 
       /// <inheritdoc />
@@ -125,5 +126,21 @@ namespace RemoteDebuggerLauncher
       }
 
       private async Task<IOptionsPageAccessor> GetOptionsPageAccessorAsync() => optionsPageAccessor = optionsPageAccessor ?? await asyncServiceProvider.GetOptionsPageServiceAsync();
+
+      private static IRemoteBulkCopySessionService CreateBulkCopyService(SecureShellSessionService session, ConfigurationAggregator configuration)
+      {
+         switch (configuration.QueryTransferMode())
+         {
+            case TransferMode.SecureCopyFull:
+               return session;
+            case TransferMode.SecureCopyDelta:
+               // Not yet implemented, fallback to SCP full copy
+               return session;
+            case TransferMode.Rsync:
+               return new RsyncRemoteBulkCopySessionService(session);
+            default:
+               return session;
+         }
+      }
    }
 }

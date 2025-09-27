@@ -281,8 +281,9 @@ Make sure you selected a 'SshRemoteLaunch' launch profile.</value>
   <data name="RemoteCommandCommonFailedCurlNotInstalled" xml:space="preserve">
     <value>FAILED: cURL is not installed. please install to use the command</value>
   </data>
-  <data name="RemoteCommandDeployRemoteFolderFailedRsyncNotInstalled" xml:space="preserve">
+  <data name="RemoteCommandDeployRemoteFolderRsyncFailedNotInstalled" xml:space="preserve">
     <value>FAILED: rsync is not installed. Please install to rsync bulk copy</value>
+    <comment>Exception: rsync not installed on target</comment>
   </data>
   <data name="RemoteCommandCommonProfile" xml:space="preserve">
     <value>Processing profile '{0}'</value>
@@ -301,12 +302,13 @@ Make sure you selected a 'SshRemoteLaunch' launch profile.</value>
   <data name="RemoteCommandDeployRemoteFolderCompletedSuccess" xml:space="preserve">
     <value>Deploying application OK</value>
   </data>
-  <data name="RemoteCommandDeployRemoteFolderNoProjects" xml:space="preserve">
+  <data name="RemoteCommandDeployRemoteFolderCommonNoProjects" xml:space="preserve">
     <value>Deploying application - no supported projects found.
 Make sure you selected a 'SshRemoteLaunch' launch profile.</value>
   </data>
-  <data name="RemoteCommandDeployRemoteFolderOutputPaneProgress" xml:space="preserve">
+  <data name="RemoteCommandDeployRemoteFolderCommonProgress" xml:space="preserve">
     <value>Deploying application - Source: {0}, Target: {1}</value>
+    <comment>Output Pane: show deploy progress</comment>
   </data>
   <data name="RemoteCommandDeployRemoteFolderStatusbarProgress" xml:space="preserve">
     <value>Deploying application...</value>
@@ -601,13 +603,18 @@ Replace: Replace the existing certificate with a new one.</value>
   <data name="SetupSshDialogUsernameLabel" xml:space="preserve">
     <value>User name</value>
   </data>
-  <data name="RemoteCommandDeployRemoteFolderFailedRsyncNoAbsolutePath" xml:space="preserve">
+  <data name="RemoteCommandDeployRemoteFolderRsyncFailedNoAbsolutePath" xml:space="preserve">
     <value>FAILED: rsync requires an absolute path for the local files</value>
   </data>
   <data name="CertificateServicesTrustCancelledByUser" xml:space="preserve">
     <value>Cancelling trusting Root CA</value>
   </data>
-  <data name="RemoteCommandDeployRemoteFolderFailedRsyncExitCode" xml:space="preserve">
+  <data name="RemoteCommandDeployRemoteFolderRsyncFailedExitCode" xml:space="preserve">
     <value>FAILED: rsync terminated with exit code {0}</value>
+    <comment>Exception: rsync exit code &gt; 0</comment>
+  </data>
+  <data name="RemoteCommandDeployRemoteFolderRsyncStart" xml:space="preserve">
+    <value>Launching rsync (version 3.4.1  protocol version 32) session...</value>
+    <comment>Output pane: rsync session starts</comment>
   </data>
 </root>

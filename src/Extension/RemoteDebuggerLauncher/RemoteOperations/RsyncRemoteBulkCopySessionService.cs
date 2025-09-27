@@ -6,13 +6,9 @@
 // ----------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Build.Tasks;
 using Microsoft.IO;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Threading;
@@ -49,13 +45,12 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          using (var commands = session.CreateCommandSession())
          {
             progressOutputPaneWriter?.Write(Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-            progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandInstallDebuggerOnlineCommonProgress);
+            progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployRemoteFolderRsyncStart);
 
             // Fail copy if rsync is missing
             await ThrowIfRsyncIsMissingAsync(commands, progressOutputPaneWriter);
 
             await StartRsyncSessionAsync(localSourcePath, remoteTargetPath, progressOutputPaneWriter);
-
          }
       }
 
@@ -69,8 +64,8 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          (int exitCode, _, _) = await commands.TryExecuteCommandAsync("command -v rsync");
          if (exitCode != 0)
          {
-            outputPaneWriter?.WriteLine(Resources.RemoteCommandDeployRemoteFolderFailedRsyncNotInstalled);
-            throw new SecureShellSessionException(Resources.RemoteCommandDeployRemoteFolderFailedRsyncNotInstalled);
+            outputPaneWriter?.WriteLine(Resources.RemoteCommandDeployRemoteFolderRsyncFailedNotInstalled);
+            throw new SecureShellSessionException(Resources.RemoteCommandDeployRemoteFolderRsyncFailedNotInstalled);
          }
       }
 
@@ -91,7 +86,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
          var rsyncSearchPath = GetRsyncDirectory();
 
-         var startInfo = new ProcessStartInfo ($"{rsyncSearchPath}\\rsync.exe", arguments)
+         var startInfo = new ProcessStartInfo ($"rsync.exe", arguments)
          {
             RedirectStandardOutput = true,
             RedirectStandardError = true,
@@ -138,7 +133,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             if (exitCode > 0)
             {
                progressOutputPaneWriter?.WriteLine(stdError);
-               throw new RemoteDebuggerLauncherException(string.Format(Resources.RemoteCommandDeployRemoteFolderFailedRsyncExitCode, exitCode));
+               throw new RemoteDebuggerLauncherException(string.Format(Resources.RemoteCommandDeployRemoteFolderRsyncFailedExitCode, exitCode));
             }
          }
       }
@@ -161,15 +156,15 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       private static string ConvertToAbsoluteCygwinPath(string absolutePath)
       {
          // ensure we get an absolute path
-         var driveLetter = Path.GetPathRoot(absolutePath);
-         if (string.IsNullOrWhiteSpace(driveLetter))
-         {         
-            throw new SecureShellSessionException(Resources.RemoteCommandDeployRemoteFolderFailedRsyncNoAbsolutePath);
+         var rootPath = Path.GetPathRoot(absolutePath);
+         if (string.IsNullOrWhiteSpace(rootPath))
+         {
+            throw new SecureShellSessionException(Resources.RemoteCommandDeployRemoteFolderRsyncFailedNoAbsolutePath);
          }
 
-         driveLetter = driveLetter.ToLower();
-         var directory = Path.GetDirectoryName(absolutePath).Replace(Path.DirectorySeparatorChar, '/').Replace(Path.AltDirectorySeparatorChar, '/');
-         return $"/cygdrive/{driveLetter}{directory}";
+         var driveLetter = rootPath.ToLower().Substring(0, 1);
+         var directory = Path.GetRelativePath(rootPath, Path.GetDirectoryName(absolutePath)).Replace(Path.DirectorySeparatorChar, '/').Replace(Path.AltDirectorySeparatorChar, '/');
+         return $"/cygdrive/{driveLetter}/{directory}";
       }
    }
 }

@@ -579,6 +579,25 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deploying application - no supported projects found.
+        ///Make sure you selected a &apos;SshRemoteLaunch&apos; launch profile..
+        /// </summary>
+        public static string RemoteCommandDeployRemoteFolderCommonNoProjects {
+            get {
+                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderCommonNoProjects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deploying application - Source: {0}, Target: {1}.
+        /// </summary>
+        public static string RemoteCommandDeployRemoteFolderCommonProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderCommonProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Deploying application OK.
         /// </summary>
         public static string RemoteCommandDeployRemoteFolderCompletedSuccess {
@@ -590,46 +609,36 @@ namespace RemoteDebuggerLauncher {
         /// <summary>
         ///   Looks up a localized string similar to FAILED: rsync terminated with exit code {0}.
         /// </summary>
-        public static string RemoteCommandDeployRemoteFolderFailedRsyncExitCode {
+        public static string RemoteCommandDeployRemoteFolderRsyncFailedExitCode {
             get {
-                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderFailedRsyncExitCode", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderRsyncFailedExitCode", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to FAILED: rsync requires an absolute path for the local files.
         /// </summary>
-        public static string RemoteCommandDeployRemoteFolderFailedRsyncNoAbsolutePath {
+        public static string RemoteCommandDeployRemoteFolderRsyncFailedNoAbsolutePath {
             get {
-                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderFailedRsyncNoAbsolutePath", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderRsyncFailedNoAbsolutePath", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to FAILED: rsync is not installed. Please install to rsync bulk copy.
         /// </summary>
-        public static string RemoteCommandDeployRemoteFolderFailedRsyncNotInstalled {
+        public static string RemoteCommandDeployRemoteFolderRsyncFailedNotInstalled {
             get {
-                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderFailedRsyncNotInstalled", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderRsyncFailedNotInstalled", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Deploying application - no supported projects found.
-        ///Make sure you selected a &apos;SshRemoteLaunch&apos; launch profile..
+        ///   Looks up a localized string similar to Launching rsync (version 3.4.1  protocol version 32) session....
         /// </summary>
-        public static string RemoteCommandDeployRemoteFolderNoProjects {
+        public static string RemoteCommandDeployRemoteFolderRsyncStart {
             get {
-                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderNoProjects", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Deploying application - Source: {0}, Target: {1}.
-        /// </summary>
-        public static string RemoteCommandDeployRemoteFolderOutputPaneProgress {
-            get {
-                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderOutputPaneProgress", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderRsyncStart", resourceCulture);
             }
         }
         

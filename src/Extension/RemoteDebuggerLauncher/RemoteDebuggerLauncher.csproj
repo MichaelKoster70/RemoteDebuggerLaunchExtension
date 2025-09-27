@@ -196,9 +196,11 @@
     </Content>
     <Content Include="ToolsExternal\README.cwrsync.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="ToolsExternal\README.rsync.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="ToolsExternal\rsync.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -215,36 +217,47 @@
     </Content>
     <Content Include="ToolsExternal\bin\cygcrypto-3.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="ToolsExternal\bin\cyggcc_s-seh-1.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="ToolsExternal\bin\cygiconv-2.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="ToolsExternal\bin\cygintl-8.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="ToolsExternal\bin\cyglz4-1.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="ToolsExternal\bin\cygpopt-0.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="ToolsExternal\bin\cygwin1.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="ToolsExternal\bin\cygxxhash-0.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="ToolsExternal\bin\cygz.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="ToolsExternal\bin\cygzstd-1.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="ToolsExternal\bin\rsync.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="ToolsExternal\bin\ssh-add.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -257,15 +270,18 @@
     </Content>
     <Content Include="ToolsExternal\bin\ssh.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Images.imagemanifest">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="ToolsExternal\etc\nsswitch.conf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="ToolsExternal\etc\ssh_config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <None Include="ToolsRemote\readme.md" />
     <None Include="ToolsExternal\readme.md" />

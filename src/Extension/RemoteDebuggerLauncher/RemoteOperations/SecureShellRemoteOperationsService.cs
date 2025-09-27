@@ -206,7 +206,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          var targetPath = configurationAggregator.QueryAppFolderPath();
 
          outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-         outputPaneWriter.WriteLine(Resources.RemoteCommandDeployRemoteFolderOutputPaneProgress, sourcePath, targetPath);
+         outputPaneWriter.WriteLine(Resources.RemoteCommandDeployRemoteFolderCommonProgress, sourcePath, targetPath);
          statusbar?.SetText(Resources.RemoteCommandDeployRemoteFolderStatusbarProgress);
 
          // Clean the remote target if requested
