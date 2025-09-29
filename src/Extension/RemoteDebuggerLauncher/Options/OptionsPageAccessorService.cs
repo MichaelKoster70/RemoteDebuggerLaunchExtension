@@ -74,6 +74,12 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <inheritdoc />
+      public string QueryToolsInstallFolderPath()
+      {
+         return GetDevicePage().ToolsInstallFolderPath;
+      }
+
+      /// <inheritdoc />
       public string QueryAppFolderPath()
       {
          return GetDevicePage().AppFolderPath;

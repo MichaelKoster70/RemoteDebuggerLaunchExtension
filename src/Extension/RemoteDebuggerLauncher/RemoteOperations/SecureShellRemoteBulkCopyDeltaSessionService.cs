@@ -6,11 +6,14 @@
 // ----------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Threading;
+using Newtonsoft.Json.Linq;
+using RemoteDebuggerLauncher.CheckSum;
 using Renci.SshNet;
 using Renci.SshNet.Common;
 
@@ -23,10 +26,12 @@ namespace RemoteDebuggerLauncher.RemoteOperations
    internal class SecureShellRemoteBulkCopyDeltaSessionService : IRemoteBulkCopySessionService
    {
       private readonly ISecureShellSessionBaseService session;
+      private readonly ConfigurationAggregator configuration;
 
-      internal SecureShellRemoteBulkCopyDeltaSessionService(ISecureShellSessionBaseService session)
+      internal SecureShellRemoteBulkCopyDeltaSessionService(ISecureShellSessionBaseService session, ConfigurationAggregator configuration)
       {
          this.session = session ?? throw new ArgumentNullException(nameof(session));
+         this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
       }
 
       /// <inheritdoc/>
@@ -45,14 +50,114 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          progressOutputPaneWriter?.Write(Resources.RemoteCommandCommonSshTarget, Settings.UserName, Settings.HostName);
          progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployRemoteFolderScpFullStart);
 
-         // ensure that remote tools are installed
-         await InstallRemoteToolsIfNeededAsync();
+         // Step 1: ensure that remote tools are installed
+         var remoteToolsPath = await InstallRemoteToolsIfNeededAsync();
 
+         // Step 2: Determine the sha 265 hashes of all files in the remote target directory
+         var remoteFileHashes = await GetRemoteFileHashesAsync(remoteTargetPath, remoteToolsPath);
+
+         // Step 3: Compare the local source directory with the remote target directory and determine which files need to be copied or deleted
+         var (filesToCopy, filesToDelete) = GetFileToCopyOrDelete(localSourcePath, remoteFileHashes);
+
+         // Step 4: Delete files that are not needed anymore
+         await DeleteRemoteFilesAsync(remoteTargetPath, filesToDelete, progressOutputPaneWriter);
+         
+         // Step 5: Copy files that are new or changed
+         await CopyRemoteFilesAsync(localSourcePath, remoteTargetPath, filesToCopy, progressOutputPaneWriter);
+      }
+
+      private async Task<string> InstallRemoteToolsIfNeededAsync()
+      {
+         // get the remote tools directory
+         using (var commands = session.CreateCommandSession())
+         {
+            // Step 1a: Get the runtime ID of the remote host
+            var runtimeId = await GetRuntimeIdAsync(commands);
+            var sourceDirectory = GetRemoteToolsSourceDirectory(runtimeId);
+
+            // Step 1b: get the remote target directory
+            var remoteTargetDirectory = await GetRemoteToolsTargetDirectoryAsync(commands);
+
+            // Step 2: Check if the remote tools are already installed - compare version.json file contents with expected version
+            bool installRemoteTools = true;
+            var (exitCode, stdOut, _) = await commands.TryExecuteCommandAsync($"cat {remoteTargetDirectory}/version.json");
+            if (exitCode == 0)
+            {
+               var localVersionContent = await ReadRemoteToolsVersionFileAsync();
+               var localVersion = JToken.Parse(localVersionContent);
+               var remoteVersion = JToken.Parse(stdOut);
+
+               if (JToken.DeepEquals(localVersion, remoteVersion))
+               {
+                  // same version - no need to install
+                  installRemoteTools = false;
+               }
+            }
+
+            // step 3: copy the tools if needed
+            if (installRemoteTools)
+            {
+               // copy the tools
+               using (var client = CreateScpClient())
+               {
+                  try
+                  {
+                     client.Connect();
+                     client.Upload(sourceDirectory, remoteTargetDirectory);
+                  }
+                  catch (SshException e)
+                  {
+                     throw new SecureShellSessionException(e.Message, e);
+                  }
+                  catch (InvalidOperationException e)
+                  {
+                     throw new SecureShellSessionException(e.Message, e);
+                  }
+               }
+
+               // set execution flag
+               _ = await commands.ExecuteCommandAsync($"chmod +x {remoteTargetDirectory}/*");
+            }
+
+            return remoteTargetDirectory;
+         }
+      }
+
+      private async Task<string> GetRemoteFileHashesAsync(string remoteTargetPath, string remoteToolsPath)
+      {
+         using (var commands = session.CreateCommandSession())
+         {
+            var fileHashes = await commands.ExecuteCommandAsync($"{remoteToolsPath}/checksum {remoteTargetPath}");
+            return fileHashes;
+         }
+      }
+
+      private static (IReadOnlyList<string> FilesToCopy, IReadOnlyList<string> FilesToDelete) GetFileToCopyOrDelete (string localSourcePath, string remoteFileHashes)
+      {
+         var comparer = new DirectoryScannerComparer(localSourcePath);
+
+         return comparer.GetMismatchedFiles(remoteFileHashes);
+      }
+
+      private async Task DeleteRemoteFilesAsync(string remoteTargetPath, IReadOnlyList<string> FilesToDelete, IOutputPaneWriterService progressOutputPaneWriter)
+      {
+         using (var commands = session.CreateCommandSession())
+         {
+            foreach (var file in FilesToDelete)
+            {
+               var absolutePath = UnixPath.Combine(remoteTargetPath, file);
+               progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployRemoteFolderScpDeltaDeleteFile, file);
+               _ = await commands.ExecuteCommandAsync($"rm {absolutePath}");
+            }
+         }
+      }
+
+      private async Task CopyRemoteFilesAsync(string localSourcePath, string remoteTargetPath, IReadOnlyList<string> FilesToCopy, IOutputPaneWriterService progressOutputPaneWriter)
+      {
          await Task.Run(() =>
          {
             try
             {
-               var sourcePathInfo = new DirectoryInfo(localSourcePath);
                using (var client = CreateScpClient())
                {
                   long progressBefore = 0;
@@ -106,7 +211,12 @@ namespace RemoteDebuggerLauncher.RemoteOperations
                   }
 
                   client.Connect();
-                  client.Upload(sourcePathInfo, remoteTargetPath);
+                  foreach (var file in FilesToCopy)
+                  {
+                     var sourcePathInfo = new FileInfo(Path.Combine(localSourcePath, file));
+                     var absoluteRemoteTargetPath = UnixPath.Combine(remoteTargetPath, file);
+                     client.Upload(sourcePathInfo, absoluteRemoteTargetPath);
+                  }
                }
             }
             catch (SshException e)
@@ -120,40 +230,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          });
       }
 
-      private async Task InstallRemoteToolsIfNeededAsync()
-      {
-         using (var commands = session.CreateCommandSession())
-         {
-            var runtimeId = await GetRuntimeIdAsync(commands);
-            var sourceDirectory = GetRemoteToolsDirectory(runtimeId);
-
-            // copy the tools
-            using (var client = CreateScpClient())
-            {
-               try
-               {
-                  client.Connect();
-                  foreach (var file in sourceDirectory.GetFiles())
-                  {
-                     client.Upload(file, $"~/{file.Name}");
-                     }
-                  }
-                  catch (SshException e)
-                  {
-                     throw new SecureShellSessionException(e.Message, e);
-                  }
-                  catch (InvalidOperationException e)
-                  {
-                     throw new SecureShellSessionException(e.Message, e);
-                  }
-               }
-               // set execution flag
-               _ = await commands.ExecuteCommandAsync("chmod +x ~/rdl/*");
-
-            }
-      }
-
-      private static DirectoryInfo GetRemoteToolsDirectory(string runtimeId)
+      private static DirectoryInfo GetRemoteToolsSourceDirectory(string runtimeId)
       {
          var assemblyLocation = Assembly.GetExecutingAssembly().Location;
          return new DirectoryInfo(Path.Combine(Path.GetDirectoryName(assemblyLocation), "ToolsRemote", runtimeId));
@@ -180,6 +257,25 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
          return runtimeId;
       }
+
+      private async Task<string> GetRemoteToolsTargetDirectoryAsync(ISecureShellSessionCommandingService commands)
+      {
+         var userHome = (await commands.ExecuteCommandAsync("pwd")).Trim('\n');
+
+         return UnixPath.Normalize(configuration.QueryToolsInstallFolderPath(), userHome);
+      }
+
+      private static Task<string> ReadRemoteToolsVersionFileAsync()
+      {
+         using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RemoteDebuggerLauncher.Resources.version.json"))
+         {
+            using (var reader = new StreamReader(stream))
+            {
+               return reader.ReadToEndAsync();
+            }
+         }
+      }
+
       private ScpClient CreateScpClient()
       {
          var key = new PrivateKeyFile(session.Settings.PrivateKeyFile);

@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace RemoteDebuggerLauncher.CheckSum
 {
@@ -27,22 +28,37 @@ namespace RemoteDebuggerLauncher.CheckSum
       }
 
       /// <summary>
-      /// Scans <paramref name="startFolder"/> and compares the resulting hashes to <paramref name="expectedHashes"/>.
+      /// Scans <paramref name="startFolder"/> and compares the resulting hashes to <paramref name="actualHashes"/>.
       /// Returns a list of file paths (relative to <paramref name="startFolder"/>) for which the hashes do
       /// not match, files that are present in expected but missing in the scan, or files that could not be read.
       /// </summary>
-      public IReadOnlyList<string> GetMismatchedFiles(IDictionary<string, string> expectedHashes)
+      public (IReadOnlyList<string> FilesToCopy, IReadOnlyList<string> FilesToDelete) GetMismatchedFiles(string actualHashesJson)
       {
-         if (expectedHashes == null)
+         if (string.IsNullOrWhiteSpace(actualHashesJson))
          {
-            throw new ArgumentNullException(nameof(expectedHashes));
+            throw new ArgumentException("Value cannot be null or whitespace.", nameof(actualHashesJson));
+         }
+         var actualHashes = JsonConvert.DeserializeObject<Dictionary<string, string>>(actualHashesJson);
+         return GetMismatchedFiles(actualHashes);
+      }
+
+      /// <summary>
+      /// Scans <paramref name="startFolder"/> and compares the resulting hashes to <paramref name="actualHashes"/>.
+      /// Returns a list of file paths (relative to <paramref name="startFolder"/>) for which the hashes do
+      /// not match, files that are present in expected but missing in the scan, or files that could not be read.
+      /// </summary>
+      /// <param name="actualHashes">The dictionary holding the actual file hashes</param>
+      public (IReadOnlyList<string> FilesToCopy, IReadOnlyList<string> FilesToDelete) GetMismatchedFiles(IDictionary<string, string> actualHashes)
+      {
+         if (actualHashes == null)
+         {
+            throw new ArgumentNullException(nameof(actualHashes));
          }
 
          // perform scan using base class API
          var result = ComputeHashes();
 
-         var (mismatches, _) = CollectMismatches(result.Hashes, expectedHashes);
-         return mismatches;
+         return CollectMismatches(actualHashes, result.Hashes);
       }
 
       /// <summary>

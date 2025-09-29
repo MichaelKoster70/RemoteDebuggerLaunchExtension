@@ -643,7 +643,16 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to copying all files with SCP....
+        ///   Looks up a localized string similar to deleting {0}.
+        /// </summary>
+        public static string RemoteCommandDeployRemoteFolderScpDeltaDeleteFile {
+            get {
+                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderScpDeltaDeleteFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to copying changed files with SCP....
         /// </summary>
         public static string RemoteCommandDeployRemoteFolderScpDeltaStart {
             get {
@@ -652,7 +661,7 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to copying changed files with SCP....
+        ///   Looks up a localized string similar to copying all files with SCP....
         /// </summary>
         public static string RemoteCommandDeployRemoteFolderScpFullStart {
             get {

@@ -282,6 +282,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="ToolsRemote\linux-x64\version.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="ToolsRemote\readme.md" />
     <None Include="ToolsExternal\readme.md" />
     <None Include="Infrastructure\readme.md" />
@@ -293,6 +296,14 @@
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="ToolsRemote\linux-arm\version.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsRemote\linux-arm64\version.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="ToolsRemote\version.json" />
     <None Include="VsInterop\readme.md" />
     <XamlPropertyRule Include="ProjectSystem\Debugger\SecureShellRemoteLaunchProfile.xaml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

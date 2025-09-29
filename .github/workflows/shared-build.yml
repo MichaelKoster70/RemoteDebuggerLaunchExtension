@@ -94,7 +94,9 @@ jobs:
        dotnet publish ${{ env.CheckSumProjectPath }} -c Release --framework net8.0 --runtime linux-x64 -o ${{ env.RemoteToolsOutputPath }}\linux-x64
        dotnet publish ${{ env.CheckSumProjectPath }} -c Release --framework net8.0 --runtime linux-arm64 -o ${{ env.RemoteToolsOutputPath }}\linux-arm64
        dotnet publish ${{ env.CheckSumProjectPath }} -c Release --framework net8.0 --runtime linux-arm -o ${{ env.RemoteToolsOutputPath }}\linux-arm
+       ${{ env.ScriptPath }}\WriteRemoteToolsVersionJson.ps1 -Version ${{ steps.git-version.outputs.versionPrefix }}
       shell: pwsh
+
 
     # Build Solution: restore NuGet Packages
     - name: 'Build Solution: NuGet restore'

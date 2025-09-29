@@ -617,12 +617,16 @@ Replace: Replace the existing certificate with a new one.</value>
     <value>Launching rsync (version 3.4.1  protocol version 32) session...</value>
     <comment>Output pane: rsync session starts</comment>
   </data>
-  <data name="RemoteCommandDeployRemoteFolderScpFullStart" xml:space="preserve">
+  <data name="RemoteCommandDeployRemoteFolderScpDeltaStart" xml:space="preserve">
     <value>copying changed files with SCP...</value>
     <comment>Output pane: SCP session starts</comment>
   </data>
-  <data name="RemoteCommandDeployRemoteFolderScpDeltaStart" xml:space="preserve">
+  <data name="RemoteCommandDeployRemoteFolderScpFullStart" xml:space="preserve">
     <value>copying all files with SCP...</value>
+    <comment>Output pane: SCP session starts</comment>
+  </data>
+  <data name="RemoteCommandDeployRemoteFolderScpDeltaDeleteFile" xml:space="preserve">
+    <value>deleting {0}</value>
     <comment>Output pane: SCP session starts</comment>
   </data>
 </root>

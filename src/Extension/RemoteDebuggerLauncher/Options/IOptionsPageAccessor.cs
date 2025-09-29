@@ -57,6 +57,12 @@ namespace RemoteDebuggerLauncher
       string QueryDebuggerInstallFolderPath();
 
       /// <summary>
+      /// Queries the path where the tools are installed on the remote device from the device option page.
+      /// </summary>
+      /// <returns>A <see langword="string"/> holding the path, <c>string.Empty</c> if not configured.</returns>
+      string QueryToolsInstallFolderPath();
+
+      /// <summary>
       /// Queries the path where the application gets deployed on the remote device from the device option page.
       /// </summary>
       /// <returns>A <see langword="string"/> holding the path, <c>string.Empty</c> if not configured.</returns>

@@ -135,7 +135,7 @@ namespace RemoteDebuggerLauncher
             case TransferMode.SecureCopyFull:
                return session;
             case TransferMode.SecureCopyDelta:
-               return new SecureShellRemoteBulkCopyDeltaSessionService(session);
+               return new SecureShellRemoteBulkCopyDeltaSessionService(session, configuration);
             case TransferMode.Rsync:
                return new SecureShellRemoteBulkCopyRsyncSessionService(session);
             default:

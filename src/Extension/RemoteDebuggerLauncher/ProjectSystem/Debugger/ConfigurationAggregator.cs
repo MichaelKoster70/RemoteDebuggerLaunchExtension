@@ -245,6 +245,19 @@ namespace RemoteDebuggerLauncher
          return PackageConstants.Options.DefaultValueDebuggerInstallFolderPath;
       }
 
+      public string QueryToolsInstallFolderPath()
+      {
+         var optionsToolsInstallFolderPath = optionsPageAccessor.QueryToolsInstallFolderPath();
+         if (!string.IsNullOrEmpty(optionsToolsInstallFolderPath))
+         {
+            // Options has path specified => use it
+            return optionsToolsInstallFolderPath;
+         }
+
+         // No path configured, relay on built-in defaults
+         return PackageConstants.Options.DefaultValueToolsInstallFolderPath;
+      }
+
       /// <summary>
       /// Queries the path where the application gets deployed on the remote device.
       /// </summary>
