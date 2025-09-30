@@ -43,6 +43,7 @@ jobs:
       ExtensionAssemblyInfoFile: ${{ github.workspace }}\src\Extension\GlobalAssemblyInfo.cs
       ExtensionManifestFile: ${{ github.workspace }}\src\Extension\RemoteDebuggerLauncher\source.extension.vsixmanifest
       ExtensionOutputPath: ${{ github.workspace }}\src\Extension\RemoteDebuggerLauncher\bin\${{ inputs.configuration }}
+      ExtensionToolsPath:  ${{ github.workspace }}\src\Extension\RemoteDebuggerLauncher\ToolsRemote
       CheckSumProjectPath: ${{ github.workspace }}\src\RemoteTools\CheckSum\exe\CheckSumExe.csproj
       RemoteToolsOutputPath: ${{ github.workspace }}\src\RemoteTools\bin
       ScriptPath: ${{ github.workspace }}\eng\scripts
@@ -94,7 +95,7 @@ jobs:
        dotnet publish ${{ env.CheckSumProjectPath }} -c Release --framework net8.0 --runtime linux-x64 -o ${{ env.RemoteToolsOutputPath }}\linux-x64
        dotnet publish ${{ env.CheckSumProjectPath }} -c Release --framework net8.0 --runtime linux-arm64 -o ${{ env.RemoteToolsOutputPath }}\linux-arm64
        dotnet publish ${{ env.CheckSumProjectPath }} -c Release --framework net8.0 --runtime linux-arm -o ${{ env.RemoteToolsOutputPath }}\linux-arm
-       ${{ env.ScriptPath }}\WriteRemoteToolsVersionJson.ps1 -Version ${{ steps.git-version.outputs.versionPrefix }}
+       ${{ env.ScriptPath }}\WriteRemoteToolsVersionJson.ps1 -SourceDirectory ${{ env.ExtensionToolsPath }} -Version ${{ steps.git-version.outputs.versionPrefix }}
       shell: pwsh
 
 
@@ -104,7 +105,7 @@ jobs:
       run: msbuild ${{ inputs.solution-path }} /t:Restore /p:Configuration=${{ inputs.configuration }}
       shell: pwsh
 
-    # Build Solution: creates PFX file from BASe64 secret if signing is enabled
+    # Build Solution: creates PFX file from BASE64 secret if signing is enabled
     - name: 'Build Solution: prepare VSIX signing'
       if:  ${{ inputs.store-artifacts && inputs.sign-vsix }}
       run: |

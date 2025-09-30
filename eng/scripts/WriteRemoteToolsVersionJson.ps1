@@ -31,14 +31,11 @@
 #>
 
 param(
-    [Parameter(Mandatory = $true)]
-    [string]$Version
+    [Parameter(Mandatory=$true)][string]$SourceDirectory,
+    [Parameter(Mandatory = $true)][string]$Version
 )
-
-$toolsRemoteDir = Join-Path $PSScriptRoot "..\src\Extension\RemoteDebuggerLauncher\ToolsRemote" | Resolve-Path -Relative
-
 # Get all subdirectories (do not include the root directory itself)
-$targetDirectories = Get-ChildItem -Path $toolsRemoteDir -Directory -Recurse | ForEach-Object { $_.FullName }
+$targetDirectories = Get-ChildItem -Path $SourceDirectory -Directory -Recurse | ForEach-Object { $_.FullName }
 
 # Create the version object
 $versionObj = @{
