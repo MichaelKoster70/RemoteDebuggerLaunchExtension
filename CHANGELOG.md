@@ -1,5 +1,16 @@
 # Release Notes
 
+## 0.13.0
+Add support for .NET 9 & 10
+
+### Features
+- Added support for .NET 9
+- Added support for .NET 10 (future-ready when released)
+- Added .NET 9 sample projects
+
+### Bug Fixes
+- none
+
 ## 0.9.0
 Initial release supporting Visual Studio 2022 17.2 or newer.
 
