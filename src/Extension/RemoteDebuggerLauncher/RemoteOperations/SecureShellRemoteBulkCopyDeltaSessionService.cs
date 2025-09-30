@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using EnvDTE;
+using EnvDTE80;
+using Microsoft.Build.Tasks;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Threading;
 using Newtonsoft.Json.Linq;
@@ -97,6 +100,9 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             // step 3: copy the tools if needed
             if (installRemoteTools)
             {
+               // create target directory
+               _ = await commands.ExecuteCommandAsync($"mkdir -p {remoteTargetDirectory}");
+
                // copy the tools
                using (var client = CreateScpClient())
                {
@@ -116,7 +122,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
                }
 
                // set execution flag
-               _ = await commands.ExecuteCommandAsync($"chmod +x {remoteTargetDirectory}/*");
+               _ = await commands.ExecuteCommandAsync($"find {remoteTargetDirectory} -type f! -name \"*.*\" -exec chmod +x {{ }} \\;");
             }
 
             return remoteTargetDirectory;
@@ -267,7 +273,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
       private static Task<string> ReadRemoteToolsVersionFileAsync()
       {
-         using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RemoteDebuggerLauncher.Resources.version.json"))
+         using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RemoteDebuggerLauncher.ToolsRemote.version.json"))
          {
             using (var reader = new StreamReader(stream))
             {

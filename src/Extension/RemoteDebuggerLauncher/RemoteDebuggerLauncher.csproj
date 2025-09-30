@@ -284,6 +284,7 @@
     </Content>
     <Content Include="ToolsRemote\linux-x64\version.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <None Include="ToolsRemote\readme.md" />
     <None Include="ToolsExternal\readme.md" />
@@ -302,6 +303,7 @@
     </Content>
     <Content Include="ToolsRemote\linux-arm64\version.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <EmbeddedResource Include="ToolsRemote\version.json" />
     <None Include="VsInterop\readme.md" />

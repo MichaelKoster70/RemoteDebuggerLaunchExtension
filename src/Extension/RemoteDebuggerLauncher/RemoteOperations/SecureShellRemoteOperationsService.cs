@@ -411,20 +411,20 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
       #region private methods
       /// <summary>
-      /// Cleans the specified folder leaving it empty.
+      /// Cleans the specified folder leaving it empty or creates it if it does not exist.
       /// </summary>
       /// <param name="remoteTargetPath">The absolute path to the remote target path to clean.</param>
       /// <param name="clean">if set to <c>true</c> the folder will be cleaned.</param>
       private async Task CleanFolderAsync(string remoteTargetPath, bool clean)
       {
          ThrowIf.ArgumentNullOrEmpty(remoteTargetPath, nameof(remoteTargetPath));
-         if (clean)
+         using (var commandSession = session.CreateCommandSession())
          {
-            using (var commandSession = session.CreateCommandSession())
+            if (clean)
             {
                _ = await commandSession.ExecuteCommandAsync($"[ -d {remoteTargetPath} ] | rm -rf {remoteTargetPath}/*");
-               _ = await commandSession.ExecuteCommandAsync($"mkdir -p {remoteTargetPath}");
             }
+            _ = await commandSession.ExecuteCommandAsync($"mkdir -p {remoteTargetPath}");
          }
       }
 
