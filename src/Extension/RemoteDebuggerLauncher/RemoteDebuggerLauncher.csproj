@@ -72,6 +72,7 @@
     <Compile Include="Infrastructure\FileHelper.cs" />
     <Compile Include="RemoteOperations\IRemoteBulkCopySessionService.cs" />
     <Compile Include="RemoteOperations\ISecureShellSessionBaseService.cs" />
+    <Compile Include="RemoteOperations\SecureShellCopyProgress.cs" />
     <Compile Include="RemoteOperations\SecureShellRemoteBulkCopyDeltaSessionService.cs" />
     <Compile Include="RemoteOperations\SecureShellRemoteBulkCopyRsyncSessionService.cs" />
     <Compile Include="RemoteOperations\ShellStreamExtensions.cs" />

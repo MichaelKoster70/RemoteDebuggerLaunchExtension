@@ -8,8 +8,6 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Threading;
 using Renci.SshNet;
 using Renci.SshNet.Common;
 
@@ -78,54 +76,14 @@ namespace RemoteDebuggerLauncher.RemoteOperations
                var sourcePathInfo = new DirectoryInfo(localSourcePath);
                using (var client = CreateScpClient())
                {
-                  long progressBefore = 0;
-                  string filenameBefore = string.Empty;
-
                   // for the moment, we assume that the path names does not have any character that have special meaning for a Linux host
                   client.RemotePathTransformation = RemotePathTransformation.None;
 
                   if (progressOutputPaneWriter != null)
                   {
                      // attach progress output pane writer if available
-#pragma warning disable VSTHRD101 // Avoid unsupported async delegates
-                     client.Uploading += async (s, e) =>
-                     {
-                        if (filenameBefore == e.Filename)
-                        {
-                           // same file
-                           if (e.Uploaded == e.Size)
-                           {
-                              await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                              progressOutputPaneWriter.WriteLine(Resources.RemoteCommandUploadOutputPaneDone);
-                           }
-                           else
-                           {
-                              long progressNow = 100 * e.Uploaded / e.Size;
-                              if ((progressNow > progressBefore) && (progressNow % 10 == 0))
-                              {
-                                 progressBefore = progressNow;
-                                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                                 progressOutputPaneWriter.Write(Resources.RemoteCommandUploadOutputPaneProgress);
-                              }
-                           }
-                        }
-                        else
-                        {
-                           // new file
-                           filenameBefore = e.Filename;
-                           progressBefore = 0;
-                           await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                           progressOutputPaneWriter.Write(Resources.RemoteCommandUploadOutputPaneStart, e.Filename);
-
-                           if (e.Uploaded == e.Size)
-                           {
-                              progressOutputPaneWriter.WriteLine(Resources.RemoteCommandUploadOutputPaneDone);
-                           }
-                        }
-
-                        await TaskScheduler.Default;
-                     };
-#pragma warning restore VSTHRD101 // Avoid unsupported async delegates
+                     var progressReporter = new SecureShellCopyProgressReporter(progressOutputPaneWriter);
+                     client.Uploading += progressReporter.OnUploadFolder;
                   }
 
                   client.Connect();
@@ -157,36 +115,14 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
                using (var client = CreateScpClient())
                {
-                  long progressBefore = 0;
-
                   // for the moment, we assume that the path names does not have any character that have special meaning for a Linux host
                   client.RemotePathTransformation = RemotePathTransformation.None;
 
                   if (progressOutputPaneWriter != null)
                   {
                      // attach progress output pane writer if available
-#pragma warning disable VSTHRD101 // Avoid unsupported async delegates
-                     client.Uploading += async (s, e) =>
-                     {
-                        if (e.Uploaded == e.Size)
-                        {
-                           await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                           progressOutputPaneWriter.WriteLine(Resources.RemoteCommandUploadOutputPaneDone);
-                        }
-                        else
-                        {
-                           long progressNow = 100 * e.Uploaded / e.Size;
-                           if ((progressNow > progressBefore) && (progressNow % 10 == 0))
-                           {
-                              progressBefore = progressNow;
-                              await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                              progressOutputPaneWriter.Write(Resources.RemoteCommandUploadOutputPaneProgress);
-                           }
-                        }
-
-                        await TaskScheduler.Default;
-                     };
-#pragma warning restore VSTHRD101 // Avoid unsupported async delegates
+                     var progressReporter = new SecureShellCopyProgressReporter(progressOutputPaneWriter);
+                     client.Uploading += progressReporter.OnUploadFile;
                   }
 
                   client.Connect();
