@@ -307,6 +307,24 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 9.0.
+        /// </summary>
+        public static string InstallDotnetVersion90DisplayName {
+            get {
+                return ResourceManager.GetString("InstallDotnetVersion90DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 10.0.
+        /// </summary>
+        public static string InstallDotnetVersion100DisplayName {
+            get {
+                return ResourceManager.GetString("InstallDotnetVersion100DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Latest STS:  The most recent Standard Term Support release of .NET
         ///Latest LTS:  The most recent Long Term Support release of .NET.
         /// </summary>

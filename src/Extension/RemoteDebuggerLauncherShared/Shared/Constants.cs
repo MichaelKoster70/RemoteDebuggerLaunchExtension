@@ -23,6 +23,12 @@ namespace RemoteDebuggerLauncher.Shared
          /// <summary>Name of the STS channel expected by the .NET install scripts.</summary>
          public const string ChannelSTS = "STS";
 
+         /// <summary>Name of the 10.0 channel expected by the .NET install scripts.</summary>
+         public const string Channel100 = "10.0";
+
+         /// <summary>Name of the 9.0 channel expected by the .NET install scripts.</summary>
+         public const string Channel90 = "9.0";
+
          /// <summary>Name of the 8.0 channel expected by the .NET install scripts.</summary>
          public const string Channel80 = "8.0";
 
