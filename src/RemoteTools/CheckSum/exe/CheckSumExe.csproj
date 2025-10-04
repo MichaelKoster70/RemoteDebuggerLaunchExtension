@@ -6,6 +6,7 @@
     <Nullable>disable</Nullable>
     <InvariantGlobalization>true</InvariantGlobalization>
     <AssemblyName>checksum</AssemblyName>
+    <AssemblyOriginatorKeyFile>..\..\..\SigningKey.snk</AssemblyOriginatorKeyFile>
 
     <!-- Disable AOT as we cannot build on a linux target, use R2R -->
     <PublishAot>false</PublishAot>

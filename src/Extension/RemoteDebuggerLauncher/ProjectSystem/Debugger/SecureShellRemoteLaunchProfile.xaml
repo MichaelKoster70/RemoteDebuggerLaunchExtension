@@ -59,15 +59,6 @@
                    Subcategory="Credentials"
                    Default="%userprofile%\\.ssh\\id_rsa" />
 
-  <EnumProperty Name="transferMode"
-                DisplayName="Transfer Mode"
-                Description="Defines the transfer mode 'Secure Copy Full/Delta' or 'Rsync'."
-                Subcategory="Deployment Options" >
-    <EnumValue Name="SecureCopyFull" />
-    <EnumValue Name="SecureCopyDelta" />
-    <EnumValue Name="Rsync" />
-  </EnumProperty>
-
   <StringProperty Name="EnvironmentVariables"
                   DisplayName="Environment variables"
                   Description="The environment variables to set prior to running the process."
@@ -108,6 +99,20 @@
     <EnumValue Name="FrameworkDependant" />
     <EnumValue Name="SelfContained" />
   </EnumProperty>
+
+  <EnumProperty Name="deployTransferMode"
+              DisplayName="Transfer Mode"
+              Description="Defines the transfer mode 'Secure Copy Full/Delta' or 'Rsync'."
+              Subcategory="Deployment Options" >
+    <EnumValue Name="SecureCopyFull" />
+    <EnumValue Name="SecureCopyDelta" />
+    <EnumValue Name="Rsync" />
+  </EnumProperty>
+
+  <BoolProperty Name="deployClean"
+                DisplayName="Deploy Clean"
+                Description="Indicates whether to clean the deployment folder before deploying."
+                Subcategory="Deployment Options" />
 
   <BoolProperty Name="deployOnStartDebugging"
                 DisplayName="Deploy on start debugging"

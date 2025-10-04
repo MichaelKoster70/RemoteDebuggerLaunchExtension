@@ -10,11 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
-using EnvDTE;
-using EnvDTE80;
-using Microsoft.Build.Tasks;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Threading;
+using EnvDTE100;
 using Newtonsoft.Json.Linq;
 using RemoteDebuggerLauncher.CheckSum;
 using Renci.SshNet;
@@ -51,110 +47,103 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          ThrowIf.ArgumentNullOrEmpty(remoteTargetPath, nameof(remoteTargetPath));
 
          progressOutputPaneWriter?.Write(Resources.RemoteCommandCommonSshTarget, Settings.UserName, Settings.HostName);
-         progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployRemoteFolderScpFullStart);
+         progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployRemoteFolderScpDeltaStart);
 
-         // Step 1: ensure that remote tools are installed
-         var remoteToolsPath = await InstallRemoteToolsIfNeededAsync();
-
-         // Step 2: Determine the sha 265 hashes of all files in the remote target directory
-         var remoteFileHashes = await GetRemoteFileHashesAsync(remoteTargetPath, remoteToolsPath);
-
-         // Step 3: Compare the local source directory with the remote target directory and determine which files need to be copied or deleted
-         var (filesToCopy, filesToDelete) = GetFileToCopyOrDelete(localSourcePath, remoteFileHashes);
-
-         // Step 4: Delete files that are not needed anymore
-         await DeleteRemoteFilesAsync(remoteTargetPath, filesToDelete, progressOutputPaneWriter);
-         
-         // Step 5: Copy files that are new or changed
-         await CopyRemoteFilesAsync(localSourcePath, remoteTargetPath, filesToCopy, progressOutputPaneWriter);
-      }
-
-      private async Task<string> InstallRemoteToolsIfNeededAsync()
-      {
-         // get the remote tools directory
          using (var commands = session.CreateCommandSession())
          {
-            // Step 1a: Get the runtime ID of the remote host
-            var runtimeId = await GetRuntimeIdAsync(commands);
-            var sourceDirectory = GetRemoteToolsSourceDirectory(runtimeId);
+            // Step 1: Get the user home, needed to normalize path expressions
+            var userHome = await GetUserHomeAsync(commands);
+            remoteTargetPath = UnixPath.Normalize(remoteTargetPath, userHome);
 
-            // Step 1b: get the remote target directory
-            var remoteTargetDirectory = await GetRemoteToolsTargetDirectoryAsync(commands);
+            // Step 2: ensure that remote tools are installed
+            var remoteToolsPath = await InstallRemoteToolsIfNeededAsync(commands, userHome);
 
-            // Step 2: Check if the remote tools are already installed - compare version.json file contents with expected version
-            bool installRemoteTools = true;
-            var (exitCode, stdOut, _) = await commands.TryExecuteCommandAsync($"cat {remoteTargetDirectory}/version.json");
-            if (exitCode == 0)
-            {
-               var localVersionContent = await ReadRemoteToolsVersionFileAsync();
-               var localVersion = JToken.Parse(localVersionContent);
-               var remoteVersion = JToken.Parse(stdOut);
+            // Step 3: Determine the sha 265 hashes of all files in the remote target directory
+            var remoteFileHashes = await GetRemoteFileHashesAsync(commands, remoteTargetPath, remoteToolsPath);
 
-               if (JToken.DeepEquals(localVersion, remoteVersion))
-               {
-                  // same version - no need to install
-                  installRemoteTools = false;
-               }
-            }
+            // Step 4: Compare the local source directory with the remote target directory and determine which files need to be copied or deleted
+            var (filesToCopy, filesToDelete) = GetFilesToCopyOrDelete(localSourcePath, remoteFileHashes);
 
-            // step 3: copy the tools if needed
-            if (installRemoteTools)
-            {
-               // create target directory
-               _ = await commands.ExecuteCommandAsync($"mkdir -p {remoteTargetDirectory}");
+            // Step 5: Delete files that are not needed anymore
+            await DeleteRemoteFilesAsync(commands, remoteTargetPath, filesToDelete, progressOutputPaneWriter);
 
-               // copy the tools
-               using (var client = CreateScpClient())
-               {
-                  try
-                  {
-                     client.Connect();
-                     client.Upload(sourceDirectory, remoteTargetDirectory);
-                  }
-                  catch (SshException e)
-                  {
-                     throw new SecureShellSessionException(e.Message, e);
-                  }
-                  catch (InvalidOperationException e)
-                  {
-                     throw new SecureShellSessionException(e.Message, e);
-                  }
-               }
-
-               // set execution flag on the binary files only
-               _ = await commands.ExecuteCommandAsync($"find {remoteTargetDirectory} -type f! -name \"*.*\" -exec chmod +x {{ }} \\;");
-            }
-
-            return remoteTargetDirectory;
+            // Step 6: Copy files that are new or changed
+            await CopyRemoteFilesAsync(localSourcePath, remoteTargetPath, filesToCopy, progressOutputPaneWriter);
          }
       }
 
-      private async Task<string> GetRemoteFileHashesAsync(string remoteTargetPath, string remoteToolsPath)
+      private async Task<string> InstallRemoteToolsIfNeededAsync(ISecureShellSessionCommandingService commands, string userHome)
       {
-         using (var commands = session.CreateCommandSession())
+         // Step 1a: Get the runtime ID of the remote host
+         var runtimeId = await GetRuntimeIdAsync(commands);
+         var sourceDirectory = GetRemoteToolsSourceDirectory(runtimeId);
+
+         // Step 1b: get the remote target directory
+         var remoteTargetDirectory = GetRemoteToolsTargetDirectory(userHome);
+
+         // Step 2: Check if the remote tools are already installed - compare version.json file contents with expected version
+         bool installRemoteTools = true;
+         var (exitCode, stdOut, _) = await commands.TryExecuteCommandAsync($"cat {remoteTargetDirectory}/version.json");
+         if (exitCode == 0)
          {
-            var fileHashes = await commands.ExecuteCommandAsync($"{remoteToolsPath}/checksum {remoteTargetPath}");
-            return fileHashes;
+            var localVersionContent = await ReadRemoteToolsVersionFileAsync();
+            var localVersion = JToken.Parse(localVersionContent);
+            var remoteVersion = JToken.Parse(stdOut);
+
+            if (JToken.DeepEquals(localVersion, remoteVersion))
+            {
+               // same version - no need to install
+               installRemoteTools = false;
+            }
          }
+
+         // step 3: copy the tools if needed
+         if (installRemoteTools)
+         {
+            // create target directory
+            _ = await commands.ExecuteCommandAsync($"mkdir -p {remoteTargetDirectory}");
+
+            // copy the tools
+            using (var client = CreateScpClient())
+            {
+               try
+               {
+                  client.Connect();
+                  client.Upload(sourceDirectory, remoteTargetDirectory);
+               }
+               catch (SshException e)
+               {
+                  throw new SecureShellSessionException(e.Message, e);
+               }
+               catch (InvalidOperationException e)
+               {
+                  throw new SecureShellSessionException(e.Message, e);
+               }
+            }
+
+            // set execution flag on the binary files only
+            _ = await commands.ExecuteCommandAsync($"find {remoteTargetDirectory} -type f ! -name \"*.*\" -exec chmod +x {{ }} \\;");
+         }
+
+         return remoteTargetDirectory;
       }
 
-      private static (IReadOnlyList<string> FilesToCopy, IReadOnlyList<string> FilesToDelete) GetFileToCopyOrDelete (string localSourcePath, string remoteFileHashes)
+      private static Task<string> GetRemoteFileHashesAsync(ISecureShellSessionCommandingService commands, string remoteTargetPath, string remoteToolsPath) => commands.ExecuteCommandAsync($"{remoteToolsPath}/checksum {remoteTargetPath}");
+
+      private static (IReadOnlyList<string> FilesToCopy, IReadOnlyList<string> FilesToDelete) GetFilesToCopyOrDelete (string localSourcePath, string remoteFileHashes)
       {
          var comparer = new DirectoryScannerComparer(localSourcePath);
 
          return comparer.GetMismatchedFiles(remoteFileHashes);
       }
 
-      private async Task DeleteRemoteFilesAsync(string remoteTargetPath, IReadOnlyList<string> FilesToDelete, IOutputPaneWriterService progressOutputPaneWriter)
+      private static async Task DeleteRemoteFilesAsync(ISecureShellSessionCommandingService commands, string remoteTargetPath, IReadOnlyList<string> FilesToDelete, IOutputPaneWriterService progressOutputPaneWriter)
       {
-         using (var commands = session.CreateCommandSession())
+         foreach (var file in FilesToDelete)
          {
-            foreach (var file in FilesToDelete)
-            {
-               var absolutePath = UnixPath.Combine(remoteTargetPath, file);
-               progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployRemoteFolderScpDeltaDeleteFile, file);
-               _ = await commands.ExecuteCommandAsync($"rm {absolutePath}");
-            }
+            var absolutePath = UnixPath.Combine(remoteTargetPath, file);
+            progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployRemoteFolderScpDeltaDeleteFile, file);
+            _ = await commands.ExecuteCommandAsync($"rm {absolutePath}");
          }
       }
 
@@ -224,12 +213,10 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          return runtimeId;
       }
 
-      private async Task<string> GetRemoteToolsTargetDirectoryAsync(ISecureShellSessionCommandingService commands)
-      {
-         var userHome = (await commands.ExecuteCommandAsync("pwd")).Trim('\n');
+      private static async Task<string> GetUserHomeAsync(ISecureShellSessionCommandingService commands) =>  (await commands.ExecuteCommandAsync("pwd")).Trim('\n');
 
-         return UnixPath.Normalize(configuration.QueryToolsInstallFolderPath(), userHome);
-      }
+      private string GetRemoteToolsTargetDirectory(string userHome) => UnixPath.Normalize(configuration.QueryToolsInstallFolderPath(), userHome);
+
 
       private static Task<string> ReadRemoteToolsVersionFileAsync()
       {

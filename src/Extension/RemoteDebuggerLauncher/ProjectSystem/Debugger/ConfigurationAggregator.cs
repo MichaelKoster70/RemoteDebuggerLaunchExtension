@@ -148,7 +148,7 @@ namespace RemoteDebuggerLauncher
       /// <returns></returns>
       public TransferMode QueryTransferMode()
       {
-         if (GetOtherSetting(SecureShellRemoteLaunchProfile.transferModeProperty, out string transferModeText) 
+         if (GetOtherSetting(SecureShellRemoteLaunchProfile.deployTransferModeProperty, out string transferModeText) 
             && Enum.TryParse<TransferMode>(transferModeText, out TransferMode transferMode))
          {
             // Launch profile value => use it
@@ -156,7 +156,19 @@ namespace RemoteDebuggerLauncher
          }
 
          // use options value or default
-         return optionsPageAccessor.QueryTransferMode();
+         return optionsPageAccessor.QueryDeployTransferMode();
+      }
+
+      public bool QueryDeployClean()
+      {
+         if (GetOtherSetting(SecureShellRemoteLaunchProfile.deployCleanProperty, out bool deployClean))
+         {
+            // Launch profile value => use it
+            return deployClean;
+         }
+
+         // use options value or default
+         return optionsPageAccessor.QueryDeployClean();
       }
 
       /// <summary>

@@ -2,7 +2,7 @@
   "profiles": {
     "CheckSum": {
       "commandName": "Project",
-      "commandLineArgs": "D:\\DevData\\DataSet1"
+      "commandLineArgs": "D:\\Temp\\test"
     }
   }
 }

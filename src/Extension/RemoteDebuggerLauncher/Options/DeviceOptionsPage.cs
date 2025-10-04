@@ -58,11 +58,17 @@ namespace RemoteDebuggerLauncher
       [DefaultValue(PackageConstants.Options.DefaultValueForceIPv4)]
       public bool ForceIPv4 { get; set; } = PackageConstants.Options.DefaultValueForceIPv4;
 
-      [Category(PackageConstants.Options.PageCategoryTransfer)]
+      [Category(PackageConstants.Options.PageCategoryDeployment)]
       [DisplayName("Transfer Mode")]
       [Description("The means to copy assets to the target device.")]
       [DefaultValue(TransferMode.SecureCopyFull)]
-      public TransferMode TransferMode { get; set; } = TransferMode.SecureCopyFull;
+      public TransferMode DeployTransferMode { get; set; } = TransferMode.SecureCopyFull;
+
+      [Category(PackageConstants.Options.PageCategoryDeployment)]
+      [DisplayName("Clean")]
+      [Description("Whether to clean the target directory before transferring files.")]
+      [DefaultValue(false)]
+      public bool DeployClean { get; set; } = false;
 
       [Category(PackageConstants.Options.PageCategoryFolders)]
       [DisplayName(".NET install folder path")]

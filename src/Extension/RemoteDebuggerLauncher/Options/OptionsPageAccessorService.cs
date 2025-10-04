@@ -56,9 +56,15 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <inheritdoc />
-      public TransferMode QueryTransferMode()
+      public TransferMode QueryDeployTransferMode()
       {
-         return GetDevicePage().TransferMode;
+         return GetDevicePage().DeployTransferMode;
+      }
+
+      /// <inheritdoc />
+      public bool QueryDeployClean()
+      {
+         return GetDevicePage().DeployClean;
       }
 
       /// <inheritdoc />

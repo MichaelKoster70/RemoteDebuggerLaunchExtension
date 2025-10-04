@@ -42,7 +42,13 @@ namespace RemoteDebuggerLauncher
       /// Queries the value which transport mode to use.
       /// </summary>
       /// <returns>A <see cref="TransferMode"/> holding the value, <c>TransferMode.SCP</c> if not configured.</returns>
-      TransferMode QueryTransferMode();
+      TransferMode QueryDeployTransferMode();
+
+      /// <summary>
+      /// Queries the flag whether to clean the target directory before deployment from the device option page.
+      /// </summary>
+      /// <returns><c>true</c> to clean, <c>false</c> otherwise.</returns>
+      bool QueryDeployClean();
 
       /// <summary>
       /// Queries the folder path where the .NET framework is installed on the remote device from the device option page.

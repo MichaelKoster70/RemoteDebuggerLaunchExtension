@@ -5,8 +5,6 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-using System;
-
 namespace RemoteDebuggerLauncher.CheckSum
 {
    internal static class Program
@@ -20,9 +18,7 @@ namespace RemoteDebuggerLauncher.CheckSum
          }
 
          var scanner = new DirectoryScannerConsoleOutput(args[0]);
-         scanner.ComputeHashesAndPrintAsJson();
-
-         return 0;
+         return scanner.ComputeHashesAndPrintAsJson();
       }
    }
 }

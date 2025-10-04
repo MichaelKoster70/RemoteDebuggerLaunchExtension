@@ -6,11 +6,17 @@
     <Nullable>disable</Nullable>
     <InvariantGlobalization>true</InvariantGlobalization>
     <AssemblyName>CheckSum</AssemblyName>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\SigningKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\DirectoryScanner.cs" Link="DirectoryScanner.cs" />
     <Compile Include="..\ScanResult.cs" Link="ScanResult.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\SigningKey.snk" Link="SigningKey.snk" />
   </ItemGroup>
 
   <ItemGroup>
