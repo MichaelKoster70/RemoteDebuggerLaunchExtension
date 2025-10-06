@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
-using EnvDTE100;
 using Newtonsoft.Json.Linq;
 using RemoteDebuggerLauncher.CheckSum;
 using Renci.SshNet;
@@ -86,9 +85,8 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          var (exitCode, stdOut, _) = await commands.TryExecuteCommandAsync($"cat {remoteTargetDirectory}/version.json");
          if (exitCode == 0)
          {
-            var localVersionContent = await ReadRemoteToolsVersionFileAsync();
-            var localVersion = JToken.Parse(localVersionContent);
-            var remoteVersion = JToken.Parse(stdOut);
+            var localVersion = await ReadRemoteToolsVersionFileAsync("version");
+            var remoteVersion = JToken.Parse(stdOut)["version"];
 
             if (JToken.DeepEquals(localVersion, remoteVersion))
             {
@@ -122,7 +120,15 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             }
 
             // set execution flag on the binary files only
-            _ = await commands.ExecuteCommandAsync($"find {remoteTargetDirectory} -type f ! -name \"*.*\" -exec chmod +x {{ }} \\;");
+            var tools = await ReadRemoteToolsVersionFileAsync("tools");
+            if (tools is JArray toolArray)
+            {
+               foreach (var tool in toolArray)
+               {
+                  var toolPath = $"{remoteTargetDirectory}/{tool}";
+                 _ = await commands.ExecuteCommandAsync($"chmod +x {toolPath}");
+               }
+            }
          }
 
          return remoteTargetDirectory;
@@ -218,13 +224,14 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       private string GetRemoteToolsTargetDirectory(string userHome) => UnixPath.Normalize(configuration.QueryToolsInstallFolderPath(), userHome);
 
 
-      private static Task<string> ReadRemoteToolsVersionFileAsync()
+      private static async Task<JToken> ReadRemoteToolsVersionFileAsync(string key)
       {
          using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RemoteDebuggerLauncher.ToolsRemote.version.json"))
          {
             using (var reader = new StreamReader(stream))
             {
-               return reader.ReadToEndAsync();
+               var content = await reader.ReadToEndAsync();
+               return JToken.Parse(content)[key];
             }
          }
       }
