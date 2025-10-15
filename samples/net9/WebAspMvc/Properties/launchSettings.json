@@ -1,0 +1,33 @@
+{
+  "profiles": {
+    "WebAspMvc": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7246;http://localhost:5164"
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "SSH Remote": {
+      "commandName": "SshRemoteLaunch",
+      "hostName": "192.168.1.106",
+      "userName": "pi"
+    }
+  },
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:18499",
+      "sslPort": 44346
+    }
+  }
+}

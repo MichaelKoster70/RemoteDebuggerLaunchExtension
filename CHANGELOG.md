@@ -1,10 +1,21 @@
 # Release Notes
 
+## 0.13.0
+Add support for .NET 9 & 10
+
+### Features
+- Added support for .NET 9
+- Added support for .NET 10 (future-ready when released)
+- Added .NET 9 sample projects
+
+### Bug Fixes
+- none
+
 ## 0.12.1
 Minor bugfix release fixing a SSH private key issue.
 
 ### Features
-- Added support for .NET 8
+- None
 
 ### Bug Fixes
 - Fixed a bug failing to load SSH private keys in some cases.
