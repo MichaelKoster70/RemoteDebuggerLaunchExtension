@@ -39,6 +39,18 @@ namespace RemoteDebuggerLauncher
       bool QueryForceIPv4();
 
       /// <summary>
+      /// Queries the value which transport mode to use.
+      /// </summary>
+      /// <returns>A <see cref="TransferMode"/> holding the value, <c>TransferMode.SCP</c> if not configured.</returns>
+      TransferMode QueryDeployTransferMode();
+
+      /// <summary>
+      /// Queries the flag whether to clean the target directory before deployment from the device option page.
+      /// </summary>
+      /// <returns><c>true</c> to clean, <c>false</c> otherwise.</returns>
+      bool QueryDeployClean();
+
+      /// <summary>
       /// Queries the folder path where the .NET framework is installed on the remote device from the device option page.
       /// </summary>
       /// <returns>A <see langword="string"/> holding the path, <c>string.Empty</c> if not configured.</returns>
@@ -49,6 +61,12 @@ namespace RemoteDebuggerLauncher
       /// </summary>
       /// <returns>A <see langword="string"/> holding the path, <c>string.Empty</c> if not configured.</returns>
       string QueryDebuggerInstallFolderPath();
+
+      /// <summary>
+      /// Queries the path where the tools are installed on the remote device from the device option page.
+      /// </summary>
+      /// <returns>A <see langword="string"/> holding the path, <c>string.Empty</c> if not configured.</returns>
+      string QueryToolsInstallFolderPath();
 
       /// <summary>
       /// Queries the path where the application gets deployed on the remote device from the device option page.

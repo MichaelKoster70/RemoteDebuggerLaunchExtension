@@ -117,7 +117,7 @@ namespace RemoteDebuggerLauncher
       /// Gets the the project configuration (Debug/Release).
       /// </summary>
       /// <param name="configuredProject">The CPS configured project to read from.</param>
-      /// <returns>The <see langword="string"/> holding the confighuration.</returns>
+      /// <returns>The <see langword="string"/> holding the configuration.</returns>
       public static string GetConfiguration(this ConfiguredProject configuredProject) => configuredProject.ProjectConfiguration.Dimensions["Configuration"];
 
       /// <summary>

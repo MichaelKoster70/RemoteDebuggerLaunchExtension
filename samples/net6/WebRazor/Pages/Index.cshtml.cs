@@ -8,7 +8,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace WebRazorApp.Pages
+namespace WebRazor.Pages
 {
    public class IndexModel : PageModel
    {

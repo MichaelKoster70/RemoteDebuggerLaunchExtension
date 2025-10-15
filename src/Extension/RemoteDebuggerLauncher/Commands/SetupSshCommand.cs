@@ -9,7 +9,7 @@ using System;
 using System.ComponentModel.Design;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
-using RemoteDebuggerLauncher.SecureShell;
+using RemoteDebuggerLauncher.RemoteOperations;
 
 namespace RemoteDebuggerLauncher
 {

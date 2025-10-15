@@ -10,10 +10,10 @@ using System.ComponentModel;
 using System.Net;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
+using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher
 {
-#pragma warning disable CA1812 // By design, Visual Studio will instanciate the class for us
    /// <summary>
    /// Implements the Device Options page shown in the VS options tree under "Remote Debugger Launcher"
    /// </summary>
@@ -58,6 +58,18 @@ namespace RemoteDebuggerLauncher
       [DefaultValue(PackageConstants.Options.DefaultValueForceIPv4)]
       public bool ForceIPv4 { get; set; } = PackageConstants.Options.DefaultValueForceIPv4;
 
+      [Category(PackageConstants.Options.PageCategoryDeployment)]
+      [DisplayName("Transfer Mode")]
+      [Description("The means to copy assets to the target device.")]
+      [DefaultValue(TransferMode.SecureCopyFull)]
+      public TransferMode DeployTransferMode { get; set; } = TransferMode.SecureCopyFull;
+
+      [Category(PackageConstants.Options.PageCategoryDeployment)]
+      [DisplayName("Clean")]
+      [Description("Whether to clean the target directory before transferring files.")]
+      [DefaultValue(false)]
+      public bool DeployClean { get; set; } = false;
+
       [Category(PackageConstants.Options.PageCategoryFolders)]
       [DisplayName(".NET install folder path")]
       [Description("The folder path where .NET framework is installed on the target device.")]
@@ -71,6 +83,12 @@ namespace RemoteDebuggerLauncher
       public string DebuggerInstallFolderPath { get; set; } = PackageConstants.Options.DefaultValueDebuggerInstallFolderPath;
 
       [Category(PackageConstants.Options.PageCategoryFolders)]
+      [DisplayName("Tools install folder path")]
+      [Description("The folder path remote tools will be installed on the target device.")]
+      [DefaultValue(PackageConstants.Options.DefaultValueToolsInstallFolderPath)]
+      public string ToolsInstallFolderPath { get; set; } = PackageConstants.Options.DefaultValueToolsInstallFolderPath;
+
+      [Category(PackageConstants.Options.PageCategoryFolders)]
       [DisplayName("App folder path")]
       [Description("The path on the target device where the application binaries will get deployed to.")]
       [DefaultValue(PackageConstants.Options.DefaultValueAppFolderPath)]
@@ -81,6 +99,7 @@ namespace RemoteDebuggerLauncher
          ResetInvalidPortNumberToDefault();
          base.OnActivate(e);
       }
+
       protected override void OnApply(PageApplyEventArgs e)
       {
          ResetInvalidPortNumberToDefault();
@@ -96,5 +115,4 @@ namespace RemoteDebuggerLauncher
          }
       }
    }
-#pragma warning restore CA1812
 }

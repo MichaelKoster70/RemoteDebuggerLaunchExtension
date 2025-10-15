@@ -11,17 +11,39 @@ Add support for .NET 9 & 10
 ### Bug Fixes
 - none
 
-## 0.9.0
-Initial release supporting Visual Studio 2022 17.2 or newer.
+## 0.12.1
+Minor bugfix release fixing a SSH private key issue.
 
 ### Features
-- SSH authentication using private keys.
-- Debug .NET framework dependant application.
-- Deploy the project output folder via SCP to the target device.
-- Publish (running dotnet publish) before deploying the application.
-- Install vsdbg automatically (configurable).
-- Install .NET on the target device.
-- Supporting command to setup SSH authentication.
+- None
+
+### Bug Fixes
+- Fixed a bug failing to load SSH private keys in some cases.
+
+## 0.12.0
+Add support for .NET 8
+
+### Features
+- Added support for .NET 8
+
+### Bug Fixes
+- none
+
+## 0.11.1
+fixes Visual Studio 17.4 prerequisite
+
+### Features
+- none
+
+### Bug Fixes
+- fixed VS prerequisites
+
+## 0.11.0
+Adds the ability to configure HTTPS dev certificates
+
+### Features
+- upgraded to support Visual Studio 17.4 or newer
+- Added a command to setup HTTPS dev certificates
 
 ### Bug Fixes
 - none
@@ -38,31 +60,18 @@ New features and bugfix release increasing stability.
 
 ### Bug Fixes
 - fixed caption for error messages
-
-## 0.11.0
-Adds the ability to configure HTTPS dev certificates
-
-### Features
-- upgraded to support Visual Studio 17.4 or newer
-- Added a command to setup HTTPS dev certificates
-
-### Bug Fixes
-- none
-
-## 0.11.1
-fixes Visual Studio 17.4 prerequisite
+- 
+## 0.9.0
+Initial release supporting Visual Studio 2022 17.2 or newer.
 
 ### Features
-- none
-
-### Bug Fixes
-- fixed VS prerequisites
-
-## 0.12.0
-Add support for .NET 8
-
-### Features
-- Added support for .NET 8
+- SSH authentication using private keys.
+- Debug .NET framework dependant application.
+- Deploy the project output folder via SCP to the target device.
+- Publish (running dotnet publish) before deploying the application.
+- Install vsdbg automatically (configurable).
+- Install .NET on the target device.
+- Supporting command to setup SSH authentication.
 
 ### Bug Fixes
 - none

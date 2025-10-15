@@ -61,6 +61,9 @@ namespace RemoteDebuggerLauncher
          /// <summary>The name for the SSH category attribute.</summary>
          public const string PageCategorySsh = "SSH";
 
+         /// <summary>The name for the Deployment (SCP/rsync) category attribute.</summary>
+         public const string PageCategoryDeployment = "Deployment";
+
          /// <summary>The name for the Publish category attribute.</summary>
          public const string PageCategoryPublish = "Publish";
 
@@ -78,6 +81,9 @@ namespace RemoteDebuggerLauncher
 
          /// <summary>The default value for the VS Code Debugger installation path on the device page.</summary>
          public const string DefaultValueDebuggerInstallFolderPath = "~/.vsdbg";
+
+         /// <summary>The default value for the Tools installation path on the device page.</summary>
+         public const string DefaultValueToolsInstallFolderPath = "~/.rdl";
 
          /// <summary>The default value for the App folder path on the device page.</summary>
          public const string DefaultValueAppFolderPath = "~/project";

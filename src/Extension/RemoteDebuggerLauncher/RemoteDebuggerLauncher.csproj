@@ -70,7 +70,12 @@
     <Compile Include="Commands\CleanOutputCommand.cs" />
     <Compile Include="Infrastructure\DirectoryHelper.cs" />
     <Compile Include="Infrastructure\FileHelper.cs" />
-    <Compile Include="SecureShell\ShellStreamExtensions.cs" />
+    <Compile Include="RemoteOperations\IRemoteBulkCopySessionService.cs" />
+    <Compile Include="RemoteOperations\ISecureShellSessionBaseService.cs" />
+    <Compile Include="RemoteOperations\SecureShellCopyProgress.cs" />
+    <Compile Include="RemoteOperations\SecureShellRemoteBulkCopyDeltaSessionService.cs" />
+    <Compile Include="RemoteOperations\SecureShellRemoteBulkCopyRsyncSessionService.cs" />
+    <Compile Include="RemoteOperations\ShellStreamExtensions.cs" />
     <Compile Include="Infrastructure\StringExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ProjectSystem\Debugger\LaunchProfileExtensions.cs" />
@@ -86,10 +91,10 @@
     <Compile Include="ProjectSystem\Debugger\IBrowserDebugLaunchSettingsProvider.cs" />
     <Compile Include="ProjectSystem\UnconfiguredPackageServiceFactory.cs" />
     <Compile Include="ProjectSystem\Build\SecureShellDeployService.cs" />
-    <Compile Include="SecureShell\SecureShellKeySetupSettings.cs" />
-    <Compile Include="SecureShell\ISecureShellKeySetupService.cs" />
-    <Compile Include="SecureShell\SecureShellKeyPairCreatorService.cs" />
-    <Compile Include="SecureShell\SecureShellKeySetupService.cs" />
+    <Compile Include="RemoteOperations\SecureShellKeySetupSettings.cs" />
+    <Compile Include="RemoteOperations\ISecureShellKeySetupService.cs" />
+    <Compile Include="RemoteOperations\SecureShellKeyPairCreatorService.cs" />
+    <Compile Include="RemoteOperations\SecureShellKeySetupService.cs" />
     <Compile Include="Commands\SetupHttpsCommand.cs" />
     <Compile Include="VsInterop\OutputPaneTextWriterService.cs" />
     <Compile Include="ProjectSystem\Build\DotnetPublishService.cs" />
@@ -108,8 +113,8 @@
     <Compile Include="VsInterop\IWaitDialogFactoryService.cs" />
     <Compile Include="ProjectSystem\Debugger\ConfigurationAggregator.cs" />
     <Compile Include="ProjectSystem\Build\IDotnetPublishService.cs" />
-    <Compile Include="SecureShell\ISecureShellSessionService.cs" />
-    <Compile Include="SecureShell\ISecureShellRemoteOperationsService.cs" />
+    <Compile Include="RemoteOperations\ISecureShellSessionService.cs" />
+    <Compile Include="RemoteOperations\ISecureShellRemoteOperationsService.cs" />
     <Compile Include="VsInterop\StatusbarAnimation.cs" />
     <Compile Include="Infrastructure\PSHostCaptureOutputUserInterface.cs" />
     <Compile Include="Infrastructure\PSHostConsoleRawUserInterface.cs" />
@@ -118,15 +123,15 @@
     <Compile Include="VsInterop\StatusbarService.cs" />
     <Compile Include="Commands\InstallDebuggerCommand.cs" />
     <Compile Include="Commands\InstallDotnetCommand.cs" />
-    <Compile Include="SecureShell\SecureShellSessionCommandingService.cs" />
+    <Compile Include="RemoteOperations\SecureShellSessionCommandingService.cs" />
     <Compile Include="VsInterop\IOutputPaneWriterService.cs" />
     <Compile Include="Options\IOptionsPageAccessor.cs" />
-    <Compile Include="SecureShell\ISecureShellSessionCommandingService.cs" />
+    <Compile Include="RemoteOperations\ISecureShellSessionCommandingService.cs" />
     <Compile Include="VsInterop\OutputPaneWriterService.cs" />
     <Compile Include="Options\OptionsPageAccessorService.cs" />
     <Compile Include="Infrastructure\RemoteDebuggerLauncherException.cs" />
-    <Compile Include="SecureShell\SecureShellRemoteOperationsService.cs" />
-    <Compile Include="SecureShell\SecureShellSessionException.cs" />
+    <Compile Include="RemoteOperations\SecureShellRemoteOperationsService.cs" />
+    <Compile Include="RemoteOperations\SecureShellSessionException.cs" />
     <Compile Include="Infrastructure\UnixPath.cs" />
     <Compile Include="ProjectSystem\ConfiguredProjectExtensions.cs" />
     <Compile Include="Options\LocalOptionsPage.cs">
@@ -135,8 +140,8 @@
     <Compile Include="Options\DeviceOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SecureShell\SecureShellSessionSettings.cs" />
-    <Compile Include="SecureShell\SecureShellSessionService.cs" />
+    <Compile Include="RemoteOperations\SecureShellSessionSettings.cs" />
+    <Compile Include="RemoteOperations\SecureShellSessionService.cs" />
     <Compile Include="Infrastructure\ThrowIf.cs" />
     <Compile Include="PackageConstants.cs" />
     <Compile Include="ProjectSystem\Debugger\SecureShellRemoteLaunchRuleExporter.cs" />
@@ -174,22 +179,134 @@
   </ItemGroup>
   <ItemGroup>
     <CompilerVisibleProperty Include="RootNamespace" />
+    <Content Include="..\..\RemoteTools\bin\linux-arm64\checksum">
+      <Link>ToolsRemote\linux-arm64\checksum</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\..\RemoteTools\bin\linux-arm\checksum">
+      <Link>ToolsRemote\linux-arm\checksum</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\..\RemoteTools\bin\linux-x64\checksum">
+      <Link>ToolsRemote\linux-x64\checksum</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsExternal\README.cwrsync.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsExternal\README.rsync.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsExternal\rsync.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ToolsExternal\rsyncd.conf.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="..\..\SigningKey.snk">
       <Link>SigningKey.snk</Link>
     </None>
     <None Include="Commands\readme.md" />
+    <Content Include="3rdPartyLicense.txt">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsExternal\bin\cygcrypto-3.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsExternal\bin\cyggcc_s-seh-1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsExternal\bin\cygiconv-2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsExternal\bin\cygintl-8.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsExternal\bin\cyglz4-1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsExternal\bin\cygpopt-0.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsExternal\bin\cygwin1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsExternal\bin\cygxxhash-0.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsExternal\bin\cygz.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsExternal\bin\cygzstd-1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsExternal\bin\rsync.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsExternal\bin\ssh-add.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ToolsExternal\bin\ssh-agent.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ToolsExternal\bin\ssh-keygen.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ToolsExternal\bin\ssh.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Images.imagemanifest">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="ToolsExternal\etc\nsswitch.conf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsExternal\etc\ssh_config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsRemote\linux-x64\version.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <None Include="ToolsRemote\readme.md" />
+    <None Include="ToolsExternal\readme.md" />
     <None Include="Infrastructure\readme.md" />
     <None Include="Options\readme.md" />
     <None Include="ProjectSystem\readme.md" />
     <None Include="readme.md" />
     <None Include="Resources\readme.md" />
-    <None Include="SecureShell\readme.md" />
+    <None Include="RemoteOperations\readme.md" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="ToolsRemote\linux-arm\version.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ToolsRemote\linux-arm64\version.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <EmbeddedResource Include="ToolsRemote\version.json" />
     <None Include="VsInterop\readme.md" />
     <XamlPropertyRule Include="ProjectSystem\Debugger\SecureShellRemoteLaunchProfile.xaml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
@@ -205,6 +322,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
@@ -246,6 +364,10 @@
     <PackageReference Include="SSH.NET" Version="2025.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\RemoteTools\CheckSum\lib\CheckSumLib.csproj">
+      <Project>{d7b5f946-ef19-01bf-94c7-a043862b55cb}</Project>
+      <Name>CheckSumLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Tools\SourceGenerators\SourceGenerators.csproj" OutputItemType="Analyzer" PrivateAssets="all" ReferenceOutputAssembly="false">
       <Project>{0F40D13C-CF48-4F35-B998-39931C2371F0}</Project>
       <Name>SourceGenerators</Name>

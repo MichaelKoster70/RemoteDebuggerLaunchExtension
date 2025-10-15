@@ -143,6 +143,35 @@ namespace RemoteDebuggerLauncher
 
 
       /// <summary>
+      /// Queries the transport mode on how to transfer assets to the remote device.
+      /// </summary>
+      /// <returns></returns>
+      public TransferMode QueryTransferMode()
+      {
+         if (GetOtherSetting(SecureShellRemoteLaunchProfile.deployTransferModeProperty, out string transferModeText) 
+            && Enum.TryParse<TransferMode>(transferModeText, out TransferMode transferMode))
+         {
+            // Launch profile value => use it
+            return transferMode;
+         }
+
+         // use options value or default
+         return optionsPageAccessor.QueryDeployTransferMode();
+      }
+
+      public bool QueryDeployClean()
+      {
+         if (GetOtherSetting(SecureShellRemoteLaunchProfile.deployCleanProperty, out bool deployClean))
+         {
+            // Launch profile value => use it
+            return deployClean;
+         }
+
+         // use options value or default
+         return optionsPageAccessor.QueryDeployClean();
+      }
+
+      /// <summary>
       /// Queries the private key to be used to establish a connection to the remote device.
       /// </summary>
       /// <returns>A <see langword="string"/> holding the private key file path; an empty string if no key is configured.</returns>
@@ -226,6 +255,19 @@ namespace RemoteDebuggerLauncher
 
          // No path configured, relay on built-in defaults
          return PackageConstants.Options.DefaultValueDebuggerInstallFolderPath;
+      }
+
+      public string QueryToolsInstallFolderPath()
+      {
+         var optionsToolsInstallFolderPath = optionsPageAccessor.QueryToolsInstallFolderPath();
+         if (!string.IsNullOrEmpty(optionsToolsInstallFolderPath))
+         {
+            // Options has path specified => use it
+            return optionsToolsInstallFolderPath;
+         }
+
+         // No path configured, relay on built-in defaults
+         return PackageConstants.Options.DefaultValueToolsInstallFolderPath;
       }
 
       /// <summary>
@@ -352,13 +394,11 @@ namespace RemoteDebuggerLauncher
       /// </remarks>
       public PublishMode QueryPublishMode()
       {
-         if (GetOtherSetting(SecureShellRemoteLaunchProfile.publishModeProperty, out string publishModeText))
+         if (GetOtherSetting(SecureShellRemoteLaunchProfile.publishModeProperty, out string publishModeText)
+            && Enum.TryParse<PublishMode>(publishModeText, out PublishMode publishMode))
          {
-            if (Enum.TryParse< PublishMode>(publishModeText, out PublishMode publishMode))
-            {
-               // Launch profile value => use it
-               return publishMode;
-            }
+            // Launch profile value => use it
+            return publishMode;
          }
 
          // use the default in options 
@@ -394,17 +434,31 @@ namespace RemoteDebuggerLauncher
       /// <returns>The URI if valid; else <c>null</c></returns>
       public string QueryInspectUri() => GetOtherSetting<string>("inspectUri");
 
-      public T GetOtherSetting<T>(string propertyName, T defaultValue = default)
+      /// <summary>
+      ///  Gets the value of the specified property from the launch profile's other settings.
+      /// </summary>
+      /// <typeparam name="T">The parameter type.</typeparam>
+      /// <param name="propertyName">The name of the property to get.</param>
+      /// <param name="defaultValue">The default value to return, if the </param>
+      /// <returns>The property value, default if not found</returns>
+      private T GetOtherSetting<T>(string propertyName, T defaultValue = default)
       {
          return launchProfile.OtherSettings != null && launchProfile.OtherSettings.TryGetValue(propertyName, out object value) && value is T targetValue ? targetValue : defaultValue;
       }
 
-      public bool GetOtherSetting<T>(string propertyName, out T targetValue, Predicate<T> predicate)
+      private bool GetOtherSetting<T>(string propertyName, out T targetValue, Predicate<T> predicate)
       {
          return GetOtherSetting(propertyName, out targetValue) && predicate(targetValue);
       }
 
-      public bool GetOtherSetting<T>(string propertyName, out T targetValue)
+      /// <summary>
+      ///  Gets the value of the specified property from the launch profile's other settings.
+      /// </summary>
+      /// <typeparam name="T">The parameter type.</typeparam>
+      /// <param name="propertyName">The name of the property to get.</param>
+      /// <param name="targetValue">The value of the property.</param>
+      /// <returns><c>true</c> if available in the launch profile, <c>false</c> otherwise.</returns>
+      private bool GetOtherSetting<T>(string propertyName, out T targetValue)
       {
          if (launchProfile.OtherSettings != null && launchProfile.OtherSettings.TryGetValue(propertyName, out object value) && value is T target)
          {

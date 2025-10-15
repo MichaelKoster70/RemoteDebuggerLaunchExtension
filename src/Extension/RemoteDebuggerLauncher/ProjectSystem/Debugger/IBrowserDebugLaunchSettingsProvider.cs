@@ -19,7 +19,7 @@ namespace RemoteDebuggerLauncher
    internal interface IBrowserDebugLaunchSettingsProvider
    {
       /// <summary>
-      /// gets the launcg settings based on the supplied parameters.
+      /// gets the launch settings based on the supplied parameters.
       /// </summary>
       /// <param name="browseUri">The target to browse to.</param>
       /// <param name="launchOptions">The debug launch options.</param>

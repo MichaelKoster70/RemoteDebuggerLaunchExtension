@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Threading;
-using RemoteDebuggerLauncher.SecureShell;
+using RemoteDebuggerLauncher.RemoteOperations;
 using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher
@@ -73,7 +73,7 @@ namespace RemoteDebuggerLauncher
 
             switch (publishMode)
             {
-               case PublishMode.FrameworkDependant:
+               case PublishMode.FrameworkDependent:
                   arguments += " --no-build";
 
                   if (await SupportsFrameworkDependentAsync())

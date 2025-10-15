@@ -111,7 +111,7 @@ namespace RemoteDebuggerLauncher
             else
             {
                // let the user know to select the correct launch profile
-               outputPaneWriter.WriteLine(Resources.RemoteCommandDeployRemoteFolderNoProjects);
+               outputPaneWriter.WriteLine(Resources.RemoteCommandDeployRemoteFolderCommonNoProjects);
             }
          });
       }

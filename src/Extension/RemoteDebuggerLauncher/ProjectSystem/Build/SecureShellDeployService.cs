@@ -7,7 +7,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem;
-using RemoteDebuggerLauncher.SecureShell;
+using RemoteDebuggerLauncher.RemoteOperations;
 
 namespace RemoteDebuggerLauncher
 {
@@ -49,7 +49,8 @@ namespace RemoteDebuggerLauncher
 
          // Step 3: Deploy application to target folder
          var outputPath = await publishService.GetOutputDirectoryPathAsync();
-         await remoteOperations.DeployRemoteFolderAsync(outputPath, true);
+         var clean = configurationAggregator.QueryDeployClean();
+         await remoteOperations.DeployRemoteFolderAsync(outputPath, clean);
 
          // Step 4: change file permission if self contained
          if (configurationAggregator.QueryPublishOnDeploy() && configurationAggregator.QueryPublishMode() == Shared.PublishMode.SelfContained)

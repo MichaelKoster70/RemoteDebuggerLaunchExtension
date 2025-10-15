@@ -12,7 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using RemoteDebuggerLauncher.SecureShell;
+using RemoteDebuggerLauncher.RemoteOperations;
 using RemoteDebuggerLauncher.WebTools;
 
 namespace RemoteDebuggerLauncher
@@ -111,7 +111,7 @@ namespace RemoteDebuggerLauncher
                try
                {
                   var outputPaneWriter = vsFacade.GetVsShell().GetOutputPaneWriter();
-                  var certificateService = await ServiceProvider.GetCertifcateServiceAsync();
+                  var certificateService = await ServiceProvider.GetCertificateServiceAsync();
 
                   // do the remaining work on the UI thread
                   await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();

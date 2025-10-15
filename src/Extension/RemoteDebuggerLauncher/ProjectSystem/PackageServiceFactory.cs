@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
 using Microsoft.VisualStudio.Shell;
-using RemoteDebuggerLauncher.SecureShell;
+using RemoteDebuggerLauncher.RemoteOperations;
+using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher
 {
@@ -64,8 +65,9 @@ namespace RemoteDebuggerLauncher
       {
          var statusbar = await GetStatusbarServiceAsync();
          var settings = SecureShellSessionSettings.Create(configurationAggregator);
-         var session = new SecureShellSessionService(settings);
-         return new SecureShellRemoteOperationsService(configurationAggregator, session, outputPaneWriter, statusbar);
+         var sessionService  = new SecureShellSessionService(settings);
+         var bulkCopyService = CreateBulkCopyService(sessionService, configurationAggregator);
+         return new SecureShellRemoteOperationsService(configurationAggregator, sessionService, bulkCopyService, outputPaneWriter, statusbar);
       }
 
       /// <inheritdoc />
@@ -125,5 +127,20 @@ namespace RemoteDebuggerLauncher
       }
 
       private async Task<IOptionsPageAccessor> GetOptionsPageAccessorAsync() => optionsPageAccessor = optionsPageAccessor ?? await asyncServiceProvider.GetOptionsPageServiceAsync();
+
+      private static IRemoteBulkCopySessionService CreateBulkCopyService(SecureShellSessionService session, ConfigurationAggregator configuration)
+      {
+         switch (configuration.QueryTransferMode())
+         {
+            case TransferMode.SecureCopyFull:
+               return session;
+            case TransferMode.SecureCopyDelta:
+               return new SecureShellRemoteBulkCopyDeltaSessionService(session, configuration);
+            case TransferMode.Rsync:
+               return new SecureShellRemoteBulkCopyRsyncSessionService(session);
+            default:
+               return session;
+         }
+      }
    }
 }

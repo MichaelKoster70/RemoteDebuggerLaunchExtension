@@ -38,11 +38,11 @@ namespace RemoteDebuggerLauncher.WebTools
       private const string AspNetHttpsOid = "1.3.6.1.4.1.311.84.1.1";
       private const string AspNetHttpsOidFriendlyName = "ASP.NET Core HTTPS development certificate";
 
-      // OID for server auth
+      // OID for server authentication
       private const string ServerAuthenticationEnhancedKeyUsageOid = "1.3.6.1.5.5.7.3.1";
       private const string ServerAuthenticationEnhancedKeyUsageOidFriendlyName = "Server Authentication";
 
-      // Hresult when the user cancels trusting a certificate
+      // HRESULT when the user cancels trusting a certificate
       private const int UserCanceledErrorCode = unchecked((int)0x800704C7);
 
       [ImportingConstructor]
@@ -82,7 +82,7 @@ namespace RemoteDebuggerLauncher.WebTools
                using (RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create())
                {
                   randomNumberGenerator.GetBytes(serialNumber);
-               };
+               }
 
                // Create the certificate
                var cert = csr.Create(rootCert, DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddYears(1), serialNumber);

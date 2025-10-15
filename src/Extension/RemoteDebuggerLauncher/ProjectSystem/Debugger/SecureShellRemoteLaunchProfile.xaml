@@ -100,6 +100,20 @@
     <EnumValue Name="SelfContained" />
   </EnumProperty>
 
+  <EnumProperty Name="deployTransferMode"
+              DisplayName="Transfer Mode"
+              Description="Defines the transfer mode 'Secure Copy Full/Delta' or 'Rsync'."
+              Subcategory="Deployment Options" >
+    <EnumValue Name="SecureCopyFull" />
+    <EnumValue Name="SecureCopyDelta" />
+    <EnumValue Name="Rsync" />
+  </EnumProperty>
+
+  <BoolProperty Name="deployClean"
+                DisplayName="Deploy Clean"
+                Description="Indicates whether to clean the deployment folder before deploying."
+                Subcategory="Deployment Options" />
+
   <BoolProperty Name="deployOnStartDebugging"
                 DisplayName="Deploy on start debugging"
                 Description="Deploys the application to the target before launching."

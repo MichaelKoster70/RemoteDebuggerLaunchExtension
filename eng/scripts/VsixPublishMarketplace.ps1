@@ -10,7 +10,7 @@
     Publishes a VSIX package to the Visual Studio marketplace.
 
 .DESCRIPTION
-    Puhblishes the supplied VSIX package to the Visual Studio marketplace using the provided metadata.
+    Publishes the supplied VSIX package to the Visual Studio marketplace using the provided metadata.
 
 .PARAMETER ExtensionFile
     The mandatory absolute path to VSIX extension tu publish.
