@@ -178,8 +178,8 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          {
             using (var commandSession = CreateCommandSession())
             {
-               _ = await commandSession.ExecuteCommandAsync($"[ -d {remoteTargetPath} ] | rm -rf {remoteTargetPath}/*");
-               _ = await commandSession.ExecuteCommandAsync($"mkdir -p {remoteTargetPath}");
+               _ = await commandSession.ExecuteCommandAsync($"[ -d \"{remoteTargetPath}\" ] && rm -rf \"{remoteTargetPath}\"/*");
+               _ = await commandSession.ExecuteCommandAsync($"mkdir -p \"{remoteTargetPath}\"");
             }
          }
       }

@@ -36,7 +36,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// </summary>
       /// <param name="configurationAggregator">The configuration aggregator.</param>
       /// <param name="session">The SSH session to use.</param>
-      /// param name="bulkCopy">The bulk copy session service to use.</param>
+      /// <param name="bulkCopy">The bulk copy session service to use.</param>
       /// <param name="outputPaneWriter">The output pane writer service instance to use.</param>
       /// <param name="statusbar">Optional statusbar service to report progress.</param>
       internal SecureShellRemoteOperationsService(ConfigurationAggregator configurationAggregator, ISecureShellSessionService session, IRemoteBulkCopySessionService bulkCopy, IOutputPaneWriterService outputPaneWriter, IStatusbarService statusbar)
@@ -422,9 +422,9 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          {
             if (clean)
             {
-               _ = await commandSession.ExecuteCommandAsync($"[ -d {remoteTargetPath} ] | rm -rf {remoteTargetPath}/*");
+               _ = await commandSession.ExecuteCommandAsync($"[ -d \"{remoteTargetPath}\" ] && rm -rf \"{remoteTargetPath}\"/*");
             }
-            _ = await commandSession.ExecuteCommandAsync($"mkdir -p {remoteTargetPath}");
+            _ = await commandSession.ExecuteCommandAsync($"mkdir -p \"{remoteTargetPath}\"");
          }
       }
 
