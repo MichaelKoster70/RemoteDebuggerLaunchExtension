@@ -9,5 +9,5 @@ csharp_style_namespace_declarations = file_scoped:suggestion
 
 #### Diagnostic configuration ####
 
-# Maintainanability
+# Maintainability
 dotnet_diagnostic.CA1515.severity = silent
