@@ -5,9 +5,9 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-using Microsoft.AspNetCore.ResponseCompression;
+namespace WebBlazorWasmApp.Server;
 
-internal class Program
+internal static class Program
 {
    private static void Main(string[] args)
    {
