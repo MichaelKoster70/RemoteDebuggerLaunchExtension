@@ -1,0 +1,13 @@
+#### Core EditorConfig Options ####
+# .NET code files (C#/VB.NET)
+[*.{cs,vb}]
+
+#### C# Coding Conventions ####
+
+# Code-block preferences
+csharp_style_namespace_declarations = file_scoped:suggestion
+
+#### Diagnostic configuration ####
+
+# Maintainability
+dotnet_diagnostic.CA1515.severity = silent

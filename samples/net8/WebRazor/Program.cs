@@ -5,7 +5,9 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-internal class Program
+namespace WebRazor;
+
+internal static class Program
 {
    private static void Main(string[] args)
    {
