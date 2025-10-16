@@ -265,7 +265,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
                var remoteDirectory = UnixPath.GetDirectoryName(remoteFilePath);
                if (!string.IsNullOrEmpty(remoteDirectory))
                {
-                  await session.ExecuteSingleCommandAsync($"mkdir -p '{remoteDirectory}'");
+                  _ = await session.ExecuteSingleCommandAsync($"mkdir -p '{remoteDirectory}'");
                }
 
                // Upload the file

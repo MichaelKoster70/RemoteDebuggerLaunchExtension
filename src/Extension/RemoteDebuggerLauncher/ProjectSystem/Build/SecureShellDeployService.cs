@@ -50,11 +50,23 @@ namespace RemoteDebuggerLauncher
          }
 
          // Step 3: Deploy application to target folder
-         var outputPath = await publishService.GetOutputDirectoryPathAsync();
          var clean = configurationAggregator.QueryDeployClean();
+         await DeployApplicationBinariesAsync(clean);
+
+         // Step 4: deploy additional files
+         await DeployAdditionalFilesAsync();
+
+         // Step 5: deploy additional folders
+         await DeployAdditionalFoldersAsync(clean);
+      }
+
+      private async Task DeployApplicationBinariesAsync(bool clean)
+      {
+         // Deploy application to target folder
+         var outputPath = await publishService.GetOutputDirectoryPathAsync();
          await remoteOperations.DeployRemoteFolderAsync(outputPath, clean);
 
-         // Step 4: change file permission if self contained
+         // If self-contained deployment, set the execute permission on the main binary
          if (configurationAggregator.QueryPublishOnDeploy() && configurationAggregator.QueryPublishMode() == Shared.PublishMode.SelfContained)
          {
             var binaryName = await configuredProject.GetAssemblyNameAsync();
@@ -63,12 +75,6 @@ namespace RemoteDebuggerLauncher
             // change file permission to rwx,r,r
             await remoteOperations.ChangeRemoteFilePermissionAsync(remotePath, "rwxr--r--");
          }
-
-         // Step 5: deploy additional files
-         await DeployAdditionalFilesAsync();
-
-         // Step 6: deploy additional folders
-         await DeployAdditionalFoldersAsync();
       }
 
       /// <summary>
@@ -77,37 +83,29 @@ namespace RemoteDebuggerLauncher
       /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
       private async Task DeployAdditionalFilesAsync()
       {
-         var additionalFilesConfig = configurationAggregator.QueryAdditionalFiles();
-         if (string.IsNullOrEmpty(additionalFilesConfig))
-         {
-            return;
-         }
-
          try
          {
-            var additionalFiles = AdditionalDeploymentParser.Parse(additionalFilesConfig);
-            var projectPath = await configuredProject.GetProjectDirectoryAsync();
-            var appFolderPath = configurationAggregator.QueryAppFolderPath();
-
-            foreach (var fileEntry in additionalFiles)
+            var additionalFilesConfig = configurationAggregator.QueryAdditionalFiles();
+            if (string.IsNullOrEmpty(additionalFilesConfig))
             {
-               var sourceFilePath = Path.GetFullPath(Path.Combine(projectPath, fileEntry.SourcePath));
-               
-               if (!File.Exists(sourceFilePath))
-               {
-                  remoteOperations.LogHost = true;
-                  await remoteOperations.CheckConnectionThrowAsync(false);
-                  throw new RemoteDebuggerLauncherException($"Additional file not found: {sourceFilePath}");
-               }
+               var parser = new AdditionalDeploymentParser(configuredProject.GetProjectFolder(), configurationAggregator.QueryAppFolderPath());
+               var additionalFiles = parser.Parse(additionalFilesConfig);
 
-               var remoteFilePath = UnixPath.Combine(appFolderPath, fileEntry.TargetPath);
-               await remoteOperations.DeployRemoteFileAsync(sourceFilePath, remoteFilePath);
+               foreach (var fileEntry in additionalFiles)
+               {
+                  if (!File.Exists(fileEntry.SourcePath))
+                  {
+                     remoteOperations.LogHost = true;
+                     await remoteOperations.CheckConnectionThrowAsync(false);
+                     throw new RemoteDebuggerLauncherException($"Additional file not found: {fileEntry.SourcePath}");
+                  }
+
+                  await remoteOperations.DeployRemoteFileAsync(fileEntry.SourcePath, fileEntry.TargetPath);
+               }
             }
          }
          catch (System.ArgumentException ex)
          {
-            remoteOperations.LogHost = true;
-            await remoteOperations.CheckConnectionThrowAsync(false);
             throw new RemoteDebuggerLauncherException($"Invalid additional files configuration: {ex.Message}", ex);
          }
       }
@@ -116,33 +114,33 @@ namespace RemoteDebuggerLauncher
       /// Deploys additional folders specified in the launch profile to the remote device.
       /// </summary>
       /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-      private async Task DeployAdditionalFoldersAsync()
+      private async Task DeployAdditionalFoldersAsync(bool clean)
       {
-         var additionalFoldersConfig = configurationAggregator.QueryAdditionalFolders();
-         if (string.IsNullOrEmpty(additionalFoldersConfig))
-         {
-            return;
-         }
-
          try
          {
-            var additionalFolders = AdditionalDeploymentParser.Parse(additionalFoldersConfig);
-            var projectPath = await configuredProject.GetProjectDirectoryAsync();
-            var appFolderPath = configurationAggregator.QueryAppFolderPath();
-
-            foreach (var folderEntry in additionalFolders)
+            var additionalFoldersConfig = configurationAggregator.QueryAdditionalFolders();
+            if (!string.IsNullOrEmpty(additionalFoldersConfig))
             {
-               var sourceFolderPath = Path.GetFullPath(Path.Combine(projectPath, folderEntry.SourcePath));
-               
-               if (!Directory.Exists(sourceFolderPath))
-               {
-                  remoteOperations.LogHost = true;
-                  await remoteOperations.CheckConnectionThrowAsync(false);
-                  throw new RemoteDebuggerLauncherException($"Additional folder not found: {sourceFolderPath}");
-               }
+               var parser = new AdditionalDeploymentParser(configuredProject.GetProjectFolder(), configurationAggregator.QueryAppFolderPath());
+               var additionalFolders = parser.Parse(additionalFoldersConfig);
 
-               var remoteFolderPath = UnixPath.Combine(appFolderPath, folderEntry.TargetPath);
-               await remoteOperations.DeployRemoteFolderToTargetAsync(sourceFolderPath, remoteFolderPath, false);
+#pragma warning disable S3267 // Loops should be simplified with "LINQ" expressions
+
+               // Validate that all source folders exist
+               foreach (var folderEntry in additionalFolders)
+               {
+                  if (!Directory.Exists(folderEntry.SourcePath))
+                  {
+                     throw new RemoteDebuggerLauncherException($"Additional folder not found: {folderEntry.SourcePath}");
+                  }
+               }
+#pragma warning restore S3267
+
+               // Deploy all additional folders
+               foreach (var folderEntry in additionalFolders)
+               {
+                  await remoteOperations.DeployRemoteFolderToTargetAsync(folderEntry.SourcePath, folderEntry.TargetPath, clean);
+               }
             }
          }
          catch (System.ArgumentException ex)

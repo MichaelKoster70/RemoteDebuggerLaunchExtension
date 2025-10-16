@@ -7,7 +7,6 @@
 
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.IO;
@@ -51,7 +50,25 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             // Fail copy if rsync is missing
             await ThrowIfRsyncIsMissingAsync(commands, progressOutputPaneWriter);
 
-            await StartRsyncSessionAsync(localSourcePath, remoteTargetPath, progressOutputPaneWriter);
+            await StartRsyncDirectorySessionAsync(localSourcePath, remoteTargetPath, progressOutputPaneWriter);
+         }
+      }
+
+      /// <inheritdoc/>
+      public async Task UploadFileAsync(string localFilePath, string remoteFilePath, IOutputPaneWriterService progressOutputPaneWriter = null)
+      {
+         ThrowIf.ArgumentNullOrEmpty(localFilePath, nameof(localFilePath));
+         ThrowIf.ArgumentNullOrEmpty(remoteFilePath, nameof(remoteFilePath));
+
+         using (var commands = session.CreateCommandSession())
+         {
+            progressOutputPaneWriter?.Write(Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployFileProgress, localFilePath, remoteFilePath);
+
+            // Fail copy if rsync is missing
+            await ThrowIfRsyncIsMissingAsync(commands, progressOutputPaneWriter);
+
+            await StartRsyncFileSessionAsync(localFilePath, remoteFilePath, progressOutputPaneWriter);
          }
       }
 
@@ -71,12 +88,12 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       }
 
       /// <summary>
-      /// Starts the rsync session.
+      /// Starts the rsync directory copy session.
       /// </summary>
       /// <param name="localSourcePath">The local source path.</param>
       /// <param name="remoteTargetPath">The remote target path.</param>
       /// <param name="outputPaneWriter">The output pane writer to use for logging.</param>
-      private async Task StartRsyncSessionAsync(string localSourcePath, string remoteTargetPath, IOutputPaneWriterService progressOutputPaneWriter)
+      private async Task StartRsyncDirectorySessionAsync(string localSourcePath, string remoteTargetPath, IOutputPaneWriterService progressOutputPaneWriter)
       {
          // Step 1: Convert paths to Cygwin style
          localSourcePath = ConvertToAbsoluteCygwinPath(localSourcePath);
@@ -86,8 +103,9 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          var arguments = $"-rvuz -e 'ssh -i {privateKeyFile}' {localSourcePath} {session.Settings.UserName}@{session.Settings.HostName}:{remoteTargetPath}";
 
          var rsyncSearchPath = GetRsyncDirectory();
+         var rsyncExecutable = Path.Combine(rsyncSearchPath, "rsync.exe");
 
-         var startInfo = new ProcessStartInfo ($"rsync.exe", arguments)
+         var startInfo = new ProcessStartInfo (rsyncExecutable, arguments)
          {
             RedirectStandardOutput = true,
             RedirectStandardError = true,
@@ -140,77 +158,65 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       }
 
       /// <inheritdoc/>
-      public async Task UploadFileAsync(string localFilePath, string remoteFilePath, IOutputPaneWriterService progressOutputPaneWriter = null)
+      public async Task StartRsyncFileSessionAsync(string localFilePath, string remoteFilePath, IOutputPaneWriterService progressOutputPaneWriter)
       {
-         ThrowIf.ArgumentNullOrEmpty(localFilePath, nameof(localFilePath));
-         ThrowIf.ArgumentNullOrEmpty(remoteFilePath, nameof(remoteFilePath));
+         // Step 1: Convert paths to Cygwin style
+         localFilePath = ConvertToAbsoluteCygwinPath(localFilePath);
 
-         using (var commands = session.CreateCommandSession())
+         // Step 2: compile command line and launch parameters
+         var target = $"{session.Settings.UserName}@{session.Settings.HostNameIPv4}:{remoteFilePath}";
+         var privateKeyFile = session.Settings.PrivateKeyFile;
+         var arguments = $"-avz -e \"ssh -i '{privateKeyFile}' -p {session.Settings.HostPort} -o StrictHostKeyChecking=no\" \"{localFilePath}\" \"{target}\"";
+
+         var rsyncSearchPath = GetRsyncDirectory();
+         var rsyncExecutable = Path.Combine(rsyncSearchPath, "rsync.exe");
+
+         var startInfo = new ProcessStartInfo(rsyncExecutable, arguments)
          {
-            progressOutputPaneWriter?.Write(Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-            progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployFileProgress, localFilePath, remoteFilePath);
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+         };
 
-            // Ensure the target directory exists before uploading
-            var remoteDirectory = UnixPath.GetDirectoryName(remoteFilePath);
-            if (!string.IsNullOrEmpty(remoteDirectory))
-            {
-               await commands.ExecuteCommandAsync($"mkdir -p '{remoteDirectory}'");
-            }
+         // Step 3: Set PATH to only the folder where rsync is located
+         startInfo.EnvironmentVariables["PATH"] = rsyncSearchPath;
 
-            // Use rsync to copy the single file
-            var rsyncSearchPath = GetRsyncDirectory();
-            var sourcePath = ConvertToAbsoluteCygwinPath(localFilePath);
-            var target = $"{session.Settings.UserName}@{session.Settings.HostNameIPv4}:{remoteFilePath}";
-
-            var arguments = $"-avz -e \"ssh -i '{session.Settings.PrivateKeyFile}' -p {session.Settings.HostPort} -o StrictHostKeyChecking=no\" \"{sourcePath}\" \"{target}\"";
-            
-            var startInfo = new ProcessStartInfo("rsync.exe", arguments)
-            {
-               RedirectStandardOutput = true,
-               RedirectStandardError = true,
-               UseShellExecute = false,
-               CreateNoWindow = true,
-            };
-
-            startInfo.EnvironmentVariables["PATH"] = rsyncSearchPath;
-
-            using (var process = Process.Start(startInfo))
-            {
+         // Step 4: Start process
+         using (var process = Process.Start(startInfo))
+         {
 #pragma warning disable VSTHRD100 // Avoid async void methods
-               async void OnDataReceived(object _, DataReceivedEventArgs e)
+            async void OnDataReceived(object _, DataReceivedEventArgs e)
+            {
+               try
                {
-                  try
+                  var message = e.Data;
+                  await ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                   {
-                     var message = e.Data;
-                     await ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                     {
-                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                        progressOutputPaneWriter?.WriteLine(message);
-                     });
-                  }
-                  catch (Exception)
-                  {
-                     // Ignore any exception
-                  }
+                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                     progressOutputPaneWriter?.WriteLine(message);
+                  });
                }
+               catch (Exception)
+               {
+                  // Ignore any exception
+               }
+            }
 #pragma warning restore VSTHRD100 // Avoid async void methods
 
-               process.OutputDataReceived += OnDataReceived;
-               process.BeginOutputReadLine();
+            process.OutputDataReceived += OnDataReceived;
+            process.BeginOutputReadLine();
 
-               var stdError = await process.StandardError.ReadToEndAsync();
-               var exitCode = await process.WaitForExitAsync();
+            var stdError = await process.StandardError.ReadToEndAsync();
+            var exitCode = await process.WaitForExitAsync();
 
-               process.OutputDataReceived -= OnDataReceived;
+            process.OutputDataReceived -= OnDataReceived;
 
-               if (exitCode > 0)
-               {
-                  progressOutputPaneWriter?.WriteLine(stdError);
-                  throw new RemoteDebuggerLauncherException(string.Format(Resources.RemoteCommandDeployFileRsyncFailedExitCode, exitCode));
-               }
+            if (exitCode > 0)
+            {
+               progressOutputPaneWriter?.WriteLine(stdError);
+               throw new RemoteDebuggerLauncherException(string.Format(Resources.RemoteCommandDeployFileRsyncFailedExitCode, exitCode));
             }
-
-            progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployFileCompletedSuccess, localFilePath, remoteFilePath);
          }
       }
 

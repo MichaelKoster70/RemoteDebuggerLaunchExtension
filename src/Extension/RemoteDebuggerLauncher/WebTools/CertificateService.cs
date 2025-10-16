@@ -282,7 +282,7 @@ namespace RemoteDebuggerLauncher.WebTools
                }
                catch (CryptographicException e) when (e.HResult == UserCanceledErrorCode)
                {
-                  throw new RemoteDebuggerLauncherException(Resources.CertificateServicesTrustCancelledByUser, e);
+                  throw new RemoteDebuggerLauncherException(Resources.CertificateServicesTrustCanceledByUser, e);
                }
             }
          }

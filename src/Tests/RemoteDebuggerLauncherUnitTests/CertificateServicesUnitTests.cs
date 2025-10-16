@@ -5,6 +5,7 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RemoteDebuggerLauncher;
@@ -66,6 +67,7 @@ namespace RemoteDebuggerLauncherUnitTests
 
       [TestMethod]
       [ExpectedException(typeof(RemoteDebuggerLauncherException))]
+      [SuppressMessage("Major Code Smell", "S3431:\"[ExpectedException]\" should not be used")]
       public void TestEnsureSelfSignedRootPresentCreatesPublicRootThrows()
       {
          var service = new CertificateService();
@@ -106,7 +108,7 @@ namespace RemoteDebuggerLauncherUnitTests
          {
             Assert.IsNotNull(cert);
 
-            Assert.AreEqual(cert.Subject, "CN=demo");
+            Assert.AreEqual("CN=demo", cert.Subject);
          }
       }
 
@@ -120,7 +122,7 @@ namespace RemoteDebuggerLauncherUnitTests
          Assert.IsTrue(rawData.Length > 0);
       }
 
-      private void RemoveAllRootCerts()
+      private static void RemoveAllRootCerts()
       {
          using (var store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
          {
@@ -133,7 +135,7 @@ namespace RemoteDebuggerLauncherUnitTests
          }
       }
 
-      private void RemoveAllPublicRootCerts()
+      private static void RemoveAllPublicRootCerts()
       {
          using (var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser))
          {

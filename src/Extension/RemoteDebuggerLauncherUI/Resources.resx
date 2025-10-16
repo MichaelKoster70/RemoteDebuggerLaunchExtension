@@ -321,7 +321,7 @@ Make sure you selected a 'SshRemoteLaunch' launch profile.</value>
   </data>
   <data name="RemoteCommandDeployFileRsyncFailedExitCode" xml:space="preserve">
     <value>FAILED: rsync file transfer terminated with exit code {0}</value>
-    <comment>Exception: rsync exit code > 0 for file transfer</comment>
+    <comment>Exception: rsync exit code &gt; 0 for file transfer</comment>
   </data>
   <data name="RemoteCommandDeployRemoteFolderCommonNoProjects" xml:space="preserve">
     <value>Deploying application - no supported projects found.
@@ -627,7 +627,7 @@ Replace: Replace the existing certificate with a new one.</value>
   <data name="RemoteCommandDeployRemoteFolderRsyncFailedNoAbsolutePath" xml:space="preserve">
     <value>FAILED: rsync requires an absolute path for the local files</value>
   </data>
-  <data name="CertificateServicesTrustCancelledByUser" xml:space="preserve">
+  <data name="CertificateServicesTrustCanceledByUser" xml:space="preserve">
     <value>Cancelling trusting Root CA</value>
   </data>
   <data name="RemoteCommandDeployRemoteFolderRsyncFailedExitCode" xml:space="preserve">
@@ -649,5 +649,8 @@ Replace: Replace the existing certificate with a new one.</value>
   <data name="RemoteCommandDeployRemoteFolderScpDeltaDeleteFile" xml:space="preserve">
     <value>deleting {0}</value>
     <comment>Output pane: SCP session starts</comment>
+  </data>
+  <data name="RemoteCommandDeployRemoteFolderStatusbarProgress1" xml:space="preserve">
+    <value>Deploying application...</value>
   </data>
 </root>
