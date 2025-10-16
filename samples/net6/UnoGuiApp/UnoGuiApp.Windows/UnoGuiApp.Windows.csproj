@@ -10,7 +10,8 @@
     <PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
-	</PropertyGroup>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+  </PropertyGroup>
 	<ItemGroup>
 	  <Compile Remove="Properties\Properties\**" />
 	  <EmbeddedResource Remove="Properties\Properties\**" />

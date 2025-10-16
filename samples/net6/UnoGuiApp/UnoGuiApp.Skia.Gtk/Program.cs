@@ -11,9 +11,9 @@ using Uno.UI.Runtime.Skia;
 
 namespace UnoGuiApp.Skia.Gtk
 {
-    internal class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             ExceptionManager.UnhandledException += delegate (UnhandledExceptionArgs expArgs)
             {
