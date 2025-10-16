@@ -162,9 +162,9 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             var sourcePath = ConvertToAbsoluteCygwinPath(localFilePath);
             var target = $"{session.Settings.UserName}@{session.Settings.HostNameIPv4}:{remoteFilePath}";
 
-            var command = $"rsync -avz -e \"ssh -i '{session.Settings.PrivateKeyFile}' -p {session.Settings.HostPort} -o StrictHostKeyChecking=no\" \"{sourcePath}\" \"{target}\"";
+            var arguments = $"-avz -e \"ssh -i '{session.Settings.PrivateKeyFile}' -p {session.Settings.HostPort} -o StrictHostKeyChecking=no\" \"{sourcePath}\" \"{target}\"";
             
-            var startInfo = new ProcessStartInfo("rsync", command)
+            var startInfo = new ProcessStartInfo("rsync.exe", arguments)
             {
                RedirectStandardOutput = true,
                RedirectStandardError = true,
