@@ -5,23 +5,21 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace WebRazor.Pages
+namespace WebRazor.Pages;
+
+public class PrivacyModel : PageModel
 {
-   public class PrivacyModel : PageModel
+   private readonly ILogger<PrivacyModel> logger;
+
+   public PrivacyModel(ILogger<PrivacyModel> logger)
    {
-      private readonly ILogger<PrivacyModel> logger;
+      this.logger = logger;
+   }
 
-      public PrivacyModel(ILogger<PrivacyModel> logger)
-      {
-         this.logger = logger;
-      }
-
-      public void OnGet()
-      {
-         //EMPTY_BODY
-      }
+   public void OnGet()
+   {
+      //EMPTY_BODY
    }
 }

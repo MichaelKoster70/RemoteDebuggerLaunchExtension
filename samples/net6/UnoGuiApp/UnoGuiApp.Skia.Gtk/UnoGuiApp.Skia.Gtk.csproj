@@ -3,6 +3,7 @@
     <OutputType Condition="'$(Configuration)'=='Release'">WinExe</OutputType>
     <OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
+    <NoWarn>$(NoWarn);NETSDK1138</NoWarn>
   </PropertyGroup>
   <ItemGroup Condition="exists('..\UnoGuiApp.Windows')">
     <EmbeddedResource Include="..\UnoGuiApp.Windows\Package.appxmanifest" LogicalName="Package.appxmanifest" />
