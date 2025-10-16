@@ -22,5 +22,14 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// <param name="progressOutputPaneWriter">The optional output pane writer to be used for logging progress.</param>
       /// <exception cref="SecureShellSessionException">thrown when the operation failed.</exception>
       Task UploadFolderRecursiveAsync(string localSourcePath, string remoteTargetPath, IOutputPaneWriterService progressOutputPaneWriter = null);
+
+      /// <summary>
+      /// Uploads a single file from the local PC to the remote host.
+      /// </summary>
+      /// <param name="localFilePath">The absolute path to the source file to copy from.</param>
+      /// <param name="remoteFilePath">The absolute path to the remote target file to copy to.</param>
+      /// <param name="progressOutputPaneWriter">The optional output pane writer to be used for logging progress.</param>
+      /// <exception cref="SecureShellSessionException">thrown when the operation failed.</exception>
+      Task UploadFileAsync(string localFilePath, string remoteFilePath, IOutputPaneWriterService progressOutputPaneWriter = null);
    }
 }

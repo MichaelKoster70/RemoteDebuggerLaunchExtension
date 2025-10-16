@@ -236,6 +236,53 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          }
       }
 
+      /// <inheritdoc/>
+      public async Task UploadFileAsync(string localFilePath, string remoteFilePath, IOutputPaneWriterService progressOutputPaneWriter = null)
+      {
+         ThrowIf.ArgumentNullOrEmpty(localFilePath, nameof(localFilePath));
+         ThrowIf.ArgumentNullOrEmpty(remoteFilePath, nameof(remoteFilePath));
+
+         progressOutputPaneWriter?.Write(Resources.RemoteCommandCommonSshTarget, Settings.UserName, Settings.HostName);
+         progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployFileProgress, localFilePath, remoteFilePath);
+
+         try
+         {
+            using (var client = CreateScpClient())
+            {
+               // We can safely assume that the path names does not have any character that have special meaning for a Linux host
+               client.RemotePathTransformation = RemotePathTransformation.None;
+
+               if (progressOutputPaneWriter != null)
+               {
+                  // attach progress output pane writer if available
+                  var progressReporter = new SecureShellCopyProgressReporter(progressOutputPaneWriter);
+                  client.Uploading += progressReporter.OnUploadFile;
+               }
+
+               client.Connect();
+
+               // Ensure the target directory exists before uploading
+               var remoteDirectory = UnixPath.GetDirectoryName(remoteFilePath);
+               if (!string.IsNullOrEmpty(remoteDirectory))
+               {
+                  await session.ExecuteSingleCommandAsync($"mkdir -p '{remoteDirectory}'");
+               }
+
+               // Upload the file
+               using (var fileStream = File.OpenRead(localFilePath))
+               {
+                  client.Upload(fileStream, remoteFilePath);
+               }
+            }
+         }
+         catch (Exception e) when (e is SshException || e is IOException)
+         {
+            throw new SecureShellSessionException(e.Message, e);
+         }
+
+         progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployFileCompletedSuccess, localFilePath, remoteFilePath);
+      }
+
       private ScpClient CreateScpClient()
       {
          var key = new PrivateKeyFile(session.Settings.PrivateKeyFile);

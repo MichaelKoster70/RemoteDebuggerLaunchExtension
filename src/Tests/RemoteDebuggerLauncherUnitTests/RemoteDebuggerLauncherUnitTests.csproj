@@ -51,6 +51,7 @@
     <Compile Include="..\..\Extension\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AdditionalDeploymentParserUnitTests.cs" />
     <Compile Include="CertificateServicesUnitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

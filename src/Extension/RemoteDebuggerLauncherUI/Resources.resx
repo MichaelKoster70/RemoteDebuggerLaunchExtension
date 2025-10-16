@@ -308,6 +308,21 @@ Make sure you selected a 'SshRemoteLaunch' launch profile.</value>
   <data name="RemoteCommandDeployRemoteFolderCompletedSuccess" xml:space="preserve">
     <value>Deploying application OK</value>
   </data>
+  <data name="RemoteCommandDeployFileProgress" xml:space="preserve">
+    <value>Deploying file - Source: {0}, Target: {1}</value>
+    <comment>Output Pane: show file deploy progress</comment>
+  </data>
+  <data name="RemoteCommandDeployFileCompletedSuccess" xml:space="preserve">
+    <value>Deploying file - Source: {0}, Target: {1} OK</value>
+    <comment>Output Pane: file deployment completed successfully</comment>
+  </data>
+  <data name="RemoteCommandDeployFileStatusbarProgress" xml:space="preserve">
+    <value>Deploying file...</value>
+  </data>
+  <data name="RemoteCommandDeployFileRsyncFailedExitCode" xml:space="preserve">
+    <value>FAILED: rsync file transfer terminated with exit code {0}</value>
+    <comment>Exception: rsync exit code > 0 for file transfer</comment>
+  </data>
   <data name="RemoteCommandDeployRemoteFolderCommonNoProjects" xml:space="preserve">
     <value>Deploying application - no supported projects found.
 Make sure you selected a 'SshRemoteLaunch' launch profile.</value>

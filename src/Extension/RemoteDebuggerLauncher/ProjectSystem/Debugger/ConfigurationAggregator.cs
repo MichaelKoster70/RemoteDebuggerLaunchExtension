@@ -435,6 +435,32 @@ namespace RemoteDebuggerLauncher
       public string QueryInspectUri() => GetOtherSetting<string>("inspectUri");
 
       /// <summary>
+      /// Queries the additional files to be deployed to the remote device.
+      /// </summary>
+      /// <returns>A <see langword="string"/> containing additional file mappings in format 'source1|target1;source2|target2'.</returns>
+      /// <remarks>
+      /// The following configuration providers are queried, first match wins:
+      /// - selected launch profile
+      /// </remarks>
+      public string QueryAdditionalFiles()
+      {
+         return GetOtherSetting<string>("additionalFiles") ?? string.Empty;
+      }
+
+      /// <summary>
+      /// Queries the additional folders to be deployed to the remote device.
+      /// </summary>
+      /// <returns>A <see langword="string"/> containing additional folder mappings in format 'source1|target1;source2|target2'.</returns>
+      /// <remarks>
+      /// The following configuration providers are queried, first match wins:
+      /// - selected launch profile
+      /// </remarks>
+      public string QueryAdditionalFolders()
+      {
+         return GetOtherSetting<string>("additionalFolders") ?? string.Empty;
+      }
+
+      /// <summary>
       ///  Gets the value of the specified property from the launch profile's other settings.
       /// </summary>
       /// <typeparam name="T">The parameter type.</typeparam>
