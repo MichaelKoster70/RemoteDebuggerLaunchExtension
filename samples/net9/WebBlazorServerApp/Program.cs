@@ -5,11 +5,11 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using WebBlazorServerApp.Data;
 
-internal class Program
+namespace WebBlazorServerApp;
+
+internal static class Program
 {
    private static void Main(string[] args)
    {

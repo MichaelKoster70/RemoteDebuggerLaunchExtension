@@ -7,9 +7,10 @@
 
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using WebBlazorWasmApp.Client;
 
-internal class Program
+namespace WebBlazorWasmApp.Client;
+
+internal static class Program
 {
    private static async Task Main(string[] args)
    {
