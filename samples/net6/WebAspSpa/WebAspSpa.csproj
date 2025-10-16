@@ -9,6 +9,7 @@
     <SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>WebAspSpa</RootNamespace>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
   </PropertyGroup>
 
   <ItemGroup>

@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
   </PropertyGroup>
 
   <ItemGroup>

@@ -7,42 +7,41 @@
 
 using WebAspSpa.Infrastructure;
 
-namespace WebAspSpa
+namespace WebAspSpa;
+
+internal static class Program
 {
-   internal static class Program
+   public static void Main(string[] args)
    {
-      public static void Main(string[] args)
-      {
-         var builder = WebApplication.CreateBuilder(args);
+      var builder = WebApplication.CreateBuilder(args);
 
-         // Add services to the container.
+      // Add services to the container.
 
-         _ = builder.Services.AddControllersWithViews()
-            .AddJsonOptions(options =>
-            {
-               options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
-            });
-
-         var app = builder.Build();
-
-         // Configure the HTTP request pipeline.
-         if (!app.Environment.IsDevelopment())
+      _ = builder.Services.AddControllersWithViews()
+         .AddJsonOptions(options =>
          {
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            _ = app.UseHsts();
-         }
+            options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+         });
 
-         _ = app.UseStaticFiles();
-         _ = app.UseRouting();
+      var app = builder.Build();
 
-
-         _ = app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller}/{action=Index}/{id?}");
-
-         _ = app.MapFallbackToFile("index.html");
-
-         app.Run();
+      // Configure the HTTP request pipeline.
+      if (!app.Environment.IsDevelopment())
+      {
+         // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+         _ = app.UseHsts();
       }
+
+      _ = app.UseStaticFiles();
+      _ = app.UseRouting();
+
+
+      _ = app.MapControllerRoute(
+             name: "default",
+             pattern: "{controller}/{action=Index}/{id?}");
+
+      _ = app.MapFallbackToFile("index.html");
+
+      app.Run();
    }
 }

@@ -8,20 +8,19 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace WebRazor.Pages
+namespace WebRazor.Pages;
+
+public class IndexModel : PageModel
 {
-   public class IndexModel : PageModel
+   private readonly ILogger<IndexModel> logger;
+
+   public IndexModel(ILogger<IndexModel> logger)
    {
-      private readonly ILogger<IndexModel> logger;
+      this.logger = logger;
+   }
 
-      public IndexModel(ILogger<IndexModel> logger)
-      {
-         this.logger = logger;
-      }
-
-      public void OnGet()
-      {
-         //EMPTY_BODY
-      }
+   public void OnGet()
+   {
+      //EMPTY_BODY
    }
 }
