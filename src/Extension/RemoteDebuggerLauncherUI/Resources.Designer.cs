@@ -63,9 +63,9 @@ namespace RemoteDebuggerLauncher {
         /// <summary>
         ///   Looks up a localized string similar to Cancelling trusting Root CA.
         /// </summary>
-        public static string CertificateServicesTrustCancelledByUser {
+        public static string CertificateServicesTrustCanceledByUser {
             get {
-                return ResourceManager.GetString("CertificateServicesTrustCancelledByUser", resourceCulture);
+                return ResourceManager.GetString("CertificateServicesTrustCanceledByUser", resourceCulture);
             }
         }
         
@@ -280,6 +280,15 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 10.0.
+        /// </summary>
+        public static string InstallDotnetVersion100DisplayName {
+            get {
+                return ResourceManager.GetString("InstallDotnetVersion100DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 6.0.
         /// </summary>
         public static string InstallDotnetVersion60DisplayName {
@@ -312,15 +321,6 @@ namespace RemoteDebuggerLauncher {
         public static string InstallDotnetVersion90DisplayName {
             get {
                 return ResourceManager.GetString("InstallDotnetVersion90DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 10.0.
-        /// </summary>
-        public static string InstallDotnetVersion100DisplayName {
-            get {
-                return ResourceManager.GetString("InstallDotnetVersion100DisplayName", resourceCulture);
             }
         }
         
@@ -597,6 +597,42 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deploying file - Source: {0}, Target: {1} OK.
+        /// </summary>
+        public static string RemoteCommandDeployFileCompletedSuccess {
+            get {
+                return ResourceManager.GetString("RemoteCommandDeployFileCompletedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deploying file - Source: {0}, Target: {1}.
+        /// </summary>
+        public static string RemoteCommandDeployFileProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandDeployFileProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FAILED: rsync file transfer terminated with exit code {0}.
+        /// </summary>
+        public static string RemoteCommandDeployFileRsyncFailedExitCode {
+            get {
+                return ResourceManager.GetString("RemoteCommandDeployFileRsyncFailedExitCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deploying file....
+        /// </summary>
+        public static string RemoteCommandDeployFileStatusbarProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandDeployFileStatusbarProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Deploying application - no supported projects found.
         ///Make sure you selected a &apos;SshRemoteLaunch&apos; launch profile..
         /// </summary>
@@ -693,6 +729,15 @@ namespace RemoteDebuggerLauncher {
         public static string RemoteCommandDeployRemoteFolderStatusbarProgress {
             get {
                 return ResourceManager.GetString("RemoteCommandDeployRemoteFolderStatusbarProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deploying application....
+        /// </summary>
+        public static string RemoteCommandDeployRemoteFolderStatusbarProgress1 {
+            get {
+                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderStatusbarProgress1", resourceCulture);
             }
         }
         

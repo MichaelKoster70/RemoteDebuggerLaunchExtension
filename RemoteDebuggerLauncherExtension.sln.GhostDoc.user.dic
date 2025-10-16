@@ -3,7 +3,9 @@ aspnetcore
 Blazor
 bugfix
 chmod
+const
 coreclr
+Crypto
 csproj
 ctmenu
 ctor
@@ -11,6 +13,8 @@ Ctrl
 cygdrive
 Cygwin
 dotnet
+Encipherment
+endregion
 fallback
 getvsdbgsh
 github
@@ -28,6 +32,8 @@ Metadata
 mkdir
 msbuild
 msedge
+nameof
+Newtonsoft
 nuget
 Offroad
 omnisharp
@@ -37,6 +43,8 @@ plugin
 powershell
 prerelease
 pwsh
+readonly
+Renci
 Rsync
 runspace
 runtimes
@@ -47,6 +55,8 @@ Statusbar
 stdin
 stdout
 sudo
+Thumbprint
+typeof
 uname
 unconfigured
 Username
