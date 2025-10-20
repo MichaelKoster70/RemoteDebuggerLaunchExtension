@@ -63,7 +63,11 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          {
             var normalizedPath = Path.GetFullPath(privateKeyFilePath);
             var securePassphrase = ConvertToSecureString(dialog.Passphrase);
-            passphraseCache.AddOrUpdate(normalizedPath, securePassphrase, (key, oldValue) => securePassphrase);
+            passphraseCache.AddOrUpdate(normalizedPath, securePassphrase, (key, oldValue) => 
+            {
+               oldValue?.Dispose();
+               return securePassphrase;
+            });
             
             return dialog.Passphrase;
          }
