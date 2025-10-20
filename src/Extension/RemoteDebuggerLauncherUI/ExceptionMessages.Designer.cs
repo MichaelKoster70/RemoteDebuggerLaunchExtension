@@ -104,5 +104,14 @@ namespace RemoteDebuggerLauncher {
                 return ResourceManager.GetString("SecureShellSessionNoUserName", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SSH private key passphrase is required..
+        /// </summary>
+        public static string SecureShellSessionPassphraseRequired {
+            get {
+                return ResourceManager.GetString("SecureShellSessionPassphraseRequired", resourceCulture);
+            }
+        }
     }
 }

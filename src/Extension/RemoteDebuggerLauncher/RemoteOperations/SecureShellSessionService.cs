@@ -23,10 +23,12 @@ namespace RemoteDebuggerLauncher.RemoteOperations
    internal class SecureShellSessionService : ISecureShellSessionService, IRemoteBulkCopySessionService
    {
       private readonly SecureShellSessionSettings settings;
+      private readonly ISecureShellPassphraseService passphraseService;
 
       internal SecureShellSessionService(SecureShellSessionSettings settings)
       {
          this.settings = settings ?? throw new ArgumentNullException(nameof(settings));
+         this.passphraseService = new SecureShellPassphraseService();
       }
 
       /// <inheritdoc/>
@@ -204,15 +206,57 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             throw new SecureShellSessionException(ExceptionMessages.SecureShellSessionNoPrivateKey);
          }
 
-         var key = new PrivateKeyFile(settings.PrivateKeyFile);
+         var key = CreatePrivateKeyFile(settings.PrivateKeyFile);
 
          return new SshClient(settings.HostNameIPv4, settings.HostPort, settings.UserName, key);
       }
 
       private ScpClient CreateScpClient()
       {
-         var key = new PrivateKeyFile(settings.PrivateKeyFile);
+         var key = CreatePrivateKeyFile(settings.PrivateKeyFile);
          return new ScpClient(settings.HostNameIPv4, settings.HostPort, settings.UserName, key);
+      }
+
+      private PrivateKeyFile CreatePrivateKeyFile(string privateKeyFilePath)
+      {
+         // First, check if we have a cached passphrase
+         var cachedPassphrase = passphraseService.GetCachedPassphrase(privateKeyFilePath);
+         if (!string.IsNullOrEmpty(cachedPassphrase))
+         {
+            try
+            {
+               return new PrivateKeyFile(privateKeyFilePath, cachedPassphrase);
+            }
+            catch (InvalidOperationException)
+            {
+               // Cached passphrase is wrong, clear it and continue
+               passphraseService.ClearCache();
+            }
+         }
+
+         // Check if the key is encrypted
+         if (SecureShellKeyUtilities.IsPrivateKeyEncrypted(privateKeyFilePath))
+         {
+            // Try without passphrase first (in case our detection is wrong)
+            try
+            {
+               return new PrivateKeyFile(privateKeyFilePath);
+            }
+            catch (InvalidOperationException)
+            {
+               // Key is definitely encrypted, prompt for passphrase
+               var passphrase = passphraseService.PromptAndCachePassphraseAsync(privateKeyFilePath).Result;
+               if (string.IsNullOrEmpty(passphrase))
+               {
+                  throw new SecureShellSessionException(ExceptionMessages.SecureShellSessionPassphraseRequired);
+               }
+
+               return new PrivateKeyFile(privateKeyFilePath, passphrase);
+            }
+         }
+
+         // Key is not encrypted
+         return new PrivateKeyFile(privateKeyFilePath);
       }
    }
 }
