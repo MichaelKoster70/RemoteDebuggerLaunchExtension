@@ -123,4 +123,14 @@
                 DisplayName="Install debugger on start debugging"
                 Description="Installs the latest VS Code debugger on the target before launching the target application."
                 Subcategory="Deployment Options" />
+
+  <StringProperty Name="additionalFiles"
+                  DisplayName="Additional files to deploy"
+                  Description="Additional files to deploy. Format: 'sourceFile1|targetPath1;sourceFile2|targetPath2' where source paths are relative to project and target paths are relative to app folder."
+                  Subcategory="Additional Deployment" />
+
+  <StringProperty Name="additionalDirectories"
+                  DisplayName="Additional directories to deploy"
+                  Description="Additional directories to deploy. Format: 'sourceFolder1|targetPath1;sourceFolder2|targetPath2' where source paths are relative to project and target paths are relative to app folder."
+                  Subcategory="Additional Deployment" />
 </Rule>

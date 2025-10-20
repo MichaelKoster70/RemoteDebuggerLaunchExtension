@@ -68,6 +68,8 @@
     </Compile>
     <Compile Include="Commands\DeployOutputCommand.cs" />
     <Compile Include="Commands\CleanOutputCommand.cs" />
+    <Compile Include="Infrastructure\AdditionalDeploymentEntry.cs" />
+    <Compile Include="Infrastructure\AdditionalDeploymentParser.cs" />
     <Compile Include="Infrastructure\DirectoryHelper.cs" />
     <Compile Include="Infrastructure\FileHelper.cs" />
     <Compile Include="RemoteOperations\IRemoteBulkCopySessionService.cs" />
@@ -259,15 +261,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="ToolsExternal\bin\ssh-add.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ToolsExternal\bin\ssh-agent.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ToolsExternal\bin\ssh-keygen.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <None Include="ToolsExternal\bin\ssh-add.exe" />
+    <None Include="ToolsExternal\bin\ssh-agent.exe" />
+    <None Include="ToolsExternal\bin\ssh-keygen.exe" />
     <Content Include="ToolsExternal\bin\ssh.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>

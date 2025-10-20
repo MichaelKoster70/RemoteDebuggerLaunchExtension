@@ -173,10 +173,10 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             using (var commandSession = session.CreateCommandSession())
             {
                // remove all files in the target folder, in case the debugger was installed before
-               _= await commandSession.ExecuteCommandAsync($"[ -d {debuggerInstallPath} ] | rm -rf {debuggerInstallPath}/*");
+              await CleanRemoteFolderAsync(commandSession, debuggerInstallPath);
 
-               // create the directory if it does not jet exist
-               _ = await commandSession.ExecuteCommandAsync($"mkdir -p {debuggerInstallPath}");
+               // create the directory if it does not yet exist
+               await CreateRemoteFolderIfNeededAsync(commandSession, debuggerInstallPath);
 
                // upload the files
                await bulkCopy.UploadFolderRecursiveAsync(downloadCachePath, debuggerInstallPath);
@@ -217,6 +217,39 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
          outputPaneWriter.WriteLine(Resources.RemoteCommandDeployRemoteFolderCompletedSuccess);
          statusbar?.SetText(Resources.RemoteCommandDeployRemoteFolderCompletedSuccess);
+      }
+
+      /// <inheritdoc />
+      public async Task DeployRemoteFolderAsync(string sourcePath, string remoteTargetPath, bool clean)
+      {
+         outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+         outputPaneWriter.WriteLine(Resources.RemoteCommandDeployRemoteFolderCommonProgress, sourcePath, remoteTargetPath);
+         statusbar?.SetText(Resources.RemoteCommandDeployRemoteFolderStatusbarProgress);
+
+         // Clean the remote target if requested
+         await CleanFolderAsync(remoteTargetPath, clean);
+
+         // copy files using the bulk copy service (SCP or rsync)
+         await bulkCopy.UploadFolderRecursiveAsync(sourcePath, remoteTargetPath, outputPaneWriter);
+
+         outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+         outputPaneWriter.WriteLine(Resources.RemoteCommandDeployRemoteFolderCompletedSuccess);
+         statusbar?.SetText(Resources.RemoteCommandDeployRemoteFolderCompletedSuccess);
+      }
+
+      /// <inheritdoc />
+      public async Task DeployRemoteFileAsync(string sourceFilePath, string remoteTargetPath)
+      {
+         outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+         outputPaneWriter.WriteLine(Resources.RemoteCommandDeployFileProgress, sourceFilePath, remoteTargetPath);
+         statusbar?.SetText(Resources.RemoteCommandDeployFileStatusbarProgress);
+
+         // copy file using the bulk copy service (SCP or rsync)
+         await bulkCopy.UploadFileAsync(sourceFilePath, remoteTargetPath, outputPaneWriter);
+
+         outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+         outputPaneWriter.WriteLine(Resources.RemoteCommandDeployFileCompletedSuccess, sourceFilePath, remoteTargetPath);
+         statusbar?.SetText(Resources.RemoteCommandDeployFileCompletedSuccess);
       }
 
        /// <inheritdoc />
@@ -410,6 +443,27 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       #endregion
 
       #region private methods
+
+      /// <summary>
+      /// Creates the remote directory if needed.
+      /// </summary>
+      /// <param name="commands">The commands service to use.</param>
+      /// <param name="remoteTargetPath">The remote target path.</param>
+      private static async Task CreateRemoteFolderIfNeededAsync(ISecureShellSessionCommandingService commands, string remoteTargetPath)
+      {
+         _ = await commands.ExecuteCommandAsync($"mkdir -p {remoteTargetPath}");
+      }
+
+      /// <summary>
+      /// Cleans the supplied remote folder.
+      /// </summary>
+      /// <param name="commands">The commands service to use.</param>
+      /// <param name="remoteTargetPath">The remote target path.</param>
+      private static async Task CleanRemoteFolderAsync(ISecureShellSessionCommandingService commands, string remoteTargetPath)
+      {
+         _ = await commands.ExecuteCommandAsync($"[ -d {remoteTargetPath} ] && rm -rf {remoteTargetPath}/*");
+      }
+
       /// <summary>
       /// Cleans the specified folder leaving it empty or creates it if it does not exist.
       /// </summary>
@@ -422,9 +476,10 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          {
             if (clean)
             {
-               _ = await commandSession.ExecuteCommandAsync($"[ -d \"{remoteTargetPath}\" ] && rm -rf \"{remoteTargetPath}\"/*");
+               await CleanRemoteFolderAsync(commandSession, remoteTargetPath);
             }
-            _ = await commandSession.ExecuteCommandAsync($"mkdir -p \"{remoteTargetPath}\"");
+
+            await CreateRemoteFolderIfNeededAsync(commandSession, remoteTargetPath);
          }
       }
 

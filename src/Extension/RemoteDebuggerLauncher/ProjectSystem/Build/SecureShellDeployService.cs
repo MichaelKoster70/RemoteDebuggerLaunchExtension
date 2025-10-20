@@ -5,8 +5,12 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
+using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem;
+using RemoteDebuggerLauncher.Infrastructure;
 using RemoteDebuggerLauncher.RemoteOperations;
 
 namespace RemoteDebuggerLauncher
@@ -48,11 +52,23 @@ namespace RemoteDebuggerLauncher
          }
 
          // Step 3: Deploy application to target folder
-         var outputPath = await publishService.GetOutputDirectoryPathAsync();
          var clean = configurationAggregator.QueryDeployClean();
+         await DeployApplicationBinariesAsync(clean);
+
+         // Step 4: deploy additional files
+         await DeployAdditionalFilesAsync();
+
+         // Step 5: deploy additional directories
+         await DeployAdditionalDirectoriesAsync(clean);
+      }
+
+      private async Task DeployApplicationBinariesAsync(bool clean)
+      {
+         // Deploy application to target folder
+         var outputPath = await publishService.GetOutputDirectoryPathAsync();
          await remoteOperations.DeployRemoteFolderAsync(outputPath, clean);
 
-         // Step 4: change file permission if self contained
+         // If self-contained deployment, set the execute permission on the main binary
          if (configurationAggregator.QueryPublishOnDeploy() && configurationAggregator.QueryPublishMode() == Shared.PublishMode.SelfContained)
          {
             var binaryName = await configuredProject.GetAssemblyNameAsync();
@@ -60,6 +76,75 @@ namespace RemoteDebuggerLauncher
 
             // change file permission to rwx,r,r
             await remoteOperations.ChangeRemoteFilePermissionAsync(remotePath, "rwxr--r--");
+         }
+      }
+
+      /// <summary>
+      /// Deploys additional files specified in the launch profile to the remote device.
+      /// </summary>
+      /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+      private async Task DeployAdditionalFilesAsync()
+      {
+         try
+         {
+            var additionalFilesConfig = configurationAggregator.QueryAdditionalFiles();
+            if (!string.IsNullOrEmpty(additionalFilesConfig))
+            {
+               var parser = new AdditionalDeploymentParser(configuredProject.GetProjectFolder(), configurationAggregator.QueryAppFolderPath());
+               var additionalFiles = parser.Parse(additionalFilesConfig);
+
+               foreach (var fileEntry in additionalFiles)
+               {
+                  if (!File.Exists(fileEntry.SourcePath))
+                  {
+                     remoteOperations.LogHost = true;
+                     await remoteOperations.CheckConnectionThrowAsync(false);
+                     throw new RemoteDebuggerLauncherException($"Additional file not found: {fileEntry.SourcePath}");
+                  }
+
+                  await remoteOperations.DeployRemoteFileAsync(fileEntry.SourcePath, fileEntry.TargetPath);
+               }
+            }
+         }
+         catch (ArgumentException ex)
+         {
+            throw new RemoteDebuggerLauncherException($"Invalid additional files configuration: {ex.Message}", ex);
+         }
+      }
+
+      /// <summary>
+      /// Deploys additional folders specified in the launch profile to the remote device.
+      /// </summary>
+      /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+      private async Task DeployAdditionalDirectoriesAsync(bool clean)
+      {
+         try
+         {
+            var additionalDirectoriesConfig = configurationAggregator.QueryAdditionalDirectories();
+            if (!string.IsNullOrEmpty(additionalDirectoriesConfig))
+            {
+               var parser = new AdditionalDeploymentParser(configuredProject.GetProjectFolder(), configurationAggregator.QueryAppFolderPath());
+               var additionalDirectories = parser.Parse(additionalDirectoriesConfig);
+
+               // Validate that all source directories exist
+               var missingDirectory = additionalDirectories.FirstOrDefault(directoryEntry => !Directory.Exists(directoryEntry.SourcePath));
+               if (missingDirectory != null)
+               {
+                  throw new RemoteDebuggerLauncherException($"Additional directory not found: {missingDirectory.SourcePath}");
+               }
+
+               // Deploy all additional directories
+               foreach (var directoryEntry in additionalDirectories)
+               {
+                  await remoteOperations.DeployRemoteFolderAsync(directoryEntry.SourcePath, directoryEntry.TargetPath, clean);
+               }
+            }
+         }
+         catch (ArgumentException ex)
+         {
+            remoteOperations.LogHost = true;
+            await remoteOperations.CheckConnectionThrowAsync(false);
+            throw new RemoteDebuggerLauncherException($"Invalid additional directories configuration: {ex.Message}", ex);
          }
       }
    }
