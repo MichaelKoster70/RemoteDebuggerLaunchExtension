@@ -32,10 +32,31 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             var keyContent = File.ReadAllText(privateKeyFilePath);
             
             // Check for common encryption indicators in PEM format
-            return keyContent.Contains("ENCRYPTED") ||
-                   keyContent.Contains("Proc-Type: 4,ENCRYPTED") ||
-                   keyContent.Contains("DEK-Info:") ||
-                   (keyContent.Contains("BEGIN OPENSSH PRIVATE KEY") && keyContent.Contains("aes"));
+            // Traditional PEM format with encryption
+            if (keyContent.Contains("ENCRYPTED") ||
+                keyContent.Contains("Proc-Type: 4,ENCRYPTED") ||
+                keyContent.Contains("DEK-Info:"))
+            {
+               return true;
+            }
+
+            // OpenSSH format with encryption
+            if (keyContent.Contains("BEGIN OPENSSH PRIVATE KEY"))
+            {
+               // Check for cipher indicators
+               return keyContent.Contains("aes128-cbc") ||
+                      keyContent.Contains("aes192-cbc") ||
+                      keyContent.Contains("aes256-cbc") ||
+                      keyContent.Contains("aes128-ctr") ||
+                      keyContent.Contains("aes192-ctr") ||
+                      keyContent.Contains("aes256-ctr") ||
+                      keyContent.Contains("aes128-gcm") ||
+                      keyContent.Contains("aes256-gcm") ||
+                      keyContent.Contains("chacha20-poly1305") ||
+                      (!keyContent.Contains("none") && keyContent.Contains("aes"));
+            }
+
+            return false;
          }
          catch (Exception)
          {

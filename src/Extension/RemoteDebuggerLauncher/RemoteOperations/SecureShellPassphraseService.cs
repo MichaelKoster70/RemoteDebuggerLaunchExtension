@@ -19,7 +19,17 @@ namespace RemoteDebuggerLauncher.RemoteOperations
    /// </summary>
    internal class SecureShellPassphraseService : ISecureShellPassphraseService
    {
+      private static readonly Lazy<SecureShellPassphraseService> _instance = new(() => new SecureShellPassphraseService());
       private readonly ConcurrentDictionary<string, SecureString> passphraseCache = new();
+
+      private SecureShellPassphraseService()
+      {
+      }
+
+      /// <summary>
+      /// Gets the singleton instance of the passphrase service.
+      /// </summary>
+      public static SecureShellPassphraseService Instance => _instance.Value;
 
       /// <inheritdoc/>
       public string GetCachedPassphrase(string privateKeyFilePath)
@@ -69,6 +79,19 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             kvp.Value?.Dispose();
          }
          passphraseCache.Clear();
+      }
+
+      /// <inheritdoc/>
+      public void ClearCachedPassphrase(string privateKeyFilePath)
+      {
+         if (string.IsNullOrEmpty(privateKeyFilePath))
+            return;
+
+         var normalizedPath = Path.GetFullPath(privateKeyFilePath);
+         if (passphraseCache.TryRemove(normalizedPath, out var securePassphrase))
+         {
+            securePassphrase?.Dispose();
+         }
       }
 
       private static SecureString ConvertToSecureString(string password)

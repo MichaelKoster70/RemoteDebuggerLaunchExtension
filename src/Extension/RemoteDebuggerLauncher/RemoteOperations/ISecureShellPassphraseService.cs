@@ -32,5 +32,11 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// Clears all cached passphrases.
       /// </summary>
       void ClearCache();
+
+      /// <summary>
+      /// Clears the cached passphrase for the specified private key file.
+      /// </summary>
+      /// <param name="privateKeyFilePath">The path to the private key file.</param>
+      void ClearCachedPassphrase(string privateKeyFilePath);
    }
 }

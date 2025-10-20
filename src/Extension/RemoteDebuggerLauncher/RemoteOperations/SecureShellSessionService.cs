@@ -8,6 +8,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Shell;
 using Renci.SshNet;
 using Renci.SshNet.Common;
 
@@ -28,7 +29,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       internal SecureShellSessionService(SecureShellSessionSettings settings)
       {
          this.settings = settings ?? throw new ArgumentNullException(nameof(settings));
-         this.passphraseService = new SecureShellPassphraseService();
+         this.passphraseService = SecureShellPassphraseService.Instance;
       }
 
       /// <inheritdoc/>
@@ -230,32 +231,49 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             catch (InvalidOperationException)
             {
                // Cached passphrase is wrong, clear it and continue
-               passphraseService.ClearCache();
+               passphraseService.ClearCachedPassphrase(privateKeyFilePath);
+            }
+            catch (SshException)
+            {
+               // SSH exception with cached passphrase, clear it and continue
+               passphraseService.ClearCachedPassphrase(privateKeyFilePath);
             }
          }
 
-         // Check if the key is encrypted
+         // Try without passphrase first
+         try
+         {
+            return new PrivateKeyFile(privateKeyFilePath);
+         }
+         catch (InvalidOperationException ex) when (ex.Message.Contains("passphrase") || ex.Message.Contains("encrypted"))
+         {
+            // Key is encrypted, proceed to passphrase handling
+         }
+         catch (SshException ex) when (ex.Message.Contains("passphrase") || ex.Message.Contains("encrypted"))
+         {
+            // Key is encrypted, proceed to passphrase handling
+         }
+
+         // If we get here, the key is encrypted or our detection was wrong
+         // Check if our utility detected encryption, or if the error suggests it
          if (SecureShellKeyUtilities.IsPrivateKeyEncrypted(privateKeyFilePath))
          {
-            // Try without passphrase first (in case our detection is wrong)
-            try
+            // Key is definitely encrypted, prompt for passphrase
+            string passphrase = null;
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-               return new PrivateKeyFile(privateKeyFilePath);
-            }
-            catch (InvalidOperationException)
-            {
-               // Key is definitely encrypted, prompt for passphrase
-               var passphrase = passphraseService.PromptAndCachePassphraseAsync(privateKeyFilePath).Result;
-               if (string.IsNullOrEmpty(passphrase))
-               {
-                  throw new SecureShellSessionException(ExceptionMessages.SecureShellSessionPassphraseRequired);
-               }
+               passphrase = await passphraseService.PromptAndCachePassphraseAsync(privateKeyFilePath);
+            });
 
-               return new PrivateKeyFile(privateKeyFilePath, passphrase);
+            if (string.IsNullOrEmpty(passphrase))
+            {
+               throw new SecureShellSessionException(ExceptionMessages.SecureShellSessionPassphraseRequired);
             }
+
+            return new PrivateKeyFile(privateKeyFilePath, passphrase);
          }
 
-         // Key is not encrypted
+         // If we reach here, something unexpected happened, try once more without passphrase
          return new PrivateKeyFile(privateKeyFilePath);
       }
    }

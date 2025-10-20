@@ -70,6 +70,22 @@ namespace RemoteDebuggerLauncher
       }
       #endregion
 
+      #region IDisposable
+      /// <summary>
+      /// Dispose method to clean up resources.
+      /// </summary>
+      /// <param name="disposing">True if called from Dispose method.</param>
+      protected override void Dispose(bool disposing)
+      {
+         if (disposing)
+         {
+            // Clear cached passphrases for security
+            RemoteOperations.SecureShellPassphraseService.Instance.ClearCache();
+         }
+         base.Dispose(disposing);
+      }
+      #endregion
+
       #region Private Methods
       /// Factory methods responsible to create service instances registered in this package.
       /// </summary>
