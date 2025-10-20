@@ -220,22 +220,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       }
 
       /// <inheritdoc />
-      public async Task DeployRemoteFileAsync(string sourceFilePath, string remoteTargetPath)
-      {
-         outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-         outputPaneWriter.WriteLine(Resources.RemoteCommandDeployFileProgress, sourceFilePath, remoteTargetPath);
-         statusbar?.SetText(Resources.RemoteCommandDeployFileStatusbarProgress);
-
-         // copy file using the bulk copy service (SCP or rsync)
-         await bulkCopy.UploadFileAsync(sourceFilePath, remoteTargetPath, outputPaneWriter);
-
-         outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
-         outputPaneWriter.WriteLine(Resources.RemoteCommandDeployFileCompletedSuccess, sourceFilePath, remoteTargetPath);
-         statusbar?.SetText(Resources.RemoteCommandDeployFileCompletedSuccess);
-      }
-
-      /// <inheritdoc />
-      public async Task DeployRemoteFolderToTargetAsync(string sourcePath, string remoteTargetPath, bool clean)
+      public async Task DeployRemoteFolderAsync(string sourcePath, string remoteTargetPath, bool clean)
       {
          outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
          outputPaneWriter.WriteLine(Resources.RemoteCommandDeployRemoteFolderCommonProgress, sourcePath, remoteTargetPath);
@@ -250,6 +235,21 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
          outputPaneWriter.WriteLine(Resources.RemoteCommandDeployRemoteFolderCompletedSuccess);
          statusbar?.SetText(Resources.RemoteCommandDeployRemoteFolderCompletedSuccess);
+      }
+
+      /// <inheritdoc />
+      public async Task DeployRemoteFileAsync(string sourceFilePath, string remoteTargetPath)
+      {
+         outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+         outputPaneWriter.WriteLine(Resources.RemoteCommandDeployFileProgress, sourceFilePath, remoteTargetPath);
+         statusbar?.SetText(Resources.RemoteCommandDeployFileStatusbarProgress);
+
+         // copy file using the bulk copy service (SCP or rsync)
+         await bulkCopy.UploadFileAsync(sourceFilePath, remoteTargetPath, outputPaneWriter);
+
+         outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+         outputPaneWriter.WriteLine(Resources.RemoteCommandDeployFileCompletedSuccess, sourceFilePath, remoteTargetPath);
+         statusbar?.SetText(Resources.RemoteCommandDeployFileCompletedSuccess);
       }
 
        /// <inheritdoc />

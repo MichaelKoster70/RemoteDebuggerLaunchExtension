@@ -87,7 +87,8 @@ namespace RemoteDebuggerLauncher.Infrastructure
                   targetPath = UnixPath.Combine(remoteAppFolderPath, targetPath);
                }
 
-
+               // append a slash to make sure the target is treated as a directory
+               targetPath = UnixPath.AppendTrailingSlash(targetPath);
 
                result.Add(new AdditionalDeploymentEntry(sourcePath, targetPath));
             }

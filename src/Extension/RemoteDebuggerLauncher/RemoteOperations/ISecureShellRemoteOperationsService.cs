@@ -56,7 +56,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       Task TryInstallVsDbgOfflineAsync(string version = Constants.Debugger.VersionLatest);
 
       /// <summary>
-      /// Deploys the application to the remote device.
+      /// Deploys the application binaries to the remote device.
       /// </summary>
       /// <param name="sourcePath">The absolute path to the source directory to deploy.</param>
       /// <param name="clean"><c>true</c> to clean the target folder; else <c>false</c>.</param>
@@ -64,6 +64,25 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// <remarks>The target path on the remote device is read from the launch profile setting.</remarks>
       /// <exception cref="SecureShellSessionException">thrown when the operation failed.</exception>
       Task DeployRemoteFolderAsync(string sourcePath, bool clean);
+
+      /// <summary>
+      /// Deploys a folder to a specific target path on the remote device.
+      /// </summary>
+      /// <param name="sourcePath">The absolute path to the source directory to deploy.</param>
+      /// <param name="remoteTargetPath">The absolute remote target path where the folder should be deployed.</param>
+      /// <param name="clean"><c>true</c> to clean the target folder; else <c>false</c>.</param>
+      /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+      /// <exception cref="SecureShellSessionException">thrown when the operation failed.</exception>
+      Task DeployRemoteFolderAsync(string sourcePath, string remoteTargetPath, bool clean);
+
+      /// <summary>
+      /// Deploys a single file to the remote device.
+      /// </summary>
+      /// <param name="sourceFilePath">The absolute path to the source file to deploy.</param>
+      /// <param name="remoteTargetPath">The absolute remote target path where the file should be deployed.</param>
+      /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+      /// <exception cref="SecureShellSessionException">thrown when the operation failed.</exception>
+      Task DeployRemoteFileAsync(string sourceFilePath, string remoteTargetPath);
 
       /// <summary>
       /// Cleans the application folder on the remote device.
@@ -123,24 +142,5 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// </summary>
       /// <returns>The <see cref="string"/> holding the runtime ID.</returns>
       Task<string> GetRuntimeIdAsync();
-
-      /// <summary>
-      /// Deploys a single file to the remote device.
-      /// </summary>
-      /// <param name="sourceFilePath">The absolute path to the source file to deploy.</param>
-      /// <param name="remoteTargetPath">The absolute remote target path where the file should be deployed.</param>
-      /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-      /// <exception cref="SecureShellSessionException">thrown when the operation failed.</exception>
-      Task DeployRemoteFileAsync(string sourceFilePath, string remoteTargetPath);
-
-      /// <summary>
-      /// Deploys a folder to a specific target path on the remote device.
-      /// </summary>
-      /// <param name="sourcePath">The absolute path to the source directory to deploy.</param>
-      /// <param name="remoteTargetPath">The absolute remote target path where the folder should be deployed.</param>
-      /// <param name="clean"><c>true</c> to clean the target folder; else <c>false</c>.</param>
-      /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-      /// <exception cref="SecureShellSessionException">thrown when the operation failed.</exception>
-      Task DeployRemoteFolderToTargetAsync(string sourcePath, string remoteTargetPath, bool clean);
    }
 }

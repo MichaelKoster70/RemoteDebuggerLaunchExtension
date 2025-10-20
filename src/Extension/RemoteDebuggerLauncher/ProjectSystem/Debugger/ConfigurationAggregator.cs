@@ -448,16 +448,16 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <summary>
-      /// Queries the additional folders to be deployed to the remote device.
+      /// Queries the additional directories to be deployed to the remote device.
       /// </summary>
-      /// <returns>A <see langword="string"/> containing additional folder mappings in format 'source1|target1;source2|target2'.</returns>
+      /// <returns>A <see langword="string"/> containing additional directory mappings in format 'source1|target1;source2|target2'.</returns>
       /// <remarks>
       /// The following configuration providers are queried, first match wins:
       /// - selected launch profile
       /// </remarks>
-      public string QueryAdditionalFolders()
+      public string QueryAdditionalDirectories()
       {
-         return GetOtherSetting<string>("additionalFolders") ?? string.Empty;
+         return GetOtherSetting<string>("additionalDirectories") ?? string.Empty;
       }
 
       /// <summary>

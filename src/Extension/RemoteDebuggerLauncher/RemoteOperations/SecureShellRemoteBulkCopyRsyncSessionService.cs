@@ -96,7 +96,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       private async Task StartRsyncDirectorySessionAsync(string localSourcePath, string remoteTargetPath, IOutputPaneWriterService progressOutputPaneWriter)
       {
          // Step 1: Convert paths to Cygwin style
-         localSourcePath = ConvertToAbsoluteCygwinPath(localSourcePath);
+         localSourcePath = ConvertToAbsoluteCygwinPath(localSourcePath, true);
 
          // Step 2: compile command line and launch parameters
          var privateKeyFile = session.Settings.PrivateKeyFile;
@@ -161,7 +161,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       public async Task StartRsyncFileSessionAsync(string localFilePath, string remoteFilePath, IOutputPaneWriterService progressOutputPaneWriter)
       {
          // Step 1: Convert paths to Cygwin style
-         localFilePath = ConvertToAbsoluteCygwinPath(localFilePath);
+         localFilePath = ConvertToAbsoluteCygwinPath(localFilePath, false);
 
          // Step 2: compile command line and launch parameters
          var target = $"{session.Settings.UserName}@{session.Settings.HostNameIPv4}:{remoteFilePath}";
@@ -234,8 +234,9 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// Converts the supplied path to an absolute Cygwin style path.
       /// </summary>
       /// <param name="path">The path to convert.</param>
+      /// <param name="folder">if set to <c>true</c> the path is a folder; else a file.</param>
       /// <returns>The Cygwin-style path.</returns>
-      private static string ConvertToAbsoluteCygwinPath(string absolutePath)
+      private static string ConvertToAbsoluteCygwinPath(string absolutePath, bool folder)
       {
          // ensure we get an absolute path
          var rootPath = Path.GetPathRoot(absolutePath);
@@ -245,8 +246,10 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          }
 
          var driveLetter = rootPath.ToLower().Substring(0, 1);
-         var directory = Path.GetRelativePath(rootPath, Path.GetDirectoryName(absolutePath)).Replace(Path.DirectorySeparatorChar, '/').Replace(Path.AltDirectorySeparatorChar, '/');
-         return $"/cygdrive/{driveLetter}/{directory}";
+         var directory = Path.GetRelativePath(rootPath,absolutePath).Replace(Path.DirectorySeparatorChar, '/').Replace(Path.AltDirectorySeparatorChar, '/');
+
+         var cygPath = $"/cygdrive/{driveLetter}/{directory}";
+         return folder? UnixPath.AppendTrailingSlash(cygPath): cygPath;
       }
    }
 }

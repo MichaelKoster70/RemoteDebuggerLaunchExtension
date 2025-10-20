@@ -62,12 +62,29 @@ namespace RemoteDebuggerLauncher
       /// <summary>
       /// Returns a value that indicates whether a file path contains a root.
       /// </summary>
-      /// <param name="path">The path.</param>
+      /// <param name="path">The path to check.</param>
+      /// <returns><c>true</c> if the path is rooted; else <c>false</c>.</returns>
       public static bool IsPathRooted(string path)
       {
          ThrowIf.ArgumentNullOrEmpty(path, nameof(path));
 
          return path.StartsWith("/");
+      }
+
+
+      /// <summary>
+      /// Appends the trailing slash.
+      /// </summary>
+      /// <param name="path">The path extend.</param>
+      /// <returns>The appended path.</returns>
+      public static string AppendTrailingSlash(string path)
+      {
+         ThrowIf.ArgumentNullOrEmpty(path, nameof(path));
+         if (!path.EndsWith("/"))
+         {
+            return path + "/";
+         }
+         return path;
       }
 
       /// <summary>
