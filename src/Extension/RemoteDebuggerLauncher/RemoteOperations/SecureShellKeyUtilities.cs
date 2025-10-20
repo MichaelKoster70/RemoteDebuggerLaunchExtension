@@ -7,6 +7,7 @@
 
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace RemoteDebuggerLauncher.RemoteOperations
 {
@@ -60,11 +61,13 @@ namespace RemoteDebuggerLauncher.RemoteOperations
                   return true;
                }
 
-               // If it contains multiple "BG5vbmU=" (base64 for "none"), it's unencrypted
-               var noneOccurrences = (keyContent.Length - keyContent.Replace("BG5vbmU=", "").Length) / 8;
+               // If it contains "BG5vbmU=" (base64 for "none") for both cipher and kdf, it's unencrypted
+               // OpenSSH format has "none" for both cipher and kdf when unencrypted
+               var nonePattern = "BG5vbmU=";
+               var noneOccurrences = Regex.Matches(keyContent, Regex.Escape(nonePattern)).Count;
                if (noneOccurrences >= 2)
                {
-                  return false;
+                  return false; // Both cipher and kdf are "none" - key is unencrypted
                }
 
                // Additional fallback checks for plaintext algorithm names
