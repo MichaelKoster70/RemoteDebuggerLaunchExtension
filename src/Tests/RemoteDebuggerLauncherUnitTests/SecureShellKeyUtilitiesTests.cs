@@ -101,13 +101,28 @@ b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdHIAAAAGYmNyeXB0AAAAGAAAABBf
       }
 
       [TestMethod]
-      public void IsPrivateKeyEncrypted_NullPath_ReturnsFalse()
+      public void IsPrivateKeyEncrypted_UnencryptedOpenSshKey_ReturnsFalse()
       {
-         // Act
-         var result = SecureShellKeyUtilities.IsPrivateKeyEncrypted(null);
+         // Arrange - using actual OpenSSH format with "none" cipher and kdf
+         var unencryptedKey = @"-----BEGIN OPENSSH PRIVATE KEY-----
+b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABFwAAAAdzc2gtcn
+NhAAAAAwEAAQAAAQEA3l7YJJufSZpJXzEwSi4pd2vRyiVseWz5mPnbrtOmct6G5k/em55J
+...
+-----END OPENSSH PRIVATE KEY-----";
+         var tempFile = CreateTempKeyFile(unencryptedKey);
 
-         // Assert
-         Assert.IsFalse(result);
+         try
+         {
+            // Act
+            var result = SecureShellKeyUtilities.IsPrivateKeyEncrypted(tempFile);
+
+            // Assert
+            Assert.IsFalse(result);
+         }
+         finally
+         {
+            File.Delete(tempFile);
+         }
       }
 
       private static string CreateTempKeyFile(string content)

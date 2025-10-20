@@ -31,8 +31,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          {
             var keyContent = File.ReadAllText(privateKeyFilePath);
             
-            // Check for common encryption indicators in PEM format
-            // Traditional PEM format with encryption
+            // Check for traditional PEM format with encryption
             if (keyContent.Contains("ENCRYPTED") ||
                 keyContent.Contains("Proc-Type: 4,ENCRYPTED") ||
                 keyContent.Contains("DEK-Info:"))
@@ -40,27 +39,54 @@ namespace RemoteDebuggerLauncher.RemoteOperations
                return true;
             }
 
-            // OpenSSH format with encryption
+            // Check for OpenSSH format
             if (keyContent.Contains("BEGIN OPENSSH PRIVATE KEY"))
             {
-               // Check for cipher indicators
-               return keyContent.Contains("aes128-cbc") ||
-                      keyContent.Contains("aes192-cbc") ||
-                      keyContent.Contains("aes256-cbc") ||
-                      keyContent.Contains("aes128-ctr") ||
-                      keyContent.Contains("aes192-ctr") ||
-                      keyContent.Contains("aes256-ctr") ||
-                      keyContent.Contains("aes128-gcm") ||
-                      keyContent.Contains("aes256-gcm") ||
-                      keyContent.Contains("chacha20-poly1305") ||
-                      (!keyContent.Contains("none") && keyContent.Contains("aes"));
+               // Look for base64 encoded algorithm indicators
+               // "aes256-ctr" = "CmFlczI1Ni1jdHI="
+               // "aes128-ctr" = "CmFlczEyOC1jdHI="
+               // "bcrypt" = "YmNyeXB0"
+               // "none" = "BG5vbmU="
+               
+               if (keyContent.Contains("CmFlczI1Ni1jdHI") ||    // aes256-ctr
+                   keyContent.Contains("CmFlczEyOC1jdHI") ||    // aes128-ctr
+                   keyContent.Contains("CmFlczE5Mi1jdHI") ||    // aes192-ctr
+                   keyContent.Contains("CmFlczI1Ni1jYmM") ||    // aes256-cbc
+                   keyContent.Contains("CmFlczEyOC1jYmM") ||    // aes128-cbc
+                   keyContent.Contains("CmFlczE5Mi1jYmM") ||    // aes192-cbc
+                   keyContent.Contains("YmNyeXB0") ||           // bcrypt
+                   keyContent.Contains("c2NyeXB0"))             // scrypt
+               {
+                  return true;
+               }
+
+               // If it contains multiple "BG5vbmU=" (base64 for "none"), it's unencrypted
+               var noneOccurrences = (keyContent.Length - keyContent.Replace("BG5vbmU=", "").Length) / 8;
+               if (noneOccurrences >= 2)
+               {
+                  return false;
+               }
+
+               // Additional fallback checks for plaintext algorithm names
+               if (keyContent.Contains("aes128-cbc") ||
+                   keyContent.Contains("aes192-cbc") ||
+                   keyContent.Contains("aes256-cbc") ||
+                   keyContent.Contains("aes128-ctr") ||
+                   keyContent.Contains("aes192-ctr") ||
+                   keyContent.Contains("aes256-ctr") ||
+                   keyContent.Contains("aes128-gcm") ||
+                   keyContent.Contains("aes256-gcm") ||
+                   keyContent.Contains("chacha20-poly1305"))
+               {
+                  return true;
+               }
             }
 
             return false;
          }
          catch (Exception)
          {
-            // If we can't read the file, assume it's not encrypted
+            // If we can't read or parse the file, assume it's not encrypted
             return false;
          }
       }
