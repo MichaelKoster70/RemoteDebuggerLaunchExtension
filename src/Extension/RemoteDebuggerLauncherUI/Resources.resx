@@ -653,4 +653,17 @@ Replace: Replace the existing certificate with a new one.</value>
   <data name="RemoteCommandDeployRemoteFolderStatusbarProgress1" xml:space="preserve">
     <value>Deploying application...</value>
   </data>
+  <data name="SecureShellKeyPassphraseDialogTitle" xml:space="preserve">
+    <value>SSH Private Key Passphrase</value>
+  </data>
+  <data name="SecureShellKeyPassphraseDialogHeaderText" xml:space="preserve">
+    <value>Enter passphrase for private key, then click OK to apply</value>
+    <comment>Header asking for the passkey</comment>
+  </data>
+  <data name="SecureShellKeyPassphraseDialogKeyFileLabel" xml:space="preserve">
+    <value>Key File</value>
+  </data>
+  <data name="SecureShellKeyPassphraseDialogPassphraseLabel" xml:space="preserve">
+    <value>Passphrase</value>
+  </data>
 </root>

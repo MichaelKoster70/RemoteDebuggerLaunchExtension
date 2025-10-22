@@ -1,0 +1,84 @@
+﻿<vsui:DialogWindow x:Class="RemoteDebuggerLauncher.RemoteOperations.SecureShellPassphraseDialogWindow"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0" 
+                   xmlns:local="clr-namespace:RemoteDebuggerLauncher"
+                   xmlns:operations="clr-namespace:RemoteDebuggerLauncher.RemoteOperations"
+                   mc:Ignorable="d" 
+                   Name="SecureShellPassphraseDialog"
+                   Title="{x:Static local:Resources.SecureShellKeyPassphraseDialogTitle}"
+                   WindowStartupLocation="CenterOwner"
+                   ShowInTaskbar="False"
+                   Height="Auto"
+                   Width="350"
+                   MinWidth="350"
+                   d:DesignHeight="155" d:DesignWidth="350"
+                   d:DataContext="{d:DesignInstance Type=operations:SecureShellPassphraseViewModel}" SizeToContent="Height">
+  <Grid Margin="4">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <!-- Dialog header -->
+    <TextBlock Grid.Row="0"
+               Grid.ColumnSpan="2" 
+               Margin="8"
+               TextWrapping="Wrap" 
+               Text="{x:Static local:Resources.SecureShellKeyPassphraseDialogHeaderText}" />
+
+    <!-- KeyFile -->
+    <Label Grid.Row="1"
+           Grid.Column="0"
+           Margin="4"
+           Content="{x:Static local:Resources.SecureShellKeyPassphraseDialogKeyFileLabel}" />
+
+    <TextBlock Grid.Row="1"
+               Grid.Column="1"
+               Margin="4"
+               Height="23"
+               Text="{Binding KeyFilePath}" />
+
+    <Label Grid.Row="2"
+           Grid.Column="0"
+           Margin="4"
+           Content="{x:Static local:Resources.SecureShellKeyPassphraseDialogPassphraseLabel}"
+           Target="{Binding ElementName=PassphraseBox}"/>
+
+    <PasswordBox Grid.Row="2"
+                 Grid.Column="1"
+                 Margin="4"/>
+
+    <!-- OK/Cancel buttons -->
+    <StackPanel Grid.Row="3"
+                Grid.ColumnSpan="2"
+                Margin="4 0"
+                Orientation="Horizontal" 
+                HorizontalAlignment="Right">
+
+      <Button Margin="4"
+              Height="23"
+              Width="75" 
+              IsDefault="True"
+              IsEnabled="False"
+              Command="{Binding OkCommand, Mode=OneWay}"
+              Content="{x:Static local:Resources.CommonOkButtonLabel}"
+              CommandParameter="{Binding ElementName=SecureShellPassphraseDialog}" />
+
+      <Button Height="23"
+              Width="75" 
+              IsCancel="True"
+              Command="{Binding CancelCommand, Mode=OneWay}"
+              Content="{x:Static local:Resources.CommonCancelButtonLabel}"
+              CommandParameter="{Binding ElementName=SecureShellPassphraseDialog}" />
+    </StackPanel>
+  </Grid>
+</vsui:DialogWindow>

@@ -8,6 +8,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Shell;
 using Renci.SshNet;
 using Renci.SshNet.Common;
 
@@ -23,10 +24,12 @@ namespace RemoteDebuggerLauncher.RemoteOperations
    internal class SecureShellSessionService : ISecureShellSessionService, IRemoteBulkCopySessionService
    {
       private readonly SecureShellSessionSettings settings;
+      private readonly ISecureShellPassphraseService passphraseService;
 
       internal SecureShellSessionService(SecureShellSessionSettings settings)
       {
          this.settings = settings ?? throw new ArgumentNullException(nameof(settings));
+         this.passphraseService = SecureShellPassphraseService.Instance;
       }
 
       /// <inheritdoc/>
@@ -204,15 +207,63 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             throw new SecureShellSessionException(ExceptionMessages.SecureShellSessionNoPrivateKey);
          }
 
-         var key = new PrivateKeyFile(settings.PrivateKeyFile);
+         var key = CreatePrivateKeyFile(settings.PrivateKeyFile);
 
          return new SshClient(settings.HostNameIPv4, settings.HostPort, settings.UserName, key);
       }
 
       private ScpClient CreateScpClient()
       {
-         var key = new PrivateKeyFile(settings.PrivateKeyFile);
+         var key = CreatePrivateKeyFile(settings.PrivateKeyFile);
          return new ScpClient(settings.HostNameIPv4, settings.HostPort, settings.UserName, key);
+      }
+
+      private PrivateKeyFile CreatePrivateKeyFile(string privateKeyFilePath)
+      {
+         // First, check if we have a cached passphrase
+         var cachedPassphrase = passphraseService.GetCachedPassphrase(privateKeyFilePath);
+         if (!string.IsNullOrEmpty(cachedPassphrase))
+         {
+            try
+            {
+               return new PrivateKeyFile(privateKeyFilePath, cachedPassphrase);
+            }
+            catch (Exception ex) when (ex is InvalidOperationException || ex is SshException)
+            {
+               // Cached passphrase is wrong, clear it and continue
+               passphraseService.ClearCachedPassphrase(privateKeyFilePath);
+            }
+         }
+
+         // Try without passphrase first
+         try
+         {
+            return new PrivateKeyFile(privateKeyFilePath);
+         }
+         catch (Exception ex) when (ex is InvalidOperationException || ex is SshException)
+         {
+            // Key is likely encrypted, proceed to passphrase handling
+            // If our utility detected encryption or the error suggests it's encrypted
+            if (SecureShellKeyUtilities.IsPrivateKeyEncrypted(privateKeyFilePath))
+            {
+               // Key is definitely encrypted, prompt for passphrase
+               string passphrase = null;
+               ThreadHelper.JoinableTaskFactory.Run(async () =>
+               {
+                  passphrase = await passphraseService.PromptAndCachePassphraseAsync(privateKeyFilePath);
+               });
+
+               if (string.IsNullOrEmpty(passphrase))
+               {
+                  throw new SecureShellSessionException(ExceptionMessages.SecureShellSessionPassphraseRequired);
+               }
+
+               return new PrivateKeyFile(privateKeyFilePath, passphrase);
+            }
+            
+            // Re-throw the original exception if we can't handle it
+            throw;
+         }
       }
    }
 }
