@@ -78,6 +78,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ExceptionMessages.resx</DependentUpon>
     </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="RemoteOperations\ViewModels\SecureShellPassphraseViewModel.cs" />
     <Compile Include="WebTools\ViewModels\BrowserViewModel.cs" />
     <Compile Include="WebTools\Model\IDisplayNameProvider.cs" />
     <Compile Include="WebTools\ViewModels\SelectBrowserViewModel.cs" />
@@ -108,6 +110,13 @@
     <Compile Include="Commands\Views\InstallDotnetDialogWindow.xaml.cs">
       <DependentUpon>InstallDotnetDialogWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RemoteOperations\Views\SecureShellPassphraseDialogWindow.xaml.cs">
+      <DependentUpon>SecureShellPassphraseDialogWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="RemoteOperations\Views\SecureShellPassphraseDialogWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="WebTools\Views\SelectBrowserDialogWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -158,5 +167,6 @@
       <Name>RemoteDebuggerLauncherShared</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

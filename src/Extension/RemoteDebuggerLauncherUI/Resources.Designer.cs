@@ -1349,6 +1349,42 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter passphrase for private key, then click OK to apply.
+        /// </summary>
+        public static string SecureShellKeyPassphraseDialogHeaderText {
+            get {
+                return ResourceManager.GetString("SecureShellKeyPassphraseDialogHeaderText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Key File.
+        /// </summary>
+        public static string SecureShellKeyPassphraseDialogKeyFileLabel {
+            get {
+                return ResourceManager.GetString("SecureShellKeyPassphraseDialogKeyFileLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passphrase.
+        /// </summary>
+        public static string SecureShellKeyPassphraseDialogPassphraseLabel {
+            get {
+                return ResourceManager.GetString("SecureShellKeyPassphraseDialogPassphraseLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SSH Private Key Passphrase.
+        /// </summary>
+        public static string SecureShellKeyPassphraseDialogTitle {
+            get {
+                return ResourceManager.GetString("SecureShellKeyPassphraseDialogTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please select the browser you want to use to start debugging..
         /// </summary>
         public static string SelectBrowserDialogHeaderText {
