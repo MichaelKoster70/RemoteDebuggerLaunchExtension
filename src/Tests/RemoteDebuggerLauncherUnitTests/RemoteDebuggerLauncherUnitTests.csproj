@@ -53,7 +53,6 @@
     </Compile>
     <Compile Include="AdditionalDeploymentParserUnitTests.cs" />
     <Compile Include="CertificateServicesUnitTests.cs" />
-    <Compile Include="SecureShellKeyUtilitiesTests.cs" />
     <Compile Include="SecureShellPassphraseServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

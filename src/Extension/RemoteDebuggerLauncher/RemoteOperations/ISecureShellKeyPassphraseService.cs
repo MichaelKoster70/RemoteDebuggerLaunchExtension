@@ -12,31 +12,34 @@ namespace RemoteDebuggerLauncher.RemoteOperations
    /// <summary>
    /// Interface defining a service for managing SSH private key passphrases.
    /// </summary>
-   internal interface ISecureShellPassphraseService
+   internal interface ISecureShellKeyPassphraseService
    {
       /// <summary>
       /// Gets the cached passphrase for the specified private key file.
       /// </summary>
       /// <param name="privateKeyFilePath">The path to the private key file.</param>
-      /// <returns>The passphrase if cached; otherwise null.</returns>
-      string GetCachedPassphrase(string privateKeyFilePath);
+      /// <param name="passphrase">The cached passphrase if available</param>
+      /// <returns><c>true</c> if passphrase is available, else <c>false</c></returns>
+      bool TryGet(string privateKeyFilePath, out string passphrase);
 
       /// <summary>
       /// Prompts the user for a passphrase and caches it for the current session.
       /// </summary>
       /// <param name="privateKeyFilePath">The path to the private key file.</param>
-      /// <returns>The passphrase entered by the user, or null if cancelled.</returns>
-      Task<string> PromptAndCachePassphraseAsync(string privateKeyFilePath);
+      /// <param name="passphrase">The cached passphrase if available</param>
+      /// <returns><c>true</c> if passphrase is available, else <c>false</c></returns>
+      /// <remarks>Must be executed on the Main Thread.</remarks>
+      bool Prompt(string privateKeyFilePath, out string passphrase);
 
       /// <summary>
       /// Clears all cached passphrases.
       /// </summary>
-      void ClearCache();
+      void Clear();
 
       /// <summary>
       /// Clears the cached passphrase for the specified private key file.
       /// </summary>
       /// <param name="privateKeyFilePath">The path to the private key file.</param>
-      void ClearCachedPassphrase(string privateKeyFilePath);
+      void Clear(string privateKeyFilePath);
    }
 }

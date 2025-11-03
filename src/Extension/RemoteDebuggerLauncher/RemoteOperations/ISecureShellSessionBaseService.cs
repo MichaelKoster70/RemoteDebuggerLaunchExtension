@@ -32,6 +32,6 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// Create a new SSH commanding session.
       /// </summary>
       /// <returns>The <see cref="ISecureShellSessionCommandingService"/> session instance.</returns>
-      ISecureShellSessionCommandingService CreateCommandSession();
+      Task<ISecureShellSessionCommandingService> CreateCommandSessionAsync();
    }
 }

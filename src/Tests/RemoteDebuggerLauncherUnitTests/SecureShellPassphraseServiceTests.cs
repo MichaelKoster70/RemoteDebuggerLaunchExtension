@@ -5,6 +5,7 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RemoteDebuggerLauncher.RemoteOperations;
@@ -14,13 +15,13 @@ namespace RemoteDebuggerLauncherUnitTests
    [TestClass]
    public class SecureShellPassphraseServiceTests
    {
-      private ISecureShellPassphraseService service;
+      private ISecureShellKeyPassphraseService service;
       private string testKeyPath;
 
       [TestInitialize]
       public void TestInitialize()
       {
-         service = SecureShellPassphraseService.Instance;
+         service = new SecureShellKeyPassphraseService();
          testKeyPath = Path.Combine(Path.GetTempPath(), "test_key");
          File.WriteAllText(testKeyPath, "dummy key content");
       }
@@ -28,7 +29,7 @@ namespace RemoteDebuggerLauncherUnitTests
       [TestCleanup]
       public void TestCleanup()
       {
-         service.ClearCache();
+         service.Clear();
          if (File.Exists(testKeyPath))
          {
             File.Delete(testKeyPath);
@@ -37,52 +38,57 @@ namespace RemoteDebuggerLauncherUnitTests
 
       [TestMethod]
       public void GetCachedPassphrase_NoCache_ReturnsNull()
-      {
+      {         
          // Act
-         var result = service.GetCachedPassphrase(testKeyPath);
+         var result = service.TryGet(testKeyPath, out var passphrase);
 
          // Assert
-         Assert.IsNull(result);
+         Assert.IsTrue(result);
+         Assert.IsNull(passphrase);
       }
 
       [TestMethod]
+      [SuppressMessage("Blocker Code Smell", "S2699:Tests should include assertions", Justification = "not thowing is the assert")]
       public void ClearCachedPassphrase_ExistingKey_RemovesFromCache()
-      {
-         // Note: This test assumes we could manually add to cache
-         // In a real implementation, we'd need a way to add test data
-         // For now, this tests the method doesn't throw
-         
-         // Act & Assert (should not throw)
-         service.ClearCachedPassphrase(testKeyPath);
-         service.ClearCachedPassphrase(null);
-         service.ClearCachedPassphrase("");
+      {       
+         // Act
+         service.Clear(testKeyPath);
+         service.Clear(null);
+         service.Clear("");
+
+         // Assert (should not throw)
       }
 
       [TestMethod]
+      [SuppressMessage("Blocker Code Smell", "S2699:Tests should include assertions", Justification = "not thowing is the assert")]
       public void ClearCache_ClearsAllCachedPassphrases()
       {
-         // Act & Assert (should not throw)
-         service.ClearCache();
+         // Act
+         service.Clear();
+
+         // Assert (should not throw)
       }
 
       [TestMethod]
-      public void GetCachedPassphrase_NullPath_ReturnsNull()
+      public void GetCachedPassphrase_NullPath_ReturnsFalse()
       {
          // Act
-         var result = service.GetCachedPassphrase(null);
+         var result = service.TryGet(null, out var passphrase);
 
          // Assert
-         Assert.IsNull(result);
+         Assert.IsFalse(result);
+         Assert.IsNull(passphrase);
       }
 
       [TestMethod]
-      public void GetCachedPassphrase_EmptyPath_ReturnsNull()
+      public void GetCachedPassphrase_EmptyPath_ReturnsFalse()
       {
          // Act
-         var result = service.GetCachedPassphrase("");
+         var result = service.TryGet("", out var passphrase);
 
          // Assert
-         Assert.IsNull(result);
+         Assert.IsFalse(result);
+         Assert.IsNull(passphrase);
       }
    }
 }

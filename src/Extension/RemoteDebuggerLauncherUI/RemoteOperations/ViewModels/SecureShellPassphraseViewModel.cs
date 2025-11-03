@@ -5,7 +5,6 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-using System.Windows.Controls;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Threading;
 

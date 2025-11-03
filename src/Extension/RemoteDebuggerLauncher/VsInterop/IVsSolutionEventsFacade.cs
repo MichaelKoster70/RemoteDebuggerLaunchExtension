@@ -5,16 +5,18 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-using System.IO;
-using Microsoft.VisualStudio.ProjectSystem;
+using System;
 
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// Extension methods for the Project System <see cref="UnconfiguredProject"/> class.
+   /// Interface providing events for solution changes.
    /// </summary>
-   internal static class UnconfiguredProjectExtensions
+   internal interface IVsSolutionEventsFacade
    {
-      public static string GetProjectFolder(this UnconfiguredProject project) => Path.GetDirectoryName(project.FullPath);
+      /// <summary>
+      /// Occurs when when Visual Studio after VS closed a solution.
+      /// </summary>
+      event EventHandler AfterCloseSolution;
    }
 }

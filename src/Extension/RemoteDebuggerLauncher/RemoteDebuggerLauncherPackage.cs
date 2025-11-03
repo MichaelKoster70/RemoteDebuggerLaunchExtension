@@ -57,6 +57,10 @@ namespace RemoteDebuggerLauncher
          // Add services implemented in this package
          AddService(typeof(SOptionsPageAccessor), CreateServiceAsync, true);
 
+         // Register the solution event listener
+         var solution = (await this.GeVsFacadeFactoryAsync()).GetVsSolution();
+
+         
          // When initialized asynchronously, the current thread may be a background thread at this point.
          // Do any initialization that requires the UI thread after switching to the UI thread.
          await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
@@ -80,7 +84,7 @@ namespace RemoteDebuggerLauncher
          if (disposing)
          {
             // Clear cached passphrases for security
-            RemoteOperations.SecureShellPassphraseService.Instance.ClearCache();
+            //RemoteOperations.SecureShellPassphraseService.Instance.ClearCache();
          }
          base.Dispose(disposing);
       }

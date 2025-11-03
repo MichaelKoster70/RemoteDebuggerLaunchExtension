@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace RemoteDebuggerLauncher
 {
@@ -22,6 +23,7 @@ namespace RemoteDebuggerLauncher
    internal class VsSolutionFacade : IVsSolutionFacade
    {
       private readonly IAsyncServiceProvider serviceProvider;
+      private readonly VsSolutionEventsListener solutionEventsListener;
 
       /// <summary>
       /// Initializes a new instance of the <see cref="VsSolutionFacade"/> class.
@@ -30,7 +32,12 @@ namespace RemoteDebuggerLauncher
       public VsSolutionFacade(IServiceProvider serviceProvider)
       {
          this.serviceProvider = serviceProvider as IAsyncServiceProvider;
+
+         // Register the solution event listener
+          solutionEventsListener = new VsSolutionEventsListener(serviceProvider.GetService<SVsSolution, IVsSolution>());
       }
+
+      public IVsSolutionEventsFacade EventsFacade { get { return solutionEventsListener; } }
 
       /// <inheritdoc />
       public async Task<IList<IUnconfiguredPackageServiceFactory>> GetActiveConfiguredProjectsAsync()

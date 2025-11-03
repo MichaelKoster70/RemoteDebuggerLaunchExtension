@@ -34,7 +34,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       public Task<string> ExecuteSingleCommandAsync(string commandText) => session.ExecuteSingleCommandAsync(commandText);
 
       /// <inheritdoc/>
-      public ISecureShellSessionCommandingService CreateCommandSession() => session.CreateCommandSession();
+      public Task<ISecureShellSessionCommandingService> CreateCommandSessionAsync() => session.CreateCommandSessionAsync();
 
       /// <inheritdoc/>
       public async Task UploadFolderRecursiveAsync(string localSourcePath, string remoteTargetPath, IOutputPaneWriterService progressOutputPaneWriter = null)
@@ -42,7 +42,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          ThrowIf.ArgumentNullOrEmpty(localSourcePath, nameof(localSourcePath));
          ThrowIf.ArgumentNullOrEmpty(remoteTargetPath, nameof(remoteTargetPath));
 
-         using (var commands = session.CreateCommandSession())
+         using (var commands = await session.CreateCommandSessionAsync())
          {
             progressOutputPaneWriter?.Write(Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
             progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployRemoteFolderRsyncStart);
@@ -60,7 +60,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          ThrowIf.ArgumentNullOrEmpty(localFilePath, nameof(localFilePath));
          ThrowIf.ArgumentNullOrEmpty(remoteFilePath, nameof(remoteFilePath));
 
-         using (var commands = session.CreateCommandSession())
+         using (var commands = await session.CreateCommandSessionAsync())
          {
             progressOutputPaneWriter?.Write(Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
             progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployFileProgress, localFilePath, remoteFilePath);
