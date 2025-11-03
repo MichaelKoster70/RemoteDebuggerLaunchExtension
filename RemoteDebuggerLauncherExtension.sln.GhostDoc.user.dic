@@ -38,6 +38,7 @@ nuget
 Offroad
 omnisharp
 openssh
+Passphrase
 pkgdef
 plugin
 powershell
@@ -57,6 +58,7 @@ stdout
 sudo
 Thumbprint
 typeof
+Unadvise
 uname
 unconfigured
 Username

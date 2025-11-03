@@ -7,6 +7,7 @@
 
 using System;
 using System.Composition;
+
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -17,7 +18,7 @@ namespace RemoteDebuggerLauncher
    /// <summary>
    /// Visual Studio Interop facade factory implementation.
    /// </summary>
-   [Export(typeof(IVsFacadeFactory))]
+   [Export(typeof(IVsFacadeFactory)), Shared]
    internal class VsFacadeFactory : IVsFacadeFactory
    {
       private readonly IServiceProvider serviceProvider;

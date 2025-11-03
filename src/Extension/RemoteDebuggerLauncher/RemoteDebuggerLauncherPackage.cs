@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -9,6 +9,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 
 namespace RemoteDebuggerLauncher
@@ -36,6 +37,7 @@ namespace RemoteDebuggerLauncher
    [ProvideProfile(typeof(DeviceOptionsPage), PackageConstants.Options.Category, PackageConstants.Options.PageNameDevice, 200, 201, true, DescriptionResourceID = 202)]
    [ProvideProfile(typeof(LocalOptionsPage), PackageConstants.Options.Category, PackageConstants.Options.PageNameLocal, 200, 203, true, DescriptionResourceID = 204)]
    [Guid(RemoteDebuggerLauncherPackage.PackageGuidString)]
+   //[ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string, PackageAutoLoadFlags.BackgroundLoad)]
    [ProvideMenuResource("Menus.ctmenu", 1)]
    public sealed class RemoteDebuggerLauncherPackage : AsyncPackage 
    {
@@ -57,6 +59,10 @@ namespace RemoteDebuggerLauncher
          // Add services implemented in this package
          AddService(typeof(SOptionsPageAccessor), CreateServiceAsync, true);
 
+         // Register the solution event listener
+         var solution = (await this.GeVsFacadeFactoryAsync()).GetVsSolution();
+
+         
          // When initialized asynchronously, the current thread may be a background thread at this point.
          // Do any initialization that requires the UI thread after switching to the UI thread.
          await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
@@ -80,7 +86,7 @@ namespace RemoteDebuggerLauncher
          if (disposing)
          {
             // Clear cached passphrases for security
-            RemoteOperations.SecureShellPassphraseService.Instance.ClearCache();
+            //RemoteOperations.SecureShellPassphraseService.Instance.ClearCache();
          }
          base.Dispose(disposing);
       }

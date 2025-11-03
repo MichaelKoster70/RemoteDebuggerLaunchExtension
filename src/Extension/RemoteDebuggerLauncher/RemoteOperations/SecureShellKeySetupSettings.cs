@@ -12,7 +12,7 @@ using System.Net.Sockets;
 namespace RemoteDebuggerLauncher.RemoteOperations
 {
    /// <summary>
-   /// Data container holding configuration data for the <see cref="ISecureShellKeySetupService"/>
+   /// Data container holding configuration data for the <see cref="ISecureShellPrivateKeyPassphraseService"/>
    /// </summary>
    internal class SecureShellKeySetupSettings
    {

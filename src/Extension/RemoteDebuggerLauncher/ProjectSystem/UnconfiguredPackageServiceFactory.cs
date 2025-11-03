@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
 using Microsoft.VisualStudio.Shell;
+using RemoteDebuggerLauncher.RemoteOperations;
 
 namespace RemoteDebuggerLauncher
 {
@@ -26,8 +27,8 @@ namespace RemoteDebuggerLauncher
       private readonly IDebugTokenReplacer tokenReplacer;
 
       [ImportingConstructor]
-      public UnconfiguredPackageServiceFactory(SVsServiceProvider asyncServiceProvider, IDebugTokenReplacer tokenReplacer, IVsFacadeFactory facadeFactory) :
-         base(asyncServiceProvider, facadeFactory, null)
+      public UnconfiguredPackageServiceFactory(SVsServiceProvider asyncServiceProvider, IDebugTokenReplacer tokenReplacer, IVsFacadeFactory facadeFactory, ISecureShellKeyPassphraseService passphraseService) :
+         base(asyncServiceProvider, facadeFactory, null, passphraseService)
       {
          this.tokenReplacer = tokenReplacer;
       }

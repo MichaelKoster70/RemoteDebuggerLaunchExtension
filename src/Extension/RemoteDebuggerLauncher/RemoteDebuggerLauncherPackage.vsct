@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
   <!--  This is the file that defines the actual layout and type of the commands.
@@ -35,7 +35,7 @@
          other menus or buttons (commands); from a visual point of view you can see the
          group as the part of a menu contained between two lines. The parent of a group
          must be a menu. -->
-    <Menus>
+    <!--<Menus>
       <Menu guid="guidRemoteDebuggerLauncherPackageCmdSet" id="menuidToolsItem" priority="0x0100" type="Menu">
         <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidToolsItem" />
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -43,19 +43,22 @@
           <ButtonText>Remote Debugger Launcher</ButtonText>
         </Strings>
       </Menu>
-    </Menus>
+    </Menus>-->
 
     <Groups>
       <!-- Group to be shown in the VS Tools Menu, holding just one submenu -->
       <Group guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidToolsItem" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS" />
+        <Strings>
+          <ButtonText>Remote Debugger Launcher</ButtonText>
+        </Strings>
       </Group>
       <!-- Group holding all commands from the extension -->
       <Group guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidDeployCommands" priority="0x0100">
-        <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="menuidToolsItem" />
+        <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidToolsItem" />
       </Group>
       <Group guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidSetupCommands" priority="0x0101">
-        <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="menuidToolsItem" />
+        <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidToolsItem" />
       </Group>
     </Groups>
 
@@ -125,7 +128,7 @@
   </Commands>
 
   <VisibilityConstraints>
-    <VisibilityItem guid="guidRemoteDebuggerLauncherPackageCmdSet" id="menuidToolsItem" context="UICONTEXT_SolutionExistsAndNotBuildingAndNotDebugging"></VisibilityItem>
+    <VisibilityItem guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidToolsItem" context="UICONTEXT_SolutionExistsAndNotBuildingAndNotDebugging"></VisibilityItem>
   </VisibilityConstraints>
 
   <Symbols>
@@ -134,7 +137,7 @@
 
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidRemoteDebuggerLauncherPackageCmdSet" value="{67dde3fd-abea-469b-939f-02a3178c91e7}">
-      <IDSymbol name="menuidToolsItem" value="0x1000" />
+      <!--<IDSymbol name="menuidToolsItem" value="0x1000" />-->
       <IDSymbol name="groupidToolsItem" value="0x1010" />
       <IDSymbol name="groupidDeployCommands" value="0x1020" />
       <IDSymbol name="groupidSetupCommands" value="0x1021" />

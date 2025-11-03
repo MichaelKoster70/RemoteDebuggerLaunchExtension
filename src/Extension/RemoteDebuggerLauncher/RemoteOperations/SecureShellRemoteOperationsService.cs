@@ -103,7 +103,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       {
          try
          {
-            using (var commands = session.CreateCommandSession())
+            using (var commands = await session.CreateCommandSessionAsync())
             {
                outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
                outputPaneWriter.WriteLine(Resources.RemoteCommandInstallDebuggerOnlineCommonProgress);
@@ -170,7 +170,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
             outputPaneWriter.Write(Resources.RemoteCommandInstallDebuggerOfflineOutputPaneProgressInstalling);
 
-            using (var commandSession = session.CreateCommandSession())
+            using (var commandSession = await session.CreateCommandSessionAsync())
             {
                // remove all files in the target folder, in case the debugger was installed before
               await CleanRemoteFolderAsync(commandSession, debuggerInstallPath);
@@ -371,7 +371,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          string dotnetExecutable = UnixPath.Combine(configurationAggregator.QueryDotNetInstallFolderPath(), "dotnet");
 
          //Check if ASP.NET runtime is installed
-         using (var commands = session.CreateCommandSession())
+         using (var commands = await session.CreateCommandSessionAsync())
          {
             // Step 1: Check certificate status
             outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
@@ -472,7 +472,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       private async Task CleanFolderAsync(string remoteTargetPath, bool clean)
       {
          ThrowIf.ArgumentNullOrEmpty(remoteTargetPath, nameof(remoteTargetPath));
-         using (var commandSession = session.CreateCommandSession())
+         using (var commandSession = await session.CreateCommandSessionAsync())
          {
             if (clean)
             {
@@ -510,7 +510,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       {
          try
          {
-            using (var commands = session.CreateCommandSession())
+            using (var commands = await session.CreateCommandSessionAsync())
             {
                outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
                outputPaneWriter.WriteLine(Resources.RemoteCommandInstallDotnetSdkOnlineOutputPaneProgress);
@@ -547,7 +547,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       {
          try
          {
-            using (var commands = session.CreateCommandSession())
+            using (var commands = await session.CreateCommandSessionAsync())
             {
                outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
                outputPaneWriter.WriteLine(Resources.RemoteCommandInstallDotnetRuntimeOnlineOutputPaneProgress);
@@ -729,7 +729,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
       private async Task InstallDotnetAsync(string filePath)
       {
-         using (var commands = session.CreateCommandSession())
+         using (var commands = await session.CreateCommandSessionAsync())
          {
             var fileName = Path.GetFileName(filePath);
 

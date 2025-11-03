@@ -80,6 +80,7 @@
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="RemoteOperations\ViewModels\SecureShellPassphraseViewModel.cs" />
+    <Compile Include="Utilities\DialogFactory.cs" />
     <Compile Include="WebTools\ViewModels\BrowserViewModel.cs" />
     <Compile Include="WebTools\Model\IDisplayNameProvider.cs" />
     <Compile Include="WebTools\ViewModels\SelectBrowserViewModel.cs" />
