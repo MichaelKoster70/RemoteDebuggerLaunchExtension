@@ -46,9 +46,9 @@
     </Menus>
 
     <Groups>
-      <!-- Group to be shown in the VS Tools Menu, holding just one submenu -->
+      <!-- Group to be shown in the VS Debug Menu, holding just one submenu -->
       <Group guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidToolsItem" priority="0x0600">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS" />
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_DEBUG" />
       </Group>
       <!-- Group holding all commands from the extension -->
       <Group guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidDeployCommands" priority="0x0100">
