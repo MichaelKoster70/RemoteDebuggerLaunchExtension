@@ -35,7 +35,7 @@
          other menus or buttons (commands); from a visual point of view you can see the
          group as the part of a menu contained between two lines. The parent of a group
          must be a menu. -->
-    <!--<Menus>
+    <Menus>
       <Menu guid="guidRemoteDebuggerLauncherPackageCmdSet" id="menuidToolsItem" priority="0x0100" type="Menu">
         <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidToolsItem" />
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -43,7 +43,7 @@
           <ButtonText>Remote Debugger Launcher</ButtonText>
         </Strings>
       </Menu>
-    </Menus>-->
+    </Menus>
 
     <Groups>
       <!-- Group to be shown in the VS Tools Menu, holding just one submenu -->
