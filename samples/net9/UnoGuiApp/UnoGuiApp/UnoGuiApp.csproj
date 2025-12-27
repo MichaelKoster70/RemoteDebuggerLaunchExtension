@@ -49,6 +49,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Refit" />
+    <PackageReference Include="System.Text.Json" />
     <EmbeddedResource Include="appsettings.json" />
     <EmbeddedResource Include="appsettings.*.json" DependentUpon="appsettings.json" />
   </ItemGroup>
