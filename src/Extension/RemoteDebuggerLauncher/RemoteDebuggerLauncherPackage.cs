@@ -9,7 +9,6 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 
 namespace RemoteDebuggerLauncher
@@ -37,7 +36,6 @@ namespace RemoteDebuggerLauncher
    [ProvideProfile(typeof(DeviceOptionsPage), PackageConstants.Options.Category, PackageConstants.Options.PageNameDevice, 200, 201, true, DescriptionResourceID = 202)]
    [ProvideProfile(typeof(LocalOptionsPage), PackageConstants.Options.Category, PackageConstants.Options.PageNameLocal, 200, 203, true, DescriptionResourceID = 204)]
    [Guid(RemoteDebuggerLauncherPackage.PackageGuidString)]
-   //[ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string, PackageAutoLoadFlags.BackgroundLoad)]
    [ProvideMenuResource("Menus.ctmenu", 1)]
    public sealed class RemoteDebuggerLauncherPackage : AsyncPackage 
    {
