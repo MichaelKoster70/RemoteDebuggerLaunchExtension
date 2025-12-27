@@ -2,25 +2,27 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "build-skia-gtk",
+      "label": "build-desktop",
       "command": "dotnet",
       "type": "process",
       "args": [
         "build",
-        "${workspaceFolder}/UnoGuiApp.Skia.Gtk/UnoGuiApp.Skia.Gtk.csproj",
+        "${workspaceFolder}/UnoGuiApp/UnoGuiApp.csproj",
         "/property:GenerateFullPaths=true",
+        "/property:TargetFramework=net9.0-desktop",
         "/consoleloggerparameters:NoSummary"
       ],
       "problemMatcher": "$msCompile"
     },
     {
-      "label": "publish-skia-gtk",
+      "label": "publish-desktop",
       "command": "dotnet",
       "type": "process",
       "args": [
         "publish",
-        "${workspaceFolder}/UnoGuiApp.Skia.Gtk/UnoGuiApp.Skia.Gtk.csproj",
+        "${workspaceFolder}/UnoGuiApp/UnoGuiApp.csproj",
         "/property:GenerateFullPaths=true",
+        "/property:TargetFramework=net9.0-desktop",
         "/consoleloggerparameters:NoSummary"
       ],
       "problemMatcher": "$msCompile"

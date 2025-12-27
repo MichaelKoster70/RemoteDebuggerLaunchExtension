@@ -11,6 +11,7 @@
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 	<ItemGroup>
 	  <Compile Remove="Properties\Properties\**" />

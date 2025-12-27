@@ -1,4 +1,4 @@
-namespace UnoGuiApp.Business.Models;
+namespace UnoGuiApp.Models;
 
 public record AppConfig
 {

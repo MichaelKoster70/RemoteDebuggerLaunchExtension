@@ -8,17 +8,18 @@
       // Use IntelliSense to find out which attributes exist for C# debugging
       // Use hover for the description of the existing attributes
       // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
-      "name": "Skia.GTK (Debug)",
+      "name": "Uno Platform Desktop Debug",
       "type": "coreclr",
       "request": "launch",
-      "preLaunchTask": "build-skia-gtk",
+      "preLaunchTask": "build-desktop",
       // If you have changed target frameworks, make sure to update the program path.
-      "program": "${workspaceFolder}/UnoGuiApp.Skia.Gtk/bin/Debug/net8.0/UnoGuiApp.Skia.Gtk.dll",
+      "program": "${workspaceFolder}/UnoGuiApp/bin/Debug/net9.0-desktop/UnoGuiApp.dll",
       "args": [],
+      "launchSettingsProfile": "UnoGuiApp (Desktop)",
       "env": {
         "DOTNET_MODIFIABLE_ASSEMBLIES": "debug"
       },
-      "cwd": "${workspaceFolder}/UnoGuiApp.Skia.Gtk",
+      "cwd": "${workspaceFolder}/UnoGuiApp",
       // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
       "console": "internalConsole",
       "stopAtEntry": false
