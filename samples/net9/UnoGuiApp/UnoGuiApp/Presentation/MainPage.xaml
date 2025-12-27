@@ -6,23 +6,24 @@
       xmlns:utu="using:Uno.Toolkit.UI"
       NavigationCacheMode="Required"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+  <ScrollViewer IsTabStop="True">
+    <Grid utu:SafeArea.Insets="VisibleBounds">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition />
+      </Grid.RowDefinitions>
+      <utu:NavigationBar Content="{Binding Title}" />
 
-  <Grid utu:SafeArea.Insets="VisibleBounds">
-    <Grid.RowDefinitions>
-      <RowDefinition Height="Auto" />
-      <RowDefinition />
-    </Grid.RowDefinitions>
-    <utu:NavigationBar Content="{Binding Title}" />
-
-    <StackPanel Grid.Row="1"
-          HorizontalAlignment="Center"
-          VerticalAlignment="Center"
-          Spacing="16">
-      <TextBox Text="{Binding Name, Mode=TwoWay}"
-          PlaceholderText="Enter your name:" />
-      <Button Content="Go to Second Page"
-          AutomationProperties.AutomationId="SecondPageButton"
-          Command="{Binding GoToSecond}" />
-    </StackPanel>
-  </Grid>
+      <StackPanel Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Spacing="16">
+        <TextBox Text="{Binding Name, Mode=TwoWay}"
+            PlaceholderText="Enter your name:" />
+        <Button Content="Go to Second Page"
+            AutomationProperties.AutomationId="SecondPageButton"
+            Command="{Binding GoToSecond}" />
+      </StackPanel>
+    </Grid>
+  </ScrollViewer>
 </Page>

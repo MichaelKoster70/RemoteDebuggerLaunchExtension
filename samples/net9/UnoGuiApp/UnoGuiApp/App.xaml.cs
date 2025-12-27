@@ -1,7 +1,18 @@
+using Uno.Resizetizer;
+
 namespace UnoGuiApp;
 
-public class App : Application
+public partial class App : Application
 {
+    /// <summary>
+    /// Initializes the singleton application object. This is the first line of authored code
+    /// executed, and as such is the logical equivalent of main() or WinMain().
+    /// </summary>
+    public App()
+    {
+        this.InitializeComponent();
+    }
+
     protected Window? MainWindow { get; private set; }
     protected IHost? Host { get; private set; }
 
@@ -52,18 +63,6 @@ public class App : Application
                 )
                 // Enable localization (see appsettings.json for supported languages)
                 .UseLocalization()
-                // Register Json serializers (ISerializer and ISerializer)
-                .UseSerialization((context, services) => services
-                    .AddContentSerializer(context)
-                    .AddJsonTypeInfo(WeatherForecastContext.Default.IImmutableListWeatherForecast))
-                .UseHttp((context, services) => services
-                    // Register HttpClient
-#if DEBUG
-                    // DelegatingHandler will be automatically injected into Refit Client
-                    .AddTransient<DelegatingHandler, DebugHttpHandler>()
-#endif
-                    .AddSingleton<IWeatherCache, WeatherCache>()
-                    .AddRefitClient<IApiClient>(context))
                 .ConfigureServices((context, services) =>
                 {
                     // TODO: Register your services
@@ -74,8 +73,9 @@ public class App : Application
         MainWindow = builder.Window;
 
 #if DEBUG
-        MainWindow.EnableHotReload();
+        MainWindow.UseStudio();
 #endif
+        MainWindow.SetWindowIcon();
 
         Host = await builder.NavigateAsync<Shell>();
     }
@@ -90,11 +90,11 @@ public class App : Application
 
         routes.Register(
             new RouteMap("", View: views.FindByViewModel<ShellViewModel>(),
-                Nested: new RouteMap[]
-                {
-                    new RouteMap("Main", View: views.FindByViewModel<MainViewModel>()),
-                    new RouteMap("Second", View: views.FindByViewModel<SecondViewModel>()),
-                }
+                Nested:
+                [
+                    new ("Main", View: views.FindByViewModel<MainViewModel>(), IsDefault:true),
+                    new ("Second", View: views.FindByViewModel<SecondViewModel>()),
+                ]
             )
         );
     }
