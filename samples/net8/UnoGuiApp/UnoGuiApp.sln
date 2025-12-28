@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.1.32421.90
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{0074187C-4CC7-47A6-BD76-D4812B1A1BFF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnoGuiApp", "UnoGuiApp\UnoGuiApp.csproj", "{6F68ED4A-9963-3A69-2F14-36F11670DC4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0074187C-4CC7-47A6-BD76-D4812B1A1BFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0074187C-4CC7-47A6-BD76-D4812B1A1BFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0074187C-4CC7-47A6-BD76-D4812B1A1BFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0074187C-4CC7-47A6-BD76-D4812B1A1BFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F68ED4A-9963-3A69-2F14-36F11670DC4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F68ED4A-9963-3A69-2F14-36F11670DC4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F68ED4A-9963-3A69-2F14-36F11670DC4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F68ED4A-9963-3A69-2F14-36F11670DC4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

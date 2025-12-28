@@ -1,0 +1,18 @@
+<Solution>
+  <Folder Name="/Apps/">
+    <Project Path="WebAspMvc/WebAspMvc.csproj">
+      <Deploy Solution="Debug|*" />
+    </Project>
+    <Project Path="WebAspSpa/WebAspSpa.csproj">
+      <Deploy Solution="Debug|*" />
+    </Project>
+    <Project Path="WebBlazorServerApp/WebBlazorServerApp.csproj" />
+    <Project Path="WebBlazorWasmApp/Client/WebBlazorWasmApp.Client.csproj" />
+    <Project Path="WebBlazorWasmApp/Server/WebBlazorWasmApp.Server.csproj" />
+    <Project Path="WebBlazorWasmApp/Shared/WebBlazorWasmApp.Shared.csproj" />
+    <Project Path="WebRazor/WebRazor.csproj" />
+  </Folder>
+  <Folder Name="/Shared/">
+    <Project Path="WebRazorClassLibrary/WebRazorClassLibrary.csproj" />
+  </Folder>
+</Solution>
