@@ -8,11 +8,6 @@ public class ShellViewModel
         INavigator navigator)
     {
         _navigator = navigator;
-        _ = Start();
-    }
-
-    public async Task Start()
-    {
-        await _navigator.NavigateViewModelAsync<MainViewModel>(this);
+        // Add code here to initialize or attach event handlers to singleton services
     }
 }
