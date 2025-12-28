@@ -14,9 +14,19 @@
     },
     "UnoGuiApp (Desktop WSL2)": {
       "commandName": "WSL2",
-      "commandLineArgs": "{ProjectDir}/bin/Debug/net9.0-desktop/UnoGuiApp.dll",
+      "commandLineArgs": "{ProjectDir}/bin/Debug/net8.0-desktop/UnoGuiApp.dll",
       "distributionName": "",
       "compatibleTargetFramework": "desktop"
+    },
+    "SSH Remote": {
+      "commandName": "SshRemoteLaunch",
+      "environmentVariables": {
+        "DISPLAY": ":0.0"
+      },
+      "hostName": "raspberrypi",
+      "userName": "pi",
+      "privateKey": "%userprofile%\\\\.ssh\\\\id_rsa",
+      "hostPort": "22"
     }
   }
 }
