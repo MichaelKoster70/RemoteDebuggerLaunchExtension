@@ -5,15 +5,6 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-namespace UnoGuiApp.Presentation;
+namespace UnoGuiApp.Models;
 
-public class ShellViewModel
-{
-    private readonly INavigator navigator;
-
-    public ShellViewModel(INavigator navigator)
-    {
-        this.navigator = navigator;
-        // Add code here to initialize or attach event handlers to singleton services
-    }
-}
+public record Entity(string Name);
