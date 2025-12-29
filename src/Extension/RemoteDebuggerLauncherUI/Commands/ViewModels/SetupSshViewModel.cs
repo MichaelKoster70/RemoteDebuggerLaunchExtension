@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -14,6 +14,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using Microsoft.VisualStudio.PlatformUI;
+using Microsoft.VisualStudio.Shell.FindAllReferences;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.Win32;
 using RemoteDebuggerLauncher.RemoteOperations;
@@ -254,6 +255,9 @@ namespace RemoteDebuggerLauncher
          valid &= Validate(username, nameof(Username));
          valid &= Validate(publicKeyFile, nameof(PublicKeyFile));
 
+         // also consider any existing binding/validation errors
+         valid &= !HasErrors;
+
          return valid;
       }
 
@@ -291,6 +295,19 @@ namespace RemoteDebuggerLauncher
             return true;
          }
          return false;
+      }
+
+      /// <summary>
+      /// Reports a binding conversion exception for the specified property to the view model's validation state.
+      /// </summary>
+      /// <param name="propertyName">The property name.</param>
+      /// <param name="message">The error message.</param>
+      public void ReportBindingException(string propertyName, string message)
+      {
+         // replace existing errors for the property with the provided message
+         _ = ClearErrors(propertyName);
+         AddErrors(propertyName, new[] { (object)message });
+         OkCommand.RaiseCanExecuteChanged();
       }
    }
 }
