@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
         <Identity Id="RemoteDebuggerLauncher.0a58df05-9e98-4665-a427-78098563fa93" Version="1.0.0" Language="en-US" Publisher="Michael Koster" />
@@ -26,6 +26,7 @@
     <Prerequisites>
         <Prerequisite Id="Microsoft.NetCore.Component.Runtime.6.0" Version="[17.4,18.0)" DisplayName=".NET 6.0 Runtime (Long Term Support)" />
         <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.LanguageServices" Version="[17.4,18.0)" DisplayName="C# and Visual Basic" />
+        <Prerequisite Id="Microsoft.NetCore.Component.Runtime.8.0" Version="[17.4,18.0)" DisplayName=".NET 8.0 Runtime (Long Term Support)" />
     </Prerequisites>
     <Assets>
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
