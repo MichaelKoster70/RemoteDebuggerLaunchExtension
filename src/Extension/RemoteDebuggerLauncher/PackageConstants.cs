@@ -181,13 +181,18 @@ namespace RemoteDebuggerLauncher
          public const string DefaultKnownHostsFileName = "known_hosts";
 
          /// <summary>SSH key scanner arguments.</summary>
-         public const string KeyScanArguments = "-4 -p {1} {0}";
+         /// <remarks>No space after {2} because SshForceIPv4 includes a trailing space.</remarks>
+         public const string KeyScanArguments = "{2}-p {1} {0}";
+
+         /// <summary>Argument for SSH to force IPv4 usage.</summary>
+         public const string SshForceIPv4 = "-4 ";
 
          /// <summary>SSH executable.</summary>
          public const string SshExecutable = "ssh.exe";
 
          /// <summary>The SSH arguments to add server fingerprint to known_hosts file.</summary>
-         public const string SshArguments = "{0}@{1} -p {2} -i \"{3}\" \"echo DONE\"";
+         /// <remarks>No space after {4} because SshForceIPv4 includes a trailing space.</remarks>
+         public const string SshArguments = "{0}@{1} {4}-p {2} -i \"{3}\" \"echo DONE\"";
 
          /// <summary>HTTPS Developer Certificate name.</summary>
          public const string HttpsCertificateName = "DevCert.pfx";
