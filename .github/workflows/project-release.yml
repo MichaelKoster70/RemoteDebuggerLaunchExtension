@@ -59,6 +59,7 @@ jobs:
     name: VS Marketplace Release
     runs-on: windows-2022
     needs: build
+    permissions: {}
     if: ${{ github.ref_type == 'tag' }}
 
     env:
