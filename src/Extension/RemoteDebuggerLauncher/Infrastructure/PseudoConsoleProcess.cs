@@ -227,7 +227,12 @@ namespace RemoteDebuggerLauncher.Infrastructure
                standardOutput?.Dispose();
             }
 
-            // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+            // free unmanaged resources (unmanaged objects)
+            if (pseudoConsoleHandle != IntPtr.Zero)
+            {
+               NativeMethods.ClosePseudoConsole(pseudoConsoleHandle);
+               pseudoConsoleHandle = IntPtr.Zero;
+            }
             disposedValue = true;
          }
       }
