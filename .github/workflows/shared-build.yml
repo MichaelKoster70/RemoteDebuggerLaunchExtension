@@ -38,9 +38,6 @@ on:
       AZURE_TENANT_ID:
         description: 'The Azure Tenant ID for authentication'
         required: false
-      AZURE_SUBSCRIPTION_ID:
-        description: 'The Azure Subscription ID for authentication'
-        required: false
       AZURE_KEYVAULT_URL:
         description: 'The Azure Key Vault URL for code signing'
         required: false
