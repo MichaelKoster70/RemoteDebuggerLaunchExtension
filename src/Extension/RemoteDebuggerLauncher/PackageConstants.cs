@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -182,6 +182,12 @@ namespace RemoteDebuggerLauncher
 
          /// <summary>SSH key scanner arguments.</summary>
          public const string KeyScanArguments = "-4 -p {1} {0}";
+
+         /// <summary>SSH executable.</summary>
+         public const string SshExecutable = "ssh.exe";
+
+         /// <summary>The SSH arguments to add server fingerprint to known_hosts file.</summary>
+         public const string SshArguments = "{0}@{1} -p {2} -i \"{3}\" \"echo DONE\"";
 
          /// <summary>HTTPS Developer Certificate name.</summary>
          public const string HttpsCertificateName = "DevCert.pfx";

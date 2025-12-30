@@ -70,8 +70,11 @@
     <Compile Include="Commands\CleanOutputCommand.cs" />
     <Compile Include="Infrastructure\AdditionalDeploymentEntry.cs" />
     <Compile Include="Infrastructure\AdditionalDeploymentParser.cs" />
+    <Compile Include="Infrastructure\StringBuilderExtensions.cs" />
+    <Compile Include="Infrastructure\PseudoConsoleProcess.cs" />
     <Compile Include="Infrastructure\DirectoryHelper.cs" />
     <Compile Include="Infrastructure\FileHelper.cs" />
+    <Compile Include="Infrastructure\NativeMethods.cs" />
     <Compile Include="RemoteOperations\IRemoteBulkCopySessionService.cs" />
     <Compile Include="RemoteOperations\ISecureShellSessionBaseService.cs" />
     <Compile Include="RemoteOperations\SecureShellCopyProgress.cs" />
