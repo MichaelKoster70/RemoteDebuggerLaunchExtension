@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Threading;
 using RemoteDebuggerLauncher.Infrastructure;
 using Renci.SshNet;
@@ -106,7 +107,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          var defaultKeysFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), PackageConstants.SecureShell.DefaultKeyPairFolder);
          var knownHostsFilePath = Path.Combine(defaultKeysFolder, PackageConstants.SecureShell.DefaultKnownHostsFileName);
 
-         var arguments = string.Format(PackageConstants.SecureShell.KeyScanArguments, settings.HostName, settings.HostPort);
+         var arguments = string.Format(PackageConstants.SecureShell.KeyScanArguments, settings.HostName, settings.HostPort, settings.ForceIPv4 ? PackageConstants.SecureShell.SshForceIPv4 : string.Empty);
          var startInfo = new ProcessStartInfo(PackageConstants.SecureShell.KeyScanExecutable, arguments)
          {
             CreateNoWindow = true,
@@ -123,6 +124,8 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             var stdOutput = await process.StandardOutput.ReadToEndAsync();
             var stdError = await process.StandardError.ReadToEndAsync();
             var exitCode = await process.WaitForExitAsync();
+
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
             if (exitCode == 0)
             {
@@ -155,7 +158,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          const string SshDoneMarker = "DONE";
 
          // open a pseudo console windows to run the ssh command
-         var arguments = string.Format(PackageConstants.SecureShell.SshArguments, settings.UserName, settings.HostName, settings.HostPort, settings.PrivateKeyFile);
+         var arguments = string.Format(PackageConstants.SecureShell.SshArguments, settings.UserName, settings.HostName, settings.HostPort, settings.PrivateKeyFile, settings.ForceIPv4 ? PackageConstants.SecureShell.SshForceIPv4 : string.Empty);
          var startInfo = new ProcessStartInfo(PackageConstants.SecureShell.SshExecutable, arguments)
          {
             CreateNoWindow = false,
