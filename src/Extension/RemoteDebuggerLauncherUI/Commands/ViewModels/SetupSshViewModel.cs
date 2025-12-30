@@ -14,7 +14,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using Microsoft.VisualStudio.PlatformUI;
-using Microsoft.VisualStudio.Shell.FindAllReferences;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.Win32;
 using RemoteDebuggerLauncher.RemoteOperations;
