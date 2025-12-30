@@ -16,7 +16,7 @@ jobs:
     name: Release Build
     permissions:
       contents: read
-      id-token: write     
+      id-token: write
     uses: ./.github/workflows/shared-build.yml
     with:
       store-artifacts: true
