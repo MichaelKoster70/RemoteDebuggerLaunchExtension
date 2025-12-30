@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -23,16 +23,22 @@ namespace RemoteDebuggerLauncher
 
       public override ValidationResult Validate(object value, CultureInfo cultureInfo)
       {
-         string text = value as string;
-         if (string.IsNullOrEmpty(text))
+         if (value is int intValue)
          {
-            // an empty string is considered valid
+            if (intValue < Min || intValue > Max)
+            {
+               return new ValidationResult(false, $"Port number must be between {Min} and {Max}.");
+            }
             return ValidationResult.ValidResult;
          }
 
+         if (value is string text && string.IsNullOrEmpty(text))
+         {
+            // empty string is invalid so OK can't be enabled
+            return new ValidationResult(false, "Port number is required.");
+         }
 
-
-         return ValidationResult.ValidResult;
+         return new ValidationResult(false, "Invalid port number.");
       }
    }
 }

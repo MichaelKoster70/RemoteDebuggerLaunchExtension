@@ -1,4 +1,4 @@
-﻿<vsui:DialogWindow x:Class="RemoteDebuggerLauncher.SetupSshDialogWindow"
+<vsui:DialogWindow x:Class="RemoteDebuggerLauncher.SetupSshDialogWindow"
                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -69,14 +69,20 @@
                VerticalContentAlignment="Center"
                Style="{StaticResource TextBoxValidationStyle}"
                ToolTip="{x:Static local:Resources.SetupSshDialogHostNameDescription}"
-               Text="{Binding HostName, ValidatesOnNotifyDataErrors=True}"/>
+               Text="{Binding HostName, ValidatesOnNotifyDataErrors=True}" />
       <TextBox Grid.Row="0"
                Grid.Column="1"
                Width="50"
                Margin="4,0,0,0"
                VerticalContentAlignment="Center"
-               ToolTip="{x:Static local:Resources.SetupSshDialogHostPortDescription}"
-               Text="{Binding HostPort, ValidatesOnNotifyDataErrors=True}"  />
+               ToolTip="{x:Static local:Resources.SetupSshDialogHostPortDescription}">
+        <TextBox.Text>
+          <Binding Path="HostPort"
+                   ValidatesOnNotifyDataErrors="True"
+                   ValidatesOnExceptions="True"
+                   UpdateSourceExceptionFilter="HostPortUpdateSourceExceptionFilter" />
+        </TextBox.Text>
+      </TextBox>
     </Grid>
 
     <!-- User Name -->

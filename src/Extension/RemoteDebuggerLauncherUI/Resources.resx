@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -521,7 +521,7 @@ Make sure you selected a 'SshRemoteLaunch' launch profile.</value>
   <data name="RemoteCommandSetupSshScanProgressFingerprintAdd" xml:space="preserve">
     <value>[{0}@{1}:{2}] adding fingerprints to known_hosts file....</value>
   </data>
-  <data name="RemoteCommandSetupSshScanProgressFingerprintScan" xml:space="preserve">
+  <data name="RemoteCommandSetupSshScanProgressFingerprintScan1" xml:space="preserve">
     <value>[{0}@{1}:{2}] Scanning SSH server fingerprints....</value>
   </data>
   <data name="RemoteCommandSetupSshScanProgressFingerprintSkip" xml:space="preserve">
@@ -650,7 +650,35 @@ Replace: Replace the existing certificate with a new one.</value>
     <value>deleting {0}</value>
     <comment>Output pane: SCP session starts</comment>
   </data>
-  <data name="RemoteCommandDeployRemoteFolderStatusbarProgress1" xml:space="preserve">
-    <value>Deploying application...</value>
+  <data name="RemoteCommandSetupSshScanProgressFingerprintFailed1" xml:space="preserve">
+    <value>[{0}@{1}:{2}] adding fingerprints to known_hosts FAILED
+Windows OpenSSH ssh-keygen reported:</value>
+  </data>
+  <data name="RemoteCommandSetupSshScanProgressFingerprintFailed3" xml:space="preserve">
+    <value>Possible fixes:
+- disable unsupported KEX algorithms on your SSHD instance - check your distro documentation
+- Run ssh.exe on an interactive OS shell</value>
+  </data>
+  <data name="RemoteCommandSetupSshScanProgressFingerprintFailed2" xml:space="preserve">
+    <value>Windows OpenSSH ssh reported:</value>
+  </data>
+  <data name="RemoteCommandSetupSshScanProgressFingerprintSsh1" xml:space="preserve">
+    <value>[{0}@{1}:{2}] Connecting using SSH, accepting fingerprints....</value>
+  </data>
+  <data name="RemoteCommandSetupSshScanProgressFingerprintSsh2" xml:space="preserve">
+    <value>running 'ssh.exe {0}'</value>
+  </data>
+  <data name="RemoteCommandSetupSshScanProgressFingerprintSsh3" xml:space="preserve">
+    <value>ssh.exe responded with:
+{0}</value>
+  </data>
+  <data name="RemoteCommandSetupSshScanProgressFingerprintSsh4" xml:space="preserve">
+    <value>ssh.exe responded with password prompt, aborting...</value>
+  </data>
+  <data name="RemoteCommandSetupSshScanProgressFingerprintSsh5" xml:space="preserve">
+    <value>ssh.exe did not respond, aborting...</value>
+  </data>
+  <data name="RemoteCommandSetupSshScanProgressFingerprintScan2" xml:space="preserve">
+    <value>running 'ssh-keyscan.exe {0}'</value>
   </data>
 </root>
