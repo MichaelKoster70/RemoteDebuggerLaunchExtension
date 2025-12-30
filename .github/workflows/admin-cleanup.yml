@@ -47,6 +47,9 @@ jobs:
   del_runs:
     name: Delete Runs
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
     steps:
       - name: Delete CI workflow runs
         uses: Mattraks/delete-workflow-runs@v2
