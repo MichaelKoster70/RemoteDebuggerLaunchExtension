@@ -26,15 +26,26 @@ on:
         type: string
         required: false
         default: 'RemoteDebuggerLauncherExtension.sln'
+      azure-timestamp-url:
+        description: 'The Timestamp URL for code signing'
+        type: string
+        required: false
+        default: ''
     secrets:
-      SIGNING_CERT_PFX: 
-        description: The Base64 encoded PFX file
+      AZURE_CLIENT_ID:
+        description: 'The Azure Client ID for authentication'
         required: false
-      SIGNING_CERT_PASSWORD: 
-        description: The password for the PFX file
+      AZURE_TENANT_ID:
+        description: 'The Azure Tenant ID for authentication'
         required: false
-      SIGNING_CERT_THUMBPRINT:
-        description: The cert footprint
+      AZURE_SUBSCRIPTION_ID:
+        description: 'The Azure Subscription ID for authentication'
+        required: false
+      AZURE_KEYVAULT_URL:
+        description: 'The Azure Key Vault URL for code signing'
+        required: false
+      AZURE_KEYVAULT_CERT_NAME:
+        description: 'The Azure Key Vault Certificate Name for code signing'
         required: false
 
 jobs:
@@ -57,20 +68,26 @@ jobs:
       with:
         fetch-depth: 0
 
-    # setup MSBUILD and VS
+    # setup MSBUILD and Visual Studio
     - name: Add MSBUILD to PATH
       id: msbuild
       uses: microsoft/setup-msbuild@v2
       with:
-        vs-version: '[17.2,17.15)'
+        vs-version: '[17.2,18)'
         msbuild-architecture: x64
+
+    # Install .NET Sign Tool from NuGet
+    - name: 'Setup: Install .NET Sign Tool'
+      if:  ${{ inputs.store-artifacts && inputs.sign-vsix }}
+      run: dotnet tool install --global --prerelease sign
+      shell: pwsh
 
     # Build Solution: determine and apply the version for the assemblies and VSIX package
     - name: 'Build Solution: Determine Version'
       id: git-version
       uses: ./eng/actions/git-version
 
-      # apply dev versions on pushes to any other branches
+    # apply dev versions on pushes to any other branches
     - name: 'Build Solution: Apply assembly version DEV'
       if: ${{ github.ref_type == 'branch' && github.ref != 'refs/heads/main' }}
       run:  ${{ env.ScriptPath }}\AssemblyInfoFileSetVersion.ps1 -SourceFilePath  ${{ env.ExtensionAssemblyInfoFile }}
@@ -80,7 +97,7 @@ jobs:
         -VersionBuild ${{ steps.git-version.outputs.versionBuild }}
       shell: pwsh
 
-      # apply prod versions on pushes to the main branch or a tag gets created
+    # apply prod versions on pushes to the main branch or a tag gets created
     - name: 'Build Solution: Apply assembly version PROD'
       if: ${{ (github.ref_type == 'branch' && github.ref == 'refs/heads/main') || github.ref_type == 'tag' }}
       run:  ${{ env.ScriptPath }}\AssemblyInfoFileSetVersion.ps1 -SourceFilePath  ${{ env.ExtensionAssemblyInfoFile }}
@@ -101,37 +118,38 @@ jobs:
        ${{ env.ScriptPath }}\WriteRemoteToolsVersionJson.ps1 -SourceDirectory ${{ env.ExtensionToolsPath }} -Version ${{ steps.git-version.outputs.versionPrefix }}
       shell: pwsh
 
-
     # Build Solution: restore NuGet Packages
     - name: 'Build Solution: NuGet restore'
       id: nuget-restore
       run: msbuild ${{ inputs.solution-path }} /t:Restore /p:Configuration=${{ inputs.configuration }}
       shell: pwsh
 
-    # Build Solution: creates PFX file from BASE64 secret if signing is enabled
-    - name: 'Build Solution: prepare VSIX signing'
-      if:  ${{ inputs.store-artifacts && inputs.sign-vsix }}
-      run: |
-        $encodedBytes = "${{ secrets.SIGNING_CERT_PFX }}"
-        [convert]::FromBase64String($encodedBytes) | Set-Content -Path ${{ runner.temp }}\cert.pfx -Encoding Byte
-      shell: powershell
-
-    # Build Solution: Rebuild, and signs VSIX if cert file is present
-    - name: 'Build Solution: Rebuild and sign'
+    # Build Solution: Rebuild
+    - name: 'Build Solution: Rebuild'
       id: build
       run: msbuild ${{ inputs.solution-path }} /t:Rebuild /p:Configuration=${{ inputs.configuration }}
       shell: pwsh
-      env:
-        SIGNING_CERT_FILE: ${{ runner.temp }}\cert.pfx
-        SIGNING_CERT_PASSWORD: ${{ secrets.SIGNING_CERT_PASSWORD }}
-        SIGNING_CERT_THUMBPRINT: ${{ secrets.SIGNING_CERT_THUMBPRINT }}
-        SIGNING_TIMESTAMP_SERVER: 'http://timestamp.sectigo.com'
 
-    - name: 'Build Solution: VSIX signing cleanup'
-      if:  ${{ inputs.store-artifacts && inputs.sign-vsix }}
-      run: |
-        Remove-Item -Path ${{ runner.temp }}\cert.pfx -ErrorAction Continue
+    # Login to Azure using a ServicePrincipal configured to authenticate against a GitHub Action
+    - name: 'Build: Azure CLI login'
+      if: ${{ inputs.store-artifacts && inputs.sign-vsix }}
+      uses: azure/login@v1
+      with:
+        allow-no-subscriptions: true
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+    
+    - name: 'Build: Sign VSIX'
+      if: ${{ inputs.store-artifacts && inputs.sign-vsix }}
       shell: pwsh
+      run: >
+        sign code azure-key-vault
+        *.vsix
+        --base-directory ${{ env.ExtensionOutputPath }}
+        --azure-credential-type "azure-cli"
+        --azure-key-vault-url "${{ secrets.AZURE_KEYVAULT_URL }}"
+        --azure-key-vault-certificate "${{ secrets.AZURE_KEYVAULT_CERT_NAME }}"
+        --timestamp-url "${{ inputs.azure-timestamp-url }}"
 
     - name: 'Store Artifacts: VSIX'
       uses: actions/upload-artifact@v4
