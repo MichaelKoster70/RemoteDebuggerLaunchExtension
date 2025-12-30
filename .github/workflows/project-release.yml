@@ -60,6 +60,7 @@ jobs:
     runs-on: windows-2022
     needs: build
     if: ${{ github.ref_type == 'tag' }}
+    permissions: {}
 
     env:
       MarketplaceOverviewFile: ${{ github.workspace }}/src/ReleaseNotes.md
