@@ -21,6 +21,7 @@ jobs:
     with:
       store-artifacts: true
       sign-vsix: true
+      environment: Release
       azure-timestamp-url: ${{ vars.AZURE_TIMESTAMP_URL }}
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}

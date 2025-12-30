@@ -2,6 +2,7 @@ name: Shared Build
 
 permissions:
   contents: read
+  id-token: write
 
 on:
   workflow_call:
@@ -26,6 +27,10 @@ on:
         type: string
         required: false
         default: 'RemoteDebuggerLauncherExtension.sln'
+      environment:
+        description: 'The GitHub Environment to use'
+        type: string
+        required: true
       azure-timestamp-url:
         description: 'The Timestamp URL for code signing'
         type: string
