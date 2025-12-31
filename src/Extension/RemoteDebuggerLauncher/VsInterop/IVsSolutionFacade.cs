@@ -16,6 +16,12 @@ namespace RemoteDebuggerLauncher
    internal interface IVsSolutionFacade
    {
       /// <summary>
+      /// Gets the Solution events facade.
+      /// </summary>
+      /// <value>The <see cref="IVsSolutionEventsFacade"/> instance.</value>
+      IVsSolutionEventsFacade EventsFacade { get; }
+
+      /// <summary>
       /// Gets the active (startup) configured projects.
       /// </summary>
       /// <returns>A collection of the active projects.Never null.</returns>

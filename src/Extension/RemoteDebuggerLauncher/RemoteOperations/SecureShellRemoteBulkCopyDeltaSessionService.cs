@@ -37,7 +37,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       public Task<string> ExecuteSingleCommandAsync(string commandText) => session.ExecuteSingleCommandAsync(commandText);
 
       /// <inheritdoc/>
-      public ISecureShellSessionCommandingService CreateCommandSession() => session.CreateCommandSession();
+      public Task<ISecureShellSessionCommandingService> CreateCommandSessionAsync() => session.CreateCommandSessionAsync();
 
       /// <inheritdoc/>
       public async Task UploadFolderRecursiveAsync(string localSourcePath, string remoteTargetPath, IOutputPaneWriterService progressOutputPaneWriter = null)
@@ -48,7 +48,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          progressOutputPaneWriter?.Write(Resources.RemoteCommandCommonSshTarget, Settings.UserName, Settings.HostName);
          progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployRemoteFolderScpDeltaStart);
 
-         using (var commands = session.CreateCommandSession())
+         using (var commands = await session.CreateCommandSessionAsync())
          {
             // Step 1: Get the user home, needed to normalize path expressions
             var userHome = await GetUserHomeAsync(commands);

@@ -132,4 +132,7 @@
   <data name="SecureShellSessionNoUserName" xml:space="preserve">
     <value>no username provided.</value>
   </data>
+  <data name="SecureShellSessionPassphraseRequired" xml:space="preserve">
+    <value>SSH private key passphrase is required.</value>
+  </data>
 </root>

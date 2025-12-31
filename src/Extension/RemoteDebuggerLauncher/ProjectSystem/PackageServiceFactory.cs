@@ -25,12 +25,14 @@ namespace RemoteDebuggerLauncher
       private ConfigurationAggregator configurationAggregator;
       private ConfiguredProject configuredProject;
       private IOutputPaneWriterService outputPaneWriter;
+      private readonly ISecureShellKeyPassphraseService passphraseService;
 
-      protected PackageServiceFactory(SVsServiceProvider asyncServiceProvider, IVsFacadeFactory facadeFactory, ConfiguredProject configuredProject)
+      protected PackageServiceFactory(SVsServiceProvider asyncServiceProvider, IVsFacadeFactory facadeFactory, ConfiguredProject configuredProject, ISecureShellKeyPassphraseService passphraseService)
       {
          this.asyncServiceProvider = asyncServiceProvider as IAsyncServiceProvider;
          this.facadeFactory = facadeFactory;
          this.configuredProject = configuredProject;
+         this.passphraseService = passphraseService;
       }
 
       /// <inheritdoc />
@@ -65,7 +67,7 @@ namespace RemoteDebuggerLauncher
       {
          var statusbar = await GetStatusbarServiceAsync();
          var settings = SecureShellSessionSettings.Create(configurationAggregator);
-         var sessionService  = new SecureShellSessionService(settings);
+         var sessionService  = new SecureShellSessionService(settings, passphraseService);
          var bulkCopyService = CreateBulkCopyService(sessionService, configurationAggregator);
          return new SecureShellRemoteOperationsService(configurationAggregator, sessionService, bulkCopyService, outputPaneWriter, statusbar);
       }

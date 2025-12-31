@@ -7,12 +7,8 @@
 
 using System;
 using System.ComponentModel.Design;
-using System.Globalization;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using RemoteDebuggerLauncher.RemoteOperations;
 using RemoteDebuggerLauncher.WebTools;
 
 namespace RemoteDebuggerLauncher
@@ -24,9 +20,6 @@ namespace RemoteDebuggerLauncher
    {
       /// <summary>Command ID.</summary>
       public const int CommandId = 0x0105;
-
-      /// <summary>VS Package that provides this command, not null.</summary>
-      public static readonly Guid CommandSet = new Guid("67dde3fd-abea-469b-939f-02a3178c91e7");
 
       /// <summary>
       /// VS Package that provides this command, not null.

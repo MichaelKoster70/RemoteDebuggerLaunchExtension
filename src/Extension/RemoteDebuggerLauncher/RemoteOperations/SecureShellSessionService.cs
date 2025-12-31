@@ -8,6 +8,8 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Threading;
 using Renci.SshNet;
 using Renci.SshNet.Common;
 
@@ -23,10 +25,12 @@ namespace RemoteDebuggerLauncher.RemoteOperations
    internal class SecureShellSessionService : ISecureShellSessionService, IRemoteBulkCopySessionService
    {
       private readonly SecureShellSessionSettings settings;
+      private readonly ISecureShellKeyPassphraseService passphraseService;
 
-      internal SecureShellSessionService(SecureShellSessionSettings settings)
+      internal SecureShellSessionService(SecureShellSessionSettings settings, ISecureShellKeyPassphraseService passphraseService)
       {
          this.settings = settings ?? throw new ArgumentNullException(nameof(settings));
+         this.passphraseService = passphraseService ?? throw new ArgumentNullException(nameof(passphraseService));
       }
 
       /// <inheritdoc/>
@@ -35,11 +39,11 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// <inheritdoc/>
       public Task<string> ExecuteSingleCommandAsync(string commandText)
       {
-         return Task.Run(() =>
+         return Task.Run(async () =>
          {
             try
             {
-               using (var client = CreateSshClient())
+               using (var client = await CreateSshClientAsync())
                {
                   client.ConnectionInfo.Timeout = TimeSpan.FromSeconds(5);
                   client.Connect();
@@ -69,12 +73,12 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          progressOutputPaneWriter?.Write(Resources.RemoteCommandCommonSshTarget, Settings.UserName, Settings.HostName);
          progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployRemoteFolderScpFullStart);
 
-         return Task.Run(() =>
+         return Task.Run(async () =>
          {
             try
             {
                var sourcePathInfo = new DirectoryInfo(localSourcePath);
-               using (var client = CreateScpClient())
+               using (var client = await CreateScpClientAsync())
                {
                   // for the moment, we assume that the path names does not have any character that have special meaning for a Linux host
                   client.RemotePathTransformation = RemotePathTransformation.None;
@@ -107,13 +111,13 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          ThrowIf.ArgumentNullOrEmpty(localSourcePath, nameof(localSourcePath));
          ThrowIf.ArgumentNullOrEmpty(remoteTargetPath, nameof(remoteTargetPath));
 
-         return Task.Run(() =>
+         return Task.Run(async () =>
          {
             try
             {
                var sourcePathInfo = new FileInfo(localSourcePath);
 
-               using (var client = CreateScpClient())
+               using (var client = await CreateScpClientAsync())
                {
                   // for the moment, we assume that the path names does not have any character that have special meaning for a Linux host
                   client.RemotePathTransformation = RemotePathTransformation.None;
@@ -146,11 +150,11 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          ThrowIf.ArgumentNull(localStream, nameof(localStream));
          ThrowIf.ArgumentNullOrEmpty(remoteTargetPath, nameof(remoteTargetPath));
 
-         return Task.Run(() =>
+         return Task.Run(async () =>
          {
             try
             {
-               using (var client = CreateScpClient())
+               using (var client = await CreateScpClientAsync())
                {
                   // for the moment, we assume that the path names does not have any character that have special meaning for a Linux host
                   client.RemotePathTransformation = RemotePathTransformation.None;
@@ -176,7 +180,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          ThrowIf.ArgumentNullOrEmpty(remoteTargetPath, nameof(remoteTargetPath));
          if (clean)
          {
-            using (var commandSession = CreateCommandSession())
+            using (var commandSession = await CreateCommandSessionAsync())
             {
                _ = await commandSession.ExecuteCommandAsync($"[ -d \"{remoteTargetPath}\" ] && rm -rf \"{remoteTargetPath}\"/*");
                _ = await commandSession.ExecuteCommandAsync($"mkdir -p \"{remoteTargetPath}\"");
@@ -185,14 +189,14 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       }
 
       /// <inheritdoc/>
-      public ISecureShellSessionCommandingService CreateCommandSession()
+      public async Task<ISecureShellSessionCommandingService> CreateCommandSessionAsync()
       {
-         var client = CreateSshClient();
+         var client = await CreateSshClientAsync();
          client.ConnectionInfo.Timeout = TimeSpan.FromSeconds(5);
          return new SecureShellSessionCommandingService(client);
       }
 
-      private SshClient CreateSshClient()
+      private async Task<SshClient> CreateSshClientAsync()
       {
          if (string.IsNullOrWhiteSpace(settings.UserName))
          {
@@ -204,15 +208,59 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             throw new SecureShellSessionException(ExceptionMessages.SecureShellSessionNoPrivateKey);
          }
 
-         var key = new PrivateKeyFile(settings.PrivateKeyFile);
+         var key = await CreatePrivateKeyFileAsync(settings.PrivateKeyFile);
 
          return new SshClient(settings.HostNameIPv4, settings.HostPort, settings.UserName, key);
       }
 
-      private ScpClient CreateScpClient()
+      private async Task<ScpClient> CreateScpClientAsync()
       {
-         var key = new PrivateKeyFile(settings.PrivateKeyFile);
+         var key = await CreatePrivateKeyFileAsync(settings.PrivateKeyFile);
          return new ScpClient(settings.HostNameIPv4, settings.HostPort, settings.UserName, key);
+      }
+
+      private async Task<PrivateKeyFile> CreatePrivateKeyFileAsync(string privateKeyFilePath)
+      {
+         // First, check if we have a cached passphrase
+         if (passphraseService.TryGet(privateKeyFilePath, out var passphrase))
+         {
+            try
+            {
+               return new PrivateKeyFile(privateKeyFilePath, passphrase);
+            }
+            catch (SshException)
+            {
+               // Cached passphrase is wrong, clear it and continue
+               passphraseService.Clear(privateKeyFilePath);
+            }
+         }
+
+         // Try without passphrase first
+         try
+         {
+            return new PrivateKeyFile(privateKeyFilePath);
+         }
+         catch (SshException)
+         {
+            // Assume the key is encrypted, proceed to passphrase handling
+
+            try
+            {
+               await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+               if (passphraseService.Prompt(privateKeyFilePath, out passphrase))
+               {
+                  return new PrivateKeyFile(privateKeyFilePath, passphrase);
+               }
+               else
+               {
+                  throw new SecureShellSessionException(ExceptionMessages.SecureShellSessionPassphraseRequired);
+               }
+            }
+            finally
+            {
+               await TaskScheduler.Default;
+            }
+         }
       }
    }
 }
