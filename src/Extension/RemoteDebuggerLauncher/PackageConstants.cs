@@ -6,6 +6,7 @@
 // ----------------------------------------------------------------------------
 
 using System;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace RemoteDebuggerLauncher
 {
@@ -14,6 +15,15 @@ namespace RemoteDebuggerLauncher
    /// </summary>
    internal static class PackageConstants
    {
+      /// <summary>
+      /// Local filesystem related constants.
+      /// </summary>
+      public static class FileSystem
+      {
+         /// <summary>Directory under %localappdata% where to store data like Logs and cached assets.</summary>
+         public const string StorageFolder = @"RemoteDebuggerLauncher";
+      }
+
       /// <summary>
       /// Common Project System related constants
       /// </summary>
@@ -86,7 +96,7 @@ namespace RemoteDebuggerLauncher
          public const string DefaultValueToolsInstallFolderPath = "~/.rdl";
 
          /// <summary>The default value for the App folder path on the device page.</summary>
-         public const string DefaultValueAppFolderPath = "~/project";
+         public const string DefaultValueAppFolderPath = "~/$(MSBuildProjectName)";
       }
 
       /// <summary>
@@ -104,7 +114,7 @@ namespace RemoteDebuggerLauncher
          public const string GetInstallDotnetPs1Url = "https://dot.net/v1/dotnet-install.ps1";
 
          /// <summary>Directory under %localappdata% where to cache the .NET downloads.</summary>
-         public const string DownloadCacheFolder = @"RemoteDebuggerLauncher\dotnet";
+         public const string DownloadCacheFolder = FileSystem.StorageFolder + @"\dotnet";
       }
 
       /// <summary>
@@ -142,7 +152,7 @@ namespace RemoteDebuggerLauncher
          public const string GetVsDbgPs1Url = "https://aka.ms/getvsdbgps1";
 
          /// <summary>Directory under %localappdata% where to cache the remote debugger downloads.</summary>
-         public const string DownloadCacheFolder = @"RemoteDebuggerLauncher\vsdbg\vs2022";
+         public const string DownloadCacheFolder = FileSystem.StorageFolder + @"\vsdbg\vs2022";
       }
 
       public static class Commands

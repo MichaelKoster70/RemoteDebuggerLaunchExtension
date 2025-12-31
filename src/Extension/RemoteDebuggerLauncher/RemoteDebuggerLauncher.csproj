@@ -75,6 +75,8 @@
     <Compile Include="Infrastructure\DirectoryHelper.cs" />
     <Compile Include="Infrastructure\FileHelper.cs" />
     <Compile Include="Infrastructure\NativeMethods.cs" />
+    <Compile Include="ProjectSystem\Project\IMSBuildPropertyReplacer.cs" />
+    <Compile Include="ProjectSystem\Project\MSBuildPropertyReplacer.cs" />
     <Compile Include="RemoteOperations\IRemoteBulkCopySessionService.cs" />
     <Compile Include="RemoteOperations\ISecureShellSessionBaseService.cs" />
     <Compile Include="RemoteOperations\SecureShellCopyProgress.cs" />

@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -36,7 +36,7 @@ namespace RemoteDebuggerLauncher
          public string Value { get; set; }
       }
 
-      /// <summary>Holds a environment variable name value pair.</summary>
+      /// <summary>Holds the launch configuration.</summary>
       internal class LaunchConfiguration
       {
          [JsonProperty("version")]
@@ -58,7 +58,7 @@ namespace RemoteDebuggerLauncher
          public string AdapterArgs { get; set; }
 
          /// <summary>The program to debug.</summary>
-         /// <remarks>Must be the path to dotnet(.exe) for framework dependant programs</remarks>
+         /// <remarks>Must be the path to dotnet(.exe) for framework dependant programs.</remarks>
          [JsonProperty("program")]
          public string Program { get; set; }
 
