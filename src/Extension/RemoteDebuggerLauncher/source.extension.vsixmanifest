@@ -26,6 +26,7 @@
     <Prerequisites>
         <Prerequisite Id="Microsoft.NetCore.Component.Runtime.6.0" Version="[17.4,18.0)" DisplayName=".NET 6.0 Runtime (Long Term Support)" />
         <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.LanguageServices" Version="[17.4,18.0)" DisplayName="C# and Visual Basic" />
+        <Prerequisite Id="Microsoft.NetCore.Component.Runtime.8.0" Version="[17.4,18.0)" DisplayName=".NET 8.0 Runtime (Long Term Support)" />
     </Prerequisites>
     <Assets>
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />

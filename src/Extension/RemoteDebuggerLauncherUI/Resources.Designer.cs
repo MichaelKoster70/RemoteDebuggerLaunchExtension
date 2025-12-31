@@ -19,7 +19,7 @@ namespace RemoteDebuggerLauncher {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -733,15 +733,6 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Deploying application....
-        /// </summary>
-        public static string RemoteCommandDeployRemoteFolderStatusbarProgress1 {
-            get {
-                return ResourceManager.GetString("RemoteCommandDeployRemoteFolderStatusbarProgress1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Installing VS Code Debugger.
         /// </summary>
         public static string RemoteCommandInstallDebuggerCommandCaption {
@@ -1295,11 +1286,50 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to [{0}@{1}:{2}] adding fingerprints to known_hosts FAILED
+        ///Windows OpenSSH ssh-keygen reported:.
+        /// </summary>
+        public static string RemoteCommandSetupSshScanProgressFingerprintFailed1 {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshScanProgressFingerprintFailed1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Windows OpenSSH ssh reported:.
+        /// </summary>
+        public static string RemoteCommandSetupSshScanProgressFingerprintFailed2 {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshScanProgressFingerprintFailed2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Possible fixes:
+        ///- disable unsupported KEX algorithms on your SSHD instance - check your distro documentation
+        ///- Run ssh.exe on an interactive OS shell.
+        /// </summary>
+        public static string RemoteCommandSetupSshScanProgressFingerprintFailed3 {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshScanProgressFingerprintFailed3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to [{0}@{1}:{2}] Scanning SSH server fingerprints.....
         /// </summary>
-        public static string RemoteCommandSetupSshScanProgressFingerprintScan {
+        public static string RemoteCommandSetupSshScanProgressFingerprintScan1 {
             get {
-                return ResourceManager.GetString("RemoteCommandSetupSshScanProgressFingerprintScan", resourceCulture);
+                return ResourceManager.GetString("RemoteCommandSetupSshScanProgressFingerprintScan1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to running &apos;ssh-keyscan.exe {0}&apos;.
+        /// </summary>
+        public static string RemoteCommandSetupSshScanProgressFingerprintScan2 {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshScanProgressFingerprintScan2", resourceCulture);
             }
         }
         
@@ -1309,6 +1339,52 @@ namespace RemoteDebuggerLauncher {
         public static string RemoteCommandSetupSshScanProgressFingerprintSkip {
             get {
                 return ResourceManager.GetString("RemoteCommandSetupSshScanProgressFingerprintSkip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [{0}@{1}:{2}] Connecting using SSH, accepting fingerprints.....
+        /// </summary>
+        public static string RemoteCommandSetupSshScanProgressFingerprintSsh1 {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshScanProgressFingerprintSsh1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to running &apos;ssh.exe {0}&apos;.
+        /// </summary>
+        public static string RemoteCommandSetupSshScanProgressFingerprintSsh2 {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshScanProgressFingerprintSsh2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ssh.exe responded with:
+        ///{0}.
+        /// </summary>
+        public static string RemoteCommandSetupSshScanProgressFingerprintSsh3 {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshScanProgressFingerprintSsh3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ssh.exe responded with password prompt, aborting....
+        /// </summary>
+        public static string RemoteCommandSetupSshScanProgressFingerprintSsh4 {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshScanProgressFingerprintSsh4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ssh.exe did not respond, aborting....
+        /// </summary>
+        public static string RemoteCommandSetupSshScanProgressFingerprintSsh5 {
+            get {
+                return ResourceManager.GetString("RemoteCommandSetupSshScanProgressFingerprintSsh5", resourceCulture);
             }
         }
         

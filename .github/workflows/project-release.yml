@@ -14,14 +14,20 @@ concurrency:
 jobs:
   build:
     name: Release Build
+    permissions:
+      contents: read
+      id-token: write
     uses: ./.github/workflows/shared-build.yml
     with:
       store-artifacts: true
       sign-vsix: true
+      environment: Release
+      azure-timestamp-url: ${{ vars.AZURE_TIMESTAMP_URL }}
     secrets:
-      SIGNING_CERT_PFX: ${{ secrets.SIGNING_CERT_PFX }}
-      SIGNING_CERT_PASSWORD: ${{ secrets.SIGNING_CERT_PASSWORD }}
-      SIGNING_CERT_THUMBPRINT: ${{ secrets.SIGNING_CERT_THUMBPRINT }}
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
+      AZURE_KEYVAULT_CERT_NAME: ${{ secrets.AZURE_KEYVAULT_CERT_NAME }}
 
   github-release:
     name: GitHub Release
@@ -59,6 +65,7 @@ jobs:
     name: VS Marketplace Release
     runs-on: windows-2022
     needs: build
+    permissions: {}
     if: ${{ github.ref_type == 'tag' }}
 
     env:

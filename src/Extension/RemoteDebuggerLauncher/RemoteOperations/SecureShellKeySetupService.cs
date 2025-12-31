@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -9,8 +9,11 @@ using System;
 using System.Composition;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Threading;
+using RemoteDebuggerLauncher.Infrastructure;
 using Renci.SshNet;
 using Renci.SshNet.Common;
 
@@ -44,36 +47,20 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          Statusbar.SetText(Resources.RemoteCommandSetupSshCommandStatusbarScanProgress);
          OutputPaneWriter.WriteLine(Resources.CommonStartSessionMarker);
 
-         var defaultKeysFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), PackageConstants.SecureShell.DefaultKeyPairFolder);
-         var knownHostsFilePath = Path.Combine(defaultKeysFolder, PackageConstants.SecureShell.DefaultKnownHostsFileName);
-
-         var arguments = string.Format(PackageConstants.SecureShell.KeyScanArguments, settings.HostName, settings.HostPort);
-         var startInfo = new ProcessStartInfo(PackageConstants.SecureShell.KeyScanExecutable, arguments)
+         // Try 1: Use ssh-keyscan to get the server fingerprint and add it to the known_hosts file
+         var (success, keyscanStdError) = await RegisterServerFingerprintWithKeyScanAsync(settings);
+         if (!success)
          {
-            CreateNoWindow = true,
-            UseShellExecute = false,
-            RedirectStandardOutput = true,
-         };
+            // Try 2: Establish an interactive SSH connection to the server to get the fingerprint
+            success = await RegisterServerFingerprintWithConnectionAsync(settings);
+         }
 
-         OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintScan, settings.UserName, settings.HostName, settings.HostPort);
-         // get the fingerprint values from the supplied host, append them to the 'known-hosts' file.
-         using (var process = Process.Start(startInfo))
+         if (!success)
          {
-            var stdOutput = await process.StandardOutput.ReadToEndAsync();
-            var exitCode = await process.WaitForExitAsync();
-
-            if (exitCode == 0)
-            {
-               if (FileHelper.ContainsText(knownHostsFilePath, settings.HostName))
-               {
-                  OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintAdd, settings.UserName, settings.HostName, settings.HostPort);
-               }
-               else
-               {
-                  OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintAdd, settings.UserName, settings.HostName, settings.HostPort);
-                  File.AppendAllText(knownHostsFilePath, stdOutput);
-               }
-            }
+            OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintFailed1, settings.UserName, settings.HostName, settings.HostPort);
+            OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintFailed2);
+            OutputPaneWriter.WriteLine(keyscanStdError);
+            OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintFailed3);
          }
       }
 
@@ -112,6 +99,139 @@ namespace RemoteDebuggerLauncher.RemoteOperations
                Resources.RemoteCommandSetupSshPhase4TryAuthenticatePrivateKeyProgress,
                Resources.RemoteCommandSetupSshPhase4TryAuthenticatePrivateKeySuccess,
                Resources.RemoteCommandSetupSshPhase4TryAuthenticatePrivateKeyFailed);
+         }
+      }
+
+      private async Task<(bool, string)> RegisterServerFingerprintWithKeyScanAsync(SecureShellKeySetupSettings settings)
+      {
+         var defaultKeysFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), PackageConstants.SecureShell.DefaultKeyPairFolder);
+         var knownHostsFilePath = Path.Combine(defaultKeysFolder, PackageConstants.SecureShell.DefaultKnownHostsFileName);
+
+         var arguments = string.Format(PackageConstants.SecureShell.KeyScanArguments, settings.HostName, settings.HostPort, settings.ForceIPv4 ? PackageConstants.SecureShell.SshForceIPv4 : string.Empty);
+         var startInfo = new ProcessStartInfo(PackageConstants.SecureShell.KeyScanExecutable, arguments)
+         {
+            CreateNoWindow = true,
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true
+         };
+
+         OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintScan1, settings.UserName, settings.HostName, settings.HostPort);
+         OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintScan2, arguments);
+
+         using (var process = Process.Start(startInfo))
+         {
+            var stdOutput = await process.StandardOutput.ReadToEndAsync();
+            var stdError = await process.StandardError.ReadToEndAsync();
+            var exitCode = await process.WaitForExitAsync();
+
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            if (exitCode == 0)
+            {
+               if (FileHelper.ContainsText(knownHostsFilePath, settings.HostName))
+               {
+                  OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintSkip, settings.UserName, settings.HostName, settings.HostPort);
+               }
+               else
+               {
+                  OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintAdd, settings.UserName, settings.HostName, settings.HostPort);
+                  File.AppendAllText(knownHostsFilePath, stdOutput);
+               }
+            }
+
+            return (exitCode == 0, stdError);
+         }
+      }
+
+      private async Task<bool> RegisterServerFingerprintWithConnectionAsync(SecureShellKeySetupSettings settings)
+      {
+         // Time to wait for initial output from SSH process
+         const double SshInitialOutputDelaySeconds = 5d;
+
+         // Overall timeout for the SSH interaction
+         const double SshOverallTimeoutSeconds = 10d;
+
+         // Known prompts and markers
+         const string SshFingerprintPrompt = "Are you sure you want to continue connecting";
+         const string SshPasswordPrompt = "password:";
+         const string SshDoneMarker = "DONE";
+
+         // open a pseudo console windows to run the ssh command
+         var arguments = string.Format(PackageConstants.SecureShell.SshArguments, settings.UserName, settings.HostName, settings.HostPort, settings.PrivateKeyFile, settings.ForceIPv4 ? PackageConstants.SecureShell.SshForceIPv4 : string.Empty);
+         var startInfo = new ProcessStartInfo(PackageConstants.SecureShell.SshExecutable, arguments)
+         {
+            CreateNoWindow = false,
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardInput = true,
+         };
+
+         OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintSsh1, settings.UserName, settings.HostName, settings.HostPort);
+         OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintSsh2, arguments);
+
+         using (var process = PseudoConsoleProcess.Start(startInfo))
+         {
+            var stringBuilder = new StringBuilder();
+            var inactivityWatch = Stopwatch.StartNew();
+
+            // Wait a couple of seconds for initial output. The process may take some time to start.
+            await Task.Delay(TimeSpan.FromSeconds(SshInitialOutputDelaySeconds));
+
+            // Continuously read characters while available
+            while (true)
+            {
+               // Read any available characters
+               while (process.StandardOutput.Peek() > -1)
+               {
+                  var ch = (char)process.StandardOutput.Read();
+
+                  _ = stringBuilder.Append(ch);
+
+                  inactivityWatch.Restart();
+               }
+
+               // Check for known prompts
+               var stdOutput = stringBuilder.ToStringStripAnsi();
+
+               if (stdOutput.Contains(SshFingerprintPrompt))
+               {
+                  // We have seen the fingerprint prompt -> confirm it
+                  await process.StandardInput.WriteLineAsync("yes");
+                  _ = stringBuilder.Clear();
+                  inactivityWatch.Restart();
+
+                  // report progress
+                  OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintSsh3, stdOutput);
+               }
+               else if (stringBuilder.ToString().Contains(SshPasswordPrompt))
+               {
+                  // We have seen the password prompt -> abort the connection & exit
+                  OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintSsh4);
+
+                  await process.StandardInput.FlushAsync();
+                  return true;
+               }
+               else if (stdOutput.Contains(SshDoneMarker))
+               {
+                  // We have seen the success marker => exit
+                  return true;
+               }
+
+               // If no new data for an extensive period of time, terminate
+               if (inactivityWatch.Elapsed >= TimeSpan.FromSeconds(SshOverallTimeoutSeconds))
+               {
+                  // Close stdin to signal EOF and dispose to tear down the pseudo console
+                  OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintSsh5);
+
+                  await process.StandardInput.FlushAsync();
+
+                  return false;
+               }
+
+               // Small delay to avoid busy loop
+               await Task.Delay(50).ConfigureAwait(false);
+            } ///end while(true)
          }
       }
 

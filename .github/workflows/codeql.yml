@@ -1,0 +1,111 @@
+# For most projects, this workflow file will not need changing; you simply need
+# to commit it to your repository.
+#
+# You may wish to alter this file to override the set of languages analyzed,
+# or to provide custom queries or build logic.
+
+name: "CodeQL Advanced"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '27 8 * * 3'
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ${{ (matrix.language == 'csharp' && 'windows-latest') || 'ubuntu-latest' }}
+    permissions:
+      # required for all workflows
+      security-events: write
+
+      # required to fetch internal or private CodeQL packs
+      packages: read
+
+      # only required for workflows in private repositories
+      actions: read
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - language: actions
+          build-mode: none
+        - language: csharp
+          build-mode: manual
+        # CodeQL supports the following values keywords for 'language': 'actions', 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript', 'python', 'ruby', 'rust', 'swift'
+        # To learn more about changing the languages that are analyzed or customizing the build mode for your analysis,
+        # see https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/customizing-your-advanced-setup-for-code-scanning.
+        # If you are analyzing a compiled language, you can modify the 'build-mode' for that language to customize how
+        # your codebase is analyzed, see https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/codeql-code-scanning-for-compiled-languages
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Add any setup steps before running the `github/codeql-action/init` action.
+    # This includes steps like installing compilers or runtimes. This is typically only required for manual builds.
+    - name: Setup MSBuild
+      if: matrix.build-mode == 'manual'
+      uses: microsoft/setup-msbuild@v2
+      with:
+        vs-version: '[17.2,17.15)'
+        msbuild-architecture: x64
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v4
+      with:
+        languages: ${{ matrix.language }}
+        build-mode: ${{ matrix.build-mode }}
+
+    - name: Run manual build steps
+      if: matrix.build-mode == 'manual'
+      shell: pwsh
+      run: |
+        $ExtensionAssemblyInfoFile = "$env:GITHUB_WORKSPACE\src\Extension\GlobalAssemblyInfo.cs"
+        $ExtensionManifestFile = "$env:GITHUB_WORKSPACE\src\Extension\RemoteDebuggerLauncher\source.extension.vsixmanifest"
+        $ExtensionOutputPath = "$env:GITHUB_WORKSPACE\src\Extension\RemoteDebuggerLauncher\bin\Release"
+        $ExtensionToolsPath =  "$env:GITHUB_WORKSPACE\src\Extension\RemoteDebuggerLauncher\ToolsRemote"
+        $CheckSumProjectPath = "$env:GITHUB_WORKSPACE\src\RemoteTools\CheckSum\exe\CheckSumExe.csproj"
+        $RemoteToolsOutputPath = "$env:GITHUB_WORKSPACE\src\RemoteTools\bin"
+        $ScriptPath = "$env:GITHUB_WORKSPACE\eng\scripts"
+
+        # Fixed version for CodeQL builds
+        $versionPrefix = "0.0.0"
+        $versionBuild = "0"
+        $versionRevision = "0"
+
+        Write-Host 'Apply assembly version 0.0.0'
+        & "$ScriptPath\AssemblyInfoFileSetVersion.ps1" -SourceFilePath $ExtensionAssemblyInfoFile `
+          -VersionPrefix $versionPrefix -VersionBuild $versionBuild -VersionRevision $versionRevision
+
+        Write-Host 'Apply VSIX version 0.0.0'
+        & "$ScriptPath\VsixManifestFileSetVersion.ps1" -SourceFilePath $ExtensionManifestFile -VersionPrefix $versionPrefix
+
+        Write-Host 'Publish Remote Tools (dotnet publish)'
+        dotnet publish $CheckSumProjectPath -c Release --framework net8.0 --runtime linux-x64 -o "$RemoteToolsOutputPath\linux-x64"
+        dotnet publish $CheckSumProjectPath -c Release --framework net8.0 --runtime linux-arm64 -o "$RemoteToolsOutputPath\linux-arm64"
+        dotnet publish $CheckSumProjectPath -c Release --framework net8.0 --runtime linux-arm -o "$RemoteToolsOutputPath\linux-arm"
+        & "$ScriptPath\WriteRemoteToolsVersionJson.ps1" -SourceDirectory $ExtensionToolsPath -Version $versionPrefix
+
+        Write-Host 'NuGet restore for extension solution'
+        msbuild "RemoteDebuggerLauncherExtension.sln" /t:Restore /p:Configuration=Release
+
+        Write-Host 'Rebuild extension solution'
+        msbuild "RemoteDebuggerLauncherExtension.sln" /t:Rebuild /p:Configuration=Release
+
+        Write-Host 'Build all sample solutions with dotnet build'
+        $sampleSolutions = Get-ChildItem -Path "$env:GITHUB_WORKSPACE\samples" -Recurse -Filter "*.sln" | Where-Object { $_.Name -notlike "*.sln.GhostDoc*" }
+        foreach ($sln in $sampleSolutions) {
+          Write-Host "Restoring and building sample solution: $($sln.FullName)"
+          dotnet restore "$($sln.FullName)"
+          dotnet build "$($sln.FullName)" -c Release --no-restore
+        }
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v4
+      with:
+        category: "/language:${{matrix.language}}"

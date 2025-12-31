@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -17,6 +17,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
    internal class SecureShellKeySetupSettings
    {
       private readonly bool forceIPv4;
+
       public SecureShellKeySetupSettings(SetupSshViewModel viewModel)
       {
          HostName = viewModel.HostName;
@@ -67,5 +68,10 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// Gets the private key file.
       /// </summary>
       public string PrivateKeyFile { get; }
+
+      /// <summary>
+      /// Gets a value indicating whether to force IPv4 usage.
+      /// </summary>
+      public bool ForceIPv4 => forceIPv4;
    }
 }
