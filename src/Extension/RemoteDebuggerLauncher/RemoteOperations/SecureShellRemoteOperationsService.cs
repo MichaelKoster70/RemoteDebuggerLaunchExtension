@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -12,6 +12,7 @@ using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.ProjectSystem.Debug;
 using RemoteDebuggerLauncher.PowerShellHost;
 using RemoteDebuggerLauncher.Shared;
 using Constants = RemoteDebuggerLauncher.Shared.Constants;
@@ -28,6 +29,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       private readonly ConfigurationAggregator configurationAggregator;
       private readonly ISecureShellSessionService session;
       private readonly IRemoteBulkCopySessionService bulkCopy;
+      private readonly IDebugTokenReplacer tokenReplacer;
       private readonly IOutputPaneWriterService outputPaneWriter;
       private readonly IStatusbarService statusbar;
 
@@ -39,11 +41,12 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// <param name="bulkCopy">The bulk copy session service to use.</param>
       /// <param name="outputPaneWriter">The output pane writer service instance to use.</param>
       /// <param name="statusbar">Optional statusbar service to report progress.</param>
-      internal SecureShellRemoteOperationsService(ConfigurationAggregator configurationAggregator, ISecureShellSessionService session, IRemoteBulkCopySessionService bulkCopy, IOutputPaneWriterService outputPaneWriter, IStatusbarService statusbar)
+      internal SecureShellRemoteOperationsService(ConfigurationAggregator configurationAggregator, ISecureShellSessionService session, IRemoteBulkCopySessionService bulkCopy, IDebugTokenReplacer tokenReplacer, IOutputPaneWriterService outputPaneWriter, IStatusbarService statusbar)
       {
          this.configurationAggregator = configurationAggregator;
          this.session = session;
          this.bulkCopy = bulkCopy;
+         this.tokenReplacer = tokenReplacer;
          this.outputPaneWriter = outputPaneWriter;
          this.statusbar = statusbar;
       }
@@ -203,6 +206,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       public async Task DeployRemoteFolderAsync(string sourcePath, bool clean)
       {
          var targetPath = configurationAggregator.QueryAppFolderPath();
+         targetPath = await tokenReplacer.ReplaceTokensInStringAsync(targetPath, false);
 
          outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
          outputPaneWriter.WriteLine(Resources.RemoteCommandDeployRemoteFolderCommonProgress, sourcePath, targetPath);
@@ -245,7 +249,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          statusbar?.SetText(Resources.RemoteCommandDeployFileStatusbarProgress);
 
          // copy file using the bulk copy service (SCP or rsync)
-         await bulkCopy.UploadFileAsync(sourceFilePath, remoteTargetPath, outputPaneWriter);
+         await bulkCopy.UploadFileAsync(sourceFilePath, remoteTargetPath);
 
          outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
          outputPaneWriter.WriteLine(Resources.RemoteCommandDeployFileCompletedSuccess, sourceFilePath, remoteTargetPath);
@@ -258,6 +262,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          try
          {
             var targetPath = configurationAggregator.QueryAppFolderPath();
+            targetPath = await tokenReplacer.ReplaceTokensInStringAsync(targetPath, false);
 
             outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
             outputPaneWriter.WriteLine(Resources.RemoteCommandCleanRemoteFolderCaption, targetPath);

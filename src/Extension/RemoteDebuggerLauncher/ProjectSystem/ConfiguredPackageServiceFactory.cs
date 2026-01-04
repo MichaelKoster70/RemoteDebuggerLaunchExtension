@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -26,7 +26,7 @@ namespace RemoteDebuggerLauncher
 
       [ImportingConstructor]
       public ConfiguredPackageServiceFactory(SVsServiceProvider asyncServiceProvider, IVsFacadeFactory facadeFactory, IDebugTokenReplacer tokenReplacer, ConfiguredProject configuredProject) :
-         base (asyncServiceProvider, facadeFactory, configuredProject)
+         base (asyncServiceProvider, facadeFactory, configuredProject, tokenReplacer)
       {
          this.tokenReplacer = tokenReplacer;
       }

@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem;
+using Microsoft.VisualStudio.ProjectSystem.Debug;
 using RemoteDebuggerLauncher.Infrastructure;
 using RemoteDebuggerLauncher.RemoteOperations;
 
@@ -25,13 +26,15 @@ namespace RemoteDebuggerLauncher
       private readonly ConfiguredProject configuredProject;
       private readonly IDotnetPublishService publishService;
       private readonly ISecureShellRemoteOperationsService remoteOperations;
+      private readonly IDebugTokenReplacer tokenReplacer;
 
-      public SecureShellDeployService(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject, IDotnetPublishService publishService, ISecureShellRemoteOperationsService remoteOperations)
+      public SecureShellDeployService(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject, IDotnetPublishService publishService, ISecureShellRemoteOperationsService remoteOperations, IDebugTokenReplacer tokenReplacer)
       {
          this.configurationAggregator = configurationAggregator;
          this.configuredProject = configuredProject;
          this.publishService = publishService;
          this.remoteOperations = remoteOperations;
+         this.tokenReplacer = tokenReplacer;
       }
 
       /// <inheritdoc />
@@ -72,7 +75,8 @@ namespace RemoteDebuggerLauncher
          if (configurationAggregator.QueryPublishOnDeploy() && configurationAggregator.QueryPublishMode() == Shared.PublishMode.SelfContained)
          {
             var binaryName = await configuredProject.GetAssemblyNameAsync();
-            var remotePath = UnixPath.Combine(configurationAggregator.QueryAppFolderPath(), binaryName);
+            var remotePath = await tokenReplacer.ReplaceTokensInStringAsync(configurationAggregator.QueryAppFolderPath(), false);
+            remotePath = UnixPath.Combine(remotePath, binaryName);
 
             // change file permission to rwx,r,r
             await remoteOperations.ChangeRemoteFilePermissionAsync(remotePath, "rwxr--r--");
@@ -90,8 +94,9 @@ namespace RemoteDebuggerLauncher
             var additionalFilesConfig = configurationAggregator.QueryAdditionalFiles();
             if (!string.IsNullOrEmpty(additionalFilesConfig))
             {
-               var parser = new AdditionalDeploymentParser(configuredProject.GetProjectFolder(), configurationAggregator.QueryAppFolderPath());
-               var additionalFiles = parser.Parse(additionalFilesConfig);
+               var appFolderPath = await tokenReplacer.ReplaceTokensInStringAsync(configurationAggregator.QueryAppFolderPath(), false);
+               var parser = new AdditionalDeploymentParser(configuredProject.GetProjectFolder(), appFolderPath);
+               var additionalFiles = parser.Parse(additionalFilesConfig, true);
 
                foreach (var fileEntry in additionalFiles)
                {
@@ -124,7 +129,7 @@ namespace RemoteDebuggerLauncher
             if (!string.IsNullOrEmpty(additionalDirectoriesConfig))
             {
                var parser = new AdditionalDeploymentParser(configuredProject.GetProjectFolder(), configurationAggregator.QueryAppFolderPath());
-               var additionalDirectories = parser.Parse(additionalDirectoriesConfig);
+               var additionalDirectories = parser.Parse(additionalDirectoriesConfig, false);
 
                // Validate that all source directories exist
                var missingDirectory = additionalDirectories.FirstOrDefault(directoryEntry => !Directory.Exists(directoryEntry.SourcePath));

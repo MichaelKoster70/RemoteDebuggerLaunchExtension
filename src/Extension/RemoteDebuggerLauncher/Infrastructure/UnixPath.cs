@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -85,6 +85,17 @@ namespace RemoteDebuggerLauncher
             return path + "/";
          }
          return path;
+      }
+
+      /// <summary>
+      /// Returns a value indicating whether the specified path denotes folder.
+      /// </summary>
+      /// <param name="path">The path.</param>
+      /// <returns><c>true</c> if the path denotes a folder; otherwise, <c>false</c>.</returns>
+      public static bool DenotesFolder(string path)
+      {
+         ThrowIf.ArgumentNullOrEmpty(path, nameof(path));
+         return path.EndsWith("/");
       }
 
       /// <summary>
