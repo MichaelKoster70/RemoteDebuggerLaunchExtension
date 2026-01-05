@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Threading;
 using RemoteDebuggerLauncher.Infrastructure;
+using RemoteDebuggerLauncher.Logging;
+using RemoteDebuggerLauncher.Shared;
 using Renci.SshNet;
 using Renci.SshNet.Common;
 
@@ -28,11 +30,13 @@ namespace RemoteDebuggerLauncher.RemoteOperations
    {
 
       private readonly IVsFacadeFactory factory;
+      private readonly ILogger logger;
 
       [ImportingConstructor]
-      public SecureShellKeySetupService(IVsFacadeFactory factory)
+      public SecureShellKeySetupService(IVsFacadeFactory factory, ILoggerFactory loggerFactory)
       {
          this.factory = factory;
+         logger = loggerFactory.CreateLogger(nameof(SecureShellKeySetupService));
       }
 
       /// <inheritdoc />
@@ -44,6 +48,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// <inheritdoc />
       public async Task RegisterServerFingerprintAsync(SecureShellKeySetupSettings settings)
       {
+         logger.LogInformation($"Starting server fingerprint registration for {settings.UserName}@{settings.HostName}:{settings.HostPort}");
          Statusbar.SetText(Resources.RemoteCommandSetupSshCommandStatusbarScanProgress);
          OutputPaneWriter.WriteLine(Resources.CommonStartSessionMarker);
 
@@ -51,22 +56,29 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          var (success, keyscanStdError) = await RegisterServerFingerprintWithKeyScanAsync(settings);
          if (!success)
          {
+            logger.LogWarning("Failed to register server fingerprint using ssh-keyscan, trying interactive connection");
             // Try 2: Establish an interactive SSH connection to the server to get the fingerprint
             success = await RegisterServerFingerprintWithConnectionAsync(settings);
          }
 
          if (!success)
          {
+            logger.LogError($"Failed to register server fingerprint for {settings.UserName}@{settings.HostName}:{settings.HostPort}");
             OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintFailed1, settings.UserName, settings.HostName, settings.HostPort);
             OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintFailed2);
             OutputPaneWriter.WriteLine(keyscanStdError);
             OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintFailed3);
+         }
+         else
+         {
+            logger.LogInformation("Successfully registered server fingerprint");
          }
       }
 
       /// <inheritdoc />
       public async Task AuthorizeKeyAsync(SecureShellKeySetupSettings settings)
       {
+         logger.LogInformation($"Starting SSH key authorization for {settings.UserName}@{settings.HostName}:{settings.HostPort}");
          Statusbar.SetText(Resources.RemoteCommandSetupSshCommandStatusbarAuthorizeProgress);
          OutputPaneWriter.WriteLine(Resources.CommonStartSessionMarker);
 
@@ -77,9 +89,11 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             Resources.RemoteCommandSetupSshPhase1TryAuthenticatePrivateKeyFailed);
          if (success)
          {
+            logger.LogInformation("SSH key already authorized, no action needed");
             return;
          }
 
+         logger.LogDebug("Private key authentication failed, trying password authentication");
          // Step 2: try authenticate with the supplied username/password
          using (var sshClient = await TryEstablishConnectionWithPasswordAsync(settings))
          {

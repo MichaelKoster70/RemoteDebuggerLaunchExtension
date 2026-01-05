@@ -293,6 +293,7 @@
     <None Include="ToolsRemote\readme.md" />
     <None Include="ToolsExternal\readme.md" />
     <None Include="Infrastructure\readme.md" />
+    <None Include="Logging\readme.md" />
     <None Include="Options\readme.md" />
     <None Include="ProjectSystem\readme.md" />
     <None Include="readme.md" />
