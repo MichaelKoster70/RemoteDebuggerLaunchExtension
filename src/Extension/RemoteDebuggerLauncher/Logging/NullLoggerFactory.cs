@@ -12,24 +12,21 @@ namespace RemoteDebuggerLauncher.Logging
    /// <summary>
    /// A logger factory that creates null loggers. Used when logging is disabled.
    /// </summary>
-   internal class NullLoggerFactory : ILoggerFactory
+   internal sealed class NullLoggerFactory : ILoggerFactory
    {
       /// <inheritdoc />
-      public ILogger CreateLogger(string categoryName)
-      {
-         return NullLogger.Instance;
-      }
+      public ILogger CreateLogger(string categoryName) => NullLogger.Instance;
 
       /// <inheritdoc />
       public void AddProvider(ILoggerProvider provider)
       {
-         // Do nothing
+         // EMPTY_BODY
       }
 
       /// <inheritdoc />
       public void Dispose()
       {
-         // Nothing to dispose
+         // EMPTY_BODY
       }
    }
 }

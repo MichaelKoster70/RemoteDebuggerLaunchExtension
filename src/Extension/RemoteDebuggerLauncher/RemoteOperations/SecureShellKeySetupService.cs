@@ -27,7 +27,6 @@ namespace RemoteDebuggerLauncher.RemoteOperations
    [Export(typeof(ISecureShellKeySetupService))]
    internal class SecureShellKeySetupService : ISecureShellKeySetupService
    {
-
       private readonly IVsFacadeFactory factory;
       private readonly ILogger logger;
 
@@ -47,7 +46,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// <inheritdoc />
       public async Task RegisterServerFingerprintAsync(SecureShellKeySetupSettings settings)
       {
-         logger.LogInformation($"Starting server fingerprint registration for {settings.UserName}@{settings.HostName}:{settings.HostPort}");
+         logger.LogInformation("RegisterServerFingerprintAsync: Starting server fingerprint registration Device={UserName}@{HostName}:{HostPort}", settings.UserName, settings.HostName, settings.HostPort);
          Statusbar.SetText(Resources.RemoteCommandSetupSshCommandStatusbarScanProgress);
          OutputPaneWriter.WriteLine(Resources.CommonStartSessionMarker);
 
@@ -62,7 +61,8 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
          if (!success)
          {
-            logger.LogError($"Failed to register server fingerprint for {settings.UserName}@{settings.HostName}:{settings.HostPort}");
+            logger.LogError("RegisterServerFingerprintAsync: FAILED to register server fingerprint. keyscanError={StdError}", keyscanStdError);
+
             OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintFailed1, settings.UserName, settings.HostName, settings.HostPort);
             OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintFailed2);
             OutputPaneWriter.WriteLine(keyscanStdError);
@@ -70,14 +70,14 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          }
          else
          {
-            logger.LogInformation("Successfully registered server fingerprint");
+            logger.LogInformation("RegisterServerFingerprintAsync: Successfully registered server fingerprint");
          }
       }
 
       /// <inheritdoc />
       public async Task AuthorizeKeyAsync(SecureShellKeySetupSettings settings)
       {
-         logger.LogInformation($"Starting SSH key authorization for {settings.UserName}@{settings.HostName}:{settings.HostPort}");
+         logger.LogInformation("AuthorizeKeyAsync: Starting SSH key authorization for {UserName}@{HostName}:{HostPort}", settings.UserName, settings.HostName, settings.HostPort);
          Statusbar.SetText(Resources.RemoteCommandSetupSshCommandStatusbarAuthorizeProgress);
          OutputPaneWriter.WriteLine(Resources.CommonStartSessionMarker);
 
@@ -88,12 +88,12 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             Resources.RemoteCommandSetupSshPhase1TryAuthenticatePrivateKeyFailed);
          if (success)
          {
-            logger.LogInformation("SSH key already authorized, no action needed");
+            logger.LogInformation("AuthorizeKeyAsync: SSH key already authorized, no action needed");
             return;
          }
 
-         logger.LogDebug("Private key authentication failed, trying password authentication");
          // Step 2: try authenticate with the supplied username/password
+         logger.LogDebug("AuthorizeKeyAsync: Private key authentication failed, trying password authentication");
          using (var sshClient = await TryEstablishConnectionWithPasswordAsync(settings))
          {
             // Step 3: register the public key with the target
@@ -117,6 +117,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
       private async Task<(bool, string)> RegisterServerFingerprintWithKeyScanAsync(SecureShellKeySetupSettings settings)
       {
+         logger.LogTrace("RegisterServerFingerprintWithKeyScanAsync: Begin.");
          var defaultKeysFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), PackageConstants.SecureShell.DefaultKeyPairFolder);
          var knownHostsFilePath = Path.Combine(defaultKeysFolder, PackageConstants.SecureShell.DefaultKnownHostsFileName);
 
@@ -132,6 +133,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintScan1, settings.UserName, settings.HostName, settings.HostPort);
          OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintScan2, arguments);
 
+         logger.LogDebug("RegisterServerFingerprintWithKeyScanAsync: Executing '{Exe} {Arguments}", PackageConstants.SecureShell.KeyScanExecutable, arguments);
          using (var process = Process.Start(startInfo))
          {
             var stdOutput = await process.StandardOutput.ReadToEndAsync();
@@ -140,14 +142,18 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
+            logger.LogDebug("RegisterServerFingerprintWithKeyScanAsync: keyscan completed. ExitCode={ExitCode}, StdOutput={StdOutput}, StdError={StdError}", exitCode, stdOutput, stdError);
+
             if (exitCode == 0)
             {
                if (FileHelper.ContainsText(knownHostsFilePath, settings.HostName))
                {
+                  logger.LogInformation("RegisterServerFingerprintWithKeyScanAsync: Host already present in known_hosts file, skipping addition");
                   OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintSkip, settings.UserName, settings.HostName, settings.HostPort);
                }
                else
                {
+                  logger.LogInformation("RegisterServerFingerprintWithKeyScanAsync: Adding host to known_hosts file");
                   OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintAdd, settings.UserName, settings.HostName, settings.HostPort);
                   File.AppendAllText(knownHostsFilePath, stdOutput);
                }
@@ -250,6 +256,8 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
       private Task<bool> TryEstablishConnectionWithKeyAsync(SecureShellKeySetupSettings settings, string progressText, string successText, string failureText)
       {
+         logger.LogDebug("TryEstablishConnectionWithKeyAsync: Begin.");
+
          OutputPaneWriter.WriteLine(progressText, settings.UserName, settings.HostName, settings.HostPort);
 
          try
@@ -267,11 +275,14 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          catch (SshAuthenticationException expectedException)
          {
             // This is expected
+            logger.LogDebug("TryEstablishConnectionWithKeyAsync: expected SshAuthenticationException. Message={Message}, return=false", expectedException.Message);
+
             OutputPaneWriter.WriteLine(failureText, expectedException.Message);
             return Task.FromResult(false);
          }
          catch (Exception ex)
          {
+            logger.LogError(ex, "TryEstablishConnectionWithKeyAsync: unexpected exception");
             OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshConnectionFailed, ex.Message);
             throw new SecureShellSessionException(ex.Message, ex);
          }
@@ -279,6 +290,8 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
       private Task<SshClient> TryEstablishConnectionWithPasswordAsync(SecureShellKeySetupSettings settings)
       {
+         logger.LogDebug("TryEstablishConnectionWithPasswordAsync: Begin.");
+
          OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshPhase2TryAuthenticatePasswordProgress, settings.UserName, settings.HostName, settings.HostPort);
 
          SshClient sshClient = null;
@@ -289,15 +302,20 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             sshClient.Connect();
 
             OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshPhase2TryAuthenticatePasswordSuccess);
+
+            logger.LogDebug("TryEstablishConnectionWithPasswordAsync: Connected successfully.");
          }
          catch (SshAuthenticationException expectedException)
          {
+            logger.LogWarning("TryEstablishConnectionWithPasswordAsync: SshAuthenticationException. Message={Message}, return=null", expectedException.Message);
+
             sshClient?.Dispose();
             sshClient = null;
             OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshPhase2TryAuthenticatePasswordFailed, expectedException.Message);
          }
          catch (Exception ex)
          {
+            logger.LogError(ex, "TryEstablishConnectionWithPasswordAsync: unexpected exception.");
             sshClient?.Dispose();
             throw new SecureShellSessionException(ex.Message, ex);
          }
@@ -309,18 +327,24 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       {
          try
          {
+            logger.LogDebug("RegisterPublicKeyAsync: Begin.");
+
             OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshPhase3AddKeyProgress, settings.UserName, settings.HostNameIPv4, settings.HostPort);
 
             string publicKeyData = File.ReadAllText(settings.PublicKeyFile).Trim();
 
+            logger.LogDebug("RegisterPublicKeyAsync: executing 'mkdir -p ~/.ssh && echo ... >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys'");
             using (var command = client.RunCommand($"mkdir -p ~/.ssh && echo {publicKeyData} >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"))
             {
                if (command.ExitStatus != 0)
                {
+                  logger.LogError("RegisterPublicKeyAsync: FAILED to add public key. ExitStatus={ExitStatus}, Error={Error}, return=false", command.ExitStatus, command.Error);
                   OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshPhase3AddKeyFailed, command.Error);
                   return Task.FromResult(false);
                }
             }
+
+            logger.LogDebug("RegisterPublicKeyAsync: End. returns=true");
 
             OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshPhase3AddKeySuccess);
             return Task.FromResult(true);
@@ -328,11 +352,13 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          }
          catch (SshException ex)
          {
+            logger.LogWarning("RegisterPublicKeyAsync: SshException. Message={Message}, return=false", ex.Message);
             OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshPhase3AddKeyFailed, ex.Message);
             return Task.FromResult(false);
          }
          catch (Exception ex)
          {
+            logger.LogError(ex, "RegisterPublicKeyAsync: unexpected exception");
             throw new SecureShellSessionException(ex.Message, ex);
          }
       }

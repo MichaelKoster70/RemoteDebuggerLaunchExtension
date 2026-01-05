@@ -6,14 +6,15 @@
 // ----------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Composition;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Diagnostics;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.Extensions.Logging.Debug;
+using Microsoft.VisualStudio.Shell;
 
 namespace RemoteDebuggerLauncher.Logging
 {
@@ -21,10 +22,11 @@ namespace RemoteDebuggerLauncher.Logging
    /// Factory for creating loggers. Exposed as a MEF component.
    /// </summary>
    [Export(typeof(ILoggerFactory))]
-   internal class LoggerFactory : ILoggerFactory
+   internal sealed class DebugLoggerFactory : ILoggerFactory
    {
       private readonly SVsServiceProvider serviceProvider;
-      private Microsoft.Extensions.Logging.ILoggerFactory loggerFactory;
+      private readonly string rootPathOverride;
+      private ILoggerFactory loggerFactory;
       private bool initialized = false;
       private readonly object lockObject = new object();
 
@@ -33,9 +35,15 @@ namespace RemoteDebuggerLauncher.Logging
       /// </summary>
       /// <param name="serviceProvider">The service provider to get options.</param>
       [ImportingConstructor]
-      public LoggerFactory(SVsServiceProvider serviceProvider)
+      public DebugLoggerFactory(SVsServiceProvider serviceProvider)
       {
          this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+         rootPathOverride = null;
+      }
+
+      public DebugLoggerFactory(string rootPathOverride)
+      {
+         this.rootPathOverride = rootPathOverride;
       }
 
       /// <inheritdoc />
@@ -58,13 +66,9 @@ namespace RemoteDebuggerLauncher.Logging
          loggerFactory?.Dispose();
       }
 
+      [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "To prevent unexpected failures")]
       private void EnsureInitialized()
       {
-         if (initialized)
-         {
-            return;
-         }
-
          lock (lockObject)
          {
             if (initialized)
@@ -89,32 +93,41 @@ namespace RemoteDebuggerLauncher.Logging
                }
                else
                {
-                  // Create a configured Microsoft.Extensions.Logging LoggerFactory with filter options
+                  // Step 1: Prepare the logging configuration
+
+                  // Create log file path
+                  var logFilePath = CreateLogFilePath();
+
+                  // Create the filter options
                   var filterOptions = new LoggerFilterOptions
                   {
                      MinLevel = minLogLevel
                   };
-                  loggerFactory = new Microsoft.Extensions.Logging.LoggerFactory(Enumerable.Empty<ILoggerProvider>(), filterOptions);
 
-                  var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-                  var logDirectory = Path.Combine(localAppData, "RemoteDebuggerLauncher", "Logfiles");
-                  var timestamp = DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
-                  var logFilePath = Path.Combine(logDirectory, $"RemoteDebuggerLauncher-{timestamp}.log");
-
-                  // Ensure directory exists
-                  if (!Directory.Exists(logDirectory))
+                  // Create the level overrides dictionary
+                  var levelOverrides = new Dictionary<string, LogLevel>()
                   {
-                     _ = Directory.CreateDirectory(logDirectory);
-                  }
+                     {  "Microsoft", LogLevel.Warning }
+                  };
 
-                  // Add Debug logger provider for Output/Debug window
+                  // Limit the logfile size to 1MB and keep up to 31 files
+                  const long FileSizeLimitBytes = 1048576L;
+                  const int FileCountLimit = 31;
+
+                  // Step 2: Create the logger factory, add providers and configure them
+                  loggerFactory = new LoggerFactory(Enumerable.Empty<ILoggerProvider>(), filterOptions);
+
+                  // Add Debug logger provider for Output/Debug window, does not support filtering
                   loggerFactory.AddProvider(new DebugLoggerProvider());
 
-                  // Use Serilog.Extensions.Logging.File to add a file logger
-                  loggerFactory.AddFile(
+                  // Add the Serilog file logger provider
+                  _ = loggerFactory.AddFile(
                      logFilePath,
                      minimumLevel: minLogLevel,
-                     outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff}] [{Level:u5}] {CategoryName}: {Message}{NewLine}{Exception}");
+                     levelOverrides: levelOverrides,
+                     fileSizeLimitBytes: FileSizeLimitBytes,
+                     retainedFileCountLimit: FileCountLimit,
+                     outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff}] [{Level:u3}] {SourceContext}::{Message}{NewLine}{Exception}");
                }
             }
             catch
@@ -125,6 +138,19 @@ namespace RemoteDebuggerLauncher.Logging
 
             initialized = true;
          }
+      }
+
+      private string CreateLogFilePath()
+      {
+         // Prepare log file path
+         var localAppData = rootPathOverride ?? Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+         var logDirectory = Path.Combine(localAppData, PackageConstants.FileSystem.StorageFolder, "Logfiles");
+         var logFilePath = Path.Combine(logDirectory, "Debug-{Date}.log");
+
+         // Ensure directory exists
+         _ = Directory.CreateDirectory(logDirectory);
+
+         return logFilePath;
       }
    }
 }
