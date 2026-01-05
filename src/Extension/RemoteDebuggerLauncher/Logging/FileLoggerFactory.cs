@@ -9,8 +9,8 @@ using System;
 using System.Composition;
 using System.Globalization;
 using System.IO;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.Shell;
-using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher.Logging
 {
@@ -43,10 +43,22 @@ namespace RemoteDebuggerLauncher.Logging
 
          if (minLogLevel == LogLevel.None)
          {
-            return new NullLogger();
+            return NullLogger.Instance;
          }
 
          return new FileLogger(categoryName, logFilePath, minLogLevel);
+      }
+
+      /// <inheritdoc />
+      public void AddProvider(ILoggerProvider provider)
+      {
+         // Not supported for this simple implementation
+      }
+
+      /// <inheritdoc />
+      public void Dispose()
+      {
+         // Nothing to dispose
       }
 
       private void EnsureInitialized()

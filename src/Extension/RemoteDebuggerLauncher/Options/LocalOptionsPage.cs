@@ -7,6 +7,7 @@
 
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.Shell;
 using RemoteDebuggerLauncher.Shared;
 

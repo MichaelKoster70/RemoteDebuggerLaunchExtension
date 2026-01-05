@@ -5,6 +5,7 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
+using Microsoft.Extensions.Logging;
 using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher

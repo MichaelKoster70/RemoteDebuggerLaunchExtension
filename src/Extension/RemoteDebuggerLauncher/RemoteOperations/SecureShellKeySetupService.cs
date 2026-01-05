@@ -11,11 +11,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Threading;
 using RemoteDebuggerLauncher.Infrastructure;
-using RemoteDebuggerLauncher.Logging;
-using RemoteDebuggerLauncher.Shared;
 using Renci.SshNet;
 using Renci.SshNet.Common;
 

@@ -7,9 +7,9 @@
 
 using System;
 using System.IO;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RemoteDebuggerLauncher.Logging;
-using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncherUnitTests
 {
@@ -74,7 +74,7 @@ namespace RemoteDebuggerLauncherUnitTests
          var logger = new FileLogger("TestCategory", testLogFilePath, LogLevel.Information);
 
          // Act
-         logger.Log(LogLevel.Information, "Test message");
+         logger.LogInformation("Test message");
 
          // Assert
          Assert.IsTrue(File.Exists(testLogFilePath));
@@ -87,7 +87,7 @@ namespace RemoteDebuggerLauncherUnitTests
          var logger = new FileLogger("TestCategory", testLogFilePath, LogLevel.Information);
 
          // Act
-         logger.Log(LogLevel.Information, "Test message");
+         logger.LogInformation("Test message");
 
          // Assert
          var content = File.ReadAllText(testLogFilePath);
@@ -103,7 +103,7 @@ namespace RemoteDebuggerLauncherUnitTests
          var logger = new FileLogger("TestCategory", testLogFilePath, LogLevel.Warning);
 
          // Act
-         logger.Log(LogLevel.Information, "Test message");
+         logger.LogInformation("Test message");
 
          // Assert
          Assert.IsFalse(File.Exists(testLogFilePath));
@@ -117,7 +117,7 @@ namespace RemoteDebuggerLauncherUnitTests
          var exception = new InvalidOperationException("Test exception");
 
          // Act
-         logger.Log(LogLevel.Error, exception, "Error occurred");
+         logger.LogError(exception, "Error occurred");
 
          // Assert
          var content = File.ReadAllText(testLogFilePath);
@@ -132,7 +132,7 @@ namespace RemoteDebuggerLauncherUnitTests
       public void TestNullLogger_IsEnabled_AlwaysReturnsFalse()
       {
          // Arrange
-         var logger = new NullLogger();
+         var logger = NullLogger.Instance;
 
          // Act & Assert
          Assert.IsFalse(logger.IsEnabled(LogLevel.Trace));
@@ -147,11 +147,11 @@ namespace RemoteDebuggerLauncherUnitTests
       public void TestNullLogger_Log_DoesNotThrow()
       {
          // Arrange
-         var logger = new NullLogger();
+         var logger = NullLogger.Instance;
 
          // Act & Assert - should not throw
-         logger.Log(LogLevel.Information, "Test message");
-         logger.Log(LogLevel.Error, new Exception("Test"), "Error message");
+         logger.LogInformation("Test message");
+         logger.LogError(new Exception("Test"), "Error message");
       }
    }
 }

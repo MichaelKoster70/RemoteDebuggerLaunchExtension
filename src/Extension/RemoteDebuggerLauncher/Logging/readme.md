@@ -4,7 +4,7 @@ This directory contains the logging infrastructure for the Remote Debugger Launc
 
 ## Overview
 
-The logging system is inspired by the .NET `ILogger` abstraction and provides:
+The logging system uses Microsoft's `Microsoft.Extensions.Logging` package and provides:
 
 - **LogLevel-based filtering**: Trace, Debug, Information, Warning, Error, Critical, and None
 - **File-based logging**: Logs are written to `%localappdata%\RemoteDebuggerLauncher\Logfiles`
@@ -13,16 +13,17 @@ The logging system is inspired by the .NET `ILogger` abstraction and provides:
 
 ## Files
 
-- **FileLogger.cs**: Implementation of file-based logger
-- **FileLoggerFactory.cs**: MEF-exportable factory for creating loggers
+- **FileLogger.cs**: Implementation of file-based logger using `Microsoft.Extensions.Logging.ILogger`
+- **FileLoggerFactory.cs**: MEF-exportable factory implementing `Microsoft.Extensions.Logging.ILoggerFactory`
 - **NullLogger.cs**: No-op logger used when logging is disabled
-- **LoggerExtensions.cs**: Extension methods for convenient logging (LogInformation, LogError, etc.)
 
 ## Usage
 
 ### Injecting a Logger via MEF
 
 ```csharp
+using Microsoft.Extensions.Logging;
+
 [Export]
 internal class MyService
 {

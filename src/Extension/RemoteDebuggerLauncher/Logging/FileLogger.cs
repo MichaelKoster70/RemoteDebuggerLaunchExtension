@@ -9,7 +9,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using RemoteDebuggerLauncher.Shared;
+using Microsoft.Extensions.Logging;
 
 namespace RemoteDebuggerLauncher.Logging
 {
@@ -37,26 +37,32 @@ namespace RemoteDebuggerLauncher.Logging
       }
 
       /// <inheritdoc />
+      public IDisposable BeginScope<TState>(TState state)
+      {
+         return null;
+      }
+
+      /// <inheritdoc />
       public bool IsEnabled(LogLevel logLevel)
       {
          return logLevel != LogLevel.None && logLevel >= minLogLevel;
       }
 
       /// <inheritdoc />
-      public void Log(LogLevel logLevel, string message)
+      public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
       {
          if (!IsEnabled(logLevel))
          {
             return;
          }
 
-         WriteLogEntry(logLevel, message, null);
-      }
+         if (formatter == null)
+         {
+            throw new ArgumentNullException(nameof(formatter));
+         }
 
-      /// <inheritdoc />
-      public void Log(LogLevel logLevel, Exception exception, string message)
-      {
-         if (!IsEnabled(logLevel))
+         var message = formatter(state, exception);
+         if (string.IsNullOrEmpty(message))
          {
             return;
          }

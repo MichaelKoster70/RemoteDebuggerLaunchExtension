@@ -6,7 +6,7 @@
 // ----------------------------------------------------------------------------
 
 using System;
-using RemoteDebuggerLauncher.Shared;
+using Microsoft.Extensions.Logging;
 
 namespace RemoteDebuggerLauncher.Logging
 {
@@ -15,17 +15,25 @@ namespace RemoteDebuggerLauncher.Logging
    /// </summary>
    internal class NullLogger : ILogger
    {
-      /// <inheritdoc />
-      public bool IsEnabled(LogLevel logLevel) => false;
+      /// <summary>
+      /// Gets the singleton instance of the null logger.
+      /// </summary>
+      public static NullLogger Instance { get; } = new NullLogger();
 
       /// <inheritdoc />
-      public void Log(LogLevel logLevel, string message)
+      public IDisposable BeginScope<TState>(TState state)
       {
-         // Do nothing
+         return null;
       }
 
       /// <inheritdoc />
-      public void Log(LogLevel logLevel, Exception exception, string message)
+      public bool IsEnabled(LogLevel logLevel)
+      {
+         return false;
+      }
+
+      /// <inheritdoc />
+      public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
       {
          // Do nothing
       }
