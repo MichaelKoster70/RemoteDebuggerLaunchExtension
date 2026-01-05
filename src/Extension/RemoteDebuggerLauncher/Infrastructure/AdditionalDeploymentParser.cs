@@ -15,7 +15,7 @@ namespace RemoteDebuggerLauncher.Infrastructure
    /// Utility class for parsing additional deployment configuration strings.
    /// </summary>
    /// <remarks>
-   /// The parser assumes 
+   /// The parser assumes that:
    /// * the configuration string is in the format 'source1|target1;source2|target2',
    /// * target path ending with a / indicates a folder deployment
    /// </remarks>

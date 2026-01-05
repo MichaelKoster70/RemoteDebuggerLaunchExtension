@@ -6,7 +6,6 @@
 // ----------------------------------------------------------------------------
 
 using System;
-using Org.BouncyCastle.Asn1.X509;
 
 namespace RemoteDebuggerLauncher
 {
@@ -209,7 +208,7 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <summary>
-      /// Holder for all Linux Shell commands executd via SSH.
+      /// Holder for all Linux Shell commands executed via SSH.
       /// </summary>
       public static class LinuxShellCommands
       {
