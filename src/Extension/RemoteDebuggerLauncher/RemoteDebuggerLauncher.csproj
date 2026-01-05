@@ -344,6 +344,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging">
+      <Version>8.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug">
+      <Version>8.0.1</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.PowerShell.5.1.ReferenceAssemblies" Version="1.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Managed" Version="17.4.314-g26c3aa51e7" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Managed.VS" Version="17.4.314-g26c3aa51e7" ExcludeAssets="runtime" />
@@ -362,7 +368,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis" Version="4.4.0" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.VisualStudio.LanguageServices" Version="4.4.0" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
     <PackageReference Include="Serilog.Extensions.Logging.File">
       <Version>3.0.0</Version>
     </PackageReference>

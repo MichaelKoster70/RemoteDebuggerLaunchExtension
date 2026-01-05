@@ -9,10 +9,11 @@ using System;
 using System.Composition;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.Shell;
-using Serilog;
-using Serilog.Extensions.Logging;
+using Microsoft.Extensions.Logging.Debug;
 
 namespace RemoteDebuggerLauncher.Logging
 {
@@ -88,7 +89,13 @@ namespace RemoteDebuggerLauncher.Logging
                }
                else
                {
-                  // Configure Serilog
+                  // Create a configured Microsoft.Extensions.Logging LoggerFactory with filter options
+                  var filterOptions = new LoggerFilterOptions
+                  {
+                     MinLevel = minLogLevel
+                  };
+                  loggerFactory = new Microsoft.Extensions.Logging.LoggerFactory(Enumerable.Empty<ILoggerProvider>(), filterOptions);
+
                   var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
                   var logDirectory = Path.Combine(localAppData, "RemoteDebuggerLauncher", "Logfiles");
                   var timestamp = DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
@@ -100,17 +107,14 @@ namespace RemoteDebuggerLauncher.Logging
                      _ = Directory.CreateDirectory(logDirectory);
                   }
 
-                  // Configure Serilog logger
-                  var serilogLogger = new LoggerConfiguration()
-                     .MinimumLevel.Is(MapToSerilogLevel(minLogLevel))
-                     .WriteTo.File(
-                        logFilePath,
-                        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff}] [{Level:u5}] {SourceContext}: {Message:lj}{NewLine}{Exception}",
-                        formatProvider: CultureInfo.InvariantCulture)
-                     .CreateLogger();
+                  // Add Debug logger provider for Output/Debug window
+                  loggerFactory.AddProvider(new DebugLoggerProvider());
 
-                  // Create Microsoft.Extensions.Logging factory with Serilog
-                  loggerFactory = new SerilogLoggerFactory(serilogLogger, dispose: true);
+                  // Use Serilog.Extensions.Logging.File to add a file logger
+                  loggerFactory.AddFile(
+                     logFilePath,
+                     minimumLevel: minLogLevel,
+                     outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff}] [{Level:u5}] {CategoryName}: {Message}{NewLine}{Exception}");
                }
             }
             catch
@@ -120,27 +124,6 @@ namespace RemoteDebuggerLauncher.Logging
             }
 
             initialized = true;
-         }
-      }
-
-      private static Serilog.Events.LogEventLevel MapToSerilogLevel(LogLevel logLevel)
-      {
-         switch (logLevel)
-         {
-            case LogLevel.Trace:
-               return Serilog.Events.LogEventLevel.Verbose;
-            case LogLevel.Debug:
-               return Serilog.Events.LogEventLevel.Debug;
-            case LogLevel.Information:
-               return Serilog.Events.LogEventLevel.Information;
-            case LogLevel.Warning:
-               return Serilog.Events.LogEventLevel.Warning;
-            case LogLevel.Error:
-               return Serilog.Events.LogEventLevel.Error;
-            case LogLevel.Critical:
-               return Serilog.Events.LogEventLevel.Fatal;
-            default:
-               return Serilog.Events.LogEventLevel.Information;
          }
       }
    }
