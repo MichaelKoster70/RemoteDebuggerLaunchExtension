@@ -9,6 +9,7 @@ using System;
 using System.Composition;
 using System.Globalization;
 using System.IO;
+using Microsoft.VisualStudio.Shell;
 using RemoteDebuggerLauncher.Shared;
 
 namespace RemoteDebuggerLauncher.Logging
@@ -19,41 +20,75 @@ namespace RemoteDebuggerLauncher.Logging
    [Export(typeof(ILoggerFactory))]
    internal class FileLoggerFactory : ILoggerFactory
    {
-      private readonly string logFilePath;
-      private readonly LogLevel minLogLevel;
-      private readonly IOptionsPageAccessor optionsPageAccessor;
+      private readonly SVsServiceProvider serviceProvider;
+      private string logFilePath;
+      private LogLevel minLogLevel = LogLevel.None;
+      private bool initialized = false;
+      private readonly object lockObject = new object();
 
       /// <summary>
       /// Initializes a new instance of the <see cref="FileLoggerFactory"/> class.
       /// </summary>
-      /// <param name="optionsPageAccessor">The options page accessor to get logging configuration.</param>
+      /// <param name="serviceProvider">The service provider to get options.</param>
       [ImportingConstructor]
-      public FileLoggerFactory([Import(typeof(SOptionsPageAccessor))] IOptionsPageAccessor optionsPageAccessor)
+      public FileLoggerFactory(SVsServiceProvider serviceProvider)
       {
-         this.optionsPageAccessor = optionsPageAccessor ?? throw new ArgumentNullException(nameof(optionsPageAccessor));
-         
-         // Get logging level from options
-         minLogLevel = optionsPageAccessor.QueryLogLevel();
-
-         // Determine log file path
-         if (minLogLevel != LogLevel.None)
-         {
-            var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var logDirectory = Path.Combine(localAppData, "RemoteDebuggerLauncher", "Logfiles");
-            var timestamp = DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
-            logFilePath = Path.Combine(logDirectory, $"RemoteDebuggerLauncher-{timestamp}.log");
-         }
+         this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
       }
 
       /// <inheritdoc />
       public ILogger CreateLogger(string categoryName)
       {
+         EnsureInitialized();
+
          if (minLogLevel == LogLevel.None)
          {
             return new NullLogger();
          }
 
          return new FileLogger(categoryName, logFilePath, minLogLevel);
+      }
+
+      private void EnsureInitialized()
+      {
+         if (initialized)
+         {
+            return;
+         }
+
+         lock (lockObject)
+         {
+            if (initialized)
+            {
+               return;
+            }
+
+            try
+            {
+               // Get the options page accessor service
+               var optionsPageAccessor = serviceProvider.GetService(typeof(SOptionsPageAccessor)) as IOptionsPageAccessor;
+               if (optionsPageAccessor != null)
+               {
+                  minLogLevel = optionsPageAccessor.QueryLogLevel();
+
+                  // Determine log file path
+                  if (minLogLevel != LogLevel.None)
+                  {
+                     var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                     var logDirectory = Path.Combine(localAppData, "RemoteDebuggerLauncher", "Logfiles");
+                     var timestamp = DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
+                     logFilePath = Path.Combine(logDirectory, $"RemoteDebuggerLauncher-{timestamp}.log");
+                  }
+               }
+            }
+            catch
+            {
+               // If we can't get the options, default to no logging
+               minLogLevel = LogLevel.None;
+            }
+
+            initialized = true;
+         }
       }
    }
 }

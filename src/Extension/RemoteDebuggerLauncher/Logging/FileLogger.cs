@@ -91,6 +91,9 @@ namespace RemoteDebuggerLauncher.Logging
                   Directory.CreateDirectory(directory);
                }
 
+               // Using File.AppendAllText for simplicity and robustness in diagnostic scenarios.
+               // Each write is immediately flushed to disk, ensuring log entries are not lost
+               // if the extension crashes. For diagnostic logging, this trade-off is acceptable.
                File.AppendAllText(logFilePath, logEntry.ToString());
             }
             catch
@@ -103,16 +106,23 @@ namespace RemoteDebuggerLauncher.Logging
 
       private static string GetLogLevelString(LogLevel logLevel)
       {
-         return logLevel switch
+         switch (logLevel)
          {
-            LogLevel.Trace => "TRACE",
-            LogLevel.Debug => "DEBUG",
-            LogLevel.Information => "INFO ",
-            LogLevel.Warning => "WARN ",
-            LogLevel.Error => "ERROR",
-            LogLevel.Critical => "CRIT ",
-            _ => "UNKN "
-         };
+            case LogLevel.Trace:
+               return "TRACE";
+            case LogLevel.Debug:
+               return "DEBUG";
+            case LogLevel.Information:
+               return "INFO ";
+            case LogLevel.Warning:
+               return "WARN ";
+            case LogLevel.Error:
+               return "ERROR";
+            case LogLevel.Critical:
+               return "CRIT ";
+            default:
+               return "UNKN ";
+         }
       }
    }
 }
