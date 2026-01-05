@@ -205,8 +205,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// <inheritdoc />
       public async Task DeployRemoteFolderAsync(string sourcePath, bool clean)
       {
-         var targetPath = configurationAggregator.QueryAppFolderPath();
-         targetPath = await tokenReplacer.ReplaceTokensInStringAsync(targetPath, false);
+         var targetPath = await tokenReplacer.ReplaceTokensInStringAsync(configurationAggregator.QueryAppFolderPath(), false);
 
          outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
          outputPaneWriter.WriteLine(Resources.RemoteCommandDeployRemoteFolderCommonProgress, sourcePath, targetPath);
@@ -261,8 +260,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       {
          try
          {
-            var targetPath = configurationAggregator.QueryAppFolderPath();
-            targetPath = await tokenReplacer.ReplaceTokensInStringAsync(targetPath, false);
+            var targetPath = await tokenReplacer.ReplaceTokensInStringAsync(configurationAggregator.QueryAppFolderPath(), false);
 
             outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
             outputPaneWriter.WriteLine(Resources.RemoteCommandCleanRemoteFolderCaption, targetPath);
@@ -290,8 +288,8 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
             outputPaneWriter.WriteLine(Resources.RemoteCommandChangeRemoteFilePermissionCaption, remotePath, permissionText);
 
-            _ = await session.ExecuteSingleCommandAsync($"chmod {permissionText} {remotePath} ");
-   }
+            _ = await session.ExecuteSingleCommandAsync(PackageConstants.LinuxShellCommands.FormatChmod(permissionText, remotePath));
+         }
          catch (SecureShellSessionException ex)
          {
             outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
@@ -456,7 +454,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// <param name="remoteTargetPath">The remote target path.</param>
       private static async Task CreateRemoteFolderIfNeededAsync(ISecureShellSessionCommandingService commands, string remoteTargetPath)
       {
-         _ = await commands.ExecuteCommandAsync($"mkdir -p {remoteTargetPath}");
+         _ = await commands.ExecuteCommandAsync(PackageConstants.LinuxShellCommands.FormatMkDir(remoteTargetPath));
       }
 
       /// <summary>
@@ -495,7 +493,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// <returns><c>true</c> if installed; else <c>false</c>.</returns>
       private async Task<bool> CheckCurlIsMissingAsync(ISecureShellSessionCommandingService commands)
       {
-         (int exitCode, _, _) = await commands.TryExecuteCommandAsync("command -v curl");
+         (int exitCode, _, _) = await commands.TryExecuteCommandAsync(PackageConstants.LinuxShellCommands.FormatCommand("curl"));
          if (exitCode != 0)
          {
             outputPaneWriter.WriteLine(Resources.RemoteCommandCommonFailedCurlNotInstalled);
@@ -738,7 +736,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          {
             var fileName = Path.GetFileName(filePath);
 
-            var userHome = (await commands.ExecuteCommandAsync("pwd")).Trim('\n');
+            var userHome = (await commands.ExecuteCommandAsync(PackageConstants.LinuxShellCommands.Pwd)).Trim('\n');
 
             var targetPath = UnixPath.Combine(userHome, fileName);
             var installPath = UnixPath.Normalize(configurationAggregator.QueryDotNetInstallFolderPath(), userHome);
@@ -752,9 +750,9 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
             outputPaneWriter.Write(Resources.RemoteCommandInstallDotnetOfflineOutputPaneInstalling, fileName);
 
-            _ = await commands.ExecuteCommandAsync($"mkdir -p {installPath}");
+            _ = await commands.ExecuteCommandAsync(PackageConstants.LinuxShellCommands.FormatMkDir(installPath));
             _ = await commands.ExecuteCommandAsync($"tar zxf {targetPath} -C {installPath}");
-            _ = await commands.ExecuteCommandAsync($"rm -f {targetPath}");
+            _ = await commands.ExecuteCommandAsync(PackageConstants.LinuxShellCommands.FormatRmF(targetPath));
 
             outputPaneWriter.WriteLine(Resources.RemoteCommandCommonSuccess);
          }

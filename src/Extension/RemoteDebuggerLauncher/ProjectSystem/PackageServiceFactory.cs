@@ -45,6 +45,9 @@ namespace RemoteDebuggerLauncher
       public IOutputPaneWriterService OutputPane => outputPaneWriter;
 
       /// <inheritdoc />
+      public IDebugTokenReplacer TokenReplacer => tokenReplacer;
+
+      /// <inheritdoc />
       public async Task<ISecureShellDeployService> GetDeployServiceAsync(bool useWaitDialog)
       {
          var publishService = await GetPublishServiceAsync(useWaitDialog);

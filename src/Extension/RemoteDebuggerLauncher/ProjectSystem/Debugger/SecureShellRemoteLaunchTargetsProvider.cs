@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -161,12 +161,12 @@ namespace RemoteDebuggerLauncher
          
          if (publishOnDeploy && publishMode == PublishMode.SelfContained)
          {
-            launchSettings.Options = await AdapterLaunchConfiguration.CreateSelfContainedAsync(factory.Configuration, configuredProject, factory.OutputPane, remoteOperations);
+            launchSettings.Options = await AdapterLaunchConfiguration.CreateSelfContainedAsync(factory.Configuration, configuredProject, factory.TokenReplacer, factory.OutputPane, remoteOperations);
          }
          else
          {
             // in all other cases, debug as framework dependent
-            launchSettings.Options = await AdapterLaunchConfiguration.CreateFrameworkDependantAsync(factory.Configuration, configuredProject, factory.OutputPane, remoteOperations);
+            launchSettings.Options = await AdapterLaunchConfiguration.CreateFrameworkDependantAsync(factory.Configuration, configuredProject, factory.TokenReplacer, factory.OutputPane, remoteOperations);
          }
 
          debugLaunchSettings.Add(launchSettings);

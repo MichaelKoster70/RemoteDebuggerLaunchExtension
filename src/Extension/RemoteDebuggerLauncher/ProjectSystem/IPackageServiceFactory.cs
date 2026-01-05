@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -6,6 +6,7 @@
 // ----------------------------------------------------------------------------
 
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.ProjectSystem.Debug;
 using RemoteDebuggerLauncher.RemoteOperations;
 
 namespace RemoteDebuggerLauncher
@@ -29,6 +30,11 @@ namespace RemoteDebuggerLauncher
       /// Gets the configured VS output pane writer.
       /// </summary>
       IOutputPaneWriterService OutputPane { get; }
+
+      /// <summary>
+      /// Gets the token replacer.
+      /// </summary>
+      IDebugTokenReplacer TokenReplacer { get; }
 
       /// <summary>
       /// Gets the SSH deploy service.

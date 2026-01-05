@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -50,6 +50,10 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             // Fail copy if rsync is missing
             await ThrowIfRsyncIsMissingAsync(commands, progressOutputPaneWriter);
 
+            // Ensure target directory exists
+            await CreateDirectoryIfNeededAsync(commands, remoteTargetPath);
+
+            // copy the file
             await StartRsyncDirectorySessionAsync(localSourcePath, remoteTargetPath, progressOutputPaneWriter);
          }
       }
@@ -72,6 +76,15 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          }
       }
 
+      private static async Task CreateDirectoryIfNeededAsync(ISecureShellSessionCommandingService commands, string remoteFilePath)
+      {
+         var remoteDirectory = UnixPath.GetDirectoryName(remoteFilePath);
+         if (!string.IsNullOrEmpty(remoteDirectory))
+         {
+            _ = await commands.ExecuteCommandAsync(PackageConstants.LinuxShellCommands.FormatMkDir(remoteDirectory));
+         }
+      }
+
       /// <summary>
       /// Checks if rsync is installed.
       /// </summary>
@@ -79,7 +92,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// <returns><c>true</c> if installed; else <c>false</c>.</returns>
       private static async Task ThrowIfRsyncIsMissingAsync(ISecureShellSessionCommandingService commands, IOutputPaneWriterService outputPaneWriter)
       {
-         (int exitCode, _, _) = await commands.TryExecuteCommandAsync("command -v rsync");
+         (int exitCode, _, _) = await commands.TryExecuteCommandAsync(PackageConstants.LinuxShellCommands.FormatCommand("rsync"));
          if (exitCode != 0)
          {
             outputPaneWriter?.WriteLine(Resources.RemoteCommandDeployRemoteFolderRsyncFailedNotInstalled);

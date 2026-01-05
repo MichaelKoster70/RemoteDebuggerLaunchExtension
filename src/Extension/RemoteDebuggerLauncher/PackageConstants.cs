@@ -207,5 +207,43 @@ namespace RemoteDebuggerLauncher
          /// <summary>HTTPS Developer Certificate name.</summary>
          public const string HttpsCertificateName = "DevCert.pfx";
       }
+
+      /// <summary>
+      /// Holder for all Linux Shell commands executd via SSH.
+      /// </summary>
+      public static class LinuxShellCommands
+      {
+         private const string MkDir = "mkdir -p \"{0}\"";
+         private const string Rm = "rm {0}";
+         private const string RmF = "rm -f {0}";
+         private const string RmRf = "rm -rf {0}";
+         private const string Chmod = "chmod {0} {1}";
+         private const string ChmodPlusX = "chmod +x {0}";
+         private const string Command = "command -v {0}";
+
+         /// <summary>"pwd" - Command to get the current working directory.</summary>
+         public const string Pwd = "pwd";
+
+         /// <summary>"mkdir -p \"{0}\"" - Formats the CreateDirectory command with the specified path.</summary>
+         public static string FormatMkDir(string path) => string.Format(MkDir, path);
+
+         /// <summary>"rm {0}" - Formats the RemoveFile command with the specified path.</summary>
+         public static string FormatRm(string path) => string.Format(Rm, path);
+
+         /// <summary>"rm -f {0}" - Formats the ForceRemoveFile command with the specified path.</summary>
+         public static string FormatRmF(string path) => string.Format(RmF, path);
+
+         /// <summary>"rm -rf {0}" - Formats the RemoveDirectory command with the specified path.</summary>
+         public static string FormatRmRf(string path) => string.Format(RmRf, path);
+
+         /// <summary>"chmod {0} {1}" - Formats the chmod command with the specified mode and path.</summary>
+         public static string FormatChmod(string mode, string path) => string.Format(Chmod, mode, path);
+
+         /// <summary>"chmod +x {0}" - Formats the chmod command with the specified path.</summary>
+         public static string FormatChmodPlusX(string path) => string.Format(ChmodPlusX, path);
+
+         /// <summary>"command -v {0}" - Formats the command to check if a command exists on the remote system.</summary>
+         public static string FormatCommand(string commandName) => string.Format(Command, commandName);
+      }
    }
 }

@@ -128,7 +128,8 @@ namespace RemoteDebuggerLauncher
             var additionalDirectoriesConfig = configurationAggregator.QueryAdditionalDirectories();
             if (!string.IsNullOrEmpty(additionalDirectoriesConfig))
             {
-               var parser = new AdditionalDeploymentParser(configuredProject.GetProjectFolder(), configurationAggregator.QueryAppFolderPath());
+               var appFolderPath = await tokenReplacer.ReplaceTokensInStringAsync(configurationAggregator.QueryAppFolderPath(), false);
+               var parser = new AdditionalDeploymentParser(configuredProject.GetProjectFolder(), appFolderPath);
                var additionalDirectories = parser.Parse(additionalDirectoriesConfig, false);
 
                // Validate that all source directories exist
