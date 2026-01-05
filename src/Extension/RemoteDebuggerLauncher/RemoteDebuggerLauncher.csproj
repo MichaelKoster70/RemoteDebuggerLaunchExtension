@@ -134,9 +134,9 @@
     <Compile Include="RemoteOperations\ISecureShellSessionCommandingService.cs" />
     <Compile Include="VsInterop\OutputPaneWriterService.cs" />
     <Compile Include="Options\OptionsPageAccessorService.cs" />
-    <Compile Include="Logging\FileLogger.cs" />
     <Compile Include="Logging\FileLoggerFactory.cs" />
     <Compile Include="Logging\NullLogger.cs" />
+    <Compile Include="Logging\NullLoggerFactory.cs" />
     <Compile Include="Infrastructure\RemoteDebuggerLauncherException.cs" />
     <Compile Include="RemoteOperations\SecureShellRemoteOperationsService.cs" />
     <Compile Include="RemoteOperations\SecureShellSessionException.cs" />
@@ -363,6 +363,9 @@
     <PackageReference Include="Microsoft.CodeAnalysis" Version="4.4.0" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.VisualStudio.LanguageServices" Version="4.4.0" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Serilog" Version="2.12.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NuGet.VisualStudio" Version="17.4.0" ExcludeAssets="runtime" />
     <PackageReference Include="SSH.NET" Version="2025.0.0" />

@@ -4,18 +4,26 @@ This directory contains the logging infrastructure for the Remote Debugger Launc
 
 ## Overview
 
-The logging system uses Microsoft's `Microsoft.Extensions.Logging` package and provides:
+The logging system uses **Serilog** with Microsoft's `Microsoft.Extensions.Logging` integration and provides:
 
 - **LogLevel-based filtering**: Trace, Debug, Information, Warning, Error, Critical, and None
 - **File-based logging**: Logs are written to `%localappdata%\RemoteDebuggerLauncher\Logfiles`
+- **Structured logging**: Serilog provides rich structured logging capabilities
 - **MEF integration**: Loggers can be injected via MEF's `[ImportingConstructor]`
 - **Configuration**: Logging level can be configured in Visual Studio Options
 
+## Packages Used
+
+- **Serilog**: Core structured logging library
+- **Serilog.Extensions.Logging**: Bridge between Serilog and Microsoft.Extensions.Logging
+- **Serilog.Sinks.File**: File sink for writing logs to disk
+- **Microsoft.Extensions.Logging.Abstractions**: Standard logging abstractions
+
 ## Files
 
-- **FileLogger.cs**: Implementation of file-based logger using `Microsoft.Extensions.Logging.ILogger`
-- **FileLoggerFactory.cs**: MEF-exportable factory implementing `Microsoft.Extensions.Logging.ILoggerFactory`
+- **FileLoggerFactory.cs**: MEF-exportable factory that configures Serilog and creates loggers
 - **NullLogger.cs**: No-op logger used when logging is disabled
+- **NullLoggerFactory.cs**: Factory that creates null loggers when logging is disabled
 
 ## Usage
 
@@ -67,9 +75,17 @@ Each session creates a new log file with a timestamp in the format: `yyyyMMdd-HH
 
 ## Log Format
 
+Serilog uses the following format template:
+
 ```
-[2024-01-05 07:30:45.123] [INFO ] CategoryName: Message text
-[2024-01-05 07:30:45.456] [ERROR] CategoryName: Error message
-Exception: System.InvalidOperationException: Error details
+[{Timestamp:yyyy-MM-dd HH:mm:ss.fff}] [{Level:u5}] {SourceContext}: {Message:lj}{NewLine}{Exception}
+```
+
+Example output:
+
+```
+[2024-01-05 07:30:45.123] [INFO ] SecureShellKeySetupService: Starting server fingerprint registration for user@host:22
+[2024-01-05 07:30:45.456] [ERROR] SecureShellKeySetupService: Failed to register server fingerprint
+System.InvalidOperationException: Connection failed
    at ...
 ```

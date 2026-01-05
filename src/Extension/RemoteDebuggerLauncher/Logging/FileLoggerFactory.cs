@@ -11,18 +11,19 @@ using System.Globalization;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.Shell;
+using Serilog;
+using Serilog.Extensions.Logging;
 
 namespace RemoteDebuggerLauncher.Logging
 {
    /// <summary>
-   /// Factory for creating file-based loggers. Exposed as a MEF component.
+   /// Factory for creating Serilog-based loggers. Exposed as a MEF component.
    /// </summary>
    [Export(typeof(ILoggerFactory))]
    internal class FileLoggerFactory : ILoggerFactory
    {
       private readonly SVsServiceProvider serviceProvider;
-      private string logFilePath;
-      private LogLevel minLogLevel = LogLevel.None;
+      private Microsoft.Extensions.Logging.ILoggerFactory loggerFactory;
       private bool initialized = false;
       private readonly object lockObject = new object();
 
@@ -37,29 +38,23 @@ namespace RemoteDebuggerLauncher.Logging
       }
 
       /// <inheritdoc />
-      public ILogger CreateLogger(string categoryName)
+      public Microsoft.Extensions.Logging.ILogger CreateLogger(string categoryName)
       {
          EnsureInitialized();
-
-         if (minLogLevel == LogLevel.None)
-         {
-            return NullLogger.Instance;
-         }
-
-         return new FileLogger(categoryName, logFilePath, minLogLevel);
+         return loggerFactory.CreateLogger(categoryName);
       }
 
       /// <inheritdoc />
-      /// <remarks>This simple implementation does not support adding providers.</remarks>
       public void AddProvider(ILoggerProvider provider)
       {
-         throw new NotSupportedException("This logger factory does not support adding providers.");
+         EnsureInitialized();
+         loggerFactory.AddProvider(provider);
       }
 
       /// <inheritdoc />
       public void Dispose()
       {
-         // Nothing to dispose
+         loggerFactory?.Dispose();
       }
 
       private void EnsureInitialized()
@@ -80,27 +75,73 @@ namespace RemoteDebuggerLauncher.Logging
             {
                // Get the options page accessor service
                var optionsPageAccessor = serviceProvider.GetService(typeof(SOptionsPageAccessor)) as IOptionsPageAccessor;
+               LogLevel minLogLevel = LogLevel.None;
+               
                if (optionsPageAccessor != null)
                {
                   minLogLevel = optionsPageAccessor.QueryLogLevel();
+               }
 
-                  // Determine log file path
-                  if (minLogLevel != LogLevel.None)
+               if (minLogLevel == LogLevel.None)
+               {
+                  // Create a null logger factory when logging is disabled
+                  loggerFactory = new NullLoggerFactory();
+               }
+               else
+               {
+                  // Configure Serilog
+                  var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                  var logDirectory = Path.Combine(localAppData, "RemoteDebuggerLauncher", "Logfiles");
+                  var timestamp = DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
+                  var logFilePath = Path.Combine(logDirectory, $"RemoteDebuggerLauncher-{timestamp}.log");
+
+                  // Ensure directory exists
+                  if (!Directory.Exists(logDirectory))
                   {
-                     var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-                     var logDirectory = Path.Combine(localAppData, "RemoteDebuggerLauncher", "Logfiles");
-                     var timestamp = DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
-                     logFilePath = Path.Combine(logDirectory, $"RemoteDebuggerLauncher-{timestamp}.log");
+                     Directory.CreateDirectory(logDirectory);
                   }
+
+                  // Configure Serilog logger
+                  var serilogLogger = new LoggerConfiguration()
+                     .MinimumLevel.Is(MapToSerilogLevel(minLogLevel))
+                     .WriteTo.File(
+                        logFilePath,
+                        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff}] [{Level:u5}] {SourceContext}: {Message:lj}{NewLine}{Exception}",
+                        formatProvider: CultureInfo.InvariantCulture)
+                     .CreateLogger();
+
+                  // Create Microsoft.Extensions.Logging factory with Serilog
+                  loggerFactory = new SerilogLoggerFactory(serilogLogger, dispose: true);
                }
             }
             catch
             {
-               // If we can't get the options, default to no logging
-               minLogLevel = LogLevel.None;
+               // If we can't configure logging, use null logger factory
+               loggerFactory = new NullLoggerFactory();
             }
 
             initialized = true;
+         }
+      }
+
+      private static Serilog.Events.LogEventLevel MapToSerilogLevel(LogLevel logLevel)
+      {
+         switch (logLevel)
+         {
+            case LogLevel.Trace:
+               return Serilog.Events.LogEventLevel.Verbose;
+            case LogLevel.Debug:
+               return Serilog.Events.LogEventLevel.Debug;
+            case LogLevel.Information:
+               return Serilog.Events.LogEventLevel.Information;
+            case LogLevel.Warning:
+               return Serilog.Events.LogEventLevel.Warning;
+            case LogLevel.Error:
+               return Serilog.Events.LogEventLevel.Error;
+            case LogLevel.Critical:
+               return Serilog.Events.LogEventLevel.Fatal;
+            default:
+               return Serilog.Events.LogEventLevel.Information;
          }
       }
    }
