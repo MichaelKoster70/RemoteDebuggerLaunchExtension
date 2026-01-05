@@ -74,10 +74,9 @@ namespace RemoteDebuggerLauncher.Logging
             try
             {
                // Get the options page accessor service
-               var optionsPageAccessor = serviceProvider.GetService(typeof(SOptionsPageAccessor)) as IOptionsPageAccessor;
                LogLevel minLogLevel = LogLevel.None;
-               
-               if (optionsPageAccessor != null)
+
+               if (serviceProvider.GetService(typeof(SOptionsPageAccessor)) is IOptionsPageAccessor optionsPageAccessor)
                {
                   minLogLevel = optionsPageAccessor.QueryLogLevel();
                }
@@ -98,7 +97,7 @@ namespace RemoteDebuggerLauncher.Logging
                   // Ensure directory exists
                   if (!Directory.Exists(logDirectory))
                   {
-                     Directory.CreateDirectory(logDirectory);
+                     _ = Directory.CreateDirectory(logDirectory);
                   }
 
                   // Configure Serilog logger
