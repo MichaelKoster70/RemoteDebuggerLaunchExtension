@@ -17,10 +17,10 @@ using Serilog.Extensions.Logging;
 namespace RemoteDebuggerLauncher.Logging
 {
    /// <summary>
-   /// Factory for creating Serilog-based loggers. Exposed as a MEF component.
+   /// Factory for creating loggers. Exposed as a MEF component.
    /// </summary>
    [Export(typeof(ILoggerFactory))]
-   internal class FileLoggerFactory : ILoggerFactory
+   internal class LoggerFactory : ILoggerFactory
    {
       private readonly SVsServiceProvider serviceProvider;
       private Microsoft.Extensions.Logging.ILoggerFactory loggerFactory;
@@ -28,11 +28,11 @@ namespace RemoteDebuggerLauncher.Logging
       private readonly object lockObject = new object();
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="FileLoggerFactory"/> class.
+      /// Initializes a new instance of the <see cref="LoggerFactory"/> class.
       /// </summary>
       /// <param name="serviceProvider">The service provider to get options.</param>
       [ImportingConstructor]
-      public FileLoggerFactory(SVsServiceProvider serviceProvider)
+      public LoggerFactory(SVsServiceProvider serviceProvider)
       {
          this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
       }

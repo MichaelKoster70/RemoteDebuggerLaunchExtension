@@ -134,7 +134,7 @@
     <Compile Include="RemoteOperations\ISecureShellSessionCommandingService.cs" />
     <Compile Include="VsInterop\OutputPaneWriterService.cs" />
     <Compile Include="Options\OptionsPageAccessorService.cs" />
-    <Compile Include="Logging\FileLoggerFactory.cs" />
+    <Compile Include="Logging\LoggerFactory.cs" />
     <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Logging\NullLoggerFactory.cs" />
     <Compile Include="Infrastructure\RemoteDebuggerLauncherException.cs" />

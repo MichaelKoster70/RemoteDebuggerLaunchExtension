@@ -21,7 +21,7 @@ The logging system uses **Serilog** with Microsoft's `Microsoft.Extensions.Loggi
 
 ## Files
 
-- **FileLoggerFactory.cs**: MEF-exportable factory that configures Serilog and creates loggers
+- **LoggerFactory.cs**: MEF-exportable factory that configures Serilog and creates loggers
 - **NullLogger.cs**: No-op logger used when logging is disabled
 - **NullLoggerFactory.cs**: Factory that creates null loggers when logging is disabled
 
