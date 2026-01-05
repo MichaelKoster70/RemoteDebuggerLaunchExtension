@@ -103,6 +103,12 @@ namespace RemoteDebuggerLauncher
          return GetLocalPage().PublishMode;
       }
 
+      /// <inheritdoc />
+      public LogLevel QueryLogLevel()
+      {
+         return GetLocalPage().LogLevel;
+      }
+
       private DeviceOptionsPage GetDevicePage()
       {
          if (devicePage == null)

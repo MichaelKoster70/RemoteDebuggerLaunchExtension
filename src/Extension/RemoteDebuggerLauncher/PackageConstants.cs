@@ -67,6 +67,9 @@ namespace RemoteDebuggerLauncher
          /// <summary>The name for the Publish category attribute.</summary>
          public const string PageCategoryPublish = "Publish";
 
+         /// <summary>The name for the Diagnostics category attribute.</summary>
+         public const string PageCategoryDiagnostics = "Diagnostics";
+
          /// <summary>The default value for the SSH private key file.</summary>
          public const string DefaultValuePrivateKey = @"%userprofile%\.ssh\id_rsa";
 

@@ -52,6 +52,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\TransferMode.cs" />
     <Compile Include="Shared\TransferModeDisplayNameConverter.cs" />
+    <Compile Include="Shared\LogLevel.cs" />
+    <Compile Include="Shared\ILogger.cs" />
+    <Compile Include="Shared\ILoggerFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\SigningKey.snk">

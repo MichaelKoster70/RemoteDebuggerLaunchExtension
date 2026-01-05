@@ -85,5 +85,11 @@ namespace RemoteDebuggerLauncher
       /// </summary>
       /// <returns>One of the <see see="PublishMode"/> values.</returns>
       PublishMode QueryPublishMode();
+
+      /// <summary>
+      /// Queries the logging level.
+      /// </summary>
+      /// <returns>One of the <see cref="LogLevel"/> values.</returns>
+      LogLevel QueryLogLevel();
    }
 }

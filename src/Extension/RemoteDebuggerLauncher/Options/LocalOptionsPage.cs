@@ -28,5 +28,11 @@ namespace RemoteDebuggerLauncher
       [DisplayName("Publish mode")]
       [Description("The type of application the publish step should produce, either self contained (includes the runtime) or framework dependent (requires .NET to be installed on the device.")]
       public PublishMode PublishMode { get; set; } = PublishMode.FrameworkDependent;
+
+      [Category(PackageConstants.Options.PageCategoryDiagnostics)]
+      [DisplayName("Log level")]
+      [Description("The minimum logging level for diagnostics. Set to 'None' to disable logging.")]
+      [DefaultValue(LogLevel.None)]
+      public LogLevel LogLevel { get; set; } = LogLevel.None;
    }
 }
