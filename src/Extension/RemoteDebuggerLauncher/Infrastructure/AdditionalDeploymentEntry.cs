@@ -5,8 +5,6 @@
 // </copyright>
 // ----------------------------------------------------------------------------
 
-using System;
-
 namespace RemoteDebuggerLauncher.Infrastructure
 {
    /// <summary>

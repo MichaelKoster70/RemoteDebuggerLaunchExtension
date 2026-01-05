@@ -19,6 +19,7 @@ The extension supports
 - SSH authentication using private keys.
 - Debugging .NET framework dependant and self contained application.
 - Deploying the project output folder via SCP or Rsync to the target device.
+- Deploying additional files/folders (configured in the launch profile) to the target device.
 - Publish (running dotnet publish) before deploying the application.
 - Installing vsdbg automatically (configurable).
 - Installing .NET on the target device (.NET 6 and newer)

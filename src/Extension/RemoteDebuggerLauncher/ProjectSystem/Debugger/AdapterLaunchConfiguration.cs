@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem;
+using Microsoft.VisualStudio.ProjectSystem.Debug;
 using Microsoft.VisualStudio.Shell;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -36,7 +37,7 @@ namespace RemoteDebuggerLauncher
          public string Value { get; set; }
       }
 
-      /// <summary>Holds a environment variable name value pair.</summary>
+      /// <summary>Holds the launch configuration.</summary>
       internal class LaunchConfiguration
       {
          [JsonProperty("version")]
@@ -58,7 +59,7 @@ namespace RemoteDebuggerLauncher
          public string AdapterArgs { get; set; }
 
          /// <summary>The program to debug.</summary>
-         /// <remarks>Must be the path to dotnet(.exe) for framework dependant programs</remarks>
+         /// <remarks>Must be the path to dotnet(.exe) for framework dependant programs.</remarks>
          [JsonProperty("program")]
          public string Program { get; set; }
 
@@ -91,13 +92,13 @@ namespace RemoteDebuggerLauncher
       /// <param name="outputPaneWriter">The logger for diagnostics logging.</param>
       /// <param name="remoteOperations">The remote operation service to use.</param>
       /// <returns>A JSON configuration object.</returns>
-      public static async Task<string> CreateFrameworkDependantAsync(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject, IOutputPaneWriterService outputPaneWriter, ISecureShellRemoteOperationsService remoteOperations)
+      public static async Task<string> CreateFrameworkDependantAsync(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject, IDebugTokenReplacer tokenReplacer, IOutputPaneWriterService outputPaneWriter, ISecureShellRemoteOperationsService remoteOperations)
       {
          ThrowIf.ArgumentNull(configurationAggregator, nameof(configurationAggregator));
          ThrowIf.ArgumentNull(configuredProject, nameof(configuredProject));
 
          var program = UnixPath.Combine(configurationAggregator.QueryDotNetInstallFolderPath(), PackageConstants.Dotnet.BinaryName);
-         var appFolderPath = configurationAggregator.QueryAppFolderPath();
+         var appFolderPath = await tokenReplacer.ReplaceTokensInStringAsync(configurationAggregator.QueryAppFolderPath(), false);
          var assemblyFileName = await configuredProject.GetAssemblyFileNameAsync();
          var assemblyFileDirectory = ".";
          var workingDirectory = appFolderPath;
@@ -149,12 +150,12 @@ namespace RemoteDebuggerLauncher
          return launchConfigurationJson;
       }
 
-      public static async Task<string> CreateSelfContainedAsync(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject, IOutputPaneWriterService outputPaneWriter, ISecureShellRemoteOperationsService remoteOperations)
+      public static async Task<string> CreateSelfContainedAsync(ConfigurationAggregator configurationAggregator, ConfiguredProject configuredProject, IDebugTokenReplacer tokenReplacer, IOutputPaneWriterService outputPaneWriter, ISecureShellRemoteOperationsService remoteOperations)
       {
          ThrowIf.ArgumentNull(configurationAggregator, nameof(configurationAggregator));
          ThrowIf.ArgumentNull(configuredProject, nameof(configuredProject));
 
-         var appFolderPath = configurationAggregator.QueryAppFolderPath();
+         var appFolderPath = await tokenReplacer.ReplaceTokensInStringAsync(configurationAggregator.QueryAppFolderPath(), false);
          var assemblyFileName = await configuredProject.GetAssemblyFileNameAsync();
          var program = UnixPath.Combine(appFolderPath, await configuredProject.GetAssemblyNameAsync());
          var workingDirectory = appFolderPath;
