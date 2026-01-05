@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -179,7 +179,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             using (var commandSession = CreateCommandSession())
             {
                _ = await commandSession.ExecuteCommandAsync($"[ -d \"{remoteTargetPath}\" ] && rm -rf \"{remoteTargetPath}\"/*");
-               _ = await commandSession.ExecuteCommandAsync($"mkdir -p \"{remoteTargetPath}\"");
+               _ = await commandSession.ExecuteCommandAsync(PackageConstants.LinuxShellCommands.FormatMkDir(remoteTargetPath)); // execute mkdir -p to recreate the folder if it does not exist
             }
          }
       }

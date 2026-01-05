@@ -15,6 +15,15 @@ namespace RemoteDebuggerLauncher
    internal static class PackageConstants
    {
       /// <summary>
+      /// Local filesystem related constants.
+      /// </summary>
+      public static class FileSystem
+      {
+         /// <summary>Directory under %localappdata% where to store data like Logs and cached assets.</summary>
+         public const string StorageFolder = @"RemoteDebuggerLauncher";
+      }
+
+      /// <summary>
       /// Common Project System related constants
       /// </summary>
       public static class CPS
@@ -86,7 +95,7 @@ namespace RemoteDebuggerLauncher
          public const string DefaultValueToolsInstallFolderPath = "~/.rdl";
 
          /// <summary>The default value for the App folder path on the device page.</summary>
-         public const string DefaultValueAppFolderPath = "~/project";
+         public const string DefaultValueAppFolderPath = "~/$(MSBuildProjectName)";
       }
 
       /// <summary>
@@ -104,7 +113,7 @@ namespace RemoteDebuggerLauncher
          public const string GetInstallDotnetPs1Url = "https://dot.net/v1/dotnet-install.ps1";
 
          /// <summary>Directory under %localappdata% where to cache the .NET downloads.</summary>
-         public const string DownloadCacheFolder = @"RemoteDebuggerLauncher\dotnet";
+         public const string DownloadCacheFolder = FileSystem.StorageFolder + @"\dotnet";
       }
 
       /// <summary>
@@ -142,7 +151,7 @@ namespace RemoteDebuggerLauncher
          public const string GetVsDbgPs1Url = "https://aka.ms/getvsdbgps1";
 
          /// <summary>Directory under %localappdata% where to cache the remote debugger downloads.</summary>
-         public const string DownloadCacheFolder = @"RemoteDebuggerLauncher\vsdbg\vs2022";
+         public const string DownloadCacheFolder = FileSystem.StorageFolder + @"\vsdbg\vs2022";
       }
 
       public static class Commands
@@ -196,6 +205,44 @@ namespace RemoteDebuggerLauncher
 
          /// <summary>HTTPS Developer Certificate name.</summary>
          public const string HttpsCertificateName = "DevCert.pfx";
+      }
+
+      /// <summary>
+      /// Holder for all Linux Shell commands executed via SSH.
+      /// </summary>
+      public static class LinuxShellCommands
+      {
+         private const string MkDir = "mkdir -p \"{0}\"";
+         private const string Rm = "rm {0}";
+         private const string RmF = "rm -f {0}";
+         private const string RmRf = "rm -rf {0}";
+         private const string Chmod = "chmod {0} {1}";
+         private const string ChmodPlusX = "chmod +x {0}";
+         private const string Command = "command -v {0}";
+
+         /// <summary>"pwd" - Command to get the current working directory.</summary>
+         public const string Pwd = "pwd";
+
+         /// <summary>"mkdir -p \"{0}\"" - Formats the CreateDirectory command with the specified path.</summary>
+         public static string FormatMkDir(string path) => string.Format(MkDir, path);
+
+         /// <summary>"rm {0}" - Formats the RemoveFile command with the specified path.</summary>
+         public static string FormatRm(string path) => string.Format(Rm, path);
+
+         /// <summary>"rm -f {0}" - Formats the ForceRemoveFile command with the specified path.</summary>
+         public static string FormatRmF(string path) => string.Format(RmF, path);
+
+         /// <summary>"rm -rf {0}" - Formats the RemoveDirectory command with the specified path.</summary>
+         public static string FormatRmRf(string path) => string.Format(RmRf, path);
+
+         /// <summary>"chmod {0} {1}" - Formats the chmod command with the specified mode and path.</summary>
+         public static string FormatChmod(string mode, string path) => string.Format(Chmod, mode, path);
+
+         /// <summary>"chmod +x {0}" - Formats the chmod command with the specified path.</summary>
+         public static string FormatChmodPlusX(string path) => string.Format(ChmodPlusX, path);
+
+         /// <summary>"command -v {0}" - Formats the command to check if a command exists on the remote system.</summary>
+         public static string FormatCommand(string commandName) => string.Format(Command, commandName);
       }
    }
 }

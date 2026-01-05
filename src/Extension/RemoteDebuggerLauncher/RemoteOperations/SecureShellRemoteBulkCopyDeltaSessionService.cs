@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -71,6 +71,53 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          }
       }
 
+      /// <inheritdoc/>
+      public async Task UploadFileAsync(string localFilePath, string remoteFilePath, IOutputPaneWriterService progressOutputPaneWriter = null)
+      {
+         ThrowIf.ArgumentNullOrEmpty(localFilePath, nameof(localFilePath));
+         ThrowIf.ArgumentNullOrEmpty(remoteFilePath, nameof(remoteFilePath));
+
+         progressOutputPaneWriter?.Write(Resources.RemoteCommandCommonSshTarget, Settings.UserName, Settings.HostName);
+         progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployFileProgress, localFilePath, remoteFilePath);
+
+         try
+         {
+            using (var client = CreateScpClient())
+            {
+               // We can safely assume that the path names does not have any character that have special meaning for a Linux host
+               client.RemotePathTransformation = RemotePathTransformation.None;
+
+               if (progressOutputPaneWriter != null)
+               {
+                  // attach progress output pane writer if available
+                  var progressReporter = new SecureShellCopyProgressReporter(progressOutputPaneWriter);
+                  client.Uploading += progressReporter.OnUploadFile;
+               }
+
+               client.Connect();
+
+               // Ensure the target directory exists before uploading
+               var remoteDirectory = UnixPath.GetDirectoryName(remoteFilePath);
+               if (!string.IsNullOrEmpty(remoteDirectory))
+               {
+                  _ = await session.ExecuteSingleCommandAsync(PackageConstants.LinuxShellCommands.FormatMkDir(remoteDirectory));
+               }
+
+               // Upload the file
+               using (var fileStream = File.OpenRead(localFilePath))
+               {
+                  client.Upload(fileStream, remoteFilePath);
+               }
+            }
+         }
+         catch (Exception e) when (e is SshException || e is IOException)
+         {
+            throw new SecureShellSessionException(e.Message, e);
+         }
+
+         progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployFileCompletedSuccess, localFilePath, remoteFilePath);
+      }
+
       private async Task<string> InstallRemoteToolsIfNeededAsync(ISecureShellSessionCommandingService commands, string userHome)
       {
          // Step 1a: Get the runtime ID of the remote host
@@ -99,7 +146,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          if (installRemoteTools)
          {
             // create target directory
-            _ = await commands.ExecuteCommandAsync($"mkdir -p {remoteTargetDirectory}");
+            _ = await commands.ExecuteCommandAsync(PackageConstants.LinuxShellCommands.FormatMkDir(remoteTargetDirectory));
 
             // copy the tools
             using (var client = CreateScpClient())
@@ -125,8 +172,9 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             {
                foreach (var tool in toolArray)
                {
+                  // run chmod +x on the tool
                   var toolPath = $"{remoteTargetDirectory}/{tool}";
-                 _ = await commands.ExecuteCommandAsync($"chmod +x {toolPath}");
+                  _ = await commands.ExecuteCommandAsync(PackageConstants.LinuxShellCommands.FormatChmodPlusX(toolPath));
                }
             }
          }
@@ -147,9 +195,10 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       {
          foreach (var file in FilesToDelete)
          {
+            // execute rm command for each file
             var absolutePath = UnixPath.Combine(remoteTargetPath, file);
             progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployRemoteFolderScpDeltaDeleteFile, file);
-            _ = await commands.ExecuteCommandAsync($"rm {absolutePath}");
+            _ = await commands.ExecuteCommandAsync(PackageConstants.LinuxShellCommands.FormatRm(absolutePath));
          }
       }
 
@@ -234,53 +283,6 @@ namespace RemoteDebuggerLauncher.RemoteOperations
                return JToken.Parse(content)[key];
             }
          }
-      }
-
-      /// <inheritdoc/>
-      public async Task UploadFileAsync(string localFilePath, string remoteFilePath, IOutputPaneWriterService progressOutputPaneWriter = null)
-      {
-         ThrowIf.ArgumentNullOrEmpty(localFilePath, nameof(localFilePath));
-         ThrowIf.ArgumentNullOrEmpty(remoteFilePath, nameof(remoteFilePath));
-
-         progressOutputPaneWriter?.Write(Resources.RemoteCommandCommonSshTarget, Settings.UserName, Settings.HostName);
-         progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployFileProgress, localFilePath, remoteFilePath);
-
-         try
-         {
-            using (var client = CreateScpClient())
-            {
-               // We can safely assume that the path names does not have any character that have special meaning for a Linux host
-               client.RemotePathTransformation = RemotePathTransformation.None;
-
-               if (progressOutputPaneWriter != null)
-               {
-                  // attach progress output pane writer if available
-                  var progressReporter = new SecureShellCopyProgressReporter(progressOutputPaneWriter);
-                  client.Uploading += progressReporter.OnUploadFile;
-               }
-
-               client.Connect();
-
-               // Ensure the target directory exists before uploading
-               var remoteDirectory = UnixPath.GetDirectoryName(remoteFilePath);
-               if (!string.IsNullOrEmpty(remoteDirectory))
-               {
-                  _ = await session.ExecuteSingleCommandAsync($"mkdir -p '{remoteDirectory}'");
-               }
-
-               // Upload the file
-               using (var fileStream = File.OpenRead(localFilePath))
-               {
-                  client.Upload(fileStream, remoteFilePath);
-               }
-            }
-         }
-         catch (Exception e) when (e is SshException || e is IOException)
-         {
-            throw new SecureShellSessionException(e.Message, e);
-         }
-
-         progressOutputPaneWriter?.WriteLine(Resources.RemoteCommandDeployFileCompletedSuccess, localFilePath, remoteFilePath);
       }
 
       private ScpClient CreateScpClient()

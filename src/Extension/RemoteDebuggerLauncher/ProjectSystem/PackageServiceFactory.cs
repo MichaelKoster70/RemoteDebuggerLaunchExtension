@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -21,16 +21,18 @@ namespace RemoteDebuggerLauncher
    {
       private readonly IAsyncServiceProvider asyncServiceProvider;
       private readonly IVsFacadeFactory facadeFactory;
+      private readonly IDebugTokenReplacer tokenReplacer;
+      private ConfiguredProject configuredProject;
       private IOptionsPageAccessor optionsPageAccessor;
       private ConfigurationAggregator configurationAggregator;
-      private ConfiguredProject configuredProject;
       private IOutputPaneWriterService outputPaneWriter;
 
-      protected PackageServiceFactory(SVsServiceProvider asyncServiceProvider, IVsFacadeFactory facadeFactory, ConfiguredProject configuredProject)
+      protected PackageServiceFactory(SVsServiceProvider asyncServiceProvider, IVsFacadeFactory facadeFactory, ConfiguredProject configuredProject, IDebugTokenReplacer tokenReplacer)
       {
          this.asyncServiceProvider = asyncServiceProvider as IAsyncServiceProvider;
          this.facadeFactory = facadeFactory;
          this.configuredProject = configuredProject;
+         this.tokenReplacer = tokenReplacer;
       }
 
       /// <inheritdoc />
@@ -43,12 +45,15 @@ namespace RemoteDebuggerLauncher
       public IOutputPaneWriterService OutputPane => outputPaneWriter;
 
       /// <inheritdoc />
+      public IDebugTokenReplacer TokenReplacer => tokenReplacer;
+
+      /// <inheritdoc />
       public async Task<ISecureShellDeployService> GetDeployServiceAsync(bool useWaitDialog)
       {
          var publishService = await GetPublishServiceAsync(useWaitDialog);
          var remoteOperations = await GetSecureShellRemoteOperationsAsync();
 
-         return new SecureShellDeployService(configurationAggregator, configuredProject, publishService, remoteOperations);
+         return new SecureShellDeployService(configurationAggregator, configuredProject, publishService, remoteOperations, tokenReplacer);
       }
 
       /// <inheritdoc />
@@ -67,7 +72,7 @@ namespace RemoteDebuggerLauncher
          var settings = SecureShellSessionSettings.Create(configurationAggregator);
          var sessionService  = new SecureShellSessionService(settings);
          var bulkCopyService = CreateBulkCopyService(sessionService, configurationAggregator);
-         return new SecureShellRemoteOperationsService(configurationAggregator, sessionService, bulkCopyService, outputPaneWriter, statusbar);
+         return new SecureShellRemoteOperationsService(configurationAggregator, sessionService, bulkCopyService, tokenReplacer, outputPaneWriter, statusbar);
       }
 
       /// <inheritdoc />
