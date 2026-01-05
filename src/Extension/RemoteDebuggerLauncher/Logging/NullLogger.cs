@@ -23,7 +23,7 @@ namespace RemoteDebuggerLauncher.Logging
       /// <inheritdoc />
       public IDisposable BeginScope<TState>(TState state)
       {
-         return null;
+         return NullScope.Instance;
       }
 
       /// <inheritdoc />
@@ -36,6 +36,23 @@ namespace RemoteDebuggerLauncher.Logging
       public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
       {
          // Do nothing
+      }
+
+      /// <summary>
+      /// A no-op disposable for scope handling.
+      /// </summary>
+      private sealed class NullScope : IDisposable
+      {
+         public static NullScope Instance { get; } = new NullScope();
+
+         private NullScope()
+         {
+         }
+
+         public void Dispose()
+         {
+            // Do nothing
+         }
       }
    }
 }

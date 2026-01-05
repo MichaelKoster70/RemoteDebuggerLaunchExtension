@@ -50,9 +50,10 @@ namespace RemoteDebuggerLauncher.Logging
       }
 
       /// <inheritdoc />
+      /// <remarks>This simple implementation does not support adding providers.</remarks>
       public void AddProvider(ILoggerProvider provider)
       {
-         // Not supported for this simple implementation
+         throw new NotSupportedException("This logger factory does not support adding providers.");
       }
 
       /// <inheritdoc />
