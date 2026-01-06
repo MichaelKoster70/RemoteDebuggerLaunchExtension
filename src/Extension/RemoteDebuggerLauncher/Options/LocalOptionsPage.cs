@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -32,7 +32,7 @@ namespace RemoteDebuggerLauncher
 
       [Category(PackageConstants.Options.PageCategoryDiagnostics)]
       [DisplayName("Log level")]
-      [Description("The minimum logging level for diagnostics. Set to 'None' to disable logging.")]
+      [Description("The minimum logging level for diagnostics. Set to 'None' to disable logging. (requires restart)")]
       [DefaultValue(LogLevel.None)]
       public LogLevel LogLevel { get; set; } = LogLevel.None;
    }

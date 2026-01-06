@@ -66,6 +66,7 @@ namespace RemoteDebuggerLauncher.Infrastructure
       }
 
       [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "To prevent unexpected failures")]
+      [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Handled by the logging framework")]
       private void EnsureInitialized()
       {
          lock (lockObject)

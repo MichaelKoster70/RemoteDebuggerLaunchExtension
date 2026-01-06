@@ -3,7 +3,7 @@ The plugin provides a set of global options in the Visual Studio under Tools -> 
 This page describes the details of the options.
 
 ## Device options
-![Device Options](ScreenShort-Options.png)
+![Device Options](ScreenShort-Options-Device.png)
 
 The Device page holds all the configuration options related to device connection settings:
 
@@ -29,12 +29,21 @@ The values configured in this section will only be applied the launch profile ha
 | Host port | The SSH port where the device listens for SSH connections. |
 
 ## Local options
-![Local Optioons](ScreenShort-Options2.png)
+![Local Optioons](ScreenShort-Options-Local.png)
 
 The values configured in this section will only be applied the launch profile has no value (launchprofile.json) does not configure it.
 
 ### Credentials
 | Setting | Description |
 |:------- |:-------------------- |
-| Publish mode | The mode (self contained vs framework dependat) how a .NET app is beeing published |
-| Publish on deploy | The flag wheter dotnet publish should be run on deploy. |
+| Publish mode | The mode (self contained vs framework dependent) how a .NET app is being published |
+| Publish on deploy | The flag whether dotnet publish should be run on deploy. |
+
+### Diagnostics
+| Setting | Description |
+|:------- |:-------------------- |
+| Log Level | The amount of debug logging the extension should produce. 'None' disables logging. |
+
+The log files are stored in %localappdata%\RemoteDebuggerLauncher\Logfiles and are kept for 31 days.
+If you change the log level after using the extension (deploy, debug, ...), please restart Visual Studio to apply the new log level.
+
