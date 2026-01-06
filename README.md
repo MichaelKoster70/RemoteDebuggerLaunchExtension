@@ -56,7 +56,7 @@ To use the plugin, follow the steps below.
 
 #### 1. Configure Options (optional)
 Open Visual Studio 2022, navigate to Tools -> Options -> Remote Debugger Launcher -> Device
-![VS Options](docs/ScreenShort-Options.png)
+![VS Options](docs/ScreenShort-Options-Device.png)
 Configure the default values for Credentials, Folders and SSH setting. These values will be applied if the Launch Profile does not configure them.
 
 #### 2. Create and configure the Launch Profile

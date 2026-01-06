@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -39,3 +39,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "False positive", Scope = "member", Target = "~M:RemoteDebuggerLauncher.RemoteOperations.SecureShellRemoteBulkCopyRsyncSessionService.StartRsyncFileSessionAsync(System.String,System.String,RemoteDebuggerLauncher.IOutputPaneWriterService)~System.Threading.Tasks.Task")]
 [assembly: SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "By design to ignore all failures", Scope = "member", Target = "~M:RemoteDebuggerLauncher.RemoteOperations.SecureShellRemoteBulkCopyRsyncSessionService.StartRsyncDirectorySessionAsync(System.String,System.String,RemoteDebuggerLauncher.IOutputPaneWriterService)~System.Threading.Tasks.Task")]
 [assembly: SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "By design to ignore all failures", Scope = "member", Target = "~M:RemoteDebuggerLauncher.RemoteOperations.SecureShellRemoteBulkCopyRsyncSessionService.StartRsyncFileSessionAsync(System.String,System.String,RemoteDebuggerLauncher.IOutputPaneWriterService)~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive", Scope = "member", Target = "~M:RemoteDebuggerLauncher.Logging.DebugLoggerFactory.EnsureInitialized")]
