@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -54,6 +54,12 @@ namespace RemoteDebuggerLauncher
       public bool QueryForceIPv4()
       {
          return GetDevicePage().ForceIPv4;
+      }
+
+      /// <inheritdoc />
+      public bool QueryDisableHostKeyChecking()
+      {
+         return GetDevicePage().DisableHostKeyChecking;
       }
 
       /// <inheritdoc />

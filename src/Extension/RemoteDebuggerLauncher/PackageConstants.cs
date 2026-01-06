@@ -88,6 +88,9 @@ namespace RemoteDebuggerLauncher
          /// <summary>The default value for the Force IPv4.</summary>
          public const bool DefaultValueForceIPv4 = false;
 
+         /// <summary>The default value for the Disable Host Key Checking.</summary>
+         public const bool DefaultValueDisableHostKeyChecking = false;
+
          /// <summary>The default value for the .NET installation path on the device page.</summary>
          public const string DefaultValueDotNetInstallFolderPath = "~/.dotnet";
 
