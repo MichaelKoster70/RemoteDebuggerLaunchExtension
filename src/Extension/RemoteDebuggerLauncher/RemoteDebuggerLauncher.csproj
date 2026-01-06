@@ -134,9 +134,9 @@
     <Compile Include="RemoteOperations\ISecureShellSessionCommandingService.cs" />
     <Compile Include="VsInterop\OutputPaneWriterService.cs" />
     <Compile Include="Options\OptionsPageAccessorService.cs" />
-    <Compile Include="Logging\DebugLoggerFactory.cs" />
-    <Compile Include="Logging\NullLogger.cs" />
-    <Compile Include="Logging\NullLoggerFactory.cs" />
+    <Compile Include="Infrastructure\DebugLoggerFactory.cs" />
+    <Compile Include="Infrastructure\NullLogger.cs" />
+    <Compile Include="Infrastructure\NullLoggerFactory.cs" />
     <Compile Include="Infrastructure\RemoteDebuggerLauncherException.cs" />
     <Compile Include="RemoteOperations\SecureShellRemoteOperationsService.cs" />
     <Compile Include="RemoteOperations\SecureShellSessionException.cs" />
@@ -292,7 +292,6 @@
     <None Include="ToolsRemote\readme.md" />
     <None Include="ToolsExternal\readme.md" />
     <None Include="Infrastructure\readme.md" />
-    <None Include="Logging\readme.md" />
     <None Include="Options\readme.md" />
     <None Include="ProjectSystem\readme.md" />
     <None Include="readme.md" />

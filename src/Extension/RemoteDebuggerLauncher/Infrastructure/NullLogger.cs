@@ -8,7 +8,7 @@
 using System;
 using Microsoft.Extensions.Logging;
 
-namespace RemoteDebuggerLauncher.Logging
+namespace RemoteDebuggerLauncher.Infrastructure
 {
    /// <summary>
    /// A logger implementation that does nothing. Used when logging is disabled.

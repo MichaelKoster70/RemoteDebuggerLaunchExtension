@@ -9,14 +9,13 @@ using System;
 using System.Collections.Generic;
 using System.Composition;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Debug;
 using Microsoft.VisualStudio.Shell;
 
-namespace RemoteDebuggerLauncher.Logging
+namespace RemoteDebuggerLauncher.Infrastructure
 {
    /// <summary>
    /// Factory for creating loggers. Exposed as a MEF component.
@@ -47,7 +46,7 @@ namespace RemoteDebuggerLauncher.Logging
       }
 
       /// <inheritdoc />
-      public Microsoft.Extensions.Logging.ILogger CreateLogger(string categoryName)
+      public ILogger CreateLogger(string categoryName)
       {
          EnsureInitialized();
          return loggerFactory.CreateLogger(categoryName);
@@ -94,7 +93,6 @@ namespace RemoteDebuggerLauncher.Logging
                else
                {
                   // Step 1: Prepare the logging configuration
-
                   // Create log file path
                   var logFilePath = CreateLogFilePath();
 

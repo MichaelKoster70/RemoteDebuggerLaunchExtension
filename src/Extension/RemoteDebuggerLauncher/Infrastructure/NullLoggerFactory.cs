@@ -7,7 +7,7 @@
 
 using Microsoft.Extensions.Logging;
 
-namespace RemoteDebuggerLauncher.Logging
+namespace RemoteDebuggerLauncher.Infrastructure
 {
    /// <summary>
    /// A logger factory that creates null loggers. Used when logging is disabled.
