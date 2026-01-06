@@ -141,6 +141,17 @@ namespace RemoteDebuggerLauncher
          return optionsPageAccessor.QueryForceIPv4();
       }
 
+      public bool QueryDisableHostKeyChecking()
+      {
+         if (launchProfile.OtherSettings.TryGetValue(SecureShellRemoteLaunchProfile.disableHostKeyCheckingProperty, out var settingsValue))
+         {
+            // Launch profile has a host port specified => use it
+            return settingsValue is bool profileDisableHostKeyChecking && profileDisableHostKeyChecking;
+         }
+
+         // use options value or default
+         return optionsPageAccessor.QueryDisableHostKeyChecking();
+      }
 
       /// <summary>
       /// Queries the transport mode on how to transfer assets to the remote device.
