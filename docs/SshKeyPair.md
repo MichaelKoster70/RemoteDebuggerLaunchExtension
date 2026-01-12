@@ -1,5 +1,5 @@
 # SSH Key Pair
-This section illustrates how to generate a SSH key pair that can be used to authenicate against the target device.
+This section illustrates how to generate a SSH key pair that can be used to authenticate against the target device.
 
 ## Supported Key Types
 *SSH.NET* supports the following private key formats:
@@ -9,13 +9,20 @@ This section illustrates how to generate a SSH key pair that can be used to auth
 - ED25519 in OpenSSH key format
 
 ## Generate key Pair on Windows 10 or newer
-Use the follwing steps to generate an RSA key pair supported by this extension.
-Open a Command Prompt (cmd.exe) and execute the following command:
+Use the following steps to generate an SSH key pair supported by this extension.
+Open a Command Prompt (cmd.exe) and execute one of the following commands:
 
+### RSA Key (4096 bit)
 ```
-ssh-keygen -b 2048 -t rsa -f id_rsa -q -N "" -m pem
+ssh-keygen -b 4096 -t rsa -f id_rsa -q -N "" -m pem
 ```
-This will create a 2048bit RSA keypair with no passphrase stored in the file *id_rda*
+This will create a 4096 bit RSA keypair with no passphrase stored in the file *id_rsa*
+
+### ECDSA Key (256 bit curve)
+```
+ssh-keygen -t ecdsa -b 256 -f id_rsa -q -N "" -m pem
+```
+This will create a 256 bit ECDSA keypair with no passphrase stored in the file *id_rsa*
 
 By default, the generated SSH keys get stored in %USERPROFILE%\\.ssh
 - id_rsa holds the key pair (public and private)

@@ -33,6 +33,7 @@ namespace RemoteDebuggerLauncher
       private string password = string.Empty;
       private string publicKeyFile = string.Empty;
       private string privateKeyFile = string.Empty;
+      private SshKeyType selectedKeyType = SshKeyType.Rsa;
 
       public SetupSshViewModel(JoinableTaskFactory joinableTaskFactory, ISecureShellKeyPairCreatorService keyService)
       {
@@ -117,6 +118,43 @@ namespace RemoteDebuggerLauncher
 
       public bool ForceIPv4 { get; set; }
 
+      public SshKeyType SelectedKeyType
+      {
+         get => selectedKeyType;
+         set
+         {
+            if (SetProperty(ref selectedKeyType, value))
+            {
+               OnPropertyChanged(nameof(IsRsaKeySelected));
+               OnPropertyChanged(nameof(IsEcdsaKeySelected));
+            }
+         }
+      }
+
+      public bool IsRsaKeySelected
+      {
+         get => selectedKeyType == SshKeyType.Rsa;
+         set
+         {
+            if (value)
+            {
+               SelectedKeyType = SshKeyType.Rsa;
+            }
+         }
+      }
+
+      public bool IsEcdsaKeySelected
+      {
+         get => selectedKeyType == SshKeyType.Ecdsa;
+         set
+         {
+            if (value)
+            {
+               SelectedKeyType = SshKeyType.Ecdsa;
+            }
+         }
+      }
+
       public DelegateCommand BrowsePublicKeyFileCommand { get; }
 
       public DelegateCommand BrowsePrivateKeyFileCommand { get; }
@@ -178,7 +216,7 @@ namespace RemoteDebuggerLauncher
 #pragma warning disable VSTHRD100 // Avoid async void methods
       private async void HandleCreateKeyFileCommandCommand()
       {
-         bool result = await keyService.CreateAsync();
+         bool result = await keyService.CreateAsync(selectedKeyType);
          if (result)
          {
             PublicKeyFile = keyService.DefaultPublicKeyPath;

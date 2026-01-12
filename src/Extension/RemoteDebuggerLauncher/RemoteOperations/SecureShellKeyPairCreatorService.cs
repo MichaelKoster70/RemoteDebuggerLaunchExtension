@@ -38,12 +38,17 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       public string DefaultPublicKeyPath => defaultPublicFile;
 
       /// <inheritdoc />
-      public async Task<bool> CreateAsync()
+      public async Task<bool> CreateAsync(SshKeyType keyType)
       {
          if (!File.Exists(defaultPrivateFile))
          {
             _ = DirectoryHelper.EnsureExists(defaultKeysFolder);
-            var arguments = string.Format(CultureInfo.InvariantCulture, PackageConstants.SecureShell.KeyGenArguments, defaultPrivateFile);
+            var arguments = keyType switch
+            {
+               SshKeyType.Rsa => string.Format(CultureInfo.InvariantCulture, PackageConstants.SecureShell.KeyGenArgumentsRsa, defaultPrivateFile),
+               SshKeyType.Ecdsa => string.Format(CultureInfo.InvariantCulture, PackageConstants.SecureShell.KeyGenArgumentsEcdsa, defaultPrivateFile),
+               _ => throw new ArgumentException($"Unsupported key type: {keyType}", nameof(keyType))
+            };
             var process = Process.Start(PackageConstants.SecureShell.KeyGenExecutable, arguments);
 
             return await process.WaitForExitAsync() == 0;

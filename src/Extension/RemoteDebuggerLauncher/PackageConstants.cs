@@ -186,8 +186,11 @@ namespace RemoteDebuggerLauncher
          /// <summary>SSH key generator executable.</summary>
          public const string KeyGenExecutable = "ssh-keygen.exe";
 
-         /// <summary>SSH key generator arguments.</summary>
-         public const string KeyGenArguments = "-b 2048 -t rsa -f {0} -q -N \"\" -m pem";
+         /// <summary>SSH key generator arguments for RSA keys (4096 bit).</summary>
+         public const string KeyGenArgumentsRsa = "-b 4096 -t rsa -f {0} -q -N \"\" -m pem";
+
+         /// <summary>SSH key generator arguments for ECDSA keys (256 bit curve).</summary>
+         public const string KeyGenArgumentsEcdsa = "-t ecdsa -b 256 -f {0} -q -N \"\" -m pem";
 
          /// <summary>SSH key scanner executable.</summary>
          public const string KeyScanExecutable = "ssh-keyscan.exe";
