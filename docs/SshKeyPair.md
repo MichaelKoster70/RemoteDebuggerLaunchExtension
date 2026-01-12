@@ -20,13 +20,13 @@ This will create a 4096 bit RSA keypair with no passphrase stored in the file *i
 
 ### ECDSA Key (256 bit curve)
 ```
-ssh-keygen -t ecdsa -b 256 -f id_rsa -q -N "" -m pem
+ssh-keygen -t ecdsa -b 256 -f id_ecdsa -q -N "" -m pem
 ```
-This will create a 256 bit ECDSA keypair with no passphrase stored in the file *id_rsa*
+This will create a 256 bit ECDSA keypair with no passphrase stored in the file *id_ecdsa*
 
 By default, the generated SSH keys get stored in %USERPROFILE%\\.ssh
-- id_rsa holds the key pair (public and private)
-- id_rsa.pub holds the public key
+- id_rsa/id_ecdsa holds the key pair (public and private)
+- id_rsa.pub/id_ecdsa.pub holds the public key
 
 ## Add SSH key to authorized_keys
 Use the following steps if you want to manually add the generated keys to the 'authorized_keys' file on the target system. Open a Window Commmand Prompt and execute the following command:
@@ -43,4 +43,4 @@ ssh-keyscan HOST >> %USERPROFILE%\.ssh\known_hosts
 ```
 
 ## References
-This extension relies on [SSH.NET](https://github.com/sshnet/SSH.NET) at version 2020.0.2
+This extension relies on [SSH.NET](https://github.com/sshnet/SSH.NET) at version 2025.0.0
