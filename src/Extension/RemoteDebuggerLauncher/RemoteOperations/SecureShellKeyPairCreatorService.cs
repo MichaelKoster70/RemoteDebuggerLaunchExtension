@@ -20,37 +20,35 @@ namespace RemoteDebuggerLauncher.RemoteOperations
    /// </summary>
    internal class SecureShellKeyPairCreatorService : ISecureShellKeyPairCreatorService
    {
-      private readonly string defaultPrivateFile;
-      private readonly string defaultPublicFile;
       private readonly string defaultKeysFolder;
 
       public SecureShellKeyPairCreatorService()
       {
          defaultKeysFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), PackageConstants.SecureShell.DefaultKeyPairFolder);
-         defaultPrivateFile = Path.Combine(defaultKeysFolder, PackageConstants.SecureShell.DefaultPrivateKeyFileName);
-         defaultPublicFile = Path.Combine(defaultKeysFolder, PackageConstants.SecureShell.DefaultPublicKeyFileName);
       }
 
       /// <inheritdoc />
-      public string DefaultPrivateKeyPath => defaultPrivateFile;
+      public string DefaultPrivateKeyPath => GetPrivateKeyPath(SshKeyType.Rsa);
       
       /// <inheritdoc />
-      public string DefaultPublicKeyPath => defaultPublicFile;
+      public string DefaultPublicKeyPath => GetPublicKeyPath(SshKeyType.Rsa);
 
       /// <inheritdoc />
       public async Task<bool> CreateAsync(SshKeyType keyType)
       {
-         if (!File.Exists(defaultPrivateFile))
+         var privateKeyFile = GetPrivateKeyPath(keyType);
+         
+         if (!File.Exists(privateKeyFile))
          {
             _ = DirectoryHelper.EnsureExists(defaultKeysFolder);
             string arguments;
             if (keyType == SshKeyType.Rsa)
             {
-               arguments = string.Format(CultureInfo.InvariantCulture, PackageConstants.SecureShell.KeyGenArgumentsRsa, defaultPrivateFile);
+               arguments = string.Format(CultureInfo.InvariantCulture, PackageConstants.SecureShell.KeyGenArgumentsRsa, privateKeyFile);
             }
             else if (keyType == SshKeyType.Ecdsa)
             {
-               arguments = string.Format(CultureInfo.InvariantCulture, PackageConstants.SecureShell.KeyGenArgumentsEcdsa, defaultPrivateFile);
+               arguments = string.Format(CultureInfo.InvariantCulture, PackageConstants.SecureShell.KeyGenArgumentsEcdsa, privateKeyFile);
             }
             else
             {
@@ -63,6 +61,24 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          }
 
          return true;
+      }
+
+      /// <inheritdoc />
+      public string GetPrivateKeyPath(SshKeyType keyType)
+      {
+         var fileName = keyType == SshKeyType.Ecdsa 
+            ? PackageConstants.SecureShell.DefaultPrivateKeyFileNameEcdsa 
+            : PackageConstants.SecureShell.DefaultPrivateKeyFileName;
+         return Path.Combine(defaultKeysFolder, fileName);
+      }
+
+      /// <inheritdoc />
+      public string GetPublicKeyPath(SshKeyType keyType)
+      {
+         var fileName = keyType == SshKeyType.Ecdsa 
+            ? PackageConstants.SecureShell.DefaultPublicKeyFileNameEcdsa 
+            : PackageConstants.SecureShell.DefaultPublicKeyFileName;
+         return Path.Combine(defaultKeysFolder, fileName);
       }
    }
 }

@@ -38,7 +38,6 @@
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
-      <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
     <!-- Dialog header -->
@@ -176,31 +175,7 @@
               ToolTip="{x:Static local:Resources.SetupSshDialogPrivateKeyFileBrowseDescription}"/>
     </Grid>
 
-    <!-- SSH Key Type Selection -->
-    <Label Grid.Row="6"
-           Grid.Column="0"
-           Margin="4"
-           VerticalContentAlignment="Center"
-           Content="{x:Static local:Resources.SetupSshDialogKeyTypeLabel}" />
-
-    <StackPanel Grid.Row="6"
-                Grid.Column="1"
-                Margin="4"
-                Orientation="Horizontal">
-      <RadioButton Margin="0,0,16,0"
-                   VerticalAlignment="Center"
-                   GroupName="KeyType"
-                   IsChecked="{Binding IsRsaKeySelected}"
-                   Content="{x:Static local:Resources.SetupSshDialogKeyTypeRsaContent}"
-                   ToolTip="{x:Static local:Resources.SetupSshDialogKeyTypeRsaDescription}" />
-      <RadioButton VerticalAlignment="Center"
-                   GroupName="KeyType"
-                   IsChecked="{Binding IsEcdsaKeySelected}"
-                   Content="{x:Static local:Resources.SetupSshDialogKeyTypeEcdsaContent}"
-                   ToolTip="{x:Static local:Resources.SetupSshDialogKeyTypeEcdsaDescription}" />
-    </StackPanel>
-
-    <CheckBox Grid.Row="7" 
+    <CheckBox Grid.Row="6" 
               Grid.Column="0"
               Margin="4,0,0,0"
               VerticalAlignment="Center"
@@ -209,7 +184,7 @@
               ToolTip="{x:Static local:Resources.SetupSshDialogKeyPairForceIPv4Description}"/>
 
     <!-- OK/Cancel buttons -->
-    <StackPanel Grid.Row="7" 
+    <StackPanel Grid.Row="6" 
                 Grid.Column="1"
                 Margin="4 0"
                 Orientation="Horizontal"

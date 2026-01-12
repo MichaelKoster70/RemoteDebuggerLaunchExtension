@@ -180,6 +180,12 @@ namespace RemoteDebuggerLauncher
          /// <summary>Filename of the default SSH public key.</summary>
          public const string DefaultPublicKeyFileName = "id_rsa.pub";
 
+         /// <summary>Filename of the default ECDSA SSH private key.</summary>
+         public const string DefaultPrivateKeyFileNameEcdsa = "id_ecdsa";
+
+         /// <summary>Filename of the default ECDSA SSH public key.</summary>
+         public const string DefaultPublicKeyFileNameEcdsa = "id_ecdsa.pub";
+
          /// <summary>Folder relative to user home where the SSH key are stored.</summary>
          public const string DefaultKeyPairFolder = ".ssh";
 

@@ -33,7 +33,6 @@ namespace RemoteDebuggerLauncher
       private string password = string.Empty;
       private string publicKeyFile = string.Empty;
       private string privateKeyFile = string.Empty;
-      private SshKeyType selectedKeyType = SshKeyType.Rsa;
 
       public SetupSshViewModel(JoinableTaskFactory joinableTaskFactory, ISecureShellKeyPairCreatorService keyService)
       {
@@ -118,43 +117,6 @@ namespace RemoteDebuggerLauncher
 
       public bool ForceIPv4 { get; set; }
 
-      public SshKeyType SelectedKeyType
-      {
-         get => selectedKeyType;
-         set
-         {
-            if (SetProperty(ref selectedKeyType, value))
-            {
-               RaisePropertyChanged(nameof(IsRsaKeySelected));
-               RaisePropertyChanged(nameof(IsEcdsaKeySelected));
-            }
-         }
-      }
-
-      public bool IsRsaKeySelected
-      {
-         get => selectedKeyType == SshKeyType.Rsa;
-         set
-         {
-            if (value)
-            {
-               SelectedKeyType = SshKeyType.Rsa;
-            }
-         }
-      }
-
-      public bool IsEcdsaKeySelected
-      {
-         get => selectedKeyType == SshKeyType.Ecdsa;
-         set
-         {
-            if (value)
-            {
-               SelectedKeyType = SshKeyType.Ecdsa;
-            }
-         }
-      }
-
       public DelegateCommand BrowsePublicKeyFileCommand { get; }
 
       public DelegateCommand BrowsePrivateKeyFileCommand { get; }
@@ -216,11 +178,32 @@ namespace RemoteDebuggerLauncher
 #pragma warning disable VSTHRD100 // Avoid async void methods
       private async void HandleCreateKeyFileCommandCommand()
       {
-         bool result = await keyService.CreateAsync(selectedKeyType);
+         // Show MessageBox to ask user which key type to create
+         var messageBoxResult = System.Windows.MessageBox.Show(
+            Resources.SetupSshDialogKeyTypePromptMessage,
+            Resources.SetupSshDialogKeyTypePromptTitle,
+            System.Windows.MessageBoxButton.YesNoCancel,
+            System.Windows.MessageBoxImage.Question);
+
+         SshKeyType keyType;
+         if (messageBoxResult == System.Windows.MessageBoxResult.Yes)
+         {
+            keyType = SshKeyType.Rsa;
+         }
+         else if (messageBoxResult == System.Windows.MessageBoxResult.No)
+         {
+            keyType = SshKeyType.Ecdsa;
+         }
+         else
+         {
+            return; // User cancelled
+         }
+
+         bool result = await keyService.CreateAsync(keyType);
          if (result)
          {
-            PublicKeyFile = keyService.DefaultPublicKeyPath;
-            PrivateKeyFile= keyService.DefaultPrivateKeyPath;
+            PublicKeyFile = keyService.GetPublicKeyPath(keyType);
+            PrivateKeyFile = keyService.GetPrivateKeyPath(keyType);
          }
       }
 #pragma warning restore VSTHRD100 // Avoid async void methods
