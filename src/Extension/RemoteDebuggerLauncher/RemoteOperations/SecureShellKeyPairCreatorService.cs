@@ -43,12 +43,20 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          if (!File.Exists(defaultPrivateFile))
          {
             _ = DirectoryHelper.EnsureExists(defaultKeysFolder);
-            var arguments = keyType switch
+            string arguments;
+            if (keyType == SshKeyType.Rsa)
             {
-               SshKeyType.Rsa => string.Format(CultureInfo.InvariantCulture, PackageConstants.SecureShell.KeyGenArgumentsRsa, defaultPrivateFile),
-               SshKeyType.Ecdsa => string.Format(CultureInfo.InvariantCulture, PackageConstants.SecureShell.KeyGenArgumentsEcdsa, defaultPrivateFile),
-               _ => throw new ArgumentException($"Unsupported key type: {keyType}", nameof(keyType))
-            };
+               arguments = string.Format(CultureInfo.InvariantCulture, PackageConstants.SecureShell.KeyGenArgumentsRsa, defaultPrivateFile);
+            }
+            else if (keyType == SshKeyType.Ecdsa)
+            {
+               arguments = string.Format(CultureInfo.InvariantCulture, PackageConstants.SecureShell.KeyGenArgumentsEcdsa, defaultPrivateFile);
+            }
+            else
+            {
+               throw new ArgumentException($"Unsupported key type: {keyType}", nameof(keyType));
+            }
+
             var process = Process.Start(PackageConstants.SecureShell.KeyGenExecutable, arguments);
 
             return await process.WaitForExitAsync() == 0;
