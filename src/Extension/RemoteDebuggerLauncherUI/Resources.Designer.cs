@@ -1579,24 +1579,38 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select SSH Key Type.
+        ///   Looks up a localized string similar to RSA (4096 bit).
         /// </summary>
-        public static string SetupSshDialogKeyTypePromptTitle {
+        public static string SetupSshDialogKeyTypeRsaContent {
             get {
-                return ResourceManager.GetString("SetupSshDialogKeyTypePromptTitle", resourceCulture);
+                return ResourceManager.GetString("SetupSshDialogKeyTypeRsaContent", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Which type of SSH key would you like to create?
-        ///
-        /// Yes = RSA (4096 bit) - id_rsa
-        /// No = ECDSA (256 bit) - id_ecdsa
-        /// Cancel = Abort.
+        ///   Looks up a localized string similar to Create RSA key with 4096 bit length - id_rsa.
         /// </summary>
-        public static string SetupSshDialogKeyTypePromptMessage {
+        public static string SetupSshDialogKeyTypeRsaDescription {
             get {
-                return ResourceManager.GetString("SetupSshDialogKeyTypePromptMessage", resourceCulture);
+                return ResourceManager.GetString("SetupSshDialogKeyTypeRsaDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ECDSA (256 bit).
+        /// </summary>
+        public static string SetupSshDialogKeyTypeEcdsaContent {
+            get {
+                return ResourceManager.GetString("SetupSshDialogKeyTypeEcdsaContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create ECDSA key with 256 bit curve - id_ecdsa.
+        /// </summary>
+        public static string SetupSshDialogKeyTypeEcdsaDescription {
+            get {
+                return ResourceManager.GetString("SetupSshDialogKeyTypeEcdsaDescription", resourceCulture);
             }
         }
         

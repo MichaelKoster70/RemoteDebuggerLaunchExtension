@@ -41,7 +41,8 @@ namespace RemoteDebuggerLauncher
          // wire-up commands
          BrowsePublicKeyFileCommand = new DelegateCommand(HandleBrowsePublicKeyFileCommandCommand, null, joinableTaskFactory);
          BrowsePrivateKeyFileCommand = new DelegateCommand(HandleBrowsePrivateKeyFileCommandCommand, null, joinableTaskFactory);
-         CreateKeyFileCommand = new DelegateCommand(HandleCreateKeyFileCommandCommand, null, joinableTaskFactory);
+         CreateRsaKeyCommand = new DelegateCommand(HandleCreateRsaKeyCommand, null, joinableTaskFactory);
+         CreateEcdsaKeyCommand = new DelegateCommand(HandleCreateEcdsaKeyCommand, null, joinableTaskFactory);
          OkCommand = new DelegateCommand<DialogWindow>(HandleOkCommand, canExecute => Validate(), joinableTaskFactory);
          CancelCommand = new DelegateCommand<DialogWindow>(HandleCancelCommand, null, joinableTaskFactory);
 
@@ -121,7 +122,9 @@ namespace RemoteDebuggerLauncher
 
       public DelegateCommand BrowsePrivateKeyFileCommand { get; }
 
-      public DelegateCommand CreateKeyFileCommand { get; }
+      public DelegateCommand CreateRsaKeyCommand { get; }
+
+      public DelegateCommand CreateEcdsaKeyCommand { get; }
 
       public DelegateCommand<DialogWindow> OkCommand { get; }
 
@@ -176,29 +179,18 @@ namespace RemoteDebuggerLauncher
       }
 
 #pragma warning disable VSTHRD100 // Avoid async void methods
-      private async void HandleCreateKeyFileCommandCommand()
+      private async void HandleCreateRsaKeyCommand()
       {
-         // Show MessageBox to ask user which key type to create
-         var messageBoxResult = System.Windows.MessageBox.Show(
-            Resources.SetupSshDialogKeyTypePromptMessage,
-            Resources.SetupSshDialogKeyTypePromptTitle,
-            System.Windows.MessageBoxButton.YesNoCancel,
-            System.Windows.MessageBoxImage.Question);
+         await CreateKeyAsync(SshKeyType.Rsa);
+      }
 
-         SshKeyType keyType;
-         if (messageBoxResult == System.Windows.MessageBoxResult.Yes)
-         {
-            keyType = SshKeyType.Rsa;
-         }
-         else if (messageBoxResult == System.Windows.MessageBoxResult.No)
-         {
-            keyType = SshKeyType.Ecdsa;
-         }
-         else
-         {
-            return; // User cancelled
-         }
+      private async void HandleCreateEcdsaKeyCommand()
+      {
+         await CreateKeyAsync(SshKeyType.Ecdsa);
+      }
 
+      private async Task CreateKeyAsync(SshKeyType keyType)
+      {
          bool result = await keyService.CreateAsync(keyType);
          if (result)
          {
