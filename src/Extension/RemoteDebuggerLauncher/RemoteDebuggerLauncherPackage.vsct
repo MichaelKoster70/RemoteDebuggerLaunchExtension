@@ -128,6 +128,13 @@
           <ButtonText>Setup HTTPS</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidRemoteDebuggerLauncherPackageCmdSet" id="cmdidQueryDotnetCommand" priority="0x0103" type="Button">
+        <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidToolsSetupCommands" />
+        <Icon guid="guidImages" id="bmpInstallDotnet" />
+        <Strings>
+          <ButtonText>Query .NET path</ButtonText>
+        </Strings>
+      </Button>
 
       <!--Buttons in the Debug menu. -->
       <Button guid="guidRemoteDebuggerLauncherPackageCmdSet" id="cmdidDeployOutputCommand" priority="0x0100" type="Button">
@@ -176,6 +183,7 @@
       <IDSymbol name="cmdidInstallDotnet" value="0x0103" />
       <IDSymbol name="cmdidSetupSshCommand" value="0x0104" />
       <IDSymbol name="cmdidSetupHttpsCommand" value="0x0105" />
+      <IDSymbol name="cmdidQueryDotnetCommand" value="0x0106" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{0b0c1900-6a3f-402f-a9b0-07ed947b34e9}">

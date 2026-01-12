@@ -693,4 +693,37 @@ Windows OpenSSH ssh-keygen reported:</value>
   <data name="RemoteCommandSetupSshScanProgressFingerprintScan2" xml:space="preserve">
     <value>running 'ssh-keyscan.exe {0}'</value>
   </data>
+  <data name="RemoteCommandQueryDotnetCommandStatusbarText" xml:space="preserve">
+    <value>Querying .NET path on targets...</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetCommandCaption" xml:space="preserve">
+    <value>Query .NET Path</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetCommandFoundPath" xml:space="preserve">
+    <value>Found .NET at: {0}</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetCommandSuccess" xml:space="preserve">
+    <value>Successfully updated launch profile with .NET install path: {0}</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetCommandInvalidPath" xml:space="preserve">
+    <value>Could not extract valid install path from dotnet binary location</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetCommandNotFound" xml:space="preserve">
+    <value>.NET not found on remote device. Error: {0}</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetNoProjects" xml:space="preserve">
+    <value>No startup project selected, or the selected project doesn't have an active SSH Remote Launch profile.</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetCommandCannotUpdateProfile" xml:space="preserve">
+    <value>Cannot update launch profile: Project service not available</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetCommandProfileUpdated" xml:space="preserve">
+    <value>Launch profile updated successfully</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetCommandProfileNotFound" xml:space="preserve">
+    <value>Active launch profile not found</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetCommandUpdateFailed" xml:space="preserve">
+    <value>Failed to update launch profile: {0}</value>
+  </data>
 </root>
