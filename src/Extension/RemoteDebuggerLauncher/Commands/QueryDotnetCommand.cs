@@ -8,10 +8,10 @@
 using System;
 using System.ComponentModel.Design;
 using System.IO;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Threading;
+using Newtonsoft.Json.Linq;
 
 namespace RemoteDebuggerLauncher
 {
@@ -210,67 +210,24 @@ namespace RemoteDebuggerLauncher
                      {
                         // Read the current launchSettings.json
                         var jsonText = await File.ReadAllTextAsync(launchSettingsPath);
-                        var jsonDoc = JsonDocument.Parse(jsonText);
+                        var jsonObj = JObject.Parse(jsonText);
                         
-                        // Create a mutable dictionary from the JSON
-                        using (var stream = new MemoryStream())
+                        // Update the dotNetInstallFolderPath in the active profile
+                        var profiles = jsonObj["profiles"] as JObject;
+                        if (profiles != null && profiles[activeProfile.Name] is JObject profileObj)
                         {
-                           using (var writer = new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true }))
-                           {
-                              writer.WriteStartObject();
-                              
-                              foreach (var property in jsonDoc.RootElement.EnumerateObject())
-                              {
-                                 if (property.Name == "profiles")
-                                 {
-                                    writer.WritePropertyName("profiles");
-                                    writer.WriteStartObject();
-                                    
-                                    foreach (var profile in property.Value.EnumerateObject())
-                                    {
-                                       writer.WritePropertyName(profile.Name);
-                                       writer.WriteStartObject();
-                                       
-                                       // Copy existing properties
-                                       foreach (var profileProp in profile.Value.EnumerateObject())
-                                       {
-                                          if (profileProp.Name == "dotNetInstallFolderPath" && profile.Name == activeProfile.Name)
-                                          {
-                                             // Update the dotNetInstallFolderPath for the active profile
-                                             writer.WriteString("dotNetInstallFolderPath", dotnetInstallPath);
-                                          }
-                                          else
-                                          {
-                                             // Copy the property as-is
-                                             profileProp.WriteTo(writer);
-                                          }
-                                       }
-                                       
-                                       // Add dotNetInstallFolderPath if it doesn't exist and this is the active profile
-                                       if (profile.Name == activeProfile.Name && !profile.Value.TryGetProperty("dotNetInstallFolderPath", out _))
-                                       {
-                                          writer.WriteString("dotNetInstallFolderPath", dotnetInstallPath);
-                                       }
-                                       
-                                       writer.WriteEndObject();
-                                    }
-                                    
-                                    writer.WriteEndObject();
-                                 }
-                                 else
-                                 {
-                                    property.WriteTo(writer);
-                                 }
-                              }
-                              
-                              writer.WriteEndObject();
-                           }
+                           profileObj["dotNetInstallFolderPath"] = dotnetInstallPath;
                            
-                           // Write back to file
-                           var updatedJson = System.Text.Encoding.UTF8.GetString(stream.ToArray());
+                           // Write back to file with indentation
+                           var updatedJson = jsonObj.ToString(Newtonsoft.Json.Formatting.Indented);
                            await File.WriteAllTextAsync(launchSettingsPath, updatedJson);
                            
                            outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandSuccess, dotnetInstallPath);
+                           return;
+                        }
+                        else
+                        {
+                           outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandProfileNotFound);
                            return;
                         }
                      }
