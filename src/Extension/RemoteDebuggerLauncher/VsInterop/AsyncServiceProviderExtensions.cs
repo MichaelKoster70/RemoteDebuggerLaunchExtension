@@ -1,10 +1,11 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
 // </copyright>
 // ----------------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.ProjectSystem;
@@ -68,6 +69,13 @@ namespace RemoteDebuggerLauncher
          return componentModel.GetService<ISecureShellKeySetupService>();
       }
 
+      public static ISecureShellKeyPairCreatorService GetSecureShellKeyPairCreatorService(this IServiceProvider serviceProvider)
+      {
+         IComponentModel componentModel = serviceProvider.GetComponentModel();
+
+         return componentModel.GetService<ISecureShellKeyPairCreatorService>();
+      }
+
       public static async Task<ICertificateService> GetCertificateServiceAsync(this IAsyncServiceProvider serviceProvider)
       {
          IComponentModel componentModel = await serviceProvider.GetComponentModelAsync();
@@ -78,6 +86,11 @@ namespace RemoteDebuggerLauncher
       private static Task<IComponentModel> GetComponentModelAsync(this IAsyncServiceProvider serviceProvider)
       {
          return serviceProvider.GetServiceAsync<SComponentModel, IComponentModel>();
+      }
+
+      private static IComponentModel GetComponentModel(this IServiceProvider serviceProvider)
+      {
+         return (IComponentModel)serviceProvider.GetService(typeof(SComponentModel));
       }
    }
 }

@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Threading;
@@ -210,7 +211,7 @@ namespace RemoteDebuggerLauncher
          }
       }
 
-      private void HandleCancelCommand(DialogWindow dialog)
+      private static void HandleCancelCommand(DialogWindow dialog)
       {
          if (dialog != null)
          {
