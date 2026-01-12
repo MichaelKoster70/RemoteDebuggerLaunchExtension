@@ -145,7 +145,7 @@ namespace RemoteDebuggerLauncher
       {
          if (launchProfile.OtherSettings.TryGetValue(SecureShellRemoteLaunchProfile.disableHostKeyCheckingProperty, out var settingsValue))
          {
-            // Launch profile has a host port specified => use it
+            // Launch profile has disable host key checking specified => use it
             return settingsValue is bool profileDisableHostKeyChecking && profileDisableHostKeyChecking;
          }
 
