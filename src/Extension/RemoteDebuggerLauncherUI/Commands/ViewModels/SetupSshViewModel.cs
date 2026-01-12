@@ -125,8 +125,8 @@ namespace RemoteDebuggerLauncher
          {
             if (SetProperty(ref selectedKeyType, value))
             {
-               OnPropertyChanged(nameof(IsRsaKeySelected));
-               OnPropertyChanged(nameof(IsEcdsaKeySelected));
+               RaisePropertyChanged(nameof(IsRsaKeySelected));
+               RaisePropertyChanged(nameof(IsEcdsaKeySelected));
             }
          }
       }
