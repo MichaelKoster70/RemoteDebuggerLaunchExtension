@@ -146,7 +146,7 @@ namespace RemoteDebuggerLauncher
          public static readonly Guid OutputPaneGuid = new Guid("772F56E5-2D88-40FB-9006-50B9C72A2A97");
 
          /// <summary>The name for the custom output pane.</summary>
-         public const string OutputPaneName = "Remote Debugger";
+         public const string OutputPaneName = "Linux Remote Debugger";
       }
 
       public static class Debugger
