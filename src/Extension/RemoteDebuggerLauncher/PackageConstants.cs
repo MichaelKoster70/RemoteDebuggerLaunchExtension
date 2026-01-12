@@ -180,14 +180,23 @@ namespace RemoteDebuggerLauncher
          /// <summary>Filename of the default SSH public key.</summary>
          public const string DefaultPublicKeyFileName = "id_rsa.pub";
 
+         /// <summary>Filename of the default ECDSA SSH private key.</summary>
+         public const string DefaultPrivateKeyFileNameEcdsa = "id_ecdsa";
+
+         /// <summary>Filename of the default ECDSA SSH public key.</summary>
+         public const string DefaultPublicKeyFileNameEcdsa = "id_ecdsa.pub";
+
          /// <summary>Folder relative to user home where the SSH key are stored.</summary>
          public const string DefaultKeyPairFolder = ".ssh";
 
          /// <summary>SSH key generator executable.</summary>
          public const string KeyGenExecutable = "ssh-keygen.exe";
 
-         /// <summary>SSH key generator arguments.</summary>
-         public const string KeyGenArguments = "-b 2048 -t rsa -f {0} -q -N \"\" -m pem";
+         /// <summary>SSH key generator arguments for RSA keys (4096 bit).</summary>
+         public const string KeyGenArgumentsRsa = "-b 4096 -t rsa -f {0} -q -N \"\" -m pem";
+
+         /// <summary>SSH key generator arguments for ECDSA keys (256 bit curve).</summary>
+         public const string KeyGenArgumentsEcdsa = "-t ecdsa -b 256 -f {0} -q -N \"\" -m pem";
 
          /// <summary>SSH key scanner executable.</summary>
          public const string KeyScanExecutable = "ssh-keyscan.exe";

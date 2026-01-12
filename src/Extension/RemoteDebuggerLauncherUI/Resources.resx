@@ -583,7 +583,19 @@ Replace: Replace the existing certificate with a new one.</value>
     <value>Create</value>
   </data>
   <data name="SetupSshDialogKeyPairCreateDescription" xml:space="preserve">
-    <value>Creates a RSA public key pair with the default name (id_rsa) and key length of 2048 bits.</value>
+    <value>Click to select key type and create SSH key pair. Choose between RSA (4096 bit) or ECDSA (256 bit).</value>
+  </data>
+  <data name="SetupSshDialogKeyTypeRsaContent" xml:space="preserve">
+    <value>RSA (4096 bit)</value>
+  </data>
+  <data name="SetupSshDialogKeyTypeRsaDescription" xml:space="preserve">
+    <value>Create RSA key with 4096 bit length - id_rsa</value>
+  </data>
+  <data name="SetupSshDialogKeyTypeEcdsaContent" xml:space="preserve">
+    <value>ECDSA (256 bit)</value>
+  </data>
+  <data name="SetupSshDialogKeyTypeEcdsaDescription" xml:space="preserve">
+    <value>Create ECDSA key with 256 bit curve - id_ecdsa</value>
   </data>
   <data name="SetupSshDialogKeyPairForceIPv4Content" xml:space="preserve">
     <value>Force IPv4</value>

@@ -192,10 +192,21 @@
 
       <Button Margin="4,4,8,4" 
               Height="23" 
-              MinWidth="75" 
-              Command="{Binding CreateKeyFileCommand, Mode=OneWay}"
+              MinWidth="75"
               Content="{x:Static local:Resources.SetupSshDialogKeyPairCreateContent}"
-              ToolTip="{x:Static local:Resources.SetupSshDialogKeyPairCreateDescription}"/>
+              ToolTip="{x:Static local:Resources.SetupSshDialogKeyPairCreateDescription}"
+              Click="CreateKeyButton_Click">
+        <Button.ContextMenu>
+          <ContextMenu x:Name="CreateKeyContextMenu">
+            <MenuItem Header="{x:Static local:Resources.SetupSshDialogKeyTypeRsaContent}"
+                      Command="{Binding CreateRsaKeyCommand}"
+                      ToolTip="{x:Static local:Resources.SetupSshDialogKeyTypeRsaDescription}" />
+            <MenuItem Header="{x:Static local:Resources.SetupSshDialogKeyTypeEcdsaContent}"
+                      Command="{Binding CreateEcdsaKeyCommand}"
+                      ToolTip="{x:Static local:Resources.SetupSshDialogKeyTypeEcdsaDescription}" />
+          </ContextMenu>
+        </Button.ContextMenu>
+      </Button>
       
       <Button Margin="4" 
               Height="23" 
