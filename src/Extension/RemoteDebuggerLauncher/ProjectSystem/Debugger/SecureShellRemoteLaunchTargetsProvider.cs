@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Composition;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
 using Microsoft.VisualStudio.ProjectSystem.VS.Debug;
@@ -32,14 +33,16 @@ namespace RemoteDebuggerLauncher
       private readonly IProjectThreadingService threadingService;
       private readonly IConfiguredPackageServiceFactory packageServiceFactory;
       private readonly IBrowserDebugLaunchSettingsProvider browserDebugLaunch;
+      private readonly ILogger logger;
 
       [ImportingConstructor]
-      public SecureShellRemoteLaunchTargetsProvider(ConfiguredProject configuredProject, IProjectThreadingService threadingService, IConfiguredPackageServiceFactory packageServiceFactory, IBrowserDebugLaunchSettingsProvider browserDebugLaunch)
+      public SecureShellRemoteLaunchTargetsProvider(ConfiguredProject configuredProject, IProjectThreadingService threadingService, IConfiguredPackageServiceFactory packageServiceFactory, IBrowserDebugLaunchSettingsProvider browserDebugLaunch, ILoggerFactory loggerFactory)
       {
          this.configuredProject = configuredProject;
          this.threadingService = threadingService;
          this.packageServiceFactory = packageServiceFactory;
          this.browserDebugLaunch = browserDebugLaunch;
+         logger = loggerFactory.CreateLogger(nameof(SecureShellRemoteLaunchTargetsProvider));
       }
 
       /// <summary>
@@ -59,6 +62,8 @@ namespace RemoteDebuggerLauncher
       /// </remarks>
       public async Task OnBeforeLaunchAsync(DebugLaunchOptions launchOptions, ILaunchProfile profile)
       {
+         logger.LogTrace("OnBeforeLaunchAsync:: Begin.");
+
          // get services
          await packageServiceFactory.ConfigureAsync(profile);
 
@@ -92,6 +97,8 @@ namespace RemoteDebuggerLauncher
          }
 
          statusbarService.SetText(Resources.RemoteCommandLaunchingDebugger);
+
+         logger.LogTrace("OnBeforeLaunchAsync:: End.");
       }
 
       /// <summary>
@@ -102,6 +109,8 @@ namespace RemoteDebuggerLauncher
       /// <returns></returns>
       public async Task<IReadOnlyList<IDebugLaunchSettings>> QueryDebugTargetsAsync(DebugLaunchOptions launchOptions, ILaunchProfile profile)
       {
+         logger.LogTrace("QueryDebugTargetsAsync:: Begin.");
+
          // get services 
          await packageServiceFactory.ConfigureAsync(profile);
 
@@ -123,13 +132,20 @@ namespace RemoteDebuggerLauncher
             await AddSshLaunchTargetAsync(debugLaunchSettings, launchOptions, packageServiceFactory);
             await AddLaunchBrowserTargetAsync(debugLaunchSettings, launchOptions, packageServiceFactory);
 
+            logger.LogTrace("QueryDebugTargetsAsync:: End.");
+
             return debugLaunchSettings;
          }
-         catch
+#pragma warning disable IDE0079
+#pragma warning disable S2139
+         catch (Exception ex)
          {
+            logger.LogError(ex, "QueryDebugTargetsAsync:: Exception occurred.");
             statusbar.Clear();
             throw;
          }
+#pragma warning restore S2139
+#pragma warning restore IDE0079
       }
 
       /// <summary>
@@ -162,11 +178,13 @@ namespace RemoteDebuggerLauncher
          if (publishOnDeploy && publishMode == PublishMode.SelfContained)
          {
             launchSettings.Options = await AdapterLaunchConfiguration.CreateSelfContainedAsync(factory.Configuration, configuredProject, factory.TokenReplacer, factory.OutputPane, remoteOperations);
+            logger.LogDebug("AddSshLaunchTargetAsync:: Using self contained deployment for debugging. Options={Options}", launchSettings.Options);
          }
          else
          {
             // in all other cases, debug as framework dependent
             launchSettings.Options = await AdapterLaunchConfiguration.CreateFrameworkDependantAsync(factory.Configuration, configuredProject, factory.TokenReplacer, factory.OutputPane, remoteOperations);
+            logger.LogDebug("AddSshLaunchTargetAsync:: Using framework dependent deployment for debugging. Options={Options}", launchSettings.Options);
          }
 
          debugLaunchSettings.Add(launchSettings);

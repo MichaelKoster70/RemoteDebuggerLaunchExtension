@@ -217,18 +217,24 @@ namespace RemoteDebuggerLauncher
 
          // Handle private key file
          var privateKey = configurationAggregator.QueryPrivateKeyFilePath();
-         adapterArgs += !string.IsNullOrEmpty(privateKey) ? $"-i {privateKey} " : string.Empty;
+         adapterArgs += !string.IsNullOrEmpty(privateKey) ? PackageConstants.SecureShellOption.FormatPrivateKeyOption(privateKey) : string.Empty;
 
          // Handle non default port
          if (hostPort != PackageConstants.Options.DefaultValueSecureShellHostPort)
          {
-            adapterArgs += $"-p {hostPort} ";
+            adapterArgs += PackageConstants.SecureShellOption.FormatPortOption(hostPort);
          }
 
          // Handle force IPv4
          if (configurationAggregator.QueryForceIPv4())
          {
-            adapterArgs += "-4 ";
+            adapterArgs += PackageConstants.SecureShellOption.ForceIPv4;
+         }
+
+         // Handle the disable host key checking option
+         if (configurationAggregator.QueryDisableHostKeyChecking())
+         {
+            adapterArgs += PackageConstants.SecureShellOption.DisableHostKeyChecking;
          }
 
          // handle user name, host, amd remaining options
