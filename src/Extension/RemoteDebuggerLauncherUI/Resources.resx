@@ -230,7 +230,7 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
     <value>Publishing application OK</value>
   </data>
   <data name="PublishWaitDialogCaption" xml:space="preserve">
-    <value>Remote Debugger Launcher</value>
+    <value>Linux Remote Debugger</value>
   </data>
   <data name="PublishWaitDialogMessageStart" xml:space="preserve">
     <value>Publishing application ...</value>
