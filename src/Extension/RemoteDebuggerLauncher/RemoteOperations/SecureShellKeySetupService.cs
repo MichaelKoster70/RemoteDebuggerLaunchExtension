@@ -121,7 +121,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          var defaultKeysFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), PackageConstants.SecureShell.DefaultKeyPairFolder);
          var knownHostsFilePath = Path.Combine(defaultKeysFolder, PackageConstants.SecureShell.DefaultKnownHostsFileName);
 
-         var arguments = string.Format(PackageConstants.SecureShell.KeyScanArguments, settings.HostName, settings.HostPort, settings.ForceIPv4 ? PackageConstants.SecureShell.SshForceIPv4 : string.Empty);
+         var arguments = string.Format(PackageConstants.SecureShell.KeyScanArguments, settings.HostName, settings.HostPort, settings.ForceIPv4 ? PackageConstants.SecureShellOption.ForceIPv4 : string.Empty);
          var startInfo = new ProcessStartInfo(PackageConstants.SecureShell.KeyScanExecutable, arguments)
          {
             CreateNoWindow = true,
@@ -177,8 +177,8 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          const string SshDoneMarker = "DONE";
 
          // open a pseudo console windows to run the ssh command
-         var arguments = string.Format(PackageConstants.SecureShell.SshArguments, settings.UserName, settings.HostName, settings.HostPort, settings.PrivateKeyFile, settings.ForceIPv4 ? PackageConstants.SecureShell.SshForceIPv4 : string.Empty);
-         var startInfo = new ProcessStartInfo(PackageConstants.SecureShell.SshExecutable, arguments)
+         var arguments = string.Format(PackageConstants.SecureShell.HostFingerPrintSshArguments, settings.UserName, settings.HostName, settings.HostPort, settings.PrivateKeyFile, settings.ForceIPv4 ? PackageConstants.SecureShellOption.ForceIPv4 : string.Empty);
+         var startInfo = new ProcessStartInfo(PackageConstants.SecureShell.HostFingerPrintSshExecutable, arguments)
          {
             CreateNoWindow = false,
             UseShellExecute = false,
@@ -275,7 +275,11 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          catch (SshAuthenticationException expectedException)
          {
             // This is expected
+#pragma warning disable IDE0079
+#pragma warning disable S6667
             logger.LogDebug("TryEstablishConnectionWithKeyAsync: expected SshAuthenticationException. Message={Message}, return=false", expectedException.Message);
+#pragma warning restore S6667
+#pragma warning restore IDE0079
 
             OutputPaneWriter.WriteLine(failureText, expectedException.Message);
             return Task.FromResult(false);
@@ -307,7 +311,11 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          }
          catch (SshAuthenticationException expectedException)
          {
+#pragma warning disable IDE0079
+#pragma warning disable S6667
             logger.LogWarning("TryEstablishConnectionWithPasswordAsync: SshAuthenticationException. Message={Message}, return=null", expectedException.Message);
+#pragma warning restore S6667
+#pragma warning restore IDE0079
 
             sshClient?.Dispose();
             sshClient = null;
@@ -352,7 +360,12 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          }
          catch (SshException ex)
          {
+#pragma warning disable IDE0079
+#pragma warning disable S6667 
             logger.LogWarning("RegisterPublicKeyAsync: SshException. Message={Message}, return=false", ex.Message);
+#pragma warning restore S6667
+#pragma warning restore IDE0079
+
             OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshPhase3AddKeyFailed, ex.Message);
             return Task.FromResult(false);
          }

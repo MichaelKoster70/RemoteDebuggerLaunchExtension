@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Rule Name="SecureShellRemoteLaunchProfile"
       Description="Properties associated with launching and debugging a custom debug target."
       DisplayName="SSH Remote Launch"
@@ -58,6 +58,11 @@
                    Subtype="file"
                    Subcategory="Credentials"
                    Default="%userprofile%\\.ssh\\id_rsa" />
+
+  <BoolProperty Name="disableHostKeyChecking"
+            DisplayName="Disable Host Key Checking"
+            Description="Indicates whether to disable host key checking."
+            Subcategory="Remote Device" />
 
   <StringProperty Name="EnvironmentVariables"
                   DisplayName="Environment variables"

@@ -88,6 +88,9 @@ namespace RemoteDebuggerLauncher
          /// <summary>The default value for the Force IPv4.</summary>
          public const bool DefaultValueForceIPv4 = false;
 
+         /// <summary>The default value for the Disable Host Key Checking.</summary>
+         public const bool DefaultValueDisableHostKeyChecking = false;
+
          /// <summary>The default value for the .NET installation path on the device page.</summary>
          public const string DefaultValueDotNetInstallFolderPath = "~/.dotnet";
 
@@ -196,18 +199,37 @@ namespace RemoteDebuggerLauncher
          /// <remarks>No space after {2} because SshForceIPv4 includes a trailing space.</remarks>
          public const string KeyScanArguments = "{2}-p {1} {0}";
 
-         /// <summary>Argument for SSH to force IPv4 usage.</summary>
-         public const string SshForceIPv4 = "-4 ";
-
-         /// <summary>SSH executable.</summary>
-         public const string SshExecutable = "ssh.exe";
+         /// <summary>Host Fingerprint scanner: SSH executable.</summary>
+         public const string HostFingerPrintSshExecutable = "ssh.exe";
 
          /// <summary>The SSH arguments to add server fingerprint to known_hosts file.</summary>
          /// <remarks>No space after {4} because SshForceIPv4 includes a trailing space.</remarks>
-         public const string SshArguments = "{0}@{1} {4}-p {2} -i \"{3}\" \"echo DONE\"";
+         public const string HostFingerPrintSshArguments = "{0}@{1} {4}-p {2} -i \"{3}\" \"echo DONE\"";
 
          /// <summary>HTTPS Developer Certificate name.</summary>
          public const string HttpsCertificateName = "DevCert.pfx";
+      }
+
+      /// <summary>
+      /// Holds command line options for the Windows OpenSSH client.
+      /// </summary>
+      public static class SecureShellOption
+      {
+         private const string PrivateKeyOption = "-i \"{0}\" ";
+         private const string PortOption = "-p {0} ";
+
+         /// <summary>SSH option to force IPv4 usage => -4</summary>
+         public const string ForceIPv4 = "-4 ";
+
+         /// <summary>SSH option disable host key checking (and to not use known_hosts file) => -o StrictHostKeyChecking.</summary>
+         public const string DisableHostKeyChecking = "-o StrictHostKeyChecking=no -o UserKnownHostsFile=NUL -o GlobalKnownHostsFile=NUL ";
+
+         /// <summary>Formats the SSH private key option => -i {0}</summary>
+         /// <param name="privateKeyFilePath">The private key file path.</param>
+        public static string FormatPrivateKeyOption(string privateKeyFilePath) => string.Format(PrivateKeyOption, privateKeyFilePath);
+
+         /// <summary>Formats the SSH port option => -p {0}</summary>
+         public static string FormatPortOption(int port) => string.Format(PortOption, port);
       }
 
       /// <summary>

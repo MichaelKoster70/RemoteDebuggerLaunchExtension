@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -38,6 +38,12 @@ namespace RemoteDebuggerLauncher
       /// </summary>
       /// <returns>A <see langword="bool"/> holding the value, <c>false</c> if not configured.</returns>
       bool QueryForceIPv4();
+
+      /// <summary>
+      /// Queries the value whether to disable host key checking from the device option page.
+      /// </summary>
+      /// <returns>A <see langword="bool"/> holding the value, <c>true</c> to disable host key checking.</returns>
+      bool QueryDisableHostKeyChecking();
 
       /// <summary>
       /// Queries the value which transport mode to use.
