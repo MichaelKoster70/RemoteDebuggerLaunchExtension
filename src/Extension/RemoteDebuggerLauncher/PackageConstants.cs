@@ -20,7 +20,7 @@ namespace RemoteDebuggerLauncher
       public static class FileSystem
       {
          /// <summary>Directory under %localappdata% where to store data like Logs and cached assets.</summary>
-         public const string StorageFolder = @"RemoteDebuggerLauncher";
+         public const string StorageFolder = @"LinuxRemoteDebugger";
       }
 
       /// <summary>
@@ -47,7 +47,7 @@ namespace RemoteDebuggerLauncher
       public static class Options
       {
          /// <summary>The Category name in the Tools=>Options used for this extension.</summary>
-         public const string Category = "RemoteDebuggerLauncher";
+         public const string Category = "LinuxRemoteDebugger";
 
          /// <summary>GUID for options page holding device connectivity settings.</summary>
          public const string PageGuidDevice = "EADDD238-7A86-4B42-8BA8-66B0C318953B";

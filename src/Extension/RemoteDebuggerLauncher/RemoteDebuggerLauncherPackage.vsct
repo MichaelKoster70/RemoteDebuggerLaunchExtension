@@ -45,7 +45,7 @@
         <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidToolsItem" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
-          <ButtonText>Remote Debugger Launcher</ButtonText>
+          <ButtonText>Linux Remote Debugger</ButtonText>
         </Strings>
       </Menu>
 
@@ -54,7 +54,7 @@
         <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidDebug" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
-          <ButtonText>Linux Remote Targets</ButtonText>
+          <ButtonText>Linux Remote Debugger</ButtonText>
         </Strings>
       </Menu>
     </Menus>
