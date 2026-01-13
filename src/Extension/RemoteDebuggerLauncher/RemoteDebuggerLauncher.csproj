@@ -153,6 +153,8 @@
     <Compile Include="RemoteOperations\SecureShellSessionService.cs" />
     <Compile Include="Infrastructure\ThrowIf.cs" />
     <Compile Include="PackageConstants.cs" />
+    <Compile Include="ProjectSystem\Debugger\ILaunchProfileEditor.cs" />
+    <Compile Include="ProjectSystem\Debugger\LaunchProfileEditor.cs" />
     <Compile Include="ProjectSystem\Debugger\SecureShellRemoteLaunchRuleExporter.cs" />
     <Compile Include="ProjectSystem\Debugger\SecureShellRemoteLaunchTargetsProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

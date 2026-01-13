@@ -7,11 +7,9 @@
 
 using System;
 using System.ComponentModel.Design;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Threading;
-using Newtonsoft.Json.Linq;
 
 namespace RemoteDebuggerLauncher
 {
@@ -172,7 +170,7 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <summary>
-      /// Updates the launch profile with the dotnet install folder path by directly modifying the launchSettings.json file.
+      /// Updates the launch profile with the dotnet install folder path using the ILaunchProfileEditor service.
       /// </summary>
       /// <param name="project">The project factory.</param>
       /// <param name="dotnetInstallPath">The dotnet install path to set.</param>
@@ -190,7 +188,7 @@ namespace RemoteDebuggerLauncher
                return;
             }
 
-            // Get the unconfigured project to find the launchSettings.json file
+            // Get the unconfigured project to access the launch profile editor
             var unconfiguredProjects = projectService.LoadedUnconfiguredProjects;
             foreach (var unconfiguredProject in unconfiguredProjects)
             {
@@ -200,40 +198,24 @@ namespace RemoteDebuggerLauncher
                   var activeProfile = factory.LaunchSettingsProvider.ActiveProfile;
                   if (activeProfile != null && activeProfile.Name == project.ActiveLaunchProfileName)
                   {
-                     // Find the launchSettings.json file
-                     var projectPath = unconfiguredProject.FullPath;
-                     var projectDir = Path.GetDirectoryName(projectPath);
-                     var propertiesDir = Path.Combine(projectDir, "Properties");
-                     var launchSettingsPath = Path.Combine(propertiesDir, "launchSettings.json");
-
-                     if (File.Exists(launchSettingsPath))
+                     // Get the launch profile editor service
+                     var launchProfileEditor = unconfiguredProject.Services.ExportProvider.GetService<ILaunchProfileEditor>();
+                     if (launchProfileEditor != null)
                      {
-                        // Read the current launchSettings.json
-                        var jsonText = File.ReadAllText(launchSettingsPath);
-                        var jsonObj = JObject.Parse(jsonText);
-                        
-                        // Update the dotNetInstallFolderPath in the active profile
-                        var profiles = jsonObj["profiles"] as JObject;
-                        if (profiles != null && profiles[activeProfile.Name] is JObject profileObj)
+                        bool success = await launchProfileEditor.UpdateProfilePropertyAsync("dotNetInstallFolderPath", dotnetInstallPath);
+                        if (success)
                         {
-                           profileObj["dotNetInstallFolderPath"] = dotnetInstallPath;
-                           
-                           // Write back to file with indentation
-                           var updatedJson = jsonObj.ToString(Newtonsoft.Json.Formatting.Indented);
-                           File.WriteAllText(launchSettingsPath, updatedJson);
-                           
                            outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandSuccess, dotnetInstallPath);
-                           return;
                         }
                         else
                         {
-                           outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandProfileNotFound);
-                           return;
+                           outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandUpdateFailed, "Failed to update profile");
                         }
+                        return;
                      }
                      else
                      {
-                        outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandProfileNotFound);
+                        outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandCannotUpdateProfile);
                         return;
                      }
                   }
