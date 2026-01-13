@@ -67,6 +67,7 @@ namespace RemoteDebuggerLauncher
          await InstallDotnetCommand.InitializeAsync(this);
          await SetupSshCommand.InitializeAsync(this);
          await SetupHttpsCommand.InitializeAsync(this);
+         await QueryDotnetCommand.InitializeAsync(this);
       }
       #endregion
 

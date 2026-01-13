@@ -75,6 +75,8 @@
     <Compile Include="Infrastructure\DirectoryHelper.cs" />
     <Compile Include="Infrastructure\FileHelper.cs" />
     <Compile Include="Infrastructure\NativeMethods.cs" />
+    <Compile Include="ProjectSystem\Debugger\LaunchProfile.cs" />
+    <Compile Include="ProjectSystem\Debugger\WritableLaunchProfile.cs" />
     <Compile Include="RemoteOperations\IRemoteBulkCopySessionService.cs" />
     <Compile Include="RemoteOperations\ISecureShellSessionBaseService.cs" />
     <Compile Include="RemoteOperations\SecureShellCopyProgress.cs" />
@@ -128,6 +130,7 @@
     <Compile Include="VsInterop\StatusbarService.cs" />
     <Compile Include="Commands\InstallDebuggerCommand.cs" />
     <Compile Include="Commands\InstallDotnetCommand.cs" />
+    <Compile Include="Commands\QueryDotnetCommand.cs" />
     <Compile Include="RemoteOperations\SecureShellSessionCommandingService.cs" />
     <Compile Include="VsInterop\IOutputPaneWriterService.cs" />
     <Compile Include="Options\IOptionsPageAccessor.cs" />
@@ -152,6 +155,8 @@
     <Compile Include="RemoteOperations\SecureShellSessionService.cs" />
     <Compile Include="Infrastructure\ThrowIf.cs" />
     <Compile Include="PackageConstants.cs" />
+    <Compile Include="ProjectSystem\Debugger\ILaunchProfileEditor.cs" />
+    <Compile Include="ProjectSystem\Debugger\LaunchProfileEditor.cs" />
     <Compile Include="ProjectSystem\Debugger\SecureShellRemoteLaunchRuleExporter.cs" />
     <Compile Include="ProjectSystem\Debugger\SecureShellRemoteLaunchTargetsProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

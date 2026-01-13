@@ -364,6 +364,14 @@ namespace RemoteDebuggerLauncher.RemoteOperations
                throw new NotSupportedException($"runtime kind '{kind}' not supported");
          }
       }
+
+      /// <inheritdoc />
+      public Task<string> TryFindDotNetInstallPathAsync()
+      {
+         var commandText = PackageConstants.LinuxShellCommands.FormatCommand(PackageConstants.Dotnet.BinaryName);
+
+         return session.ExecuteSingleCommandAsync(commandText);
+      }
       #endregion
 
       # region HTTPS Setup

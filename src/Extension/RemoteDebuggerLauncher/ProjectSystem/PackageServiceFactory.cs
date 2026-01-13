@@ -17,7 +17,7 @@ namespace RemoteDebuggerLauncher
    /// <summary>
    /// The package service factory base class.
    /// </summary>
-   internal class PackageServiceFactory : IPackageServiceFactory
+   internal abstract class PackageServiceFactory : IPackageServiceFactory
    {
       private readonly IAsyncServiceProvider asyncServiceProvider;
       private readonly IVsFacadeFactory facadeFactory;

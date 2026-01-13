@@ -34,6 +34,12 @@ namespace RemoteDebuggerLauncher
       [Import]
       internal ILaunchSettingsProvider LaunchSettingsProvider { get; private set; }
 
+      [Import]
+      internal ILaunchProfileEditor LaunchProfileEditor { get; private set; }
+
+      /// <inheritdoc />
+      public Task<ILaunchProfileEditor> GetLaunchProfileEditorAsync() => Task.FromResult(LaunchProfileEditor);
+
       /// <inheritdoc />
       public async Task ConfigureAsync(ILaunchProfile launchProfile)
       {
