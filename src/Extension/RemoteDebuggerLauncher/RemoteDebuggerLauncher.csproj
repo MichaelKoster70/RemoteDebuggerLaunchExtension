@@ -128,6 +128,7 @@
     <Compile Include="VsInterop\StatusbarService.cs" />
     <Compile Include="Commands\InstallDebuggerCommand.cs" />
     <Compile Include="Commands\InstallDotnetCommand.cs" />
+    <Compile Include="Commands\QueryDotnetCommand.cs" />
     <Compile Include="RemoteOperations\SecureShellSessionCommandingService.cs" />
     <Compile Include="VsInterop\IOutputPaneWriterService.cs" />
     <Compile Include="Options\IOptionsPageAccessor.cs" />
