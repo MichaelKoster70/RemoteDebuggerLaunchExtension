@@ -186,8 +186,10 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             RedirectStandardInput = true,
          };
 
-         OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintSsh1, settings.UserName, settings.HostName, settings.HostPort);
-         OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintSsh2, arguments);
+         var outputPaneWriter = OutputPaneWriterServiceAsync.Create(OutputPaneWriter);
+
+         outputPaneWriter.WriteLineAsync(Resources.RemoteCommandSetupSshScanProgressFingerprintSsh1, settings.UserName, settings.HostName, settings.HostPort);
+         outputPaneWriter.WriteLineAsync(Resources.RemoteCommandSetupSshScanProgressFingerprintSsh2, arguments);
 
          using (var process = PseudoConsoleProcess.Start(startInfo))
          {
@@ -221,12 +223,13 @@ namespace RemoteDebuggerLauncher.RemoteOperations
                   inactivityWatch.Restart();
 
                   // report progress
-                  OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintSsh3, stdOutput);
+                  await outputPaneWriter.WriteLineAsync(Resources.RemoteCommandSetupSshScanProgressFingerprintSsh3, stdOutput);
                }
                else if (stringBuilder.ToString().Contains(SshPasswordPrompt))
                {
                   // We have seen the password prompt -> abort the connection & exit
-                  OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintSsh4);
+                  await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                  await outputPaneWriter.WriteLineAsync(Resources.RemoteCommandSetupSshScanProgressFingerprintSsh4);
 
                   await process.StandardInput.FlushAsync();
                   return true;
@@ -241,7 +244,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
                if (inactivityWatch.Elapsed >= TimeSpan.FromSeconds(SshOverallTimeoutSeconds))
                {
                   // Close stdin to signal EOF and dispose to tear down the pseudo console
-                  OutputPaneWriter.WriteLine(Resources.RemoteCommandSetupSshScanProgressFingerprintSsh5);
+                  await outputPaneWriter.WriteLineAsync(Resources.RemoteCommandSetupSshScanProgressFingerprintSsh5);
 
                   await process.StandardInput.FlushAsync();
 

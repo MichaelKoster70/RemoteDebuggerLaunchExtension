@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -127,6 +127,12 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
       /// <exception cref="NotSupportedException">runtime kind not supported.</exception>
       Task TryInstallDotNetOfflineAsync(DotnetInstallationKind kind, string channel);
+
+      /// <summary>
+      /// Tries the find the path where .NET is installed on the remote device.
+      /// </summary>
+      /// <returns>A <see cref="Task{String}" />representing the asynchronous operation: the path where .NET is installed, or <c>null</c> if not found.</returns>
+      Task<string> TryFindDotNetInstallPathAsync();
 
       /// <summary>
       /// Sets up a new ASP.NET HTTPS Developer Certificate.

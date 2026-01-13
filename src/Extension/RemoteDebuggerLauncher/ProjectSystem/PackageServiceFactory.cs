@@ -6,6 +6,7 @@
 // ----------------------------------------------------------------------------
 
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
 using Microsoft.VisualStudio.Shell;
@@ -17,7 +18,7 @@ namespace RemoteDebuggerLauncher
    /// <summary>
    /// The package service factory base class.
    /// </summary>
-   internal class PackageServiceFactory : IPackageServiceFactory
+   internal abstract class PackageServiceFactory : IPackageServiceFactory
    {
       private readonly IAsyncServiceProvider asyncServiceProvider;
       private readonly IVsFacadeFactory facadeFactory;
@@ -26,13 +27,16 @@ namespace RemoteDebuggerLauncher
       private IOptionsPageAccessor optionsPageAccessor;
       private ConfigurationAggregator configurationAggregator;
       private IOutputPaneWriterService outputPaneWriter;
+      private readonly ILoggerFactory loggerFactory;
 
-      protected PackageServiceFactory(SVsServiceProvider asyncServiceProvider, IVsFacadeFactory facadeFactory, ConfiguredProject configuredProject, IDebugTokenReplacer tokenReplacer)
+
+      protected PackageServiceFactory(SVsServiceProvider asyncServiceProvider, IVsFacadeFactory facadeFactory, ConfiguredProject configuredProject, IDebugTokenReplacer tokenReplacer, ILoggerFactory loggerFactor)
       {
          this.asyncServiceProvider = asyncServiceProvider as IAsyncServiceProvider;
          this.facadeFactory = facadeFactory;
          this.configuredProject = configuredProject;
          this.tokenReplacer = tokenReplacer;
+         loggerFactory = loggerFactor;
       }
 
       /// <inheritdoc />
@@ -72,7 +76,7 @@ namespace RemoteDebuggerLauncher
          var settings = SecureShellSessionSettings.Create(configurationAggregator);
          var sessionService  = new SecureShellSessionService(settings);
          var bulkCopyService = CreateBulkCopyService(sessionService, configurationAggregator);
-         return new SecureShellRemoteOperationsService(configurationAggregator, sessionService, bulkCopyService, tokenReplacer, outputPaneWriter, statusbar);
+         return new SecureShellRemoteOperationsService(configurationAggregator, sessionService, bulkCopyService, tokenReplacer, outputPaneWriter, statusbar, loggerFactory);
       }
 
       /// <inheritdoc />

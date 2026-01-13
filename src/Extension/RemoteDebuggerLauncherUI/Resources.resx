@@ -697,16 +697,13 @@ Windows OpenSSH ssh-keygen reported:</value>
     <value>Querying .NET path on targets...</value>
   </data>
   <data name="RemoteCommandQueryDotnetCommandCaption" xml:space="preserve">
-    <value>Query .NET Path</value>
+    <value>Query .NET Install path</value>
   </data>
   <data name="RemoteCommandQueryDotnetCommandFoundPath" xml:space="preserve">
     <value>Found .NET at: {0}</value>
   </data>
   <data name="RemoteCommandQueryDotnetCommandSuccess" xml:space="preserve">
     <value>Successfully updated launch profile with .NET install path: {0}</value>
-  </data>
-  <data name="RemoteCommandQueryDotnetCommandInvalidPath" xml:space="preserve">
-    <value>Could not extract valid install path from dotnet binary location</value>
   </data>
   <data name="RemoteCommandQueryDotnetCommandNotFound" xml:space="preserve">
     <value>.NET not found on remote device. Error: {0}</value>
@@ -725,5 +722,14 @@ Windows OpenSSH ssh-keygen reported:</value>
   </data>
   <data name="RemoteCommandQueryDotnetCommandUpdateFailed" xml:space="preserve">
     <value>Failed to update launch profile: {0}</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetOutputPaneProgress" xml:space="preserve">
+    <value>Finding where 'dotnet' is installed...</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetOutputPaneFound" xml:space="preserve">
+    <value>Found 'dotnet' at '{0}'</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetOutputPaneNotFound" xml:space="preserve">
+    <value>Did not find 'dotnet', configure it manually</value>
   </data>
 </root>

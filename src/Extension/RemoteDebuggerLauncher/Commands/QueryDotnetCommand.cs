@@ -113,40 +113,18 @@ namespace RemoteDebuggerLauncher
 
                      outputPaneWriter.WriteLine(Resources.RemoteCommandCommonProjectAndProfile, project.GetProjectName(), project.ActiveLaunchProfileName);
 
-                     // Execute command -v dotnet on remote device
-                     var commandText = PackageConstants.LinuxShellCommands.FormatCommand(PackageConstants.Dotnet.BinaryName);
-                     var sessionService = new RemoteOperations.SecureShellSessionService(RemoteOperations.SecureShellSessionSettings.Create(project.Configuration));
+                     var dotnetInstallPath = await remoteOperations.TryFindDotNetInstallPathAsync();
 
-                     using (var commandingService = new RemoteOperations.SecureShellSessionCommandingService(sessionService))
+                     if (!string.IsNullOrEmpty(dotnetInstallPath))
                      {
-                        var (statusCode, result, error) = await commandingService.TryExecuteCommandAsync(commandText);
+                        outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandFoundPath, dotnetInstallPath);
 
-                        if (statusCode == 0 && !string.IsNullOrWhiteSpace(result))
-                        {
-                           // Successfully found dotnet path
-                           var dotnetPath = result.Trim();
-                           outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandFoundPath, dotnetPath);
-
-                           // Extract the directory path from the full binary path
-                           // dotnet binary is typically at /path/to/dotnet, we want /path/to
-                           var dotnetInstallPath = System.IO.Path.GetDirectoryName(dotnetPath);
-                           if (!string.IsNullOrEmpty(dotnetInstallPath))
-                           {
-                              // Convert Windows-style path separators to Unix-style if needed
-                              dotnetInstallPath = dotnetInstallPath.Replace('\\', '/');
-                              
-                              // Update the launch profile with the dotnet install path
-                              await UpdateLaunchProfileAsync(project, dotnetInstallPath, outputPaneWriter);
-                           }
-                           else
-                           {
-                              outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandInvalidPath);
-                           }
-                        }
-                        else
-                        {
-                           outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandNotFound, error);
-                        }
+                        // Update the launch profile with the dotnet install path
+                        await UpdateLaunchProfileAsync(project, dotnetInstallPath, outputPaneWriter);
+                     }
+                     else
+                     {
+                        outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandNotFound);
                      }
                   }
                }
@@ -175,59 +153,22 @@ namespace RemoteDebuggerLauncher
       /// <param name="project">The project factory.</param>
       /// <param name="dotnetInstallPath">The dotnet install path to set.</param>
       /// <param name="outputPaneWriter">The output pane writer for logging.</param>
-      private async Task UpdateLaunchProfileAsync(IPackageServiceFactory project, string dotnetInstallPath, IOutputPaneWriterService outputPaneWriter)
+      private static async Task UpdateLaunchProfileAsync(IUnconfiguredPackageServiceFactory project, string dotnetInstallPath, IOutputPaneWriterService outputPaneWriter)
       {
          await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-         try
-         {
-            var projectService = await ServiceProvider.GetProjectServiceAsync();
-            if (projectService == null)
-            {
-               outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandCannotUpdateProfile);
-               return;
-            }
+         var editor = await project.GetLaunchProfileEditorAsync();
 
-            // Get the unconfigured project to access the launch profile editor
-            var unconfiguredProjects = projectService.LoadedUnconfiguredProjects;
-            foreach (var unconfiguredProject in unconfiguredProjects)
-            {
-               var factory = unconfiguredProject.Services.ExportProvider.GetService<IUnconfiguredPackageServiceFactory>();
-               if (factory != null && factory.LaunchSettingsProvider != null)
-               {
-                  var activeProfile = factory.LaunchSettingsProvider.ActiveProfile;
-                  if (activeProfile != null && activeProfile.Name == project.ActiveLaunchProfileName)
-                  {
-                     // Get the launch profile editor service
-                     var launchProfileEditor = unconfiguredProject.Services.ExportProvider.GetService<ILaunchProfileEditor>();
-                     if (launchProfileEditor != null)
-                     {
-                        bool success = await launchProfileEditor.UpdateProfilePropertyAsync("dotNetInstallFolderPath", dotnetInstallPath);
-                        if (success)
-                        {
-                           outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandSuccess, dotnetInstallPath);
-                        }
-                        else
-                        {
-                           outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandUpdateFailed, "Failed to update profile");
-                        }
-                        return;
-                     }
-                     else
-                     {
-                        outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandCannotUpdateProfile);
-                        return;
-                     }
-                  }
-               }
-            }
-
-            outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandProfileNotFound);
-         }
-         catch (Exception ex)
+         bool success = await editor.UpdateProfilePropertyAsync("dotNetInstallFolderPath", dotnetInstallPath);
+         if (success)
          {
-            outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandUpdateFailed, ex.Message);
+            outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandSuccess, dotnetInstallPath);
          }
+         else
+         {
+            outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandUpdateFailed, "Failed to update profile");
+         }
+
       }
    }
 }

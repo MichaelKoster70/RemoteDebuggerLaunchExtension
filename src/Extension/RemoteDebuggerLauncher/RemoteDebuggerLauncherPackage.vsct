@@ -85,6 +85,8 @@
 
     <!--Buttons section. -->
     <!--This section defines the elements the user can interact with, like a menu command or a button or combo box in a toolbar. -->
+
+    <!-- Deploy commands -->
     <Buttons>
       <Button guid="guidRemoteDebuggerLauncherPackageCmdSet" id="cmdidDeployOutputCommand" priority="0x0100" type="Button">
         <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidToolsDeployCommands" />
@@ -100,6 +102,8 @@
           <ButtonText>Clean remote target path</ButtonText>
         </Strings>
       </Button>
+
+      <!-- Setup commands -->
       <Button guid="guidRemoteDebuggerLauncherPackageCmdSet" id="cmdidInstallDebugger" priority="0x0100" type="Button">
         <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidToolsSetupCommands" />
         <Icon guid="guidImages" id="bmpInstallDebugger" />
@@ -114,25 +118,25 @@
           <ButtonText>Install .NET runtime</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidRemoteDebuggerLauncherPackageCmdSet" id="cmdidSetupSshCommand" priority="0x0102" type="Button">
+      <Button guid="guidRemoteDebuggerLauncherPackageCmdSet" id="cmdidQueryDotnetCommand" priority="0x0102" type="Button">
+        <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidToolsSetupCommands" />
+        <Icon guid="guidImages" id="bmpQueryDotnet" />
+        <Strings>
+          <ButtonText>Query .NET path</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidRemoteDebuggerLauncherPackageCmdSet" id="cmdidSetupSshCommand" priority="0x0103" type="Button">
         <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidToolsSetupCommands" />
         <Icon guid="guidImages" id="bmpSetupSsh" />
         <Strings>
           <ButtonText>Setup SSH</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidRemoteDebuggerLauncherPackageCmdSet" id="cmdidSetupHttpsCommand" priority="0x0102" type="Button">
+      <Button guid="guidRemoteDebuggerLauncherPackageCmdSet" id="cmdidSetupHttpsCommand" priority="0x0104" type="Button">
         <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidToolsSetupCommands" />
         <Icon guid="guidImages" id="bmpSetupHttps" />
         <Strings>
           <ButtonText>Setup HTTPS</ButtonText>
-        </Strings>
-      </Button>
-      <Button guid="guidRemoteDebuggerLauncherPackageCmdSet" id="cmdidQueryDotnetCommand" priority="0x0103" type="Button">
-        <Parent guid="guidRemoteDebuggerLauncherPackageCmdSet" id="groupidToolsSetupCommands" />
-        <Icon guid="guidImages" id="bmpInstallDotnet" />
-        <Strings>
-          <ButtonText>Query .NET path</ButtonText>
         </Strings>
       </Button>
 
@@ -155,7 +159,7 @@
   
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
     <Bitmaps>
-      <Bitmap guid="guidImages" href="Resources\Commands.png" usedList="bmpDeployOutput, bmpCleanOutput, bmpInstallDebugger, bmpInstallDotnet, bmpSetupSsh, bmpSetupHttps" />
+      <Bitmap guid="guidImages" href="Resources\Commands.png" usedList="bmpDeployOutput, bmpCleanOutput, bmpInstallDebugger, bmpInstallDotnet, bmpSetupSsh, bmpSetupHttps, bmpQueryDotnet" />
     </Bitmaps>
   </Commands>
 
@@ -193,6 +197,7 @@
       <IDSymbol name="bmpInstallDotnet" value="4" />
       <IDSymbol name="bmpSetupSsh" value="5" />
       <IDSymbol name="bmpSetupHttps" value="6" />
+      <IDSymbol name="bmpQueryDotnet" value="7" />
     </GuidSymbol>
   </Symbols>
 </CommandTable>

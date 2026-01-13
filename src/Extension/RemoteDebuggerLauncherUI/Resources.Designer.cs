@@ -398,7 +398,7 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remote Debugger Launcher.
+        ///   Looks up a localized string similar to Linux Remote Debugger.
         /// </summary>
         public static string PublishWaitDialogCaption {
             get {
@@ -1043,6 +1043,123 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot update launch profile: Project service not available.
+        /// </summary>
+        public static string RemoteCommandQueryDotnetCommandCannotUpdateProfile {
+            get {
+                return ResourceManager.GetString("RemoteCommandQueryDotnetCommandCannotUpdateProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Query .NET Install path.
+        /// </summary>
+        public static string RemoteCommandQueryDotnetCommandCaption {
+            get {
+                return ResourceManager.GetString("RemoteCommandQueryDotnetCommandCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found .NET at: {0}.
+        /// </summary>
+        public static string RemoteCommandQueryDotnetCommandFoundPath {
+            get {
+                return ResourceManager.GetString("RemoteCommandQueryDotnetCommandFoundPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .NET not found on remote device. Error: {0}.
+        /// </summary>
+        public static string RemoteCommandQueryDotnetCommandNotFound {
+            get {
+                return ResourceManager.GetString("RemoteCommandQueryDotnetCommandNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Active launch profile not found.
+        /// </summary>
+        public static string RemoteCommandQueryDotnetCommandProfileNotFound {
+            get {
+                return ResourceManager.GetString("RemoteCommandQueryDotnetCommandProfileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launch profile updated successfully.
+        /// </summary>
+        public static string RemoteCommandQueryDotnetCommandProfileUpdated {
+            get {
+                return ResourceManager.GetString("RemoteCommandQueryDotnetCommandProfileUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Querying .NET path on targets....
+        /// </summary>
+        public static string RemoteCommandQueryDotnetCommandStatusbarText {
+            get {
+                return ResourceManager.GetString("RemoteCommandQueryDotnetCommandStatusbarText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successfully updated launch profile with .NET install path: {0}.
+        /// </summary>
+        public static string RemoteCommandQueryDotnetCommandSuccess {
+            get {
+                return ResourceManager.GetString("RemoteCommandQueryDotnetCommandSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to update launch profile: {0}.
+        /// </summary>
+        public static string RemoteCommandQueryDotnetCommandUpdateFailed {
+            get {
+                return ResourceManager.GetString("RemoteCommandQueryDotnetCommandUpdateFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No startup project selected, or the selected project doesn&apos;t have an active SSH Remote Launch profile..
+        /// </summary>
+        public static string RemoteCommandQueryDotnetNoProjects {
+            get {
+                return ResourceManager.GetString("RemoteCommandQueryDotnetNoProjects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found &apos;dotnet&apos; at &apos;{0}&apos;.
+        /// </summary>
+        public static string RemoteCommandQueryDotnetOutputPaneFound {
+            get {
+                return ResourceManager.GetString("RemoteCommandQueryDotnetOutputPaneFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Did not find &apos;dotnet&apos;, configure it manually.
+        /// </summary>
+        public static string RemoteCommandQueryDotnetOutputPaneNotFound {
+            get {
+                return ResourceManager.GetString("RemoteCommandQueryDotnetOutputPaneNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finding where &apos;dotnet&apos; is installed....
+        /// </summary>
+        public static string RemoteCommandQueryDotnetOutputPaneProgress {
+            get {
+                return ResourceManager.GetString("RemoteCommandQueryDotnetOutputPaneProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Checking certificate.....
         /// </summary>
         public static string RemoteCommandSetupHttpsCheckProgress {
@@ -1552,7 +1669,7 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Creates a RSA public key pair with the default name (id_rsa) and key length of 2048 bits..
+        ///   Looks up a localized string similar to Click to select key type and create SSH key pair. Choose between RSA (4096 bit) or ECDSA (256 bit)..
         /// </summary>
         public static string SetupSshDialogKeyPairCreateDescription {
             get {
@@ -1579,24 +1696,6 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to RSA (4096 bit).
-        /// </summary>
-        public static string SetupSshDialogKeyTypeRsaContent {
-            get {
-                return ResourceManager.GetString("SetupSshDialogKeyTypeRsaContent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Create RSA key with 4096 bit length - id_rsa.
-        /// </summary>
-        public static string SetupSshDialogKeyTypeRsaDescription {
-            get {
-                return ResourceManager.GetString("SetupSshDialogKeyTypeRsaDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to ECDSA (256 bit).
         /// </summary>
         public static string SetupSshDialogKeyTypeEcdsaContent {
@@ -1611,6 +1710,24 @@ namespace RemoteDebuggerLauncher {
         public static string SetupSshDialogKeyTypeEcdsaDescription {
             get {
                 return ResourceManager.GetString("SetupSshDialogKeyTypeEcdsaDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RSA (4096 bit).
+        /// </summary>
+        public static string SetupSshDialogKeyTypeRsaContent {
+            get {
+                return ResourceManager.GetString("SetupSshDialogKeyTypeRsaContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create RSA key with 4096 bit length - id_rsa.
+        /// </summary>
+        public static string SetupSshDialogKeyTypeRsaDescription {
+            get {
+                return ResourceManager.GetString("SetupSshDialogKeyTypeRsaDescription", resourceCulture);
             }
         }
         
