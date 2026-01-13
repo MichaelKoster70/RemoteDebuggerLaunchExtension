@@ -697,16 +697,13 @@ Windows OpenSSH ssh-keygen reported:</value>
     <value>Querying .NET path on targets...</value>
   </data>
   <data name="RemoteCommandQueryDotnetCommandCaption" xml:space="preserve">
-    <value>Query .NET Path</value>
+    <value>Query .NET Install path</value>
   </data>
   <data name="RemoteCommandQueryDotnetCommandFoundPath" xml:space="preserve">
     <value>Found .NET at: {0}</value>
   </data>
   <data name="RemoteCommandQueryDotnetCommandSuccess" xml:space="preserve">
     <value>Successfully updated launch profile with .NET install path: {0}</value>
-  </data>
-  <data name="RemoteCommandQueryDotnetCommandInvalidPath" xml:space="preserve">
-    <value>Could not extract valid install path from dotnet binary location</value>
   </data>
   <data name="RemoteCommandQueryDotnetCommandNotFound" xml:space="preserve">
     <value>.NET not found on remote device. Error: {0}</value>

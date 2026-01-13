@@ -38,6 +38,12 @@ namespace RemoteDebuggerLauncher
       [Import]
       internal Lazy<IActiveConfiguredProjectProvider> ActiveConfiguredProjectProvider { get; private set; }
 
+      [Import]
+      internal ILaunchProfileEditor LaunchProfileEditor { get; private set;  }
+
+      /// <inheritdoc />
+      public Task<ILaunchProfileEditor> GetLaunchProfileEditorAsync() => Task.FromResult(LaunchProfileEditor);
+
       /// <inheritdoc />
       public string GetProjectName() => ConfiguredProject.GetProjectName();
 
