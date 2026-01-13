@@ -209,7 +209,7 @@ namespace RemoteDebuggerLauncher
                      if (File.Exists(launchSettingsPath))
                      {
                         // Read the current launchSettings.json
-                        var jsonText = await File.ReadAllTextAsync(launchSettingsPath);
+                        var jsonText = File.ReadAllText(launchSettingsPath);
                         var jsonObj = JObject.Parse(jsonText);
                         
                         // Update the dotNetInstallFolderPath in the active profile
@@ -220,7 +220,7 @@ namespace RemoteDebuggerLauncher
                            
                            // Write back to file with indentation
                            var updatedJson = jsonObj.ToString(Newtonsoft.Json.Formatting.Indented);
-                           await File.WriteAllTextAsync(launchSettingsPath, updatedJson);
+                           File.WriteAllText(launchSettingsPath, updatedJson);
                            
                            outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetCommandSuccess, dotnetInstallPath);
                            return;
