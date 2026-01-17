@@ -50,8 +50,16 @@ namespace RemoteDebuggerLauncher
       /// <returns>A <see cref="ISecureShellDeployService"/> instance.</returns>
       Task<IDotnetPublishService> GetPublishServiceAsync(bool useWaitDialog);
 
+      /// <summary>
+      /// Gets the secure shell remote operations asynchronous.
+      /// </summary>
+      /// <returns>A <see cref="ISecureShellRemoteOperationsService"/> instance.</returns>
       Task<ISecureShellRemoteOperationsService> GetSecureShellRemoteOperationsAsync();
 
+      /// <summary>
+      /// Gets the status bar service.
+      /// </summary>
+      /// <returns>A <see cref="IStatusbarService"/> instance.</returns>
       Task<IStatusbarService> GetStatusbarServiceAsync();
    }
 }

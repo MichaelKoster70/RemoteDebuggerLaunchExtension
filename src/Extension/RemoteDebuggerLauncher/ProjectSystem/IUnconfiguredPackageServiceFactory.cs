@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -27,5 +27,11 @@ namespace RemoteDebuggerLauncher
       /// </summary>
       /// <returns><c>true</c> is active profile is supported, else <c>false</c></returns>
       Task<bool> ConfigureAsync();
+
+      /// <summary>
+      /// Gets the launch profile editor service.
+      /// </summary>
+      /// <returns>A <see cref="ILaunchProfileEditor"/> instance.</returns>
+      Task<ILaunchProfileEditor> GetLaunchProfileEditorAsync();
    }
 }

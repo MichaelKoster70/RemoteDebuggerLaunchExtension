@@ -12,7 +12,10 @@ using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Build.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
+using Microsoft.VisualStudio.ProjectSystem.VS;
 using RemoteDebuggerLauncher.PowerShellHost;
 using RemoteDebuggerLauncher.Shared;
 using Constants = RemoteDebuggerLauncher.Shared.Constants;
@@ -32,6 +35,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       private readonly IDebugTokenReplacer tokenReplacer;
       private readonly IOutputPaneWriterService outputPaneWriter;
       private readonly IStatusbarService statusbar;
+      private readonly ILogger logger;
 
       /// <summary>
       /// Initializes a new instance of the <see cref="SecureShellRemoteOperations" /> class.
@@ -41,7 +45,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// <param name="bulkCopy">The bulk copy session service to use.</param>
       /// <param name="outputPaneWriter">The output pane writer service instance to use.</param>
       /// <param name="statusbar">Optional statusbar service to report progress.</param>
-      internal SecureShellRemoteOperationsService(ConfigurationAggregator configurationAggregator, ISecureShellSessionService session, IRemoteBulkCopySessionService bulkCopy, IDebugTokenReplacer tokenReplacer, IOutputPaneWriterService outputPaneWriter, IStatusbarService statusbar)
+      internal SecureShellRemoteOperationsService(ConfigurationAggregator configurationAggregator, ISecureShellSessionService session, IRemoteBulkCopySessionService bulkCopy, IDebugTokenReplacer tokenReplacer, IOutputPaneWriterService outputPaneWriter, IStatusbarService statusbar, ILoggerFactory loggerFactory)
       {
          this.configurationAggregator = configurationAggregator;
          this.session = session;
@@ -49,6 +53,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          this.tokenReplacer = tokenReplacer;
          this.outputPaneWriter = outputPaneWriter;
          this.statusbar = statusbar;
+         logger = loggerFactory.CreateLogger<SecureShellRemoteOperationsService>();
       }
 
       /// <inheritdoc />
@@ -362,6 +367,53 @@ namespace RemoteDebuggerLauncher.RemoteOperations
                return TryInstallDotNetRuntimeOfflineAsync(channel, Constants.Dotnet.RuntimeAspNet);
             default:
                throw new NotSupportedException($"runtime kind '{kind}' not supported");
+         }
+      }
+
+      /// <inheritdoc />
+      public async Task<string> TryFindDotNetInstallPathAsync()
+      {
+         logger.LogTrace("TryFindDotNetInstallPathAsync: begin.");
+
+         using (var commandingService = session.CreateCommandSession())
+         {
+            outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetOutputPaneProgress);
+
+            // Step 1: try to find 'dotnet' using 'command -v dotnet'
+            var commandText = PackageConstants.LinuxShellCommands.FormatCommand(PackageConstants.Dotnet.BinaryName);
+            (int statusCode, string result, string error) = await commandingService.TryExecuteCommandAsync(commandText);
+            logger.LogInformation("TryFindDotNetInstallPathAsync: command '{CommandText}' returned StatusCode={StatusCode}, result='{Result}', error='{Error}'", commandText, statusCode, result, error);
+            if (statusCode == 0)
+            {
+               // remove the trailing '/dotnet' from the result to get the install folder path
+               result = result.Trim('\n').Remove(result.LastIndexOf("/dotnet"));
+               outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+               outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetOutputPaneFound, result);
+
+               logger.LogTrace("TryFindDotNetInstallPathAsync: end. returns '{Result}'", result);
+               return result;
+            }
+
+            // Step 2: try to find 'dotnet' using 'bash -lc "command -v dotnet"'
+            commandText = PackageConstants.LinuxShellCommands.FormatBashLoginCommand(PackageConstants.Dotnet.BinaryName);
+            ( statusCode, result, error) = await commandingService.TryExecuteCommandAsync(commandText);
+            logger.LogInformation("TryFindDotNetInstallPathAsync: command '{CommandText}' returned StatusCode={StatusCode}, result='{Result}', error='{Error}'", commandText, statusCode, result, error);
+            if (statusCode == 0)
+            {
+               result = result.Trim('\n').Remove(result.LastIndexOf("/dotnet"));
+               outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+               outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetOutputPaneFound, result);
+            }
+            else
+            {
+               outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+               outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetOutputPaneNotFound);
+               result = string.Empty;
+            }
+
+            logger.LogTrace("TryFindDotNetInstallPathAsync: end. returns '{Result}'", result);
+            return result;
          }
       }
       #endregion

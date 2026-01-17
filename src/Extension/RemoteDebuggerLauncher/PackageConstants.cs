@@ -253,6 +253,8 @@ namespace RemoteDebuggerLauncher
          private const string Chmod = "chmod {0} {1}";
          private const string ChmodPlusX = "chmod +x {0}";
          private const string Command = "command -v {0}";
+         private const string BashLoginShellCommand = "bash -lc \"command -v {0}\"";
+
 
          /// <summary>"pwd" - Command to get the current working directory.</summary>
          public const string Pwd = "pwd";
@@ -277,6 +279,9 @@ namespace RemoteDebuggerLauncher
 
          /// <summary>"command -v {0}" - Formats the command to check if a command exists on the remote system.</summary>
          public static string FormatCommand(string commandName) => string.Format(Command, commandName);
+
+         /// <summary>"bash -lc "command -v {0}"" - Formats the command to check if a command exists on the remote system.</summary>
+         public static string FormatBashLoginCommand(string commandName) => string.Format(BashLoginShellCommand, commandName);
       }
    }
 }
