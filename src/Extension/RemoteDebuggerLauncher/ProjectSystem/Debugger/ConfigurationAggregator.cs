@@ -342,6 +342,19 @@ namespace RemoteDebuggerLauncher
       public IImmutableDictionary<string, string> QueryEnvironmentVariables() => launchProfile.EnvironmentVariables;
 
       /// <summary>
+      /// Queries the process name from which to copy environment variables.
+      /// </summary>
+      /// <returns>A <see langword="string"/> holding the process name; an empty string if not configured.</returns>
+      /// <remarks>
+      /// The following configuration providers are queried, first match wins:
+      /// - selected launch profile
+      /// </remarks>
+      public string QueryCopyEnvironmentFrom()
+      {
+         return GetOtherSetting<string>("copyEnvironmentFrom") ?? string.Empty;
+      }
+
+      /// <summary>
       /// Queries the flag whether to install the VS code debugger when start debugging.
       /// </summary>
       /// <returns>A <see langword="bool"/><c>true</c> if debugger should be installed; else <c>false</c>.</returns>

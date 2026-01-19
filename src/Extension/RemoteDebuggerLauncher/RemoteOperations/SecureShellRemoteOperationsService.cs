@@ -6,6 +6,7 @@
 // ----------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
@@ -808,6 +809,64 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
             outputPaneWriter.WriteLine(Resources.RemoteCommandCommonSuccess);
          }
+      }
+
+      /// <inheritdoc />
+      public async Task<Dictionary<string, string>> QueryProcessEnvironmentAsync(string processName)
+      {
+         var result = new Dictionary<string, string>();
+
+         if (string.IsNullOrWhiteSpace(processName))
+         {
+            return result;
+         }
+
+         try
+         {
+            logger.LogDebug("QueryProcessEnvironmentAsync: Querying environment from process '{ProcessName}'", processName);
+
+            // Find the process ID of a process with the given name owned by the current user
+            var userName = session.Settings.UserName;
+            var findPidCommand = $"pgrep -u {userName} -x \"{processName}\" | head -n 1";
+            
+            var pidResult = await session.ExecuteSingleCommandAsync(findPidCommand);
+            var pid = pidResult.Trim();
+
+            if (string.IsNullOrWhiteSpace(pid) || !int.TryParse(pid, out _))
+            {
+               logger.LogDebug("QueryProcessEnvironmentAsync: Process '{ProcessName}' not found or not owned by user '{UserName}'", processName, userName);
+               return result;
+            }
+
+            logger.LogDebug("QueryProcessEnvironmentAsync: Found process '{ProcessName}' with PID {Pid}", processName, pid);
+
+            // Read the environment variables from /proc/{pid}/environ
+            var environCommand = $"cat /proc/{pid}/environ";
+            var environResult = await session.ExecuteSingleCommandAsync(environCommand);
+
+            // The environ file contains null-terminated strings
+            var envVars = environResult.Split('\0', StringSplitOptions.RemoveEmptyEntries);
+            
+            foreach (var envVar in envVars)
+            {
+               var separatorIndex = envVar.IndexOf('=');
+               if (separatorIndex > 0)
+               {
+                  var key = envVar.Substring(0, separatorIndex);
+                  var value = envVar.Substring(separatorIndex + 1);
+                  result[key] = value;
+               }
+            }
+
+            logger.LogDebug("QueryProcessEnvironmentAsync: Successfully retrieved {Count} environment variables from process '{ProcessName}'", result.Count, processName);
+         }
+         catch (Exception ex)
+         {
+            logger.LogWarning(ex, "QueryProcessEnvironmentAsync: Failed to query environment from process '{ProcessName}'", processName);
+            // Return empty dictionary on error - this is not a critical failure
+         }
+
+         return result;
       }
       #endregion
    }

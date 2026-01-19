@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
@@ -141,7 +142,7 @@ namespace RemoteDebuggerLauncher
          config.Args.Add($"{assemblyFileDirectory}/{assemblyFileName}");
          config.CurrentWorkingDirectory = workingDirectory;
          config.AppendCommandLineArguments(configurationAggregator);
-         config.AppendEnvironmentVariables(configurationAggregator);
+         await config.AppendEnvironmentVariablesAsync(configurationAggregator, remoteOperations);
 
          var launchConfigurationJson = JsonConvert.SerializeObject(config);
 
@@ -194,7 +195,7 @@ namespace RemoteDebuggerLauncher
          config.Args.Add($"./{assemblyFileName}");
          config.CurrentWorkingDirectory = workingDirectory;
          config.AppendCommandLineArguments(configurationAggregator);
-         config.AppendEnvironmentVariables(configurationAggregator);
+         await config.AppendEnvironmentVariablesAsync(configurationAggregator, remoteOperations);
 
          var launchConfigurationJson = JsonConvert.SerializeObject(config);
 
@@ -260,11 +261,33 @@ namespace RemoteDebuggerLauncher
          }
       }
 
-      private static void AppendEnvironmentVariables(this LaunchConfiguration config, ConfigurationAggregator configurationAggregator)
+      private static async Task AppendEnvironmentVariablesAsync(this LaunchConfiguration config, ConfigurationAggregator configurationAggregator, ISecureShellRemoteOperationsService remoteOperations)
       {
-         var environment = configurationAggregator.QueryEnvironmentVariables();
-         foreach(var ev in environment)
+         // First, check if we need to copy environment from a process
+         var copyEnvFrom = configurationAggregator.QueryCopyEnvironmentFrom();
+         if (!string.IsNullOrWhiteSpace(copyEnvFrom))
          {
+            var processEnv = await remoteOperations.QueryProcessEnvironmentAsync(copyEnvFrom);
+            
+            // Add all environment variables from the process
+            foreach (var kvp in processEnv)
+            {
+               config.Environment.Add(new EnvironmentEntry { Name = kvp.Key, Value = kvp.Value });
+            }
+         }
+
+         // Then, add/override with explicitly configured environment variables
+         // These take precedence over copied variables
+         var explicitEnv = configurationAggregator.QueryEnvironmentVariables();
+         foreach (var ev in explicitEnv)
+         {
+            // Remove any existing entry with the same name (from copied env)
+            var existingEntry = config.Environment.FirstOrDefault(e => e.Name == ev.Key);
+            if (existingEntry != null)
+            {
+               config.Environment.Remove(existingEntry);
+            }
+            
             config.Environment.Add(new EnvironmentEntry { Name = ev.Key, Value = ev.Value });
          }
       }

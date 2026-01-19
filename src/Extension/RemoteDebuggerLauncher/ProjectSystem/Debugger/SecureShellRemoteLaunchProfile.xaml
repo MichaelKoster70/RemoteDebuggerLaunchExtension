@@ -73,6 +73,11 @@
     </StringProperty.ValueEditors>
   </StringProperty>
 
+  <StringProperty Name="copyEnvironmentFrom"
+                  DisplayName="Copy environment from"
+                  Description="Name of a process to copy environment variables from (e.g., gnome-shell, plasmashell, Xwayland). Environment variables explicitly set above will not be overwritten."
+                  Subcategory="Remote Devices" />
+
   <BoolProperty Name="launchBrowser"
                 DisplayName="LaunchBrowser"
                 Description="indicates that the web browser should automatically launch when debugging this project." />

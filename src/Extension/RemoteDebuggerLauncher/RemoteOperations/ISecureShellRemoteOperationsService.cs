@@ -148,5 +148,12 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// </summary>
       /// <returns>The <see cref="string"/> holding the runtime ID.</returns>
       Task<string> GetRuntimeIdAsync();
+
+      /// <summary>
+      /// Queries environment variables from a running process owned by the current user.
+      /// </summary>
+      /// <param name="processName">The name of the process to query.</param>
+      /// <returns>A <see cref="Task{Dictionary}"/> representing the asynchronous operation: a dictionary of environment variables, or an empty dictionary if the process is not found.</returns>
+      Task<Dictionary<string, string>> QueryProcessEnvironmentAsync(string processName);
    }
 }
