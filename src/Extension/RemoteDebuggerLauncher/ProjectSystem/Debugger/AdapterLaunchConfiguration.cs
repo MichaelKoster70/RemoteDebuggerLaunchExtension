@@ -279,16 +279,25 @@ namespace RemoteDebuggerLauncher
          // Then, add/override with explicitly configured environment variables
          // These take precedence over copied variables
          var explicitEnv = configurationAggregator.QueryEnvironmentVariables();
-         foreach (var ev in explicitEnv)
+         if (explicitEnv.Count > 0)
          {
-            // Remove any existing entry with the same name (from copied env)
-            var existingEntry = config.Environment.FirstOrDefault(e => e.Name == ev.Key);
-            if (existingEntry != null)
+            // Create a HashSet of explicit keys for efficient lookup
+            var explicitKeys = new HashSet<string>(explicitEnv.Keys);
+            
+            // Remove any existing entries that will be overridden
+            for (int i = config.Environment.Count - 1; i >= 0; i--)
             {
-               config.Environment.Remove(existingEntry);
+               if (explicitKeys.Contains(config.Environment[i].Name))
+               {
+                  config.Environment.RemoveAt(i);
+               }
             }
             
-            config.Environment.Add(new EnvironmentEntry { Name = ev.Key, Value = ev.Value });
+            // Add the explicit environment variables
+            foreach (var ev in explicitEnv)
+            {
+               config.Environment.Add(new EnvironmentEntry { Name = ev.Key, Value = ev.Value });
+            }
          }
       }
    }

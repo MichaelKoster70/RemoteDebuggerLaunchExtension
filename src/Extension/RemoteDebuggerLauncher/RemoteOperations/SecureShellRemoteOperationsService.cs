@@ -825,6 +825,14 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          {
             logger.LogDebug("QueryProcessEnvironmentAsync: Querying environment from process '{ProcessName}'", processName);
 
+            // Escape the process name to prevent command injection
+            // Only allow alphanumeric characters, hyphens, and underscores
+            if (!System.Text.RegularExpressions.Regex.IsMatch(processName, @"^[a-zA-Z0-9_-]+$"))
+            {
+               logger.LogWarning("QueryProcessEnvironmentAsync: Invalid process name '{ProcessName}' - only alphanumeric, hyphens, and underscores are allowed", processName);
+               return result;
+            }
+
             // Find the process ID of a process with the given name owned by the current user
             var userName = session.Settings.UserName;
             var findPidCommand = $"pgrep -u {userName} -x \"{processName}\" | head -n 1";
