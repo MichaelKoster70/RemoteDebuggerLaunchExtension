@@ -344,43 +344,34 @@ namespace RemoteDebuggerLauncher
       public IImmutableDictionary<string, string> QueryEnvironmentVariables() => launchProfile.EnvironmentVariables;
 
       /// <summary>
-      /// Queries the process name from which to copy environment variables.
+      /// Queries and parses the copyEnvironmentFrom configuration value.
       /// </summary>
-      /// <returns>A <see langword="string"/> holding the process name; an empty string if not configured.</returns>
+      /// <returns>A tuple containing the process name and list of specific variables to copy. Returns (string.Empty, empty list) if not configured.</returns>
       /// <remarks>
+      /// The syntax is: "processName|var1;var2;var3"
+      /// - If no pipe character is present, all variables are copied (returns empty list)
+      /// - If pipe is present with variables, only those variables are copied
       /// The following configuration providers are queried, first match wins:
       /// - selected launch profile
       /// </remarks>
-      public string QueryCopyEnvironmentFrom()
+      public (string ProcessName, IReadOnlyList<string> VariablesToCopy) QueryCopyEnvironmentFrom()
       {
-         return GetOtherSetting<string>("copyEnvironmentFrom") ?? string.Empty;
-      }
-
-      /// <summary>
-      /// Queries and parses the copyEnvironmentFrom configuration value.
-      /// </summary>
-      /// <param name="processName">The process name to query.</param>
-      /// <param name="variablesToCopy">The list of specific variables to copy, or null to copy all.</param>
-      /// <returns><c>true</c> if a process name was configured; otherwise <c>false</c>.</returns>
-      /// <remarks>
-      /// The syntax is: "processName|var1;var2;var3"
-      /// - If no pipe character is present, all variables are copied
-      /// - If pipe is present with variables, only those variables are copied
-      /// </remarks>
-      public bool TryParseCopyEnvironmentFrom(out string processName, out IReadOnlyList<string> variablesToCopy)
-      {
-         var copyEnvFrom = QueryCopyEnvironmentFrom();
+         var copyEnvFrom = GetOtherSetting<string>("copyEnvironmentFrom") ?? string.Empty;
          
          if (string.IsNullOrWhiteSpace(copyEnvFrom))
          {
-            processName = string.Empty;
-            variablesToCopy = null;
-            return false;
+            return (string.Empty, Array.Empty<string>());
          }
 
          var parts = copyEnvFrom.Split(new[] { '|' }, 2);
-         processName = parts[0].Trim();
+         var processName = parts[0].Trim();
          
+         if (string.IsNullOrWhiteSpace(processName))
+         {
+            return (string.Empty, Array.Empty<string>());
+         }
+         
+         IReadOnlyList<string> variablesToCopy;
          if (parts.Length == 2 && !string.IsNullOrWhiteSpace(parts[1]))
          {
             // Parse the variable list
@@ -388,15 +379,15 @@ namespace RemoteDebuggerLauncher
                                   .Select(v => v.Trim())
                                   .Where(v => !string.IsNullOrEmpty(v))
                                   .ToList();
-            variablesToCopy = varList.Count > 0 ? varList : null;
+            variablesToCopy = varList.Count > 0 ? varList : (IReadOnlyList<string>)Array.Empty<string>();
          }
          else
          {
             // No variables specified, copy all
-            variablesToCopy = null;
+            variablesToCopy = Array.Empty<string>();
          }
 
-         return !string.IsNullOrWhiteSpace(processName);
+         return (processName, variablesToCopy);
       }
 
       /// <summary>
