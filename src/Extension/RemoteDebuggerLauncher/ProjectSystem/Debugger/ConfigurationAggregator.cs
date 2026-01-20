@@ -6,7 +6,9 @@
 // ----------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Net;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
 using RemoteDebuggerLauncher.Shared;
@@ -340,6 +342,46 @@ namespace RemoteDebuggerLauncher
       /// - selected launch profile
       /// </remarks>
       public IImmutableDictionary<string, string> QueryEnvironmentVariables() => launchProfile.EnvironmentVariables;
+
+      /// <summary>
+      /// Queries and parses the copyEnvironmentFrom configuration value.
+      /// </summary>
+      /// <returns>A tuple containing the process name and list of specific variables to copy. Returns (string.Empty, empty list) if not configured.</returns>
+      /// <remarks>
+      /// The syntax is: "processName|var1;var2;var3"
+      /// - If no pipe character is present, all variables are copied (returns empty list)
+      /// - If pipe is present with variables, only those variables are copied
+      /// The following configuration providers are queried, first match wins:
+      /// - selected launch profile
+      /// </remarks>
+      public (string ProcessName, IReadOnlyList<string> VariablesToCopy) QueryCopyEnvironmentFrom()
+      {
+         var copyEnvFrom = GetOtherSetting<string>("copyEnvironmentFrom") ?? string.Empty;
+
+         if (!string.IsNullOrWhiteSpace(copyEnvFrom))
+         {
+            // Split the value into process name and variable list
+            var parts = copyEnvFrom.Split(new[] { '|' }, 2);
+            var processName = parts[0].Trim();
+
+            if (string.IsNullOrWhiteSpace(processName))
+            {
+               return (string.Empty, Array.Empty<string>());
+            }
+
+            IReadOnlyList<string> variablesToCopy = parts.Length == 2 && !string.IsNullOrWhiteSpace(parts[1]) ? 
+               parts[1].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                         .Select(v => v.Trim())
+                         .Where(v => !string.IsNullOrEmpty(v))
+                         .ToList() 
+               : (IReadOnlyList<string>)Array.Empty<string>();
+
+            return (processName, variablesToCopy);
+         }
+
+         // No args configured
+         return (string.Empty, Array.Empty<string>());
+      }
 
       /// <summary>
       /// Queries the flag whether to install the VS code debugger when start debugging.
