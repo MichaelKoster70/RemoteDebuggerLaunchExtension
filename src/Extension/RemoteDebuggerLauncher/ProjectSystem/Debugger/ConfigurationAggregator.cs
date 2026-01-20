@@ -6,7 +6,9 @@
 // ----------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Net;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
 using RemoteDebuggerLauncher.Shared;
