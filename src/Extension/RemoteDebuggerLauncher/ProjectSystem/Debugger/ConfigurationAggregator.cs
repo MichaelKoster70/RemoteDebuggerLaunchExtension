@@ -355,6 +355,49 @@ namespace RemoteDebuggerLauncher
       }
 
       /// <summary>
+      /// Queries and parses the copyEnvironmentFrom configuration value.
+      /// </summary>
+      /// <param name="processName">The process name to query.</param>
+      /// <param name="variablesToCopy">The list of specific variables to copy, or null to copy all.</param>
+      /// <returns><c>true</c> if a process name was configured; otherwise <c>false</c>.</returns>
+      /// <remarks>
+      /// The syntax is: "processName|var1;var2;var3"
+      /// - If no pipe character is present, all variables are copied
+      /// - If pipe is present with variables, only those variables are copied
+      /// </remarks>
+      public bool TryParseCopyEnvironmentFrom(out string processName, out IReadOnlyList<string> variablesToCopy)
+      {
+         var copyEnvFrom = QueryCopyEnvironmentFrom();
+         
+         if (string.IsNullOrWhiteSpace(copyEnvFrom))
+         {
+            processName = string.Empty;
+            variablesToCopy = null;
+            return false;
+         }
+
+         var parts = copyEnvFrom.Split(new[] { '|' }, 2);
+         processName = parts[0].Trim();
+         
+         if (parts.Length == 2 && !string.IsNullOrWhiteSpace(parts[1]))
+         {
+            // Parse the variable list
+            var varList = parts[1].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                                  .Select(v => v.Trim())
+                                  .Where(v => !string.IsNullOrEmpty(v))
+                                  .ToList();
+            variablesToCopy = varList.Count > 0 ? varList : null;
+         }
+         else
+         {
+            // No variables specified, copy all
+            variablesToCopy = null;
+         }
+
+         return !string.IsNullOrWhiteSpace(processName);
+      }
+
+      /// <summary>
       /// Queries the flag whether to install the VS code debugger when start debugging.
       /// </summary>
       /// <returns>A <see langword="bool"/><c>true</c> if debugger should be installed; else <c>false</c>.</returns>

@@ -813,7 +813,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       }
 
       /// <inheritdoc />
-      public async Task<IDictionary<string, string>> QueryProcessEnvironmentAsync(string processName)
+      public async Task<IDictionary<string, string>> QueryProcessEnvironmentAsync(string processName, IReadOnlyList<string> variablesToCopy = null)
       {
          var result = new Dictionary<string, string>();
 
@@ -856,6 +856,14 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             // The environ file contains null-terminated strings
             var envVars = environResult.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
             
+            // Create a HashSet for efficient lookup if filtering is needed
+            HashSet<string> filterSet = null;
+            if (variablesToCopy != null && variablesToCopy.Count > 0)
+            {
+               filterSet = new HashSet<string>(variablesToCopy, StringComparer.Ordinal);
+               logger.LogDebug("QueryProcessEnvironmentAsync: Filtering to {Count} specific variables", filterSet.Count);
+            }
+            
             foreach (var envVar in envVars)
             {
                var separatorIndex = envVar.IndexOf('=');
@@ -863,7 +871,12 @@ namespace RemoteDebuggerLauncher.RemoteOperations
                {
                   var key = envVar.Substring(0, separatorIndex);
                   var value = envVar.Substring(separatorIndex + 1);
-                  result[key] = value;
+                  
+                  // Only add if no filter, or if the key is in the filter set
+                  if (filterSet == null || filterSet.Contains(key))
+                  {
+                     result[key] = value;
+                  }
                }
             }
 

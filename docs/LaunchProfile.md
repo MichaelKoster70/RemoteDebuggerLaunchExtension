@@ -91,6 +91,13 @@ The `copyEnvironmentFrom` property allows you to copy environment variables from
 - `XDG_CURRENT_DESKTOP`
 - `XAUTHORITY`
 
+**Syntax:**
+The `copyEnvironmentFrom` property supports two formats:
+1. **Copy all variables**: `processName`
+   - Example: `"gnome-shell"` - copies all environment variables from the gnome-shell process
+2. **Copy specific variables**: `processName|var1;var2;var3`
+   - Example: `"gnome-shell|DISPLAY;XAUTHORITY;DBUS_SESSION_BUS_ADDRESS"` - copies only the specified variables
+
 **Usage:**
 1. Log into the target machine through a different connection having a desktop session (e.g., remote desktop via RDP/VNC or the virtual display of a VM)
 2. In your launch profile, set `copyEnvironmentFrom` to the name of a desktop process, such as:
@@ -101,7 +108,9 @@ The `copyEnvironmentFrom` property allows you to copy environment variables from
    - `kwin_wayland` or `kwin_x11` (KWin window manager)
    - `Xwayland` or `Xorg` (X server)
 
-**Example:**
+**Examples:**
+
+Copy all environment variables:
 ```json
 {
   "profiles": {
@@ -109,6 +118,22 @@ The `copyEnvironmentFrom` property allows you to copy environment variables from
       "commandName": "SshRemoteLaunch",
       "hostName": "192.168.1.106",
       "copyEnvironmentFrom": "gnome-shell",
+      "environmentVariables": {
+        "MY_CUSTOM_VAR": "value"
+      }
+    }
+  }
+}
+```
+
+Copy only specific environment variables:
+```json
+{
+  "profiles": {
+    "SSH Remote GUI": {
+      "commandName": "SshRemoteLaunch",
+      "hostName": "192.168.1.106",
+      "copyEnvironmentFrom": "gnome-shell|DISPLAY;WAYLAND_DISPLAY;XAUTHORITY;DBUS_SESSION_BUS_ADDRESS",
       "environmentVariables": {
         "MY_CUSTOM_VAR": "value"
       }

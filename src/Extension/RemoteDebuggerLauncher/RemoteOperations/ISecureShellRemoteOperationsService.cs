@@ -154,7 +154,8 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// Queries environment variables from a running process owned by the current user.
       /// </summary>
       /// <param name="processName">The name of the process to query.</param>
+      /// <param name="variablesToCopy">Optional list of specific variables to copy. If null, all variables are copied.</param>
       /// <returns>A <see cref="Task{IDictionary}"/> representing the asynchronous operation: a dictionary of environment variables, or an empty dictionary if the process is not found.</returns>
-      Task<IDictionary<string, string>> QueryProcessEnvironmentAsync(string processName);
+      Task<IDictionary<string, string>> QueryProcessEnvironmentAsync(string processName, IReadOnlyList<string> variablesToCopy = null);
    }
 }

@@ -264,12 +264,11 @@ namespace RemoteDebuggerLauncher
       private static async Task AppendEnvironmentVariablesAsync(this LaunchConfiguration config, ConfigurationAggregator configurationAggregator, ISecureShellRemoteOperationsService remoteOperations)
       {
          // First, check if we need to copy environment from a process
-         var copyEnvFrom = configurationAggregator.QueryCopyEnvironmentFrom();
-         if (!string.IsNullOrWhiteSpace(copyEnvFrom))
+         if (configurationAggregator.TryParseCopyEnvironmentFrom(out string processName, out IReadOnlyList<string> variablesToCopy))
          {
-            var processEnv = await remoteOperations.QueryProcessEnvironmentAsync(copyEnvFrom);
+            var processEnv = await remoteOperations.QueryProcessEnvironmentAsync(processName, variablesToCopy);
             
-            // Add all environment variables from the process
+            // Add all environment variables from the process (filtered if specified)
             foreach (var kvp in processEnv)
             {
                config.Environment.Add(new EnvironmentEntry { Name = kvp.Key, Value = kvp.Value });
