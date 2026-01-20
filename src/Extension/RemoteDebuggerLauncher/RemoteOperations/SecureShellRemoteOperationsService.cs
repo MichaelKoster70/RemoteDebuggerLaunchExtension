@@ -813,7 +813,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       }
 
       /// <inheritdoc />
-      public async Task<Dictionary<string, string>> QueryProcessEnvironmentAsync(string processName)
+      public async Task<IDictionary<string, string>> QueryProcessEnvironmentAsync(string processName)
       {
          var result = new Dictionary<string, string>();
 
