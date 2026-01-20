@@ -819,6 +819,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
          if (string.IsNullOrWhiteSpace(processName))
          {
+            logger.LogDebug("QueryProcessEnvironmentAsync: No processName specified, exiting");
             return result;
          }
 

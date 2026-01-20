@@ -357,37 +357,30 @@ namespace RemoteDebuggerLauncher
       public (string ProcessName, IReadOnlyList<string> VariablesToCopy) QueryCopyEnvironmentFrom()
       {
          var copyEnvFrom = GetOtherSetting<string>("copyEnvironmentFrom") ?? string.Empty;
-         
+
          if (string.IsNullOrWhiteSpace(copyEnvFrom))
          {
-            return (string.Empty, Array.Empty<string>());
+            // Split the value into process name and variable list
+            var parts = copyEnvFrom.Split(new[] { '|' }, 2);
+            var processName = parts[0].Trim();
+
+            if (string.IsNullOrWhiteSpace(processName))
+            {
+               return (string.Empty, Array.Empty<string>());
+            }
+
+            IReadOnlyList<string> variablesToCopy = parts.Length == 2 && !string.IsNullOrWhiteSpace(parts[1]) ? 
+               parts[1].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                         .Select(v => v.Trim())
+                         .Where(v => !string.IsNullOrEmpty(v))
+                         .ToList() 
+               : (IReadOnlyList<string>)Array.Empty<string>();
+
+            return (processName, variablesToCopy);
          }
 
-         var parts = copyEnvFrom.Split(new[] { '|' }, 2);
-         var processName = parts[0].Trim();
-         
-         if (string.IsNullOrWhiteSpace(processName))
-         {
-            return (string.Empty, Array.Empty<string>());
-         }
-         
-         IReadOnlyList<string> variablesToCopy;
-         if (parts.Length == 2 && !string.IsNullOrWhiteSpace(parts[1]))
-         {
-            // Parse the variable list
-            var varList = parts[1].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                                  .Select(v => v.Trim())
-                                  .Where(v => !string.IsNullOrEmpty(v))
-                                  .ToList();
-            variablesToCopy = varList.Count > 0 ? varList : (IReadOnlyList<string>)Array.Empty<string>();
-         }
-         else
-         {
-            // No variables specified, copy all
-            variablesToCopy = Array.Empty<string>();
-         }
-
-         return (processName, variablesToCopy);
+         // No args configured
+         return (string.Empty, Array.Empty<string>());
       }
 
       /// <summary>
