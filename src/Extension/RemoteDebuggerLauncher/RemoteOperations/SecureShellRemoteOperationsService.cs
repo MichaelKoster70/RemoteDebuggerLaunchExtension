@@ -12,6 +12,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Build.Tasks;
 using Microsoft.Extensions.Logging;
@@ -827,7 +828,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
             // Escape the process name to prevent command injection
             // Only allow alphanumeric characters, hyphens, and underscores
-            if (!System.Text.RegularExpressions.Regex.IsMatch(processName, @"^[a-zA-Z0-9_-]+$"))
+            if (!Regex.IsMatch(processName, @"^[a-zA-Z0-9_-]+$"))
             {
                logger.LogWarning("QueryProcessEnvironmentAsync: Invalid process name '{ProcessName}' - only alphanumeric, hyphens, and underscores are allowed", processName);
                return result;
@@ -853,7 +854,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
             var environResult = await session.ExecuteSingleCommandAsync(environCommand);
 
             // The environ file contains null-terminated strings
-            var envVars = environResult.Split('\0', StringSplitOptions.RemoveEmptyEntries);
+            var envVars = environResult.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
             
             foreach (var envVar in envVars)
             {
