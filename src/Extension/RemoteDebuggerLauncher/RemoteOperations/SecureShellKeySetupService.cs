@@ -188,8 +188,12 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
          var outputPaneWriter = OutputPaneWriterServiceAsync.Create(OutputPaneWriter);
 
-         outputPaneWriter.WriteLineAsync(Resources.RemoteCommandSetupSshScanProgressFingerprintSsh1, settings.UserName, settings.HostName, settings.HostPort);
-         outputPaneWriter.WriteLineAsync(Resources.RemoteCommandSetupSshScanProgressFingerprintSsh2, arguments);
+         await outputPaneWriter.WriteLineAsync(Resources.RemoteCommandSetupSshScanProgressFingerprintSsh1, settings.UserName, settings.HostName, settings.HostPort);
+         await 
+            
+            
+            
+            outputPaneWriter.WriteLineAsync(Resources.RemoteCommandSetupSshScanProgressFingerprintSsh2, arguments);
 
          using (var process = PseudoConsoleProcess.Start(startInfo))
          {

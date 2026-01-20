@@ -358,7 +358,7 @@ namespace RemoteDebuggerLauncher
       {
          var copyEnvFrom = GetOtherSetting<string>("copyEnvironmentFrom") ?? string.Empty;
 
-         if (string.IsNullOrWhiteSpace(copyEnvFrom))
+         if (!string.IsNullOrWhiteSpace(copyEnvFrom))
          {
             // Split the value into process name and variable list
             var parts = copyEnvFrom.Split(new[] { '|' }, 2);
