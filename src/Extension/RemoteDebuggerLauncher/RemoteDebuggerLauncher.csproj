@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <MinimumVisualStudioVersion>17.0</MinimumVisualStudioVersion>
@@ -344,7 +344,7 @@
     <PackageReference Include="MessagePack">
       <Version>2.5.198</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -362,28 +362,28 @@
       <Version>6.0.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.PowerShell.5.1.ReferenceAssemblies" Version="1.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Managed" Version="17.4.314-g26c3aa51e7" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Managed.VS" Version="17.4.314-g26c3aa51e7" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK" Version="17.4.38-pre" />
-    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK.Tools" Version="17.4.38-pre" />
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.4.33103.184" ExcludeAssets="runtime">
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Managed" Version="17.14.10-g16c22b7f1c" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Managed.VS" Version="17.14.10-g16c22b7f1c" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK" Version="17.14.72" />
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK.Tools" Version="17.14.72" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.14.40469" ExcludeAssets="runtime">
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.4.33" />
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.3.2095">
+    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.14.29" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.14.40469">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VSSDK.Vsixsigntool">
-      <Version>16.3.29220.27</Version>
+      <Version>17.14.2099</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.4.0" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.VisualStudio.LanguageServices" Version="4.4.0" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.11.0-2.final" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.VisualStudio.LanguageServices" Version="4.11.0-2.final" ExcludeAssets="runtime" />
     <PackageReference Include="Serilog.Extensions.Logging.File">
       <Version>3.0.0</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="NuGet.VisualStudio" Version="17.4.0" ExcludeAssets="runtime" />
+    <PackageReference Include="NuGet.VisualStudio" Version="17.12.1" ExcludeAssets="runtime" />
     <PackageReference Include="SSH.NET" Version="2025.1.0" />
   </ItemGroup>
   <ItemGroup>
@@ -494,3 +494,10 @@
   </Target>
   -->
 </Project>
+
+
+
+
+
+
+
