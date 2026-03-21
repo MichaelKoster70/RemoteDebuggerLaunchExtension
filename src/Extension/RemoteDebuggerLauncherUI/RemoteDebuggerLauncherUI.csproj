@@ -152,6 +152,8 @@
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="4.4.0" ExcludeAssets="runtime" />
     <PackageReference Include="System.Text.Json">
       <Version>6.0.10</Version>
+      <PrivateAssets>all</PrivateAssets>
+      <!-- System.Text.Json is pinned to this version to align transitive dependencies; it is not used directly by this project. -->
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
