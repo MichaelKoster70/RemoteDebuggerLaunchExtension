@@ -30,6 +30,17 @@ namespace RemoteDebuggerLauncher
          password = passwordBox.Password;
       }
 
+      // Event handler for Create button click to show dropdown menu
+      private void CreateKeyButton_Click(object sender, System.Windows.RoutedEventArgs e)
+      {
+         if (sender is System.Windows.Controls.Button button && button.ContextMenu != null)
+         {
+            button.ContextMenu.PlacementTarget = button;
+            button.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+            button.ContextMenu.IsOpen = true;
+         }
+      }
+
       // Called via XAML Binding UpdateSourceExceptionFilter
       public object HostPortUpdateSourceExceptionFilter(object _, Exception exception)
       {

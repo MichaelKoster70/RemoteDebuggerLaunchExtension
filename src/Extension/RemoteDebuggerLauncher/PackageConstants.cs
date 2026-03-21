@@ -20,7 +20,7 @@ namespace RemoteDebuggerLauncher
       public static class FileSystem
       {
          /// <summary>Directory under %localappdata% where to store data like Logs and cached assets.</summary>
-         public const string StorageFolder = @"RemoteDebuggerLauncher";
+         public const string StorageFolder = @"LinuxRemoteDebugger";
       }
 
       /// <summary>
@@ -47,7 +47,7 @@ namespace RemoteDebuggerLauncher
       public static class Options
       {
          /// <summary>The Category name in the Tools=>Options used for this extension.</summary>
-         public const string Category = "RemoteDebuggerLauncher";
+         public const string Category = "LinuxRemoteDebugger";
 
          /// <summary>GUID for options page holding device connectivity settings.</summary>
          public const string PageGuidDevice = "EADDD238-7A86-4B42-8BA8-66B0C318953B";
@@ -87,6 +87,9 @@ namespace RemoteDebuggerLauncher
 
          /// <summary>The default value for the Force IPv4.</summary>
          public const bool DefaultValueForceIPv4 = false;
+
+         /// <summary>The default value for the Disable Host Key Checking.</summary>
+         public const bool DefaultValueDisableHostKeyChecking = false;
 
          /// <summary>The default value for the .NET installation path on the device page.</summary>
          public const string DefaultValueDotNetInstallFolderPath = "~/.dotnet";
@@ -143,7 +146,7 @@ namespace RemoteDebuggerLauncher
          public static readonly Guid OutputPaneGuid = new Guid("772F56E5-2D88-40FB-9006-50B9C72A2A97");
 
          /// <summary>The name for the custom output pane.</summary>
-         public const string OutputPaneName = "Remote Debugger";
+         public const string OutputPaneName = "Linux Remote Debugger";
       }
 
       public static class Debugger
@@ -177,14 +180,23 @@ namespace RemoteDebuggerLauncher
          /// <summary>Filename of the default SSH public key.</summary>
          public const string DefaultPublicKeyFileName = "id_rsa.pub";
 
+         /// <summary>Filename of the default ECDSA SSH private key.</summary>
+         public const string DefaultPrivateKeyFileNameEcdsa = "id_ecdsa";
+
+         /// <summary>Filename of the default ECDSA SSH public key.</summary>
+         public const string DefaultPublicKeyFileNameEcdsa = "id_ecdsa.pub";
+
          /// <summary>Folder relative to user home where the SSH key are stored.</summary>
          public const string DefaultKeyPairFolder = ".ssh";
 
          /// <summary>SSH key generator executable.</summary>
          public const string KeyGenExecutable = "ssh-keygen.exe";
 
-         /// <summary>SSH key generator arguments.</summary>
-         public const string KeyGenArguments = "-b 2048 -t rsa -f {0} -q -N \"\" -m pem";
+         /// <summary>SSH key generator arguments for RSA keys (4096 bit).</summary>
+         public const string KeyGenArgumentsRsa = "-b 4096 -t rsa -f {0} -q -N \"\" -m pem";
+
+         /// <summary>SSH key generator arguments for ECDSA keys (256 bit curve).</summary>
+         public const string KeyGenArgumentsEcdsa = "-t ecdsa -b 256 -f {0} -q -N \"\" -m pem";
 
          /// <summary>SSH key scanner executable.</summary>
          public const string KeyScanExecutable = "ssh-keyscan.exe";
@@ -196,18 +208,37 @@ namespace RemoteDebuggerLauncher
          /// <remarks>No space after {2} because SshForceIPv4 includes a trailing space.</remarks>
          public const string KeyScanArguments = "{2}-p {1} {0}";
 
-         /// <summary>Argument for SSH to force IPv4 usage.</summary>
-         public const string SshForceIPv4 = "-4 ";
-
-         /// <summary>SSH executable.</summary>
-         public const string SshExecutable = "ssh.exe";
+         /// <summary>Host Fingerprint scanner: SSH executable.</summary>
+         public const string HostFingerPrintSshExecutable = "ssh.exe";
 
          /// <summary>The SSH arguments to add server fingerprint to known_hosts file.</summary>
          /// <remarks>No space after {4} because SshForceIPv4 includes a trailing space.</remarks>
-         public const string SshArguments = "{0}@{1} {4}-p {2} -i \"{3}\" \"echo DONE\"";
+         public const string HostFingerPrintSshArguments = "{0}@{1} {4}-p {2} -i \"{3}\" \"echo DONE\"";
 
          /// <summary>HTTPS Developer Certificate name.</summary>
          public const string HttpsCertificateName = "DevCert.pfx";
+      }
+
+      /// <summary>
+      /// Holds command line options for the Windows OpenSSH client.
+      /// </summary>
+      public static class SecureShellOption
+      {
+         private const string PrivateKeyOption = "-i \"{0}\" ";
+         private const string PortOption = "-p {0} ";
+
+         /// <summary>SSH option to force IPv4 usage => -4</summary>
+         public const string ForceIPv4 = "-4 ";
+
+         /// <summary>SSH option disable host key checking (and to not use known_hosts file) => -o StrictHostKeyChecking.</summary>
+         public const string DisableHostKeyChecking = "-o StrictHostKeyChecking=no -o UserKnownHostsFile=NUL -o GlobalKnownHostsFile=NUL ";
+
+         /// <summary>Formats the SSH private key option => -i {0}</summary>
+         /// <param name="privateKeyFilePath">The private key file path.</param>
+        public static string FormatPrivateKeyOption(string privateKeyFilePath) => string.Format(PrivateKeyOption, privateKeyFilePath);
+
+         /// <summary>Formats the SSH port option => -p {0}</summary>
+         public static string FormatPortOption(int port) => string.Format(PortOption, port);
       }
 
       /// <summary>
@@ -222,6 +253,8 @@ namespace RemoteDebuggerLauncher
          private const string Chmod = "chmod {0} {1}";
          private const string ChmodPlusX = "chmod +x {0}";
          private const string Command = "command -v {0}";
+         private const string BashLoginShellCommand = "bash -lc \"command -v {0}\"";
+
 
          /// <summary>"pwd" - Command to get the current working directory.</summary>
          public const string Pwd = "pwd";
@@ -246,6 +279,9 @@ namespace RemoteDebuggerLauncher
 
          /// <summary>"command -v {0}" - Formats the command to check if a command exists on the remote system.</summary>
          public static string FormatCommand(string commandName) => string.Format(Command, commandName);
+
+         /// <summary>"bash -lc "command -v {0}"" - Formats the command to check if a command exists on the remote system.</summary>
+         public static string FormatBashLoginCommand(string commandName) => string.Format(BashLoginShellCommand, commandName);
       }
    }
 }

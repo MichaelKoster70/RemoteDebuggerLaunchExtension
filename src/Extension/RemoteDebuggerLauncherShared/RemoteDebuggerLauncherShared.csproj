@@ -45,6 +45,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="RemoteOperations\ISecureShellKeyPairCreatorService.cs" />
+    <Compile Include="RemoteOperations\SshKeyType.cs" />
     <Compile Include="Shared\SetupMode.cs" />
     <Compile Include="Shared\PublishMode.cs" />
     <Compile Include="Shared\Constants.cs" />

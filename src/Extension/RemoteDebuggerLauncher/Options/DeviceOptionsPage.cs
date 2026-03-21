@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -15,7 +15,7 @@ using RemoteDebuggerLauncher.Shared;
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// Implements the Device Options page shown in the VS options tree under "Remote Debugger Launcher"
+   /// Implements the Device Options page shown in the VS options tree under "Linux Remote Debugger"
    /// </summary>
    [ComVisible(true)]
    [Guid(PackageConstants.Options.PageGuidDevice)]
@@ -57,6 +57,12 @@ namespace RemoteDebuggerLauncher
       [Description("To force the plugin to use IPv4.")]
       [DefaultValue(PackageConstants.Options.DefaultValueForceIPv4)]
       public bool ForceIPv4 { get; set; } = PackageConstants.Options.DefaultValueForceIPv4;
+
+      [Category(PackageConstants.Options.PageCategorySsh)]
+      [DisplayName("Disable Host Key Checking")]
+      [Description("Whether to disable host key checking.")]
+      [DefaultValue(PackageConstants.Options.DefaultValueDisableHostKeyChecking)]
+      public bool DisableHostKeyChecking { get; set; } = PackageConstants.Options.DefaultValueDisableHostKeyChecking;
 
       [Category(PackageConstants.Options.PageCategoryDeployment)]
       [DisplayName("Transfer Mode")]

@@ -1,5 +1,5 @@
 # Options
-The plugin provides a set of global options in the Visual Studio under Tools -> Options -> Remote Debugger Launcher.
+The plugin provides a set of global options in the Visual Studio under Tools -> Options -> Linux Remote Debugger.
 This page describes the details of the options.
 
 ## Device options
@@ -44,6 +44,6 @@ The values configured in this section will only be applied the launch profile ha
 |:------- |:-------------------- |
 | Log Level | The amount of debug logging the extension should produce. 'None' disables logging. |
 
-The log files are stored in %localappdata%\RemoteDebuggerLauncher\Logfiles and are kept for 31 days.
+The log files are stored in %localappdata%\LinuxRemoteDebugger\Logfiles and are kept for 31 days.
 If you change the log level after using the extension (deploy, debug, ...), please restart Visual Studio to apply the new log level.
 

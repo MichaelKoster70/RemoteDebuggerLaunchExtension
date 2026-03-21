@@ -14,7 +14,7 @@ using RemoteDebuggerLauncher.Shared;
 namespace RemoteDebuggerLauncher
 {
    /// <summary>
-   /// Implements the Local Options page shown in the VS options tree under "Remote Debugger Launcher"
+   /// Implements the Local Options page shown in the VS options tree under "Linux Remote Debugger"
    /// </summary>
    [ComVisible(true)]
    [Guid(PackageConstants.Options.PageGuidLocal)]

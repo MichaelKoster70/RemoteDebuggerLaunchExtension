@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="100" xml:space="preserve">
-    <value>Remote Debugger Launcher</value>
+    <value>Linux Remote Debugger</value>
     <comment>Options Dialog: Category</comment>
   </data>
   <data name="101" xml:space="preserve">
@@ -130,7 +130,7 @@
     <comment>Options Dialog: Local page name</comment>
   </data>
   <data name="110" xml:space="preserve">
-    <value>Remote Debugger Launcher Extension</value>
+    <value>Linux Remote Debugger Extension</value>
     <comment>About Dialog: license information</comment>
   </data>
   <data name="112" xml:space="preserve">
@@ -138,23 +138,23 @@
     <comment>About Dialog: Detail information</comment>
   </data>
   <data name="200" xml:space="preserve">
-    <value>Remote Debugger Launcher</value>
+    <value>Linux Remote Debugger</value>
     <comment>Settings Import/Export: Category</comment>
   </data>
   <data name="201" xml:space="preserve">
-    <value>Remote Debugger Launcher Device Settings</value>
+    <value>Linux Remote Debugger Device Settings</value>
     <comment>Settings Import/Export: Display name in the tree view</comment>
   </data>
   <data name="202" xml:space="preserve">
-    <value>The device settings for the Remote Debugger Launcher</value>
+    <value>The device settings for the Linux Remote Debugger</value>
     <comment>Settings Import/Export: Description text</comment>
   </data>
   <data name="203" xml:space="preserve">
-    <value>Remote Debugger Launcher Local Settings</value>
+    <value>Linux Remote Debugger Local Settings</value>
     <comment>Settings Import/Export: Display name in the tree view</comment>
   </data>
   <data name="204" xml:space="preserve">
-    <value>The local settings for the Remote Debugger Launcher</value>
+    <value>The local settings for the Linux Remote Debugger</value>
     <comment>Settings Import/Export: Description text</comment>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

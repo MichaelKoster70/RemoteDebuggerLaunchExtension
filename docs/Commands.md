@@ -1,5 +1,5 @@
 # Commands
-The plugin provides a set of utility commands in the Tools menu under 'Remote Debugger Launcher' menu item.
+The plugin provides a set of utility commands in the Tools menu under 'Linux Remote Debugger' menu item.
 This page describes the details of each command available.
 
 ## Deploy remote target

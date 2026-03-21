@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -81,7 +81,7 @@ namespace RemoteDebuggerLauncher
          ThreadHelper.ThrowIfNotOnUIThread();
 
          // bring up config dialog
-         var viewModel = new SetupSshViewModel(ThreadHelper.JoinableTaskFactory, new SecureShellKeyPairCreatorService());
+         var viewModel = new SetupSshViewModel(ThreadHelper.JoinableTaskFactory, package.GetSecureShellKeyPairCreatorService());
          var dialog = new SetupSshDialogWindow()
          {
             DataContext = viewModel

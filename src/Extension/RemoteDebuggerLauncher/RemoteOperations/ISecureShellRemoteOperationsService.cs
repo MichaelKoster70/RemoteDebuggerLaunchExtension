@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -6,6 +6,7 @@
 // ----------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using RemoteDebuggerLauncher.Shared;
 
@@ -129,6 +130,12 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       Task TryInstallDotNetOfflineAsync(DotnetInstallationKind kind, string channel);
 
       /// <summary>
+      /// Tries the find the path where .NET is installed on the remote device.
+      /// </summary>
+      /// <returns>A <see cref="Task{String}" />representing the asynchronous operation: the path where .NET is installed, or <c>null</c> if not found.</returns>
+      Task<string> TryFindDotNetInstallPathAsync();
+
+      /// <summary>
       /// Sets up a new ASP.NET HTTPS Developer Certificate.
       /// </summary>
       /// <param name="mode">The desired setup mode.</param>
@@ -142,5 +149,13 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// </summary>
       /// <returns>The <see cref="string"/> holding the runtime ID.</returns>
       Task<string> GetRuntimeIdAsync();
+
+      /// <summary>
+      /// Queries environment variables from a running process owned by the current user.
+      /// </summary>
+      /// <param name="processName">The name of the process to query.</param>
+      /// <param name="variablesToCopy">Optional list of specific variables to copy. If null or empty, all variables are copied.</param>
+      /// <returns>A <see cref="Task{IDictionary}"/> representing the asynchronous operation: a dictionary of environment variables, or an empty dictionary if the process is not found.</returns>
+      Task<IDictionary<string, string>> QueryProcessEnvironmentAsync(string processName, IReadOnlyList<string> variablesToCopy = null);
    }
 }

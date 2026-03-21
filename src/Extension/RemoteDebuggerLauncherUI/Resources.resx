@@ -230,7 +230,7 @@ Latest LTS:  The most recent Long Term Support release of .NET</value>
     <value>Publishing application OK</value>
   </data>
   <data name="PublishWaitDialogCaption" xml:space="preserve">
-    <value>Remote Debugger Launcher</value>
+    <value>Linux Remote Debugger</value>
   </data>
   <data name="PublishWaitDialogMessageStart" xml:space="preserve">
     <value>Publishing application ...</value>
@@ -583,7 +583,19 @@ Replace: Replace the existing certificate with a new one.</value>
     <value>Create</value>
   </data>
   <data name="SetupSshDialogKeyPairCreateDescription" xml:space="preserve">
-    <value>Creates a RSA public key pair with the default name (id_rsa) and key length of 2048 bits.</value>
+    <value>Click to select key type and create SSH key pair. Choose between RSA (4096 bit) or ECDSA (256 bit).</value>
+  </data>
+  <data name="SetupSshDialogKeyTypeRsaContent" xml:space="preserve">
+    <value>RSA (4096 bit)</value>
+  </data>
+  <data name="SetupSshDialogKeyTypeRsaDescription" xml:space="preserve">
+    <value>Create RSA key with 4096 bit length - id_rsa</value>
+  </data>
+  <data name="SetupSshDialogKeyTypeEcdsaContent" xml:space="preserve">
+    <value>ECDSA (256 bit)</value>
+  </data>
+  <data name="SetupSshDialogKeyTypeEcdsaDescription" xml:space="preserve">
+    <value>Create ECDSA key with 256 bit curve - id_ecdsa</value>
   </data>
   <data name="SetupSshDialogKeyPairForceIPv4Content" xml:space="preserve">
     <value>Force IPv4</value>
@@ -680,5 +692,44 @@ Windows OpenSSH ssh-keygen reported:</value>
   </data>
   <data name="RemoteCommandSetupSshScanProgressFingerprintScan2" xml:space="preserve">
     <value>running 'ssh-keyscan.exe {0}'</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetCommandStatusbarText" xml:space="preserve">
+    <value>Querying .NET path on targets...</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetCommandCaption" xml:space="preserve">
+    <value>Query .NET Install path</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetCommandFoundPath" xml:space="preserve">
+    <value>Found .NET at: {0}</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetCommandSuccess" xml:space="preserve">
+    <value>Successfully updated launch profile with .NET install path: {0}</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetCommandNotFound" xml:space="preserve">
+    <value>.NET not found on remote device. Error: {0}</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetNoProjects" xml:space="preserve">
+    <value>No startup project selected, or the selected project doesn't have an active SSH Remote Launch profile.</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetCommandCannotUpdateProfile" xml:space="preserve">
+    <value>Cannot update launch profile: Project service not available</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetCommandProfileUpdated" xml:space="preserve">
+    <value>Launch profile updated successfully</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetCommandProfileNotFound" xml:space="preserve">
+    <value>Active launch profile not found</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetCommandUpdateFailed" xml:space="preserve">
+    <value>Failed to update launch profile: {0}</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetOutputPaneProgress" xml:space="preserve">
+    <value>Finding where 'dotnet' is installed...</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetOutputPaneFound" xml:space="preserve">
+    <value>Found 'dotnet' at '{0}'</value>
+  </data>
+  <data name="RemoteCommandQueryDotnetOutputPaneNotFound" xml:space="preserve">
+    <value>Did not find 'dotnet', configure it manually</value>
   </data>
 </root>

@@ -61,6 +61,34 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       }
 
       /// <inheritdoc/>
+      public Task<(int StatusCode, string Result, string Error)> TryExecuteCommandAsync(string commandText)
+      {
+         return Task.Run(() =>
+         {
+            try
+            {
+               using (var client = CreateSshClient())
+               {
+                  client.ConnectionInfo.Timeout = TimeSpan.FromSeconds(5);
+                  client.Connect();
+                  using (var command = client.RunCommand(commandText))
+                  {
+                     return (command.ExitStatus ?? 0, command.Result, command.Error);
+                  }
+               }
+            }
+            catch (SshException e)
+            {
+               throw new SecureShellSessionException(e.Message, e);
+            }
+            catch (InvalidOperationException e)
+            {
+               throw new SecureShellSessionException(e.Message, e);
+            }
+         });
+      }
+
+      /// <inheritdoc/>
       public Task UploadFolderRecursiveAsync(string localSourcePath, string remoteTargetPath, IOutputPaneWriterService progressOutputPaneWriter = null)
       {
          ThrowIf.ArgumentNullOrEmpty(localSourcePath, nameof(localSourcePath));

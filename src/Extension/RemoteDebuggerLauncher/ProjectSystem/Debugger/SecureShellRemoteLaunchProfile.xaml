@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Rule Name="SecureShellRemoteLaunchProfile"
       Description="Properties associated with launching and debugging a custom debug target."
       DisplayName="SSH Remote Launch"
@@ -59,6 +59,11 @@
                    Subcategory="Credentials"
                    Default="%userprofile%\\.ssh\\id_rsa" />
 
+  <BoolProperty Name="disableHostKeyChecking"
+            DisplayName="Disable Host Key Checking"
+            Description="Indicates whether to disable host key checking."
+            Subcategory="Remote Device" />
+
   <StringProperty Name="EnvironmentVariables"
                   DisplayName="Environment variables"
                   Description="The environment variables to set prior to running the process."
@@ -67,6 +72,11 @@
       <ValueEditor EditorType="NameValueList" />
     </StringProperty.ValueEditors>
   </StringProperty>
+
+  <StringProperty Name="copyEnvironmentFrom"
+                  DisplayName="Copy environment from"
+                  Description="Name of a process to copy environment variables from (e.g., gnome-shell, plasmashell, Xwayland). Environment variables explicitly set above will not be overwritten."
+                  Subcategory="Remote Devices" />
 
   <BoolProperty Name="launchBrowser"
                 DisplayName="LaunchBrowser"

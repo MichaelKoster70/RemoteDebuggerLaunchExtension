@@ -6,13 +6,18 @@
 // ----------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.Build.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
+using Microsoft.VisualStudio.ProjectSystem.VS;
 using RemoteDebuggerLauncher.PowerShellHost;
 using RemoteDebuggerLauncher.Shared;
 using Constants = RemoteDebuggerLauncher.Shared.Constants;
@@ -32,6 +37,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       private readonly IDebugTokenReplacer tokenReplacer;
       private readonly IOutputPaneWriterService outputPaneWriter;
       private readonly IStatusbarService statusbar;
+      private readonly ILogger logger;
 
       /// <summary>
       /// Initializes a new instance of the <see cref="SecureShellRemoteOperations" /> class.
@@ -41,7 +47,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
       /// <param name="bulkCopy">The bulk copy session service to use.</param>
       /// <param name="outputPaneWriter">The output pane writer service instance to use.</param>
       /// <param name="statusbar">Optional statusbar service to report progress.</param>
-      internal SecureShellRemoteOperationsService(ConfigurationAggregator configurationAggregator, ISecureShellSessionService session, IRemoteBulkCopySessionService bulkCopy, IDebugTokenReplacer tokenReplacer, IOutputPaneWriterService outputPaneWriter, IStatusbarService statusbar)
+      internal SecureShellRemoteOperationsService(ConfigurationAggregator configurationAggregator, ISecureShellSessionService session, IRemoteBulkCopySessionService bulkCopy, IDebugTokenReplacer tokenReplacer, IOutputPaneWriterService outputPaneWriter, IStatusbarService statusbar, ILoggerFactory loggerFactory)
       {
          this.configurationAggregator = configurationAggregator;
          this.session = session;
@@ -49,6 +55,7 @@ namespace RemoteDebuggerLauncher.RemoteOperations
          this.tokenReplacer = tokenReplacer;
          this.outputPaneWriter = outputPaneWriter;
          this.statusbar = statusbar;
+         logger = loggerFactory.CreateLogger<SecureShellRemoteOperationsService>();
       }
 
       /// <inheritdoc />
@@ -362,6 +369,53 @@ namespace RemoteDebuggerLauncher.RemoteOperations
                return TryInstallDotNetRuntimeOfflineAsync(channel, Constants.Dotnet.RuntimeAspNet);
             default:
                throw new NotSupportedException($"runtime kind '{kind}' not supported");
+         }
+      }
+
+      /// <inheritdoc />
+      public async Task<string> TryFindDotNetInstallPathAsync()
+      {
+         logger.LogTrace("TryFindDotNetInstallPathAsync: begin.");
+
+         using (var commandingService = session.CreateCommandSession())
+         {
+            outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+            outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetOutputPaneProgress);
+
+            // Step 1: try to find 'dotnet' using 'command -v dotnet'
+            var commandText = PackageConstants.LinuxShellCommands.FormatCommand(PackageConstants.Dotnet.BinaryName);
+            (int statusCode, string result, string error) = await commandingService.TryExecuteCommandAsync(commandText);
+            logger.LogInformation("TryFindDotNetInstallPathAsync: command '{CommandText}' returned StatusCode={StatusCode}, result='{Result}', error='{Error}'", commandText, statusCode, result, error);
+            if (statusCode == 0)
+            {
+               // remove the trailing '/dotnet' from the result to get the install folder path
+               result = result.Trim('\n').Remove(result.LastIndexOf("/dotnet"));
+               outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+               outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetOutputPaneFound, result);
+
+               logger.LogTrace("TryFindDotNetInstallPathAsync: end. returns '{Result}'", result);
+               return result;
+            }
+
+            // Step 2: try to find 'dotnet' using 'bash -lc "command -v dotnet"'
+            commandText = PackageConstants.LinuxShellCommands.FormatBashLoginCommand(PackageConstants.Dotnet.BinaryName);
+            ( statusCode, result, error) = await commandingService.TryExecuteCommandAsync(commandText);
+            logger.LogInformation("TryFindDotNetInstallPathAsync: command '{CommandText}' returned StatusCode={StatusCode}, result='{Result}', error='{Error}'", commandText, statusCode, result, error);
+            if (statusCode == 0)
+            {
+               result = result.Trim('\n').Remove(result.LastIndexOf("/dotnet"));
+               outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+               outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetOutputPaneFound, result);
+            }
+            else
+            {
+               outputPaneWriter.Write(LogHost, Resources.RemoteCommandCommonSshTarget, session.Settings.UserName, session.Settings.HostName);
+               outputPaneWriter.WriteLine(Resources.RemoteCommandQueryDotnetOutputPaneNotFound);
+               result = string.Empty;
+            }
+
+            logger.LogTrace("TryFindDotNetInstallPathAsync: end. returns '{Result}'", result);
+            return result;
          }
       }
       #endregion
@@ -756,6 +810,86 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
             outputPaneWriter.WriteLine(Resources.RemoteCommandCommonSuccess);
          }
+      }
+
+      /// <inheritdoc />
+      public async Task<IDictionary<string, string>> QueryProcessEnvironmentAsync(string processName, IReadOnlyList<string> variablesToCopy = null)
+      {
+         var result = new Dictionary<string, string>();
+
+         if (string.IsNullOrWhiteSpace(processName))
+         {
+            logger.LogDebug("QueryProcessEnvironmentAsync: No processName specified, exiting");
+            return result;
+         }
+
+         try
+         {
+            logger.LogDebug("QueryProcessEnvironmentAsync: Querying environment from process '{ProcessName}'", processName);
+
+            // Escape the process name to prevent command injection
+            // Only allow alphanumeric characters, hyphens, and underscores
+            if (!Regex.IsMatch(processName, @"^[a-zA-Z0-9_-]+$"))
+            {
+               logger.LogWarning("QueryProcessEnvironmentAsync: Invalid process name '{ProcessName}' - only alphanumeric, hyphens, and underscores are allowed", processName);
+               return result;
+            }
+
+            // Find the process ID of a process with the given name owned by the current user
+            var userName = session.Settings.UserName;
+            var findPidCommand = $"pgrep -u {userName} -x \"{processName}\" | head -n 1";
+            
+            var pidResult = await session.ExecuteSingleCommandAsync(findPidCommand);
+            var pid = pidResult.Trim();
+
+            if (string.IsNullOrWhiteSpace(pid) || !int.TryParse(pid, out _))
+            {
+               logger.LogDebug("QueryProcessEnvironmentAsync: Process '{ProcessName}' not found or not owned by user '{UserName}'", processName, userName);
+               return result;
+            }
+
+            logger.LogDebug("QueryProcessEnvironmentAsync: Found process '{ProcessName}' with PID {Pid}", processName, pid);
+
+            // Read the environment variables from /proc/{pid}/environ
+            var environCommand = $"cat /proc/{pid}/environ";
+            var environResult = await session.ExecuteSingleCommandAsync(environCommand);
+
+            // The environ file contains null-terminated strings
+            var envVars = environResult.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
+            
+            // Create a HashSet for efficient lookup if filtering is needed
+            HashSet<string> filterSet = null;
+            if (variablesToCopy != null && variablesToCopy.Count > 0)
+            {
+               filterSet = new HashSet<string>(variablesToCopy, StringComparer.Ordinal);
+               logger.LogDebug("QueryProcessEnvironmentAsync: Filtering to {Count} specific variables", filterSet.Count);
+            }
+            
+            foreach (var envVar in envVars)
+            {
+               var separatorIndex = envVar.IndexOf('=');
+               if (separatorIndex > 0)
+               {
+                  var key = envVar.Substring(0, separatorIndex);
+                  var value = envVar.Substring(separatorIndex + 1);
+                  
+                  // Only add if no filter, or if the key is in the filter set
+                  if (filterSet == null || filterSet.Contains(key))
+                  {
+                     result[key] = value;
+                  }
+               }
+            }
+
+            logger.LogDebug("QueryProcessEnvironmentAsync: Successfully retrieved {Count} environment variables from process '{ProcessName}'", result.Count, processName);
+         }
+         catch (Exception ex)
+         {
+            logger.LogWarning(ex, "QueryProcessEnvironmentAsync: Failed to query environment from process '{ProcessName}'", processName);
+            // Return empty dictionary on error - this is not a critical failure
+         }
+
+         return result;
       }
       #endregion
    }

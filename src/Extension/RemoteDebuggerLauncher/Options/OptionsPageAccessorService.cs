@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // <copyright company="Michael Koster">
 //   Copyright (c) Michael Koster. All rights reserved.
 //   Licensed under the MIT License.
@@ -54,6 +54,12 @@ namespace RemoteDebuggerLauncher
       public bool QueryForceIPv4()
       {
          return GetDevicePage().ForceIPv4;
+      }
+
+      /// <inheritdoc />
+      public bool QueryDisableHostKeyChecking()
+      {
+         return GetDevicePage().DisableHostKeyChecking;
       }
 
       /// <inheritdoc />
@@ -135,9 +141,11 @@ namespace RemoteDebuggerLauncher
    /// Defines the service type for the options page accessor service.
    /// </summary>
    [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "By design, using VS naming standards")]
+#pragma warning disable IDE0079
 #pragma warning disable S101 // Types should be named in PascalCase
    internal interface SOptionsPageAccessor
    {
    }
-#pragma warning restore S101 // Types should be named in PascalCase
+#pragma warning restore S101
+#pragma warning restore IDE0079
 }

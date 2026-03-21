@@ -20,7 +20,8 @@
       "privateKey": "%userprofile%\\.ssh\\id_rsa",
       "deployTransferMode": "Rsync",
       "additionalFiles": "Data\\Files\\data.txt|hello.txt;Data\\Files\\data.txt|/home/mko/hello.txt",
-      "additionalDirectories": "Data\\Directory|data/;Data\\Directory|/home/mko/data"
+      "additionalDirectories": "Data\\Directory|data/;Data\\Directory|/home/mko/data",
+      "disableHostKeyChecking": false
     }
   }
 }

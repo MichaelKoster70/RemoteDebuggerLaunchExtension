@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Threading;
@@ -41,7 +42,8 @@ namespace RemoteDebuggerLauncher
          // wire-up commands
          BrowsePublicKeyFileCommand = new DelegateCommand(HandleBrowsePublicKeyFileCommandCommand, null, joinableTaskFactory);
          BrowsePrivateKeyFileCommand = new DelegateCommand(HandleBrowsePrivateKeyFileCommandCommand, null, joinableTaskFactory);
-         CreateKeyFileCommand = new DelegateCommand(HandleCreateKeyFileCommandCommand, null, joinableTaskFactory);
+         CreateRsaKeyCommand = new DelegateCommand(HandleCreateRsaKeyCommand, null, joinableTaskFactory);
+         CreateEcdsaKeyCommand = new DelegateCommand(HandleCreateEcdsaKeyCommand, null, joinableTaskFactory);
          OkCommand = new DelegateCommand<DialogWindow>(HandleOkCommand, canExecute => Validate(), joinableTaskFactory);
          CancelCommand = new DelegateCommand<DialogWindow>(HandleCancelCommand, null, joinableTaskFactory);
 
@@ -121,7 +123,9 @@ namespace RemoteDebuggerLauncher
 
       public DelegateCommand BrowsePrivateKeyFileCommand { get; }
 
-      public DelegateCommand CreateKeyFileCommand { get; }
+      public DelegateCommand CreateRsaKeyCommand { get; }
+
+      public DelegateCommand CreateEcdsaKeyCommand { get; }
 
       public DelegateCommand<DialogWindow> OkCommand { get; }
 
@@ -176,13 +180,23 @@ namespace RemoteDebuggerLauncher
       }
 
 #pragma warning disable VSTHRD100 // Avoid async void methods
-      private async void HandleCreateKeyFileCommandCommand()
+      private async void HandleCreateRsaKeyCommand()
       {
-         bool result = await keyService.CreateAsync();
+         await CreateKeyAsync(SshKeyType.Rsa);
+      }
+
+      private async void HandleCreateEcdsaKeyCommand()
+      {
+         await CreateKeyAsync(SshKeyType.Ecdsa);
+      }
+
+      private async Task CreateKeyAsync(SshKeyType keyType)
+      {
+         bool result = await keyService.CreateAsync(keyType);
          if (result)
          {
-            PublicKeyFile = keyService.DefaultPublicKeyPath;
-            PrivateKeyFile= keyService.DefaultPrivateKeyPath;
+            PublicKeyFile = keyService.GetPublicKeyPath(keyType);
+            PrivateKeyFile = keyService.GetPrivateKeyPath(keyType);
          }
       }
 #pragma warning restore VSTHRD100 // Avoid async void methods
@@ -197,7 +211,7 @@ namespace RemoteDebuggerLauncher
          }
       }
 
-      private void HandleCancelCommand(DialogWindow dialog)
+      private static void HandleCancelCommand(DialogWindow dialog)
       {
          if (dialog != null)
          {

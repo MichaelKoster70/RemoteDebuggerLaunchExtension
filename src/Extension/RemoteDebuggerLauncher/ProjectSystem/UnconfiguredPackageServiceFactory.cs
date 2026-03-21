@@ -8,6 +8,7 @@
 using System;
 using System.Composition;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.ProjectSystem.Debug;
 using Microsoft.VisualStudio.Shell;
@@ -26,8 +27,8 @@ namespace RemoteDebuggerLauncher
       private readonly IDebugTokenReplacer tokenReplacer;
 
       [ImportingConstructor]
-      public UnconfiguredPackageServiceFactory(SVsServiceProvider asyncServiceProvider, IDebugTokenReplacer tokenReplacer, IVsFacadeFactory facadeFactory) :
-         base(asyncServiceProvider, facadeFactory, null, tokenReplacer)
+      public UnconfiguredPackageServiceFactory(SVsServiceProvider asyncServiceProvider, IDebugTokenReplacer tokenReplacer, IVsFacadeFactory facadeFactory, ILoggerFactory loggerFactory) :
+         base(asyncServiceProvider, facadeFactory, null, tokenReplacer, loggerFactory)
       {
          this.tokenReplacer = tokenReplacer;
       }
@@ -37,6 +38,12 @@ namespace RemoteDebuggerLauncher
 
       [Import]
       internal Lazy<IActiveConfiguredProjectProvider> ActiveConfiguredProjectProvider { get; private set; }
+
+      [Import]
+      internal ILaunchProfileEditor LaunchProfileEditor { get; private set;  }
+
+      /// <inheritdoc />
+      public Task<ILaunchProfileEditor> GetLaunchProfileEditorAsync() => Task.FromResult(LaunchProfileEditor);
 
       /// <inheritdoc />
       public string GetProjectName() => ConfiguredProject.GetProjectName();

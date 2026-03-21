@@ -34,7 +34,12 @@ namespace RemoteDebuggerLauncher.RemoteOperations
 
       /// <inheritdoc/>
       public SecureShellSessionSettings Settings => session.Settings;
+
+      /// <inheritdoc/>
       public Task<string> ExecuteSingleCommandAsync(string commandText) => session.ExecuteSingleCommandAsync(commandText);
+
+      /// <inheritdoc/>
+      public Task<(int StatusCode, string Result, string Error)> TryExecuteCommandAsync(string commandText) => session.TryExecuteCommandAsync(commandText);
 
       /// <inheritdoc/>
       public ISecureShellSessionCommandingService CreateCommandSession() => session.CreateCommandSession();
