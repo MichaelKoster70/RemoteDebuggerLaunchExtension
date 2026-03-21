@@ -341,6 +341,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="MessagePack">
+      <Version>2.5.198</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -354,6 +357,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug">
       <Version>8.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.IO.Redist">
+      <Version>6.0.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.PowerShell.5.1.ReferenceAssemblies" Version="1.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Managed" Version="17.4.314-g26c3aa51e7" ExcludeAssets="runtime" />
@@ -378,7 +384,7 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NuGet.VisualStudio" Version="17.4.0" ExcludeAssets="runtime" />
-    <PackageReference Include="SSH.NET" Version="2025.0.0" />
+    <PackageReference Include="SSH.NET" Version="2025.1.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RemoteTools\CheckSum\lib\CheckSumLib.csproj">
