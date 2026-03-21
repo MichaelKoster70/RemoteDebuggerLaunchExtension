@@ -24,7 +24,7 @@
     "@angular/router": "^19.2.15",
     "bootstrap": "^5.2.0",
     "jquery": "^3.6.0",
-    "oidc-client": "^1.11.5",
+    "oidc-client": "^1.10.1",
     "popper.js": "^1.16.0",
     "run-script-os": "^1.1.6",
     "rxjs": "~7.5.6",
@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.2.18",
-    "@angular/cli": "^19.2.18",
+    "@angular/cli": "^21.2.3",
     "@angular/compiler-cli": "^19.2.15",
     "@types/jasmine": "~4.3.0",
     "@types/jasminewd2": "~2.0.10",

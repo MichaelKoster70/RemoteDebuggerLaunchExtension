@@ -48,7 +48,11 @@
     "vite": "6.4.1"
   },
   "overrides": {
-    "autoprefixer": "10.4.5"
+    "autoprefixer": "10.4.5",
+    "rollup": "^4.64.1",
+    "serialize-javascript": "^7.0.3",
+    "tar": "^7.5.11",
+    "webpack": "^5.104.1"
   },
   "optionalDependencies": {}
 }
