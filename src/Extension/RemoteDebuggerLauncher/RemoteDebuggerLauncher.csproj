@@ -385,9 +385,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NuGet.VisualStudio" Version="17.4.0" ExcludeAssets="runtime" />
     <PackageReference Include="SSH.NET" Version="2025.1.0" />
-    <PackageReference Include="System.Text.Json">
-      <Version>6.0.10</Version>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RemoteTools\CheckSum\lib\CheckSumLib.csproj">
