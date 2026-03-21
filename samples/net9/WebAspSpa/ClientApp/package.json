@@ -14,18 +14,18 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^19.2.15",
-    "@angular/common": "^19.2.15",
-    "@angular/compiler": "^19.2.15",
+    "@angular/animations": "^19.2.20",
+    "@angular/common": "^19.2.20",
+    "@angular/compiler": "^19.2.20",
     "@angular/core": "^19.2.20",
-    "@angular/forms": "^19.2.15",
-    "@angular/platform-browser": "^19.2.15",
-    "@angular/platform-browser-dynamic": "^19.2.15",
-    "@angular/platform-server": "^19.2.15",
-    "@angular/router": "^19.2.15",
+    "@angular/forms": "^19.2.20",
+    "@angular/platform-browser": "^19.2.20",
+    "@angular/platform-browser-dynamic": "^19.2.20",
+    "@angular/platform-server": "^19.2.20",
+    "@angular/router": "^19.2.20",
     "bootstrap": "^5.2.0",
     "jquery": "^3.6.0",
-    "oidc-client": "^1.10.1",
+    "oidc-client": "^1.11.5",
     "popper.js": "^1.16.0",
     "run-script-os": "^1.1.6",
     "rxjs": "~7.5.6",
@@ -33,9 +33,9 @@
     "zone.js": "~0.15.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^19.2.22",
-    "@angular/cli": "^19.2.15",
-    "@angular/compiler-cli": "^19.2.15",
+    "@angular-devkit/build-angular": "^19.2.20",
+    "@angular/cli": "^19.2.20",
+    "@angular/compiler-cli": "^19.2.20",
     "@types/jasmine": "~4.3.0",
     "@types/jasminewd2": "~2.0.10",
     "@types/node": "^18.7.11",
@@ -50,6 +50,10 @@
     "vite": "6.4.1"
   },
   "overrides": {
-    "autoprefixer": "10.4.5"
+    "autoprefixer": "10.4.5",
+    "rollup": "^4.59.1",
+    "serialize-javascript": "^7.0.3",
+    "tar": "^7.5.11",
+    "webpack": "^5.104.1"
   }
 }
