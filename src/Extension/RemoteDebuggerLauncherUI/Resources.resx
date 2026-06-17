@@ -189,9 +189,6 @@ Runtime aspnet: Install the ASP.NET runtime</value>
   <data name="InstallDotnetInstallationTypeSdkDisplayName" xml:space="preserve">
     <value>SDK</value>
   </data>
-  <data name="InstallDotnetVersion60DisplayName" xml:space="preserve">
-    <value>6.0</value>
-  </data>
   <data name="InstallDotnetVersion70DisplayName" xml:space="preserve">
     <value>7.0</value>
   </data>

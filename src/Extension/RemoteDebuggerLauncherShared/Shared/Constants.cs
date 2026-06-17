@@ -35,9 +35,6 @@ namespace RemoteDebuggerLauncher.Shared
          /// <summary>Name of the 7.0 channel expected by the .NET install scripts.</summary>
          public const string Channel70 = "7.0";
 
-         /// <summary>Name of the 6.0 channel expected by the .NET install scripts.</summary>
-         public const string Channel60 = "6.0";
-
          /// <summary>Name of complete runtime expected by the .NET install scripts.</summary>
          public const string RuntimeNet = "dotnet";
 

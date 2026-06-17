@@ -22,7 +22,7 @@ The extension supports
 - Deploying additional files/folders (configured in the launch profile) to the target device.
 - Publish (running dotnet publish) before deploying the application.
 - Installing vsdbg automatically (configurable).
-- Installing .NET on the target device (.NET 6 and newer)
+- Installing .NET on the target device (.NET 7 and newer)
 - Supporting command to setup SSH authentication.
 
 ## Getting Started
@@ -60,7 +60,7 @@ Open Visual Studio 2022, navigate to Tools -> Options -> Remote Debugger Launche
 Configure the default values for Credentials, Folders and SSH setting. These values will be applied if the Launch Profile does not configure them.
 
 #### 2. Create and configure the Launch Profile
-Load a Visual Studio Solution holding at least one .NET 6 (or newer) based application.
+Load a Visual Studio Solution holding at least one .NET 7 (or newer) based application.
 Open the project 'Debug Properties' dialog. Click 'new launch profile' and select 'SSH Remote Launch'
 ![LaunchProfileDialog](docs/ScreenShort-LaunchProfileDialog.png)
 

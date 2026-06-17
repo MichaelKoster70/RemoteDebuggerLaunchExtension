@@ -1,5 +1,15 @@
 # Release Notes
 
+## 0.14.0
+Remove support for .NET 6
+
+### Features
+- Removed support for .NET 6
+- Deleted .NET 6 sample projects
+
+### Bug Fixes
+- none
+
 ## 0.13.0
 Add support for .NET 9 & 10
 
