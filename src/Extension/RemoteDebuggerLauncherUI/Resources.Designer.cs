@@ -289,15 +289,6 @@ namespace RemoteDebuggerLauncher {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 7.0.
-        /// </summary>
-        public static string InstallDotnetVersion70DisplayName {
-            get {
-                return ResourceManager.GetString("InstallDotnetVersion70DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to 8.0.
         /// </summary>
         public static string InstallDotnetVersion80DisplayName {

@@ -15,7 +15,7 @@ namespace RemoteDebuggerLauncher.WebTools
    /// </summary>
    internal static class FrameworkNameExtensions
    {
-      public static readonly Version Version70 = new Version(7, 0);
+      public static readonly Version Version80 = new Version(8, 0);
       public const string DotNETCore = ".NETCore";
       public const string DotNETCoreApp = ".NETCoreApp";
 
@@ -34,10 +34,10 @@ namespace RemoteDebuggerLauncher.WebTools
       public static bool IsNetCore(this FrameworkName framework) => framework.Identifier.Equals(DotNETCore, StringComparison.OrdinalIgnoreCase);
 
       /// <summary>
-      /// Determines whether the framework is .NET 7 or newer.
+      /// Determines whether the framework is .NET 8 or newer.
       /// </summary>
       /// <param name="framework">The framework name.</param>
-      /// <returns><c>true</c> if .NET 7 or newer; otherwise, <c>false</c>.</returns>
-      public static bool IsNET70OrNewer(this FrameworkName framework) => (framework.IsNetCoreApp() || framework.IsNetCore()) && framework.Version >= Version70;
+      /// <returns><c>true</c> if .NET 8 or newer; otherwise, <c>false</c>.</returns>
+      public static bool IsNET80OrNewer(this FrameworkName framework) => (framework.IsNetCoreApp() || framework.IsNetCore()) && framework.Version >= Version80;
    }
 }

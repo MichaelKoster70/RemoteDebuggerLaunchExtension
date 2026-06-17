@@ -32,7 +32,7 @@ The command has the following configuration options:
 - Version: lets you select the version to install.
   - Latest LTS: The most recent .NET LTS release
   - Latest STS: The most recent .NET STS release
-  - specific .NET versions starting with .NET 7
+  - specific .NET versions starting with .NET 8
 
 ## Setup SSH
 This command tries to setup and configure SSH private key authentication on the device. It tries to add the supplied SSH public key to the 'authorized_keys' file.  

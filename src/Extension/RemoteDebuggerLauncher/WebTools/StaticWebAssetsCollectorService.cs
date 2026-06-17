@@ -83,7 +83,7 @@ namespace RemoteDebuggerLauncher.WebTools
          if (!string.IsNullOrEmpty(frameworkMoniker))
          {
             var framework = new FrameworkName(frameworkMoniker);
-            if (framework.IsNET70OrNewer())
+            if (framework.IsNET80OrNewer())
             {
                string outputPath = await properties.GetEvaluatedPropertyValueAsync("IntermediateOutputPath");
 
